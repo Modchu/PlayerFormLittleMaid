@@ -8,7 +8,7 @@ public class PFLM_EntityRendererOptiHD extends EntityRenderer {
 
 	public PFLM_EntityRendererOptiHD(Minecraft par1Minecraft) {
 		super(par1Minecraft);
-		// TODO ©“®¶¬‚³‚ê‚½ƒRƒ“ƒXƒgƒ‰ƒNƒ^[EƒXƒ^ƒu
+		// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ¼ãƒ»ã‚¹ã‚¿ãƒ–
 	}
 
 }

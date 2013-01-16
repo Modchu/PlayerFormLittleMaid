@@ -625,7 +625,7 @@ public class PFLM_Gui extends GuiScreen {
     public void handleMouseInput() {
     	super.handleMouseInput();
     	if(partsButton) {
-    	// ƒzƒC[ƒ‹‚ÌŠl“¾
+    	// ãƒ›ã‚¤ãƒ¼ãƒ«ã®ç²å¾—
     		int i = Mouse.getEventDWheel();
     		if(i != 0) {
     			scrollY -= i * 0.25;
@@ -1096,7 +1096,7 @@ public class PFLM_Gui extends GuiScreen {
     private BufferedImage fullColorConversion(BufferedImage image) {
     	BufferedImage write = null;
     	try {
-    	//ƒtƒ‹ƒJƒ‰[•ÏŠ·ˆ—
+    	//ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼å¤‰æ›å‡¦ç†
     	result = (image.getWidth() != 64) | (image.getHeight() != 32) ? false : true;
     	if (!result) return null;
     	int w = 64;

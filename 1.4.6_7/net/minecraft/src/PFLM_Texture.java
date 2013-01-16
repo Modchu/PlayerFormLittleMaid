@@ -726,7 +726,7 @@ public class PFLM_Texture
         }
     }
 
-    //TODO «‚±‚±ˆÈ‰ºAPFLM’Ç‰Á
+    //TODO â†“ã“ã“ä»¥ä¸‹ã€PFLMè¿½åŠ 
     public static Object[] multiModelGet(String s)
     {
     	int i = s.lastIndexOf("_");

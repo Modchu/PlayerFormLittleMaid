@@ -20,7 +20,7 @@ public class PFLM_PlayerController extends PlayerControllerMP {
     }
 
     public EntityClientPlayerMP func_78754_a(World world) {
-    	// EntityClientPlayerMP‚Ì’u‚«Š·‚¦ PlayerAPI–¢g—p
+    	// EntityClientPlayerMPã®ç½®ãæ›ãˆ PlayerAPIæœªä½¿ç”¨
     	if (!mod_PFLM_PlayerFormLittleMaid.isPlayerAPI
     			| mod_PFLM_PlayerFormLittleMaid.isPlayerAPIDebug) {
     		if (pflm_entityPlayersp != null
@@ -38,7 +38,7 @@ public class PFLM_PlayerController extends PlayerControllerMP {
     		return pflm_entityPlayersp;
     	} else {
 //-@-b166
-    		// EntityClientPlayerMP‚Ì’u‚«Š·‚¦ PlayerAPI—p
+    		// EntityClientPlayerMPã®ç½®ãæ›ãˆ PlayerAPIç”¨
     		if (mod_PFLM_PlayerFormLittleMaid.isPlayerAPI) {
     			Modchu_Debug.Debug("Replace PFLM_EntityPlayer.");
     			if (pflm_entityPlayer != null

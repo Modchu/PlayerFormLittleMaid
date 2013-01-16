@@ -110,7 +110,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 
 	@Override
 	public void handleMouseInput() {
-		// ホイールスクロール用
+		// 繝帙う繝ｼ繝ｫ繧ｹ繧ｯ繝ｭ繝ｼ繝ｫ逕ｨ
 		super.handleMouseInput();
 		int i = Mouse.getEventDWheel();
 		if(i != 0) {

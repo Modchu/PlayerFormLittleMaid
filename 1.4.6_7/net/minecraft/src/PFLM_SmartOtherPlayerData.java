@@ -8,7 +8,7 @@ public class PFLM_SmartOtherPlayerData {
 
 	public static void initialize(GameSettings gameSettings, boolean b,
 			Logger logger) {
-		// TODO ©“®¶¬‚³‚ê‚½ƒƒ\ƒbƒhEƒXƒ^ƒu
+		// TODO è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸãƒ¡ã‚½ãƒƒãƒ‰ãƒ»ã‚¹ã‚¿ãƒ–
 
 	}
 

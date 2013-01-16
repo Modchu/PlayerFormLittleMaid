@@ -54,7 +54,7 @@ public class PFLM_GuiOthersPlayerSlot extends GuiSlot {
 
 	@Override
 	protected void elementClicked(int i, boolean flag) {
-		//flag = true 左ダブルクリック
+		//flag = true 蟾ｦ繝繝悶Ν繧ｯ繝ｪ繝�繧ｯ
 		selected = i;
 		String s = PFLM_GuiOthersPlayerIndividualCustomizeSelect.playerList.get(i);
 		if (flag) openGuiCustomize();

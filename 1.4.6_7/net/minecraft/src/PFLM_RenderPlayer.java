@@ -924,14 +924,14 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	}
 /*
     	// b173deletefloat f20 = mc.currentScreen == null | mc.currentScreen instanceof GuiIngameMenu ? entityplayer.getEntityBrightness(f) : 1.0F;
-    	// ƒtƒ‰ƒ[ƒwƒbƒh
+    	// ãƒ•ãƒ©ãƒ¯ãƒ¼ãƒ˜ãƒƒãƒ‰
     	ItemStack itemstack2 = entityplayer.inventory.getStackInSlot(9);
     	if (itemstack2 != null) {
     		Item item = itemstack2.getItem();
     		if (item instanceof ItemBlock) {
     			Block block = Block.blocksList[item.itemID];
     			boolean flag = false;
-    			//DecoBlock, FavBlock—pƒ`ƒFƒbƒN
+    			//DecoBlock, FavBlockç”¨ãƒã‚§ãƒƒã‚¯
     			if (mod_PFLM_PlayerFormLittleMaid.isDecoBlock
     					| mod_PFLM_PlayerFormLittleMaid.isFavBlock) flag = decoBlockCheck(entityplayer, modelDataPlayerFormLittleMaid);
 
@@ -1216,7 +1216,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     }
 
     private boolean decoBlockCheck(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid) {
-    	//DecoBlock, FavBlock—pƒ`ƒFƒbƒN
+    	//DecoBlock, FavBlockç”¨ãƒã‚§ãƒƒã‚¯
     	ItemStack itemstack2 = entityplayer.inventory.getStackInSlot(9);
     	Item item = itemstack2.getItem();
     	Block block = Block.blocksList[item.itemID];

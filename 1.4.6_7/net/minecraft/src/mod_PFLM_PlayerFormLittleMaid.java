@@ -25,7 +25,7 @@ import net.minecraft.client.Minecraft;
 
 public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 {
-	//cfg‘‚«‚İ€–Ú
+	//cfgæ›¸ãè¾¼ã¿é …ç›®
 	public static boolean DebugMessage = true;
 	public static boolean DebugMessagetexture = true;
 	public static boolean AlphaBlend = true;
@@ -166,7 +166,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	private static int PFLMModelsKeyCode;
 	private boolean isItemRendererDebug = true;
 
-	//‘Î‰minecraftƒo[ƒWƒ‡ƒ“‚É‚æ‚Á‚Äg‚Á‚Ä‚¢‚½‚è‚¢‚È‚©‚Á‚½‚è
+	//å¯¾å¿œminecraftãƒãƒ¼ã‚¸ãƒ§ãƒ³ã«ã‚ˆã£ã¦ä½¿ã£ã¦ã„ãŸã‚Šã„ãªã‹ã£ãŸã‚Š
 	public static boolean isSwapGuiSelectWorld = false;
 	public static boolean addRendererFlag = false;
 	private boolean aetherAddRenderer;
@@ -382,7 +382,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			}
 		}
 //@-@125
-		// GUI‚ğŠJ‚­
+		// GUIã‚’é–‹ã
 		if (keybinding.keyDescription.equals("key.PlayerFormLittleMaid"))
 		{
 			if (mc.theWorld != null && mc.currentScreen == null
@@ -607,11 +607,11 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		}
 //@-@110
 //-@-123
-		// GUI’u‚«Š·‚¦
+		// GUIç½®ãæ›ãˆ
 		if (par1GuiScreen instanceof GuiSelectWorld
 				&& isAether
 				&& guiSelectWorldSwapCount < 10) {
-			// ƒ[ƒ‹ƒhƒZƒŒƒNƒg‚ğ’u‚«Š·‚¦
+			// ãƒ¯ãƒ¼ãƒ«ãƒ‰ã‚»ãƒ¬ã‚¯ãƒˆã‚’ç½®ãæ›ãˆ
 			if (!(par1GuiScreen instanceof GuiSelectWorldPlayerFormLittleMaidAether)) {
 				guiSelectWorldSwapCount++;
 				String guiMainMenu = getClassName("GuiMainMenu");
@@ -636,12 +636,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			}
 		}
 //@-@123
-		// GUI’u‚«Š·‚¦
+		// GUIç½®ãæ›ãˆ
 		if (par1GuiScreen instanceof GuiSelectWorld
 				&& !isAether
 				&& isSwapGuiSelectWorld
 				&& guiSelectWorldSwapCount < 10) {
-			// ƒ[ƒ‹ƒhƒZƒŒƒNƒg‚ğ’u‚«Š·‚¦
+			// ãƒ¯ãƒ¼ãƒ«ãƒ‰ã‚»ãƒ¬ã‚¯ãƒˆã‚’ç½®ãæ›ãˆ
 			if (!(par1GuiScreen instanceof GuiSelectWorldPlayerFormLittleMaid)) {
 				guiSelectWorldSwapCount++;
 				minecraft.displayGuiScreen(new GuiSelectWorldPlayerFormLittleMaid((GuiSelectWorld)par1GuiScreen));
@@ -1954,7 +1954,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (amodelPlayerFormLittleMaid != null) {
 			textureModel[0] = amodelPlayerFormLittleMaid[0];
 		}
-		// setSize‚Ìİ’è’l‚Íƒ_ƒ~[Bİ’è‚ÍŒÄ‚Ño‚µæ‚Å
+		// setSizeã®è¨­å®šå€¤ã¯ãƒ€ãƒŸãƒ¼ã€‚è¨­å®šã¯å‘¼ã³å‡ºã—å…ˆã§
 		if (isModelSize) {
 			setSize(0.5F, 1.35F);
 			resetHeight();
@@ -2129,10 +2129,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
 	public static void loadcfg() {
-		// cfg“Ç‚İ‚İ
+		// cfgèª­ã¿è¾¼ã¿
 		if (cfgdir.exists()) {
 			if (!mainCfgfile.exists()) {
-				// cfgƒtƒ@ƒCƒ‹‚ª–³‚¢ = V‹Kì¬
+				// cfgãƒ•ã‚¡ã‚¤ãƒ«ãŒç„¡ã„ = æ–°è¦ä½œæˆ
 				String s[] = {
 						"DebugMessage=true", "DebugMessagetexture=true", "debugReflect=false", "AlphaBlend=true",
 						"Physical_BurningPlayer=0", "Physical_MeltingPlayer=0", "Physical_Hammer=1.0F",
@@ -2150,7 +2150,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				};
 				Modchu_Config.writerConfig(mainCfgfile, s);
 			} else {
-				// cfgƒtƒ@ƒCƒ‹‚ª‚ ‚é
+				// cfgãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹
 				DebugMessage = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "DebugMessage", DebugMessage)).toString());
 				DebugMessagetexture = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "DebugMessagetexture", DebugMessagetexture)).toString());
 				debugReflect = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "debugReflect", debugReflect)).toString());
@@ -2247,7 +2247,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static void writerParamater() {
-		//GUIİ’èƒtƒ@ƒCƒ‹‘‚«‚İ
+		//GUIè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãè¾¼ã¿
 		String s[] = {
 				"defaultTexture="+defaultTexture, "defaultTextureArmorName="+defaultTextureArmorName, "maidColor="+maidColor,
 				"ModelScale="+PFLM_Gui.modelScale, "onlineMode="+onlineMode, "setModel="+PFLM_Gui.setModel,
@@ -2259,14 +2259,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static void loadParamater() {
-		// Guiİ’è€–Ú“Ç‚İ‚İ
+		// Guiè¨­å®šé …ç›®èª­ã¿è¾¼ã¿
 		Modchu_Debug.mDebug("loadParamater");
 		if (cfgdir.exists()) {
 			if (!cfgfile.exists()) {
-				// ƒRƒ“ƒtƒBƒOƒtƒ@ƒCƒ‹‚ª–³‚¢ = V‹Kì¬
+				// ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãŒç„¡ã„ = æ–°è¦ä½œæˆ
 				writerParamater();
 			} else {
-				// ƒRƒ“ƒtƒBƒOƒtƒ@ƒCƒ‹‚ª‚ ‚é
+				// ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹
 				defaultTextureArmorName = (Modchu_Config.loadConfig(showModelList, cfgfile, "defaultTextureArmorName", defaultTextureArmorName)).toString();
 				defaultTexture = (Modchu_Config.loadConfig(showModelList, cfgfile, "defaultTexture", defaultTexture)).toString();
 				maidColor = Integer.valueOf((Modchu_Config.loadConfig(showModelList, cfgfile, "maidColor", maidColor)).toString());
@@ -2285,7 +2285,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static void saveParamater() {
-		// Guiİ’è€–Ú‚ğcfgƒtƒ@ƒCƒ‹‚É•Û‘¶
+		// Guiè¨­å®šé …ç›®ã‚’cfgãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
 		String k[] = {
 				"defaultTexture", "defaultTextureArmorName", "maidColor", "ModelScale", "changeMode",
 				"setModel", "setColor", "setArmor", "showArmor", "handednessMode"
@@ -2300,10 +2300,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static void loadModelList() {
-		// ModelList“Ç‚İ‚İ
+		// ModelListèª­ã¿è¾¼ã¿
 		if (cfgdir.exists()) {
 			if (!modelListfile.exists()) {
-				// ModelListƒtƒ@ƒCƒ‹‚ª–³‚¢ = V‹Kì¬
+				// ModelListãƒ•ã‚¡ã‚¤ãƒ«ãŒç„¡ã„ = æ–°è¦ä½œæˆ
 				String s[] = {
 						"default", "Aokise", "Aug", "Beverly2", "chrno",
 						"chu", "DogAngel", "DogAngel2", "Elsa", "Elsie" ,
@@ -2325,11 +2325,11 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				};
 				Modchu_Config.writerModelList(s, modelListfile, modelList);
 			} else {
-				// ModelListƒtƒ@ƒCƒ‹‚ª‚ ‚é
+				// ModelListãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹
 				Modchu_Config.loadList(modelListfile, modelList, "PlayerFormLittleMaidModelList.cfg");
 			}
 			if (!textureListfile.exists()) {
-				// textureListƒtƒ@ƒCƒ‹‚ª–³‚¢ = V‹Kì¬
+				// textureListãƒ•ã‚¡ã‚¤ãƒ«ãŒç„¡ã„ = æ–°è¦ä½œæˆ
 				String s[] = {
 						"default", "ERYI_Aokise", "MMM_Aug", "b2color_Beverly2", "Cirno_chrno",
 						"chu_chu", "CV_DogAngel", "CV_DogAngel2", "e10color_Elsa", "e2color_Elsie" ,
@@ -2350,14 +2350,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				};
 				Modchu_Config.writerModelList(s, textureListfile, textureList);
 			} else {
-				// textureListƒtƒ@ƒCƒ‹‚ª‚ ‚é
+				// textureListãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹
 				Modchu_Config.loadList(textureListfile, textureList, "PlayerFormLittleMaidtextureList.cfg");
 			}
 		}
 	}
 
 	public static void writerOthersPlayerParamater() {
-		//GUIOthersPlayerİ’èƒtƒ@ƒCƒ‹‘‚«‚İ
+		//GUIOthersPlayerè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãè¾¼ã¿
 		String s[] = {
 				"othersTextureName="+othersTextureName, "othersTextureArmorName="+othersTextureArmorName, "othersMaidColor="+othersMaidColor,
 				"othersModelScale="+othersModelScale, "showArmor="+PFLM_GuiOthersPlayer.showArmor
@@ -2366,14 +2366,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static void loadOthersPlayerParamater() {
-		// GuiOthersPlayerİ’è€–Ú“Ç‚İ‚İ
+		// GuiOthersPlayerè¨­å®šé …ç›®èª­ã¿è¾¼ã¿
 		Modchu_Debug.mDebug("loadOthersPlayerParamater");
 		if (cfgdir.exists()) {
 			if (!othersCfgfile.exists()) {
-				// ƒRƒ“ƒtƒBƒOƒtƒ@ƒCƒ‹‚ª–³‚¢ = V‹Kì¬
+				// ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãŒç„¡ã„ = æ–°è¦ä½œæˆ
 				writerOthersPlayerParamater();
 			} else {
-				// ƒRƒ“ƒtƒBƒOƒtƒ@ƒCƒ‹‚ª‚ ‚é
+				// ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹
 				othersTextureName = (Modchu_Config.loadConfig(showModelList, othersCfgfile, "othersTextureName", othersTextureName)).toString();
 				othersTextureArmorName = (Modchu_Config.loadConfig(showModelList, othersCfgfile, "othersTextureArmorName", othersTextureArmorName)).toString();
 				othersMaidColor = Integer.valueOf((Modchu_Config.loadConfig(showModelList, othersCfgfile, "othersMaidColor", othersMaidColor)).toString());
@@ -2388,7 +2388,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static void saveOthersPlayerParamater(boolean flag) {
-		// GuiOthersPlayerİ’è€–Ú‚ğcfgƒtƒ@ƒCƒ‹‚É•Û‘¶
+		// GuiOthersPlayerè¨­å®šé …ç›®ã‚’cfgãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
 		String k[] = {
 				"othersTextureName", "othersTextureArmorName", "othersMaidColor", "othersModelScale", "showArmor", "changeMode"
 		};
@@ -2402,14 +2402,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static void removeOthersPlayerParamater(String s) {
-		// GuiOthersPlayerİ’è‚©‚çw’è“à—eíœ
+		// GuiOthersPlayerè¨­å®šã‹ã‚‰æŒ‡å®šå†…å®¹å‰Šé™¤
 		Modchu_Config.removeOthersPlayerParamater(othersCfgfile, s);
 	}
 
 	public static void saveShortcutKeysPlayerParamater() {
-		// GuiShortcutKeysİ’è€–Ú‚ğcfgƒtƒ@ƒCƒ‹‚É•Û‘¶
+		// GuiShortcutKeysè¨­å®šé …ç›®ã‚’cfgãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
 		if (!shortcutKeysCfgfile.exists()) {
-			// ƒRƒ“ƒtƒBƒOƒtƒ@ƒCƒ‹‚ª–³‚¢ = V‹Kì¬
+			// ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãŒç„¡ã„ = æ–°è¦ä½œæˆ
 			writerShortcutKeysParamater();
 		}
 		int m = 9;
@@ -2463,7 +2463,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static void writerShortcutKeysParamater() {
-		//GUIShortcutKeysİ’èƒtƒ@ƒCƒ‹‘‚«‚İ
+		//GUIShortcutKeysè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãè¾¼ã¿
 		int m = 9;
 		String s[] = new String [maxShortcutKeys * m];
 		int j;
@@ -2502,14 +2502,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static void loadShortcutKeysParamater() {
-		// GuiShortcutKeysİ’è€–Ú“Ç‚İ‚İ
+		// GuiShortcutKeysè¨­å®šé …ç›®èª­ã¿è¾¼ã¿
 		Modchu_Debug.mDebug("loadShortcutKeysParamater");
 		if (cfgdir.exists()) {
 			if (!shortcutKeysCfgfile.exists()) {
-				// ƒRƒ“ƒtƒBƒOƒtƒ@ƒCƒ‹‚ª–³‚¢ = V‹Kì¬
+				// ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãŒç„¡ã„ = æ–°è¦ä½œæˆ
 				//writerShortcutKeysParamater();
 			} else {
-				// ƒRƒ“ƒtƒBƒOƒtƒ@ƒCƒ‹‚ª‚ ‚é
+				// ã‚³ãƒ³ãƒ•ã‚£ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹
 				String s;
 				String k;
 				for(int i = 0; i < maxShortcutKeys;i++) {
@@ -2544,7 +2544,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public void modsLoaded()
     {
-		// ƒ}[ƒWclass”»’è
+		// ãƒãƒ¼ã‚¸classåˆ¤å®š
 		List list = ModLoader.getLoadedMods();
 		int size = list.size();
 		for (int i = 0; i < size; i++)
@@ -2605,7 +2605,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				Modchu_Debug.Debug("mod_LMM_littleMaidMob Check ok.");
 			}
 		}
-		//mod_SmartMovingMp Shaders MinecraftForge‚È‚Ç‘Î‰ƒNƒ‰ƒX‘¶İƒ`ƒFƒbƒN
+		//mod_SmartMovingMp Shaders MinecraftForgeãªã©å¯¾å¿œã‚¯ãƒ©ã‚¹å­˜åœ¨ãƒã‚§ãƒƒã‚¯
 		String className1[] = {
 				"mod_SmartMovingMp", "Shaders", "DynamicLights", "Shader", "FMLRenderAccessLibrary",
 				"EntityPlayerSP2", "RenderPlayer2", "net.minecraft.decoblock.DecoBlock", "net.minecraft.favstar.BlockFav", "ItemRendererHD"
@@ -2751,7 +2751,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		}
 
 		boolean keyFlag = playerFormLittleMaidVersion > 129 ? isForge : false;
-		// GUI ‚ğŠJ‚­ƒL[‚Ì“o˜^‚Æ–¼Ì•ÏŠ·ƒe[ƒuƒ‹‚Ì“o˜^
+		// GUI ã‚’é–‹ãã‚­ãƒ¼ã®ç™»éŒ²ã¨åç§°å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ«ã®ç™»éŒ²
 		if (isPlayerForm) {
 			String s = "key.PlayerFormLittleMaid";
 			ModLoader.registerKey(this, new KeyBinding(s, 41), keyFlag);
@@ -2791,7 +2791,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (isModelSize) {
 /*//110delete
 //-@-100
-				// OptiFine”»’èL
+				// OptiFineåˆ¤å®šL
 				try {
 					s = (String) getPrivateValue(net.minecraft.src.RenderGlobal.class, this, "version");
 					String s1 = "OptiFine";
@@ -2805,7 +2805,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //@-@100
 *///110delete
 
-			// OptiFine”»’è
+			// OptiFineåˆ¤å®š
 			boolean t = false;
 			String className2 = getClassName("Config");
 			test2 = null;
@@ -3110,7 +3110,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (playerFormLittleMaidVersion < 130
 				| isSmartMoving) ModLoader.setInGUIHook(this, true, true);
 
-		// PlayerAPI”»’è
+		// PlayerAPIåˆ¤å®š
 		isPlayerAPI = false;
 		/*b166//*/if (!isPlayerAPIDebug) {
 /*
