@@ -81,6 +81,13 @@ public class PFLM_GuiKeyControls extends
 					controlList.add(new Modchu_GuiSmallButton(7, x + 75, y + 40, 75, 15, "ScaleChange"));
 				}
 			}
+			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] >= modeAction
+					&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] <= modeActionLast) {
+				controlList.add(new Modchu_GuiSmallButton(409, x + 50, y + 165, 15, 15, "+"));
+				controlList.add(new Modchu_GuiSmallButton(410, x + 35, y + 165, 15, 15, "-"));
+				controlList.add(new Modchu_GuiSmallButton(411, x + 65, y + 165, 20, 15, "+10"));
+				controlList.add(new Modchu_GuiSmallButton(412, x + 15, y + 165, 20, 15, "-10"));
+			}
 		}
 		setTextureValue();
 		selectInit();
@@ -199,12 +206,19 @@ public class PFLM_GuiKeyControls extends
     	{
     		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
     			mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]--;
+    			if ((mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeAction
+    					&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] <= modeActionLast + 1)
+    					| (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < 0
+    					&& changeModeMax == modeActionLast + 1)) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
+    			//modeを増やしたときに問題ないかチェックする
     		} else {
     			mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]++;
+    			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeAction
+    					&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] <= modeActionLast) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeActionLast + 1;
     		}
-    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > changeModeMax) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = 0;
+    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] >= changeModeMax) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = 0;
     		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < 0) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = changeModeMax;
-    		//mod_PFLM_PlayerFormLittleMaid.clearPlayers();
+    		//Modchu_Debug.mDebug("mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]="+mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]);
     		initGui();
     	}
     	//select--
@@ -257,6 +271,34 @@ public class PFLM_GuiKeyControls extends
     	if(guibutton.id == 408)
     	{
     		select = select < mod_PFLM_PlayerFormLittleMaid.maxShortcutKeys - 10 ? select + 10 : mod_PFLM_PlayerFormLittleMaid.maxShortcutKeys - 1;
+    		initGui();
+    	}
+    	//Action++
+    	if(guibutton.id == 409)
+    	{
+    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]++;
+    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeActionLast) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
+    		initGui();
+    	}
+    	//Action--
+    	if(guibutton.id == 410)
+    	{
+    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]--;
+    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < modeAction) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeActionLast;
+    		initGui();
+    	}
+    	//Action+10
+    	if(guibutton.id == 411)
+    	{
+    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] + 10;
+    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeActionLast) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeActionLast;
+    		initGui();
+    	}
+    	//Action-10
+    	if(guibutton.id == 412)
+    	{
+    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] - 10;
+    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < modeAction) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
     		initGui();
     	}
     }

@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL12;
 
 public class PFLM_RenderPlayer extends RenderPlayer
 {
-	public static HashMap playerData = new HashMap();
+	public static HashMap<Entity, PFLM_ModelData> playerData = new HashMap();
 	protected static ModelPlayerFormLittleMaidBaseBiped modelBasicOrig[];
 	public static String[] armorFilenamePrefix;
 	private static Minecraft mc = Minecraft.getMinecraft();
@@ -64,36 +64,21 @@ public class PFLM_RenderPlayer extends RenderPlayer
 //-@-b181
     		byte0 = (byte) (is.isItemEnchanted() ? 15 : 1);
 //@-@b181
-    		armorTextureSetting(modelDataPlayerFormLittleMaid, is, i);
+    		armorTextureSetting(entityplayer, modelDataPlayerFormLittleMaid, is, i);
     	}
     	return byte0;
     }
 
-    private void armorTextureSetting(PFLM_ModelData modelDataPlayerFormLittleMaid, ItemStack is, int i) {
+    private void armorTextureSetting(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid, ItemStack is, int i) {
     	int i2 = i;
     	String t = modelDataPlayerFormLittleMaid.modelArmorName;
     	//Modchu_Debug.mDebug("setArmorModel t="+t);
     	boolean isBiped = ModelPlayerFormLittleMaid_Biped.class.isInstance(modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter);
     	if (t != null) ;else t = isBiped ? "Biped" : "default";
-    	if (modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter != null) {
+    	if (modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter != null
+    			&& modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner != null) {
     	} else {
-    		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(t);
-    		Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-    		if (ltb != null) {
-    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) models[2];
-    		} else {
-    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = modelDataPlayerFormLittleMaid.isPlayer ? modelBasicOrig[2] : t.equalsIgnoreCase("Biped") ? new ModelPlayerFormLittleMaid_Biped(1.0F) : new ModelPlayerFormLittleMaid(0.5F);
-    		}
-    	}
-    	if (modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner != null) {
-    	} else {
-    		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(t);
-    		Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-    		if (ltb != null) {
-    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) models[1];
-    		} else {
-    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = modelDataPlayerFormLittleMaid.isPlayer ? modelBasicOrig[1] : isBiped ? new ModelPlayerFormLittleMaid_Biped(0.5F) : new ModelPlayerFormLittleMaid(0.1F);
-    		}
+    		modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, t);
     	}
     	if (isBiped) {
     		ItemArmor itemarmor = null;
@@ -1015,7 +1000,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     public static PFLM_ModelData getPlayerData(EntityPlayer entityplayer)
     {
     	if (entityplayer != null) ;else return null;
-    	PFLM_ModelData modelDataPlayerFormLittleMaid = (PFLM_ModelData)playerData.get(entityplayer);
+    	PFLM_ModelData modelDataPlayerFormLittleMaid = playerData.get(entityplayer);
 
     	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return null;
     	boolean b = false;
@@ -1070,7 +1055,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	case skinMode_Player:
     		entityplayer.skinUrl = mc.thePlayer.skinUrl;
     		entityplayer.texture = mc.thePlayer.texture;
-    		modelDataPlayerFormLittleMaid = (PFLM_ModelData)playerData.get(mc.thePlayer);
+    		modelDataPlayerFormLittleMaid = playerData.get(mc.thePlayer);
     		break;
     	case skinMode_OthersSettingOffline:
     		if (mod_PFLM_PlayerFormLittleMaid.othersTextureName != null) {} else mod_PFLM_PlayerFormLittleMaid.othersTextureName = "default";
@@ -1121,31 +1106,16 @@ public class PFLM_RenderPlayer extends RenderPlayer
 					String s2 = t[0];
 					Modchu_Debug.mDebug("@@@@loadPlayerData modelName="+s2);
 					modelDataPlayerFormLittleMaid.modelMain.textureOuter[0] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(s2, Integer.valueOf(t[2]));
-					Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s2);
-			    	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-					if (ltb != null) {
-						modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[0] != null ? models[0] : new ModelPlayerFormLittleMaid(0.0F));
-					} else {
-						modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = new ModelPlayerFormLittleMaid(0.0F);
-					}
+					modelInit(entityplayer, modelDataPlayerFormLittleMaid, s2);
 					s2 = t[1];
 					modelDataPlayerFormLittleMaid.modelArmorName = t[1];
-					s2 = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(s2, "_");
-					ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s2);
-			    	models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-					if (ltb != null) {
-						modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[1] != null ? models[1] : new ModelPlayerFormLittleMaid(0.5F));
-						modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[2] != null ? models[2] : new ModelPlayerFormLittleMaid(0.1F));
-					} else {
-						modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = new ModelPlayerFormLittleMaid(0.5F);
-						modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = new ModelPlayerFormLittleMaid(0.1F);
-					}
+					modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, s2);
 					modelDataPlayerFormLittleMaid.handedness = othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5]));
 					modelDataPlayerFormLittleMaid.modelScale = Float.valueOf(t[3]);
 					break;
 				case PFLM_GuiOthersPlayerIndividualCustomize.modePlayerOffline:
 					modelDataPlayerFormLittleMaid.skinMode = skinMode_PlayerOffline;
-					skinMode_PlayerOfflineSetting(modelDataPlayerFormLittleMaid);
+					skinMode_PlayerOfflineSetting(entityplayer, modelDataPlayerFormLittleMaid);
 					modelDataPlayerFormLittleMaid.handedness = playerHandednessSetting();
 					modelDataPlayerFormLittleMaid.modelScale = PFLM_Gui.modelScale;
 					break;
@@ -1156,7 +1126,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 					break;
 				case PFLM_GuiOthersPlayerIndividualCustomize.modeRandom:
 					modelDataPlayerFormLittleMaid.skinMode = skinMode_Random;
-					skinMode_RandomSetting(modelDataPlayerFormLittleMaid);
+					skinMode_RandomSetting(entityplayer, modelDataPlayerFormLittleMaid);
 					modelDataPlayerFormLittleMaid.handedness = othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5]));
 					modelDataPlayerFormLittleMaid.modelScale = Float.valueOf(t[3]);
 					break;
@@ -1177,33 +1147,17 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				case PFLM_GuiOthersPlayer.modeOthersSettingOffline:
 					modelDataPlayerFormLittleMaid.skinMode = skinMode_OthersSettingOffline;
 					String s = mod_PFLM_PlayerFormLittleMaid.othersTextureName;
-					s = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(s, "_");
-					Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s);
-			    	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-					if (ltb != null) {
-						modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[0] != null ? models[0] : new ModelPlayerFormLittleMaid(0.0F));
-					} else {
-						modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = new ModelPlayerFormLittleMaid(0.0F);
-					}
+					modelInit(entityplayer, modelDataPlayerFormLittleMaid, s);
 					s = mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName;
 					modelDataPlayerFormLittleMaid.modelArmorName = mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName;
-					s = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(s, "_");
-					ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s);
-					models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-					if (ltb != null) {
-						modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[1] != null ? models[1] : new ModelPlayerFormLittleMaid(0.5F));
-						modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[2] != null ? models[2] : new ModelPlayerFormLittleMaid(0.1F));
-					} else {
-						modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = new ModelPlayerFormLittleMaid(0.5F);
-						modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = new ModelPlayerFormLittleMaid(0.1F);
-					}
+					modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, s);
 					modelDataPlayerFormLittleMaid.handedness = othersPlayerHandednessSetting();
 					modelDataPlayerFormLittleMaid.modelScale = mod_PFLM_PlayerFormLittleMaid.othersModelScale;
 					Modchu_Debug.mDebug("modelDataPlayerFormLittleMaid.handedness="+modelDataPlayerFormLittleMaid.handedness);
 					break;
 				case PFLM_GuiOthersPlayer.modePlayerOffline:
 					modelDataPlayerFormLittleMaid.skinMode = skinMode_PlayerOffline;
-					skinMode_PlayerOfflineSetting(modelDataPlayerFormLittleMaid);
+					skinMode_PlayerOfflineSetting(entityplayer, modelDataPlayerFormLittleMaid);
 					modelDataPlayerFormLittleMaid.handedness = playerHandednessSetting();
 					modelDataPlayerFormLittleMaid.modelScale = PFLM_Gui.modelScale;
 					break;
@@ -1214,7 +1168,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 					break;
 				case PFLM_GuiOthersPlayer.modeRandom:
 					modelDataPlayerFormLittleMaid.skinMode = skinMode_Random;
-					skinMode_RandomSetting(modelDataPlayerFormLittleMaid);
+					skinMode_RandomSetting(entityplayer, modelDataPlayerFormLittleMaid);
 					modelDataPlayerFormLittleMaid.handedness = othersPlayerHandednessSetting();
 					modelDataPlayerFormLittleMaid.modelScale = mod_PFLM_PlayerFormLittleMaid.othersModelScale;
 					break;
@@ -1229,7 +1183,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 			modelDataPlayerFormLittleMaid.handedness = playerHandednessSetting();
 			if (mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeRandom) {
 				modelDataPlayerFormLittleMaid.skinMode = skinMode_Random;
-				skinMode_RandomSetting(modelDataPlayerFormLittleMaid);
+				skinMode_RandomSetting(entityplayer, modelDataPlayerFormLittleMaid);
 				modelDataPlayerFormLittleMaid.initFlag = 2;
 				return modelDataPlayerFormLittleMaid;
 			}
@@ -1319,6 +1273,18 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		return checkSkin(entityplayer, bufferedimage, modelDataPlayerFormLittleMaid);
 	}
 
+	private static void modelInit(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid, String s) {
+		Object[] models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entityplayer, s, false);
+		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[0] != null ? models[0] : new ModelPlayerFormLittleMaid(0.0F));
+	}
+
+	private static void modelArmorInit(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid, String s) {
+		Object[] models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entityplayer, s, false);
+		float[] f1 = mod_PFLM_PlayerFormLittleMaid.getArmorModelsSize(models[0]);
+		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[1] != null ? models[1] : new ModelPlayerFormLittleMaid(f1[0]));
+		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[2] != null ? models[2] : new ModelPlayerFormLittleMaid(f1[1]));
+	}
+
 	private static int playerHandednessSetting() {
 		return mod_PFLM_PlayerFormLittleMaid.handednessMode == -1 ? rnd.nextInt(2) : mod_PFLM_PlayerFormLittleMaid.handednessMode;
 	}
@@ -1338,46 +1304,11 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		if (modelDataPlayerFormLittleMaid.isPlayer
 				&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOffline
 				| modelDataPlayerFormLittleMaid.skinMode == skinMode_offline) {
-			if (modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = null;
-			Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(mod_PFLM_PlayerFormLittleMaid.textureName);
-			Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-			if (ltb != null) {
-				if (modelDataPlayerFormLittleMaid.isPlayer) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner =
-						(ModelPlayerFormLittleMaidBaseBiped) (models[0] == null ? modelBasicOrig[0] : models[0]);
-				else modelDataPlayerFormLittleMaid.modelMain.modelArmorInner =
-						(ModelPlayerFormLittleMaidBaseBiped) (models[0] == null ? new ModelPlayerFormLittleMaid(0.0F) : models[0]);
-				Modchu_Debug.mDebug((new StringBuilder()).append("offlineMode mainModel ok. modelDataPlayerFormLittleMaid.textureName = ").append(mod_PFLM_PlayerFormLittleMaid.textureName).toString());
-			} else {
-				Modchu_Debug.mDebug((new StringBuilder()).append("offlineMode mainModel null!! modelDataPlayerFormLittleMaid.textureName = ").append(mod_PFLM_PlayerFormLittleMaid.textureName).toString());
-			}
-			if (modelDataPlayerFormLittleMaid.modelMain.modelArmorInner == null) {
-				modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = new ModelPlayerFormLittleMaid(0.0F);
-			}
-			if (modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter != null) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = null;
+			//if (modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = null;
+			//if (modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter != null) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = null;
+			modelInit(entityplayer, modelDataPlayerFormLittleMaid, mod_PFLM_PlayerFormLittleMaid.textureName);
 			modelDataPlayerFormLittleMaid.modelArmorName = mod_PFLM_PlayerFormLittleMaid.textureArmorName;
-			float f1[] = modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.getArmorModelsSize();
-			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(mod_PFLM_PlayerFormLittleMaid.textureArmorName);
-			models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-			if (ltb != null
-					&& mod_PFLM_PlayerFormLittleMaid.getTextureBoxHasArmor(ltb)) {
-				if (modelDataPlayerFormLittleMaid.isPlayer) {
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[1] != null ? models[1] : modelBasicOrig[1]);
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[2] != null ? models[2] : modelBasicOrig[2]);
-				} else {
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[1] != null ? models[1] : new ModelPlayerFormLittleMaid(f1[0]));
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[2] != null ? models[2] : new ModelPlayerFormLittleMaid(f1[1]));
-				}
-			}
-			if (modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter == null) {
-				if (ModelPlayerFormLittleMaid_Biped.class.isInstance(modelDataPlayerFormLittleMaid.modelMain.modelArmorInner)) {
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = new ModelPlayerFormLittleMaid_Biped(f1[0]);
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = new ModelPlayerFormLittleMaid_Biped(f1[1]);
-				} else {
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = new ModelPlayerFormLittleMaid(f1[0]);
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = new ModelPlayerFormLittleMaid(f1[1]);
-				}
-				Modchu_Debug.mDebug((new StringBuilder()).append("offlineMode modelFATT.modelArmorOuter == null mod_PFLM_PlayerFormLittleMaid.textureArmorName = ").append(mod_PFLM_PlayerFormLittleMaid.textureArmorName).toString());
-			}
+			modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
 			modelDataPlayerFormLittleMaid.skinMode = skinMode_offline;
 			((ModelPlayerFormLittleMaidBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isPlayer = ((ModelPlayerFormLittleMaidBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isPlayer =
 					((ModelPlayerFormLittleMaidBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isPlayer = modelDataPlayerFormLittleMaid.isPlayer = entityplayer.username == mc.thePlayer.username;
@@ -1435,60 +1366,9 @@ public class PFLM_RenderPlayer extends RenderPlayer
 			modelDataPlayerFormLittleMaid.modelMain.textureOuter[0] = null;
 		}
 
-		if (textureName != null)
-		{
-			Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(textureName);
-			Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-			if (ltb != null) {
-				if (modelDataPlayerFormLittleMaid.isPlayer) {
-					modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[0] == null ? modelBasicOrig[0] : models[0]);
-				} else {
-					modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[0] == null ? new ModelPlayerFormLittleMaid(0.0F) : models[0]);
-				}
-			}
-			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(modelDataPlayerFormLittleMaid.modelArmorName);
-			models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-			if (ltb != null
-					&& mod_PFLM_PlayerFormLittleMaid.getTextureBoxHasArmor(ltb)
-					&& modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null) {
-				float[] f1 = modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.getArmorModelsSize();
-				if (modelDataPlayerFormLittleMaid.isPlayer) {
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[1] == null ? modelBasicOrig[1] : models[1]);
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[2] == null ? modelBasicOrig[2] : models[2]);
-				} else {
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[1] == null ? new ModelPlayerFormLittleMaid(f1[0]) : models[1]);
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[2] == null ? new ModelPlayerFormLittleMaid(f1[1]) : models[2]);
-				}
-			}
-			if (modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner == null) {
-				Modchu_Debug.Debug((new StringBuilder()).append("mainModel == null modelDataPlayerFormLittleMaid.textureName = ").append(textureName).toString());
-				modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = new ModelPlayerFormLittleMaid(0.5F);
-				modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = new ModelPlayerFormLittleMaid(0.1F);
-			}
-		}
+		if (textureName != null) modelInit(entityplayer, modelDataPlayerFormLittleMaid, textureName);
 		Modchu_Debug.Debug((new StringBuilder()).append("checkSkin Armor = ").append(s[2]).toString());
-		if (modelDataPlayerFormLittleMaid.modelArmorName != null)
-		{
-			Object amodelPlayerFormLittleMaid[];
-			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = null;
-			String s1 = modelDataPlayerFormLittleMaid.modelArmorName;
-			Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
-			Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-			if (ltb != null) {
-				if (modelDataPlayerFormLittleMaid.isPlayer) {
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[1] == null ? modelBasicOrig[1] : models[1]);
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[2] == null ? modelBasicOrig[2] : models[2]);
-				} else {
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[1] == null ? new ModelPlayerFormLittleMaid(0.1F) : models[1]);
-					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[2] == null ? new ModelPlayerFormLittleMaid(0.5F) : models[2]);
-				}
-			}
-			if (modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter == null) {
-				modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = ModelPlayerFormLittleMaid_Biped.class.isInstance(modelDataPlayerFormLittleMaid.modelMain.modelArmorInner) ? new ModelPlayerFormLittleMaid_Biped(1.0F) : new ModelPlayerFormLittleMaid(0.5F);
-				modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = ModelPlayerFormLittleMaid_Biped.class.isInstance(modelDataPlayerFormLittleMaid.modelMain.modelArmorInner) ? new ModelPlayerFormLittleMaid_Biped(0.5F) : new ModelPlayerFormLittleMaid(0.1F);
-				Modchu_Debug.Debug("Armor new default");
-			}
-		}
+		if (modelDataPlayerFormLittleMaid.modelArmorName != null) modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, modelDataPlayerFormLittleMaid.modelArmorName);
 		Modchu_Debug.Debug((new StringBuilder()).append("modelDataPlayerFormLittleMaid.textureName = ").append(textureName).toString());
 
 		((ModelPlayerFormLittleMaidBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isPlayer = ((ModelPlayerFormLittleMaidBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isPlayer =
@@ -1839,68 +1719,37 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	return f;
     }
 
-    private static void skinMode_PlayerOfflineSetting(
-    		PFLM_ModelData modelDataPlayerFormLittleMaid) {
+    private static void skinMode_PlayerOfflineSetting(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid) {
     	if (mod_PFLM_PlayerFormLittleMaid.textureName == null
     			| mod_PFLM_PlayerFormLittleMaid.textureName.isEmpty()) mod_PFLM_PlayerFormLittleMaid.textureName = "Biped_Biped";
     	if (mod_PFLM_PlayerFormLittleMaid.textureArmorName == null
     			| mod_PFLM_PlayerFormLittleMaid.textureArmorName.isEmpty()) mod_PFLM_PlayerFormLittleMaid.textureArmorName = "Biped_Biped";
     	modelDataPlayerFormLittleMaid.modelMain.textureOuter[0] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor);
     	String s1 = mod_PFLM_PlayerFormLittleMaid.textureName;
-    	s1 = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(s1, "_");
-    	Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
-    	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-    	if (ltb != null) {
-    		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[0] != null ? models[0] : new ModelPlayerFormLittleMaid(0.0F));
-    	} else {
-    		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = new ModelPlayerFormLittleMaid(0.0F);
-    	}
+    	modelInit(entityplayer, modelDataPlayerFormLittleMaid, s1);
     	s1 = mod_PFLM_PlayerFormLittleMaid.textureArmorName;
     	modelDataPlayerFormLittleMaid.modelArmorName = mod_PFLM_PlayerFormLittleMaid.textureArmorName;
-    	s1 = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(s1, "_");
-    	ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
-    	models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-    	if (ltb != null) {
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[1] != null ? models[1] : new ModelPlayerFormLittleMaid(0.5F));
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[2] != null ? models[2] : new ModelPlayerFormLittleMaid(0.1F));
-    	} else {
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = new ModelPlayerFormLittleMaid(0.5F);
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = new ModelPlayerFormLittleMaid(0.1F);
-    	}
+    	modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, s1);
     }
 
-    private static void skinMode_RandomSetting(
-    		PFLM_ModelData modelDataPlayerFormLittleMaid) {
-    	int i = rnd.nextInt(16);
-    	int j = rnd.nextInt(mod_PFLM_PlayerFormLittleMaid.textureManagerTexturesSize());
-    	String s3 = mod_PFLM_PlayerFormLittleMaid.getPackege(i, j);
+    private static void skinMode_RandomSetting(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid) {
+    	String s3 = null;
+    	String s4 = null;
+    	for(int i1 = 0; s4 == null && i1 < 50; i1++) {
+    		int i = rnd.nextInt(16);
+    		int j = rnd.nextInt(mod_PFLM_PlayerFormLittleMaid.textureManagerTexturesSize());
+    		s3 = mod_PFLM_PlayerFormLittleMaid.getPackege(i, j);
+    		mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(s3, i);
+    		s4 = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(s3, i);
+    		if (i1 == 49) return;
+    	}
+    	modelDataPlayerFormLittleMaid.modelMain.textureOuter[0] = s4;
     	Modchu_Debug.Debug("Random modelPackege="+s3);
-    	modelDataPlayerFormLittleMaid.modelMain.textureOuter[0] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(s3, i);
+    	//Modchu_Debug.mDebug("Random s4="+s4);
     	String s1 = mod_PFLM_PlayerFormLittleMaid.getArmorName(s3);
     	modelDataPlayerFormLittleMaid.modelArmorName = s1;
-		s3 = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(s3, "_");
-    	Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s3);
-    	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-    	if (ltb != null) {
-    		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[0] != null ? models[0] : new ModelPlayerFormLittleMaid(0.0F));
-    	} else {
-    		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = new ModelPlayerFormLittleMaid(0.0F);
-    	}
-    	s1 = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(s1, "_");
-    	ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
-    	models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-    	Modchu_Debug.Debug("Random modelMap.get="+s1);
-    	if (ltb != null) {
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) (models[1] != null
-					&& models[0] instanceof ModelPlayerFormLittleMaidBaseBiped ? models[1] : new ModelPlayerFormLittleMaid(0.5F));
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) (models[2] != null
-					&& models[0] instanceof ModelPlayerFormLittleMaidBaseBiped ? models[2] : new ModelPlayerFormLittleMaid(0.1F));
-    		Modchu_Debug.Debug("Random modelArmorName="+modelDataPlayerFormLittleMaid.modelArmorName);
-    	} else {
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner = new ModelPlayerFormLittleMaid(0.5F);
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter = new ModelPlayerFormLittleMaid(0.1F);
-    		Modchu_Debug.Debug("Random modelArmorName=default");
-    	}
+    	modelInit(entityplayer, modelDataPlayerFormLittleMaid, s3);
+    	modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, s1);
     	if (modelDataPlayerFormLittleMaid.isPlayer) {
     		mod_PFLM_PlayerFormLittleMaid.textureModel[0] = modelDataPlayerFormLittleMaid.modelMain.modelArmorInner;
     		mod_PFLM_PlayerFormLittleMaid.textureModel[1] = modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner;
