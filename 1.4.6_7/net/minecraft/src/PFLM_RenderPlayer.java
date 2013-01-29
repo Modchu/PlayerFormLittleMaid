@@ -656,6 +656,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData(entityplayer);
     	if (modelDataPlayerFormLittleMaid != null) {} else return;
     	if (modelDataPlayerFormLittleMaid.changeModelFlag) {
+    		((ModelPlayerFormLittleMaidBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).showPartsInit();
     		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.changeModel(entityplayer);
     		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.changeModel(entityplayer);
     		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.changeModel(entityplayer);
@@ -1025,7 +1026,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	}
     	switch (modelDataPlayerFormLittleMaid.skinMode) {
     	case skinMode_online:
-    		entityplayer.skinUrl = "http://s3.amazonaws.com/MinecraftSkins/" + entityplayer.username + ".png";
+    		entityplayer.skinUrl = "http://skins.minecraft.net/MinecraftSkins/" + entityplayer.username + ".png";
     		entityplayer.texture = null;
     		if (modelDataPlayerFormLittleMaid.modelMain != null
     				&& modelDataPlayerFormLittleMaid.modelMain.textureOuter != null) modelDataPlayerFormLittleMaid.modelMain.textureOuter[0] = null;
@@ -1191,7 +1192,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		if (entityplayer.skinUrl == null) {
 			if (mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOnline
 				| !modelDataPlayerFormLittleMaid.isPlayer) {
-				entityplayer.skinUrl = (new StringBuilder()).append("http://s3.amazonaws.com/MinecraftSkins/").append(entityplayer.username).append(".png").toString();
+				entityplayer.skinUrl = (new StringBuilder()).append("http://skins.minecraft.net/MinecraftSkins/").append(entityplayer.username).append(".png").toString();
 			}
 		}
 		boolean er = false;
@@ -1203,7 +1204,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 					&& modelDataPlayerFormLittleMaid.skinMode == skinMode_online)) {
 				Modchu_Debug.Debug((new StringBuilder()).append("new model read username = ").append(entityplayer.username).toString());
 				if (modelDataPlayerFormLittleMaid.skinMode == skinMode_PlayerOnline) {
-					entityplayer.skinUrl = (new StringBuilder()).append("http://s3.amazonaws.com/MinecraftSkins/").append(mc.thePlayer.username).append(".png").toString();
+					entityplayer.skinUrl = (new StringBuilder()).append("http://skins.minecraft.net/MinecraftSkins/").append(mc.thePlayer.username).append(".png").toString();
 				}
 				URL url = new URL(entityplayer.skinUrl);
 				bufferedimage = ImageIO.read(url);

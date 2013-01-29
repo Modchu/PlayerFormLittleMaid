@@ -184,7 +184,11 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 			entityPlayerFormLittleMaidDummy.texture = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor);
 			//String s4 = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(entityPlayerFormLittleMaidDummy.textureName, "_");
 			Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(entityPlayerFormLittleMaidDummy.textureName);
-			entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+			if (ltb != null) entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+			else {
+				ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox("default");
+				if (ltb != null) entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+			}
 			entityPlayerFormLittleMaidDummy.textureArmorName = modelSelectMode % 2 == 0 ? "" : mod_PFLM_PlayerFormLittleMaid.getTextureBoxPackegeName(ltb);
 			StringBuilder s = (new StringBuilder()).append("TextureName : ");
 	    	//StringBuilder s1 = (new StringBuilder()).append("ArmorName : ");
@@ -233,9 +237,15 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 		if (i1 < 0
 				| i1 >= mod_PFLM_PlayerFormLittleMaid.textureManagerTexturesSize()) return;
 		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(i1);
-		String packgeName = mod_PFLM_PlayerFormLittleMaid.getTextureBoxPackegeName(ltb);
+		String packgeName = "default";
+		if (ltb != null) packgeName = mod_PFLM_PlayerFormLittleMaid.getTextureBoxPackegeName(ltb);
+		else {
+			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox("default");
+			if (ltb != null) packgeName = mod_PFLM_PlayerFormLittleMaid.getTextureBoxPackegeName(ltb);
+		}
 		entityPlayerFormLittleMaidDummy.textureName = packgeName;
-		if (entityPlayerFormLittleMaidDummy.textureName == null) return;
+		if (entityPlayerFormLittleMaidDummy.textureName != null
+				&& ltb != null) ;else return;
 		entityPlayerFormLittleMaidDummy.texture = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor);
 		entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
 		entityPlayerFormLittleMaidDummy.textureArmorName = modelSelectMode % 2 == 0 ? "" : packgeName;

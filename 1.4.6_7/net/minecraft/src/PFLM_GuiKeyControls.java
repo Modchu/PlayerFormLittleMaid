@@ -209,8 +209,9 @@ public class PFLM_GuiKeyControls extends
     			if ((mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeAction
     					&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] <= modeActionLast + 1)
     					| (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < 0
-    					&& changeModeMax == modeActionLast + 1)) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
-    			//modeを増やしたときに問題ないかチェックする
+    					//TODO modeを増やしたときに問題ないかチェックする
+    					//&& changeModeMax == modeActionLast + 1
+    					)) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
     		} else {
     			mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]++;
     			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeAction

@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,36 +33,36 @@ public class PFLM_Gui extends GuiScreen {
 
 	private float xSize_lo;
 	private float ySize_lo;
-	public static boolean colorReverse = false;
-	public static EntityLiving entityliving;
-	protected boolean closePlayerToSpawn = false;
-	public static float modelScale = 0.0F;
-	protected boolean partsSetDefault = false;
-	protected boolean modelScaleButton = false;
-	public static boolean guiMode = false;
-	public static final int partsNumberMax = 79;
-	public static boolean partsButton = false;
-	public static int partsSetFlag = 1;
-	public static boolean showModelFlag = false;
-	public static boolean partsSaveFlag = false;
-	public static String parts[] = new String[partsNumberMax];
-	public static boolean[] showModel = new boolean[partsNumberMax];
-   	boolean result = false;
-	private boolean imageWriteComplete = false;
-	//private String modeltype = null;
-	private String modelArmorName = null;
 	private BufferedImage bufferedimage;
 	private BufferedImage bufferedimage1;
-	private boolean imageWriteFail = false;
-	private String tagSetFileName = null;
-	private boolean bufferedimageMode = false;
-	private static double tempYOffset;
-	private boolean TempYOffsetInit = false;
 	private World popWorld;
 	private Entity drawEntity = null;
+	private String modelArmorName = null;
+	private String tagSetFileName = null;
+	private static double tempYOffset;
+	private boolean imageWriteComplete = false;
+	private boolean imageWriteFail = false;
+	private boolean bufferedimageMode = false;
+	private boolean TempYOffsetInit = false;
 	private boolean drawEntitySetFlag = true;
 	private int scrollY = 0;
 	private int handedness = 0;
+	protected boolean closePlayerToSpawn = false;
+	protected boolean partsSetDefault = false;
+	protected boolean modelScaleButton = false;
+	protected boolean result = false;
+	public static EntityLiving entityliving;
+	public static boolean colorReverse = false;
+	public static boolean guiMode = false;
+	public static boolean partsButton = false;
+	public static boolean showModelFlag = false;
+	public static boolean partsSaveFlag = false;
+	public static float modelScale = 0.0F;
+	public static int partsNumberMax = 128;
+	public static int partsSetFlag = 1;
+	public static String parts[] = new String[partsNumberMax];
+	public static boolean[] showModel = new boolean[partsNumberMax];
+	public static HashMap<String, String> showPartsReneme = new HashMap();
 	public static int setModel = 0;
 	public static int setArmor = 0;
 	public static int setColor = 0;
@@ -285,7 +286,9 @@ public class PFLM_Gui extends GuiScreen {
 			j = i % 2 == 0 ? 0 : 1;
 			x = width / 2 - 200 + (j * 70);
 			y = j == 0 ? 13 + (15 * i / 2) - scrollY : 20 + (15 * i / 2 - 15) - scrollY;
-			controlList.add(new Modchu_GuiSmallButton(100 + i - 1, x, y, 70, 15, parts[i - 1]+":"+s));
+			String s1 = parts[i - 1];
+			if (showPartsReneme.containsKey(s1)) s1 = showPartsReneme.get(s1);
+			controlList.add(new Modchu_GuiSmallButton(10000 + i - 1, x, y, 70, 15, s1 + ":" + s));
 		}
 	}
 
@@ -595,10 +598,10 @@ public class PFLM_Gui extends GuiScreen {
     		return;
     	}
     	//PartsButton
-    	if(guibutton.id >= 100
-    			&& guibutton.id <= 199)
+    	if(guibutton.id >= 10000
+    			&& guibutton.id <= 19999)
     	{
-    		int i = guibutton.id - 100;
+    		int i = guibutton.id - 10000;
     		showModel[i] = showModel[i] ? false : true;
     		showModelFlag = true;
     		partsSaveFlag = true;
@@ -1191,23 +1194,69 @@ public class PFLM_Gui extends GuiScreen {
 		return s;
     }
 
-	public static int setParts(String[] s, int k) {
+    public static int getShowModel(String s) {
+    	for(int i = 0;i < parts.length
+    			&& parts[i] != null; i++) {
+    		if (parts[i].equalsIgnoreCase(s)) {
+    			if (showModel[i]) return 1;
+    			else return 0;
+    		}
+    	}
+    	return -1;
+    }
+
+    public static int setShowModel(String s, boolean b) {
+    	for(int i = 0;i < parts.length
+    			&& parts[i] != null; i++) {
+    		if (parts[i].equalsIgnoreCase(s)) {
+    			showModel[i] = b;
+    			return 1;
+    		}
+    	}
+    	return -1;
+    }
+
+    public static int setParts(List<String> list, List<String> hideList, int k) {
     	boolean setPartsNumberFlag = false;
     	int j = 0;
-		for (int i = 0; i + k < partsNumberMax ; i++)
-		{
-			if(i < s.length) {
-				parts[i + k] = s[i];
-				showModel[i + k] = true;
-			} else {
-				if(!setPartsNumberFlag) {
-					j = i + k;
-					setPartsNumberFlag = true;
-				}
-				parts[i + k] = null;
-				showModel[i + k] = false;
-			}
-		}
-		return j;
-	}
+    	if (parts.length < list.size()) {
+    		partsNumberMax = list.size();
+    		parts = new String[partsNumberMax];
+    		showModel = new boolean[partsNumberMax];
+    	}
+    	String s = null;
+    	boolean b = false;
+    	int listCount = 0;
+    	for (int i = 0; i + k < partsNumberMax ; i++) {
+    		if(listCount < list.size()) s = list.get(listCount);
+    		else s = null;
+    		listCount++;
+    		b = false;
+    		//if (s != null) Modchu_Debug.mDebug("setParts s ="+s);
+    		if (!hideList.isEmpty()) {
+    			for (int j1 = 0; j1 < hideList.size()
+    					&& !b; j1++) {
+    				b = hideList.get(j1).equalsIgnoreCase(s);
+    			}
+    		}
+    		if(s != null
+    				&& !b) {
+    			parts[i + k] = s;
+    			showModel[i + k] = true;
+    		} else {
+    			if (b) {
+    				i--;
+    				//Modchu_Debug.mDebug("setParts hideList true. s ="+s);
+    				continue;
+    			}
+    			if(!setPartsNumberFlag) {
+    				j = i + k;
+    				setPartsNumberFlag = true;
+    			}
+    			parts[i + k] = null;
+    			showModel[i + k] = false;
+    		}
+    	}
+    	return j;
+    }
 }

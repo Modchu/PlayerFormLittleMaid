@@ -1997,11 +1997,17 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		textureModel[1] = null;
 		textureModel[2] = null;
 		Object ltb = getTextureBox(textureName);
-		Object[] models = getTextureBoxModels(ltb);
-		if (ltb != null
+		Object[] models = null;
+		if (ltb != null) {
+			models = getTextureBoxModels(ltb);
+			ltb = textureBoxCheck(ltb, textureName);
+		}
+		if (models != null
 				&& models[0] != null
 				&& models[0] instanceof ModelPlayerFormLittleMaidBaseBiped) textureModel[0] = models[0];
-		else Modchu_Debug.mDebug("ltb != null or ltb.models[0] != null or ltb.models[0] instanceof ModelPlayerFormLittleMaidBaseBiped textureModel[0] textureName="+textureName);
+		else {
+			//Modchu_Debug.mDebug("ltb != null or ltb.models[0] != null or ltb.models[0] instanceof ModelPlayerFormLittleMaidBaseBiped textureModel[0] textureName="+textureName);
+		}
 		// setSizeの設定値はダミー。設定は呼び出し先で
 		if (isModelSize) {
 			setSize(0.5F, 1.35F);
@@ -2045,20 +2051,24 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		Object ltb = getTextureBox(textureArmorName);
 		if (ltb != null) {
 		} else {
-			String s1 = setArmorTexturePackege(textureArmorName, 0);
+			String s1 = setArmorTexturePackege("default", 0);
 			if (s1 != null) setTextureArmorName(s1);
+			ltb = getTextureBox(textureArmorName);
 		}
-		ltb = getTextureBox(textureArmorName);
-		Object[] models = getTextureBoxModels(ltb);
-		if (ltb != null
+		Object[] models = null;
+		if (ltb != null) {
+			models = getTextureBoxModels(ltb);
+			ltb = textureBoxCheck(ltb, textureArmorName);
+		}
+		if (models != null
 				&& getTextureBoxHasArmor(ltb)) {
 			textureModel[1] = models[1];
 			textureModel[2] = models[2];
 		} else {
 			textureArmorName = textureName.indexOf("_Biped") == -1 ? "default" : "Biped";
 			ltb = getTextureBox(textureArmorName);
-			models = getTextureBoxModels(ltb);
-			if (ltb != null
+			if (ltb != null) models = getTextureBoxModels(ltb);
+			if (models != null
 					&& getTextureBoxHasArmor(ltb)) {
 				textureModel[1] = models[1];
 				textureModel[2] = models[2];
@@ -2364,7 +2374,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				"LittleVocal_VUD1.Yukari1_VUD1.0_SR2", "VOICEROID.Yukari0_Yukari", "VOICEROID.Yukari1_Yukari", "VOICEROID.YukariS0_Yukari", "VOICEROID.YukariS1_Yukari",
 				"e11color_Elsa3", "e11under_Elsa3", "Catcher_Pawapro", "Batter_Pawapro", "b4under_Beverly4",
 				"kimono_pl_Shion", "Sword_NM", "Ar_NM", "x16_QB", "Hituji",
-				"Udonge_usagi", "neta_chu", "ColorVariation_chu", "NetaPetit_Petit", "CV_DressYukari"
+				"Udonge_usagi", "neta_chu", "ColorVariation_chu", "NetaPetit_Petit", "CV_DressYukari",
+				"e12color_Elsa3", "b14color_Beverly5"
 		};
 		Modchu_Config.writerModelList(s, textureListfile, textureList);
 	}
@@ -3424,17 +3435,18 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (ltb != null
 				&& models != null
 				&& !ModelPlayerFormLittleMaidBaseBiped.class.isInstance(models[0])) {
-			Modchu_Debug.mDebug("getTextureBox !ModelPlayerFormLittleMaidBaseBiped s="+s);
+			//Modchu_Debug.mDebug("getTextureBox !ModelPlayerFormLittleMaidBaseBiped s="+s);
 			s = lastIndexProcessing(s, "_");
 			Class c = Modchu_Reflect.loadClass(mod_pflm_playerformlittlemaid.getClassName(new StringBuilder().append("ModelPlayerFormLittleMaid_").append(s).toString()), false);
 			if (c != null) {
-				Modchu_Debug.mDebug("getTextureBox newInstance");
+				Modchu_Debug.mDebug("getTextureBox newInstance s ="+s);
 				models[0] = (ModelPlayerFormLittleMaidBaseBiped) Modchu_Reflect.newInstance(c, new Class[]{ float.class }, new Object[]{ 0.0F });
 				float[] f1 = getArmorModelsSize(models[0]);
 				models[1] = (ModelPlayerFormLittleMaidBaseBiped) Modchu_Reflect.newInstance(c, new Class[]{ float.class }, new Object[]{ f1[0] });
 				models[2] = (ModelPlayerFormLittleMaidBaseBiped) Modchu_Reflect.newInstance(c, new Class[]{ float.class }, new Object[]{ f1[1] });
 			} else {
 				//Modchu_Debug.mDebug("getTextureBox !c == null");
+				return null;
 			}
 			return ltb;
 		}
