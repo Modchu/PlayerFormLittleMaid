@@ -10,7 +10,7 @@ public class PFLM_RenderPlayerSmart extends RenderPlayer {
 	public static boolean firstPersonHandResetFlag;
 	public static boolean resetFlag;
 	public static boolean textureResetFlag;
-    public static ModelPlayerFormLittleMaidSmart modelBasicOrig[];
+    public static MultiModelSmart modelBasicOrig[];
 	public static HashMap playerData = new HashMap();
 
 	public static void clearPlayers() {

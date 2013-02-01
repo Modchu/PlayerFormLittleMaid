@@ -166,7 +166,7 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
 			if (isRiding() && !worldObj.isRemote) {
 				float f = yOffset + 0.2F;
 				if (mod_PFLM_PlayerFormLittleMaid.textureModel[0] != null)
-					f = ((ModelPlayerFormLittleMaid) mod_PFLM_PlayerFormLittleMaid.textureModel[0])
+					f = ((MultiModel) mod_PFLM_PlayerFormLittleMaid.textureModel[0])
 							.getRidingyOffset();
 				// Modchu_Debug.mDebug("getYOffset isRiding() f="+f);
 				return (double) (f);

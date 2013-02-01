@@ -250,7 +250,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 		entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
 		entityPlayerFormLittleMaidDummy.textureArmorName = modelSelectMode % 2 == 0 ? "" : packgeName;
 		//Modchu_Debug.mDebug("modelNamber="+modelNamber+" entityPlayerFormLittleMaidDummy.textureName="+entityPlayerFormLittleMaidDummy.textureName);
-		//Modchu_Debug.mDebug("drawModel entityPlayerFormLittleMaidDummy.textureName="+entityPlayerFormLittleMaidDummy.textureName+" s1="+s1);
+		//Modchu_Debug.mDebug("drawModel entityPlayerFormLittleMaidDummy.textureName="+entityPlayerFormLittleMaidDummy.textureName);
 		drawMobModel(i, j, f, entityPlayerFormLittleMaidDummy);
 	}
 

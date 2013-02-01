@@ -58,10 +58,9 @@ public class PFLM_Gui extends GuiScreen {
 	public static boolean showModelFlag = false;
 	public static boolean partsSaveFlag = false;
 	public static float modelScale = 0.0F;
-	public static int partsNumberMax = 128;
 	public static int partsSetFlag = 1;
-	public static String parts[] = new String[partsNumberMax];
-	public static boolean[] showModel = new boolean[partsNumberMax];
+	public static HashMap<String, Boolean> parts = new HashMap<String, Boolean>();
+	public static HashMap<Integer, String> showPartsNemeList = new HashMap();
 	public static HashMap<String, String> showPartsReneme = new HashMap();
 	public static int setModel = 0;
 	public static int setArmor = 0;
@@ -86,10 +85,10 @@ public class PFLM_Gui extends GuiScreen {
 			//Modchu_Debug.mDebug("PFLM_EntityPlayerDummy default");
 //-@-110
 			if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-				textureModel = new ModelPlayerFormLittleMaidSmart[3];
+				textureModel = new MultiModelSmart[3];
 			} else {
 //@-@110
-				textureModel = new ModelPlayerFormLittleMaid[3];
+				textureModel = new MultiModel[3];
 			/*110//*/}
 		}
 		if (textureArmor0 == null) textureArmor0 = new String[4];
@@ -260,10 +259,10 @@ public class PFLM_Gui extends GuiScreen {
 				&& modelScale == 0.0F) {
 //-@-110
 			if(mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-				modelScale = ((ModelPlayerFormLittleMaidSmart) mod_PFLM_PlayerFormLittleMaid.textureModel[0]).getModelScale();
+				modelScale = ((MultiModelSmart) mod_PFLM_PlayerFormLittleMaid.textureModel[0]).getModelScale();
 			} else {
 //@-@110
-				modelScale = ((ModelPlayerFormLittleMaidBaseBiped) mod_PFLM_PlayerFormLittleMaid.textureModel[0]).getModelScale();
+				modelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.textureModel[0]).getModelScale();
 			/*110//*/}
 		}
 		guiMode = true;
@@ -280,15 +279,20 @@ public class PFLM_Gui extends GuiScreen {
 		int y;
 		//Modchu_Debug.mDebug("PartsButtonAdd "+controlList.size());
 		controlList.add(new Modchu_GuiSmallButton(99, width / 2 - 200, 12 - scrollY, 70, 15, "Default"));
-		for (int i = 1; parts[i - 1] != null; i++)
-		{
-			s = showModel[i - 1] ? "ON" : "OFF";
+		String s2 = null;
+		for (int i = 1; i <= parts.size()
+				&& i <= showPartsNemeList.size(); i++) {
+			s2 = showPartsNemeList.get(i - 1);
+			if (s2 != null) ;else break;
+			s = parts.get(s2) ? "ON" : "OFF";
 			j = i % 2 == 0 ? 0 : 1;
 			x = width / 2 - 200 + (j * 70);
 			y = j == 0 ? 13 + (15 * i / 2) - scrollY : 20 + (15 * i / 2 - 15) - scrollY;
-			String s1 = parts[i - 1];
-			if (showPartsReneme.containsKey(s1)) s1 = showPartsReneme.get(s1);
-			controlList.add(new Modchu_GuiSmallButton(10000 + i - 1, x, y, 70, 15, s1 + ":" + s));
+			if (s2 != null
+					&& showPartsReneme.containsKey(s2)) {
+				s2 = showPartsReneme.get(s2);
+			}
+			controlList.add(new Modchu_GuiSmallButton(10000 + i - 1, x, y, 70, 15, s2 + ":" + s));
 		}
 	}
 
@@ -602,7 +606,9 @@ public class PFLM_Gui extends GuiScreen {
     			&& guibutton.id <= 19999)
     	{
     		int i = guibutton.id - 10000;
-    		showModel[i] = showModel[i] ? false : true;
+    		String s = showPartsNemeList.get(i);
+    		if (parts.get(s)) parts.put(s, false);
+    		else parts.put(s, true);
     		showModelFlag = true;
     		partsSaveFlag = true;
     		initGui();
@@ -645,7 +651,7 @@ public class PFLM_Gui extends GuiScreen {
     		if(i != 0) {
     			scrollY -= i * 0.25;
     			scrollY = scrollY < 0 ? 0 : scrollY;
-    			scrollY = scrollY > (partsNumberMax / 2 * 20 + 20) ? partsNumberMax / 2 * 20 + 20 : scrollY;
+    			scrollY = scrollY > (parts.size() / 2 * 20 + 20) ? parts.size() / 2 * 20 + 20 : scrollY;
     			initGui();
     		}
     	}
@@ -656,7 +662,7 @@ public class PFLM_Gui extends GuiScreen {
     {
     	if(i == 200) {
     		scrollY += 30;
-    		scrollY = scrollY > (partsNumberMax / 2 * 20 + 20) ? partsNumberMax / 2 * 20 + 20 : scrollY;
+    		scrollY = scrollY > (parts.size() / 2 * 20 + 20) ? parts.size() / 2 * 20 + 20 : scrollY;
     		initGui();
     	}
     	if(i == 208) {
@@ -1195,68 +1201,37 @@ public class PFLM_Gui extends GuiScreen {
     }
 
     public static int getShowModel(String s) {
-    	for(int i = 0;i < parts.length
-    			&& parts[i] != null; i++) {
-    		if (parts[i].equalsIgnoreCase(s)) {
-    			if (showModel[i]) return 1;
-    			else return 0;
-    		}
+    	if (parts.get(s) != null) {
+    		if (parts.get(s)) return 1;
+    		return 0;
     	}
     	return -1;
     }
 
-    public static int setShowModel(String s, boolean b) {
-    	for(int i = 0;i < parts.length
-    			&& parts[i] != null; i++) {
-    		if (parts[i].equalsIgnoreCase(s)) {
-    			showModel[i] = b;
-    			return 1;
-    		}
-    	}
-    	return -1;
+    public static void setShowModel(String s, boolean b) {
+    	parts.put(s, b);
     }
 
-    public static int setParts(List<String> list, List<String> hideList, int k) {
-    	boolean setPartsNumberFlag = false;
-    	int j = 0;
-    	if (parts.length < list.size()) {
-    		partsNumberMax = list.size();
-    		parts = new String[partsNumberMax];
-    		showModel = new boolean[partsNumberMax];
-    	}
+    public static void setParts(List<String> list, List<String> hideList) {
+    	parts.clear();
+    	showPartsNemeList.clear();
     	String s = null;
     	boolean b = false;
-    	int listCount = 0;
-    	for (int i = 0; i + k < partsNumberMax ; i++) {
-    		if(listCount < list.size()) s = list.get(listCount);
-    		else s = null;
-    		listCount++;
+    	int count = 0;
+    	for (int i = 0; i < list.size() ; i++) {
+    		s = list.get(i);
     		b = false;
-    		//if (s != null) Modchu_Debug.mDebug("setParts s ="+s);
     		if (!hideList.isEmpty()) {
     			for (int j1 = 0; j1 < hideList.size()
     					&& !b; j1++) {
     				b = hideList.get(j1).equalsIgnoreCase(s);
     			}
     		}
-    		if(s != null
-    				&& !b) {
-    			parts[i + k] = s;
-    			showModel[i + k] = true;
-    		} else {
-    			if (b) {
-    				i--;
-    				//Modchu_Debug.mDebug("setParts hideList true. s ="+s);
-    				continue;
-    			}
-    			if(!setPartsNumberFlag) {
-    				j = i + k;
-    				setPartsNumberFlag = true;
-    			}
-    			parts[i + k] = null;
-    			showModel[i + k] = false;
+    		if (!b) {
+    			parts.put(s, true);
+    			showPartsNemeList.put(count, s);
+    			count++;
     		}
     	}
-    	return j;
     }
 }

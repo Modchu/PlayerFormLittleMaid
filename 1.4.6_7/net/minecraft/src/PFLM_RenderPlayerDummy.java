@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL12;
 
 public class PFLM_RenderPlayerDummy extends RenderPlayer
 {
-	protected static ModelPlayerFormLittleMaidBaseBiped modelBasicOrig[];
+	protected static MultiModelBaseBiped modelBasicOrig[];
 	public MMM_ModelDuo modelMain;
 	public MMM_ModelDuo modelFATT;
 	public static String[] armorFilenamePrefix;
@@ -28,10 +28,10 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
 		modelFATT.textureInner = new String [4];
 		modelFATT.textureOuter = new String [4];
-		modelBasicOrig = new ModelPlayerFormLittleMaid[3];
-		modelBasicOrig[0] = new ModelPlayerFormLittleMaid(0.0F);
-		modelBasicOrig[1] = new ModelPlayerFormLittleMaid(0.1F);
-		modelBasicOrig[2] = new ModelPlayerFormLittleMaid(0.5F);
+		modelBasicOrig = new MultiModel[3];
+		modelBasicOrig[0] = new MultiModel(0.0F);
+		modelBasicOrig[1] = new MultiModel(0.1F);
+		modelBasicOrig[2] = new MultiModel(0.5F);
 		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "armorFilenamePrefix");
 	}
 
@@ -58,7 +58,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     private void armorTextureSetting(EntityLiving entityliving, ItemStack is, int i) {
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	String t = entity.textureArmorName;
-    	boolean isBiped = ModelPlayerFormLittleMaid_Biped.class.isInstance(modelFATT.modelArmorOuter);
+    	boolean isBiped = MultiModel_Biped.class.isInstance(modelFATT.modelArmorOuter);
     	if (t != null) {
     		if (entity.textureName != null) {
     			if (isBiped) {
@@ -73,9 +73,9 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(t);
         	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
     		if (ltb != null) {
-    			modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped) models[2];
+    			modelFATT.modelArmorOuter = (MultiModelBaseBiped) models[2];
     		} else {
-    			modelFATT.modelArmorOuter = isBiped ? new ModelPlayerFormLittleMaid_Biped(1.0F) : new ModelPlayerFormLittleMaid(0.5F);
+    			modelFATT.modelArmorOuter = isBiped ? new MultiModel_Biped(1.0F) : new MultiModel(0.5F);
     		}
     	}
     	if (modelFATT.modelArmorInner != null) {
@@ -83,9 +83,9 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(t);
         	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
     		if (ltb != null) {
-    			modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped) models[1];
+    			modelFATT.modelArmorInner = (MultiModelBaseBiped) models[1];
     		} else {
-    			modelFATT.modelArmorInner = isBiped ? new ModelPlayerFormLittleMaid_Biped(0.5F) : new ModelPlayerFormLittleMaid(0.1F);
+    			modelFATT.modelArmorInner = isBiped ? new MultiModel_Biped(0.5F) : new MultiModel(0.1F);
     		}
     	}
     	if (isBiped) {
@@ -166,7 +166,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
 		float f1 = entity.modelScale;
 		if (f1 == 0.0F) {
-			f1 = ((ModelPlayerFormLittleMaidBaseBiped) modelMain.modelArmorInner).getModelScale();
+			f1 = ((MultiModelBaseBiped) modelMain.modelArmorInner).getModelScale();
 		}
 		GL11.glScalef(f1, f1, f1);
 	}
@@ -596,20 +596,20 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     		entityDummy.textureArmor1 = null;
     	}
     	if (flag) {
-    		modelMain.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped)
+    		modelMain.modelArmorInner = (MultiModelBaseBiped)
     				(entityDummy.textureModel[0] != null
     				&& !entityDummy.textureName.equalsIgnoreCase("default")
-					&& entityDummy.textureModel[0] instanceof ModelPlayerFormLittleMaidBaseBiped ?
+					&& entityDummy.textureModel[0] instanceof MultiModelBaseBiped ?
     						entityDummy.textureModel[0] : modelBasicOrig[0]);
-    		modelFATT.modelArmorOuter = (ModelPlayerFormLittleMaidBaseBiped)
+    		modelFATT.modelArmorOuter = (MultiModelBaseBiped)
     				(entityDummy.textureModel[1] != null
     				&& !entityDummy.textureArmorName.equalsIgnoreCase("default")
-					&& entityDummy.textureModel[1] instanceof ModelPlayerFormLittleMaidBaseBiped ?
+					&& entityDummy.textureModel[1] instanceof MultiModelBaseBiped ?
     						entityDummy.textureModel[1] : modelBasicOrig[1]);
-    		modelFATT.modelArmorInner = (ModelPlayerFormLittleMaidBaseBiped)
+    		modelFATT.modelArmorInner = (MultiModelBaseBiped)
     				(entityDummy.textureModel[2] != null
     				&& !entityDummy.textureArmorName.equalsIgnoreCase("default")
-					&& entityDummy.textureModel[2] instanceof ModelPlayerFormLittleMaidBaseBiped ?
+					&& entityDummy.textureModel[2] instanceof MultiModelBaseBiped ?
     						entityDummy.textureModel[2] : modelBasicOrig[2]);
     	} else {
     		modelMain.modelArmorInner = modelBasicOrig[0];

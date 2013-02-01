@@ -2,9 +2,9 @@ package net.minecraft.src;
 
 public class PFLM_ModelDataSmart
 {
-	public ModelPlayerFormLittleMaidSmart mainModel;
-	public ModelPlayerFormLittleMaidSmart modelArmorChestplate;
-	public ModelPlayerFormLittleMaidSmart modelArmor;
+	public MultiModelSmart mainModel;
+	public MultiModelSmart modelArmorChestplate;
+	public MultiModelSmart modelArmor;
 	public String modeltype = null;
 	public String modelArmorName = null;
 	public String texture = null;
@@ -29,8 +29,8 @@ public class PFLM_ModelDataSmart
 
 	public PFLM_ModelDataSmart()
 	{
-		mainModel = new ModelPlayerFormLittleMaidSmart_Biped(0.0F);
-		modelArmorChestplate = new ModelPlayerFormLittleMaidSmart_Biped(1.0F);
-		modelArmor = new ModelPlayerFormLittleMaidSmart_Biped(0.5F);
+		mainModel = new MultiModelSmart_Biped(0.0F);
+		modelArmorChestplate = new MultiModelSmart_Biped(1.0F);
+		modelArmor = new MultiModelSmart_Biped(0.5F);
 	}
 }

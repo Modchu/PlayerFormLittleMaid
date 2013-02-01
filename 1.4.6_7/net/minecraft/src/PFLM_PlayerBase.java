@@ -76,9 +76,9 @@ public class PFLM_PlayerBase extends PlayerBase {
 						&& mod_PFLM_PlayerFormLittleMaid.isModelSize
 						&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOffline) {
 					player.setSize(
-							((ModelPlayerFormLittleMaid) mod_PFLM_PlayerFormLittleMaid.textureModel[0])
+							((MultiModel) mod_PFLM_PlayerFormLittleMaid.textureModel[0])
 									.getWidth(),
-							((ModelPlayerFormLittleMaid) mod_PFLM_PlayerFormLittleMaid.textureModel[0])
+							((MultiModel) mod_PFLM_PlayerFormLittleMaid.textureModel[0])
 									.getHeight());
 				} else {
 					if (mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOnline
