@@ -233,15 +233,16 @@ public class PFLM_Gui extends GuiScreen {
 				}
 			}
 		}
-		if(modelScaleButton) {
-			controlList.add(new Modchu_GuiSmallButton(3, width / 2 - 170, height / 2 - 40, 50, 20, "Default"));
-			controlList.add(new Modchu_GuiSmallButton(4, width / 2 - 120, height / 2 - 40, 30, 20, "UP"));
-			controlList.add(new Modchu_GuiSmallButton(5, width / 2 - 200, height / 2 - 40, 30, 20, "Down"));
-			controlList.add(new Modchu_GuiSmallButton(6, x + 75, y + 25, 75, 15, "Close"));
+		if (mod_PFLM_PlayerFormLittleMaid.useScaleChange
+				&& modelScaleButton) {
+				controlList.add(new Modchu_GuiSmallButton(3, width / 2 - 170, height / 2 - 40, 50, 20, "Default"));
+				controlList.add(new Modchu_GuiSmallButton(4, width / 2 - 120, height / 2 - 40, 30, 20, "UP"));
+				controlList.add(new Modchu_GuiSmallButton(5, width / 2 - 200, height / 2 - 40, 30, 20, "Down"));
+				controlList.add(new Modchu_GuiSmallButton(6, x + 75, y + 25, 75, 15, "Close"));
 		} else {
 			if(!partsButton) {
-				controlList.add(new Modchu_GuiSmallButton(7, x + 75, y + 25, 75, 15, "ScaleChange"));
-				if(mod_PFLM_PlayerFormLittleMaid.isMulti
+				if (mod_PFLM_PlayerFormLittleMaid.useScaleChange) controlList.add(new Modchu_GuiSmallButton(7, x + 75, y + 25, 75, 15, "ScaleChange"));
+				if (mod_PFLM_PlayerFormLittleMaid.isMulti
 						| !mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.isRelease()) {
 					controlList.add(new Modchu_GuiSmallButton(30, x + 75, y - 5, 75, 15, "othersPlayer"));
 				}
@@ -757,7 +758,8 @@ public class PFLM_Gui extends GuiScreen {
     		s4 = (new StringBuilder()).append(s4).toString();
     		fontRenderer.drawString(s4, guiLeft, guiTop + 130, 0xffffff);
     	}
-    	if(modelScaleButton) {
+		if(mod_PFLM_PlayerFormLittleMaid.useScaleChange
+				&& modelScaleButton) {
     		String s6 = "ModelScale : "+modelScale;
     		s6 = (new StringBuilder()).append(s6).toString();
     		fontRenderer.drawString(s6, guiLeft - 140, guiTop + 30, 0xffffff);

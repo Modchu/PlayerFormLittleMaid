@@ -51,13 +51,15 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			controlList.add(new Modchu_GuiSmallButton(54, x + 40, y + 55, 15, 15, "<"));
 			controlList.add(new Modchu_GuiSmallButton(55, x + 55, y + 55, 15, 15, ">"));
 			controlList.add(new Modchu_GuiSmallButton(20, x, y + 70, 75, 15, "showArmor"));
-			if(modelScaleButton) {
-				controlList.add(new Modchu_GuiSmallButton(3, width / 2 - 140, height / 2 + 20, 50, 20, "Default"));
-				controlList.add(new Modchu_GuiSmallButton(4, width / 2 - 90, height / 2 + 20, 30, 20, "UP"));
-				controlList.add(new Modchu_GuiSmallButton(5, width / 2 - 170, height / 2 + 20, 30, 20, "Down"));
-				controlList.add(new Modchu_GuiSmallButton(6, x + 75, y + 25, 75, 15, "Close"));
-			} else {
-				controlList.add(new Modchu_GuiSmallButton(7, x + 75, y + 25, 75, 15, "ScaleChange"));
+			if (mod_PFLM_PlayerFormLittleMaid.useScaleChange) {
+				if(modelScaleButton) {
+					controlList.add(new Modchu_GuiSmallButton(3, width / 2 - 140, height / 2 + 20, 50, 20, "Default"));
+					controlList.add(new Modchu_GuiSmallButton(4, width / 2 - 90, height / 2 + 20, 30, 20, "UP"));
+					controlList.add(new Modchu_GuiSmallButton(5, width / 2 - 170, height / 2 + 20, 30, 20, "Down"));
+					controlList.add(new Modchu_GuiSmallButton(6, x + 75, y + 25, 75, 15, "Close"));
+				} else {
+					controlList.add(new Modchu_GuiSmallButton(7, x + 75, y + 25, 75, 15, "ScaleChange"));
+				}
 			}
 		}
 		setTextureValue();
@@ -248,7 +250,8 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
 		s8 = s8.append(showArmor);
 		fontRenderer.drawString(s8.toString(), guiLeft, guiTop + 120, 0xffffff);
-		if(modelScaleButton) {
+		if(mod_PFLM_PlayerFormLittleMaid.useScaleChange
+				&& modelScaleButton) {
 			String s6 = "ModelScale : "+othersModelScale;
 			s6 = (new StringBuilder()).append(s6).toString();
 			fontRenderer.drawString(s6, guiLeft - 120, guiTop + 90, 0xffffff);

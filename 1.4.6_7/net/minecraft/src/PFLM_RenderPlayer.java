@@ -167,6 +167,10 @@ public class PFLM_RenderPlayer extends RenderPlayer
      */
     protected void preRenderCallback(EntityLiving entityliving, float f)
     {
+    	if (!mod_PFLM_PlayerFormLittleMaid.useScaleChange) {
+    		super.preRenderCallback(entityliving, f);
+    		return;
+    	}
     	PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData((EntityPlayer)entityliving);
     	if (modelDataPlayerFormLittleMaid != null) {} else return;
     	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return;

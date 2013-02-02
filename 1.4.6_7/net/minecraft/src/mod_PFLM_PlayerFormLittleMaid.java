@@ -66,9 +66,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static boolean useInvisibilityArmor = false;
 	public static boolean useInvisibilityItem = false;
 	public static boolean debugReflect = false;
-	public static boolean debugReflectDetail = false;
+	public static boolean useScaleChange = true;
 	public static int handednessMode = 0;
 
+	public static boolean debugReflectDetail = false;
 	public static int changeMode = 0;
 	public static int maidColor = 0;
 	public static float setWatherFog = 0F;
@@ -2221,18 +2222,25 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				// cfgファイルが無い = 新規作成
 				String s[] = {
 						"DebugMessage=true", "DebugMessagetexture=true", "debugReflect=false", "AlphaBlend=true",
-						"Physical_BurningPlayer=0", "Physical_MeltingPlayer=0", "Physical_Hammer=1.0F",
-						"Physical_Undead=false", "Physical_HurtSound=damage.hit", "isPlayerForm=true",
-						"isPlayerAPIDebug=false", "isModelSize=false", "isClearWater=false",
-						"isVoidFog=true", "isFog=true", "isDimming=true",
+						//"Physical_BurningPlayer=0", "Physical_MeltingPlayer=0", "Physical_Hammer=1.0F",
+						//"Physical_Undead=false",
+						"Physical_HurtSound=damage.hit", "isPlayerForm=true",
+						"isPlayerAPIDebug=false",
+						//"isModelSize=false",
+						"isClearWater=false",
+						//"isVoidFog=true", "isFog=true", "isDimming=true",
 						"watherFog=0.1F", "watherFog2=0.05F", "waterStillLightOpacity=3",
-						"waterMovingLightOpacity=3", "lavaFog=2.0F", "transparency=1.0F",
+						"waterMovingLightOpacity=3",
+						//"lavaFog=2.0F",
+						"transparency=1.0F",
 						"textureSavedir=/output/", "guiMultiPngSaveButton=true",
 						"changeModeButton=true", "isRenderName=true",
-						"isMouseOverMinecraftMenu=true", "locationPositionCorrectionY=0.5D", "waitTime=600",
+						//"isMouseOverMinecraftMenu=true",
+						"locationPositionCorrectionY=0.5D", "waitTime=600",
 						"multiAutochangeMode=true", "skirtFloats=false", "skirtFloatsVolume=1.0F",
 						"othersPlayerWaitTime=600", "modchuRemodelingModel=true", "versionCheck=true",
-						"useInvisibilityBody=true","useInvisibilityArmor=false","useInvisibilityItem=false"
+						"useInvisibilityBody=true","useInvisibilityArmor=false","useInvisibilityItem=false",
+						"useScaleChange=true"
 				};
 				Modchu_Config.writerConfig(mainCfgfile, s);
 			} else {
@@ -2241,30 +2249,30 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				DebugMessagetexture = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "DebugMessagetexture", DebugMessagetexture)).toString());
 				debugReflect = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "debugReflect", debugReflect)).toString());
 				AlphaBlend = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "AlphaBlend", AlphaBlend)).toString());
-				Physical_BurningPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_BurningPlayer", Physical_BurningPlayer)).toString());
-				Physical_MeltingPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_MeltingPlayer", Physical_MeltingPlayer)).toString());
-				Physical_Hammer = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_Hammer", Physical_Hammer)).toString());
-				Physical_Undead = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_Undead", Physical_Undead)).toString());
+				//Physical_BurningPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_BurningPlayer", Physical_BurningPlayer)).toString());
+				//Physical_MeltingPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_MeltingPlayer", Physical_MeltingPlayer)).toString());
+				//Physical_Hammer = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_Hammer", Physical_Hammer)).toString());
+				//Physical_Undead = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_Undead", Physical_Undead)).toString());
 				Physical_HurtSound = (Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_HurtSound", Physical_HurtSound)).toString();
 				isPlayerForm = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isPlayerForm", isPlayerForm)).toString());
 				isPlayerAPIDebug = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isPlayerAPIDebug", isPlayerAPIDebug)).toString());
 				isModelSize = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isModelSize", isModelSize)).toString());
 				isClearWater = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isClearWater", isClearWater)).toString());
-				isVoidFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isVoidFog", isVoidFog)).toString());
-				isFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isFog", isFog)).toString());
-				isDimming = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isDimming", isDimming)).toString());
+				//isVoidFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isVoidFog", isVoidFog)).toString());
+				//isFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isFog", isFog)).toString());
+				//isDimming = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isDimming", isDimming)).toString());
 				watherFog = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "watherFog", watherFog)).toString());
 				watherFog2 = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "watherFog2", watherFog2)).toString());
 				waterStillLightOpacity = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "waterStillLightOpacity", waterStillLightOpacity)).toString());
 				waterMovingLightOpacity = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "waterMovingLightOpacity", waterMovingLightOpacity)).toString());
-				lavaFog = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "lavaFog", lavaFog)).toString());
+				//lavaFog = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "lavaFog", lavaFog)).toString());
 				transparency = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "transparency", transparency)).toString());
 				textureSavedir = (Modchu_Config.loadConfig(showModelList, mainCfgfile, "textureSavedir", textureSavedir)).toString();
 				guiMultiPngSaveButton = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "guiMultiPngSaveButton", guiMultiPngSaveButton)).toString());
 				changeModeButton = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "changeModeButton", changeModeButton)).toString());
 				isRenderName = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isRenderName", isRenderName)).toString());
-				isMouseOverMinecraftMenu = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isMouseOverMinecraftMenu", isMouseOverMinecraftMenu)).toString());
-				locationPositionCorrectionY = Double.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "locationPositionCorrectionY", locationPositionCorrectionY)).toString());
+				//isMouseOverMinecraftMenu = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isMouseOverMinecraftMenu", isMouseOverMinecraftMenu)).toString());
+				//locationPositionCorrectionY = Double.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "locationPositionCorrectionY", locationPositionCorrectionY)).toString());
 				waitTime = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "waitTime", waitTime)).toString());
 				multiAutochangeMode = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "multiAutochangeMode", multiAutochangeMode)).toString());
 				skirtFloats = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "skirtFloats", skirtFloats)).toString());
@@ -2275,36 +2283,47 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				useInvisibilityBody = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "useInvisibilityBody", useInvisibilityBody)).toString());
 				useInvisibilityArmor = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "useInvisibilityArmor", useInvisibilityArmor)).toString());
 				useInvisibilityItem = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "useInvisibilityItem", useInvisibilityItem)).toString());
+				useScaleChange = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "useScaleChange", useScaleChange)).toString());
 				cfgMaxMinCheck();
 				String k[] = {
 						"DebugMessage", "DebugMessagetexture", "debugReflect", "AlphaBlend",
-						"Physical_BurningPlayer", "Physical_MeltingPlayer", "Physical_Hammer",
-						"Physical_Undead", "Physical_HurtSound", "isPlayerForm",
+						//"Physical_BurningPlayer", "Physical_MeltingPlayer", "Physical_Hammer",
+						//"Physical_Undead",
+						"Physical_HurtSound", "isPlayerForm",
 						"isPlayerAPIDebug", "isModelSize", "isClearWater",
-						"isVoidFog", "isFog", "isDimming",
+						//"isVoidFog", "isFog", "isDimming",
 						"watherFog", "watherFog2", "waterStillLightOpacity",
-						"waterMovingLightOpacity", "lavaFog", "transparency",
+						"waterMovingLightOpacity",
+						//"lavaFog",
+						"transparency",
 						"textureSavedir", "guiMultiPngSaveButton",
 						"changeModeButton", "isRenderName",
-						"isMouseOverMinecraftMenu", "locationPositionCorrectionY", "waitTime",
+						//"isMouseOverMinecraftMenu", "locationPositionCorrectionY",
+						"waitTime",
 						"multiAutochangeMode", "skirtFloats", "skirtFloatsVolume",
 						"othersPlayerWaitTime", "modchuRemodelingModel", "versionCheck",
-						"useInvisibilityBody", "useInvisibilityArmor", "useInvisibilityItem"
+						"useInvisibilityBody", "useInvisibilityArmor", "useInvisibilityItem",
+						"useScaleChange"
 				};
 				String k1[] = {
 						""+DebugMessage, ""+DebugMessagetexture, ""+debugReflect, ""+AlphaBlend,
-						""+Physical_BurningPlayer, ""+Physical_MeltingPlayer, ""+Physical_Hammer,
-						""+Physical_Undead, ""+Physical_HurtSound, ""+isPlayerForm,
+						//""+Physical_BurningPlayer, ""+Physical_MeltingPlayer, ""+Physical_Hammer,
+						//""+Physical_Undead,
+						""+Physical_HurtSound, ""+isPlayerForm,
 						""+isPlayerAPIDebug, ""+isModelSize, ""+isClearWater,
-						""+isVoidFog, ""+isFog, ""+isDimming,
+						//""+isVoidFog, ""+isFog, ""+isDimming,
 						""+watherFog, ""+watherFog2, ""+waterStillLightOpacity,
-						""+waterMovingLightOpacity, ""+lavaFog, ""+transparency,
+						""+waterMovingLightOpacity,
+						//""+lavaFog,
+						""+transparency,
 						""+textureSavedir, ""+guiMultiPngSaveButton,
 						""+changeModeButton, ""+isRenderName,
-						""+isMouseOverMinecraftMenu, ""+locationPositionCorrectionY, ""+waitTime,
+						//""+isMouseOverMinecraftMenu, ""+locationPositionCorrectionY,
+						""+waitTime,
 						""+multiAutochangeMode, ""+skirtFloats, ""+skirtFloatsVolume,
 						""+othersPlayerWaitTime, ""+modchuRemodelingModel, ""+versionCheck,
-						""+useInvisibilityBody, ""+useInvisibilityArmor, ""+useInvisibilityItem
+						""+useInvisibilityBody, ""+useInvisibilityArmor, ""+useInvisibilityItem,
+						""+useScaleChange
 				};
 				Modchu_Config.writerSupplementConfig(mainCfgfile, k, k1);
 				checkEntityReplaceNecessity();
