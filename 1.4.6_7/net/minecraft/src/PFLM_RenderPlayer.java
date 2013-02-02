@@ -39,6 +39,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 	private static int actionTime;
 	private boolean checkGlEnableWrapper = true;
 	private boolean checkGlDisableWrapper = true;
+	private boolean isSizeMultiplier = false;
+	private Method sizeMultiplier;
     // b173deleteprivate RenderBlocks renderBlocks;
 
 	public PFLM_RenderPlayer() {
@@ -47,6 +49,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		modelBasicOrig[1] = new MultiModel(0.5F);
 		modelBasicOrig[2] = new MultiModel(0.1F);
 		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "armorFilenamePrefix");
+		sizeMultiplier = Modchu_Reflect.getMethod(Entity.class, "getSizeMultiplier");
+		isSizeMultiplier = sizeMultiplier != null;
 		// b173deleterenderBlocks = new RenderBlocks();
 	}
 
@@ -167,6 +171,11 @@ public class PFLM_RenderPlayer extends RenderPlayer
      */
     protected void preRenderCallback(EntityLiving entityliving, float f)
     {
+    	if (isSizeMultiplier) {
+    		float f2 = 0.9375F * (Float) Modchu_Reflect.invoke(sizeMultiplier, entityliving);
+    		GL11.glScalef(f2, f2, f2);
+    		return;
+    	}
     	if (!mod_PFLM_PlayerFormLittleMaid.useScaleChange) {
     		super.preRenderCallback(entityliving, f);
     		return;

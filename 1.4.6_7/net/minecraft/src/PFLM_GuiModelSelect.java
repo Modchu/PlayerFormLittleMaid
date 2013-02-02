@@ -233,6 +233,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 		float f5 = (float)i - xSize_lo;
 		float f6 = (float)(j - 50) - ySize_lo;
 		entityPlayerFormLittleMaidDummy.maidColor = modelColor;
+		if (modelNamber >= mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor].length) return;
 		int i1 = mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][modelNamber];
 		if (i1 < 0
 				| i1 >= mod_PFLM_PlayerFormLittleMaid.textureManagerTexturesSize()) return;

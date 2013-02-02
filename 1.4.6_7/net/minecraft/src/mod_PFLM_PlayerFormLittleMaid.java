@@ -193,6 +193,11 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public mod_PFLM_PlayerFormLittleMaid()
 	{
 		// b181deleteload();
+		if (getVersion().startsWith("1.4.6~7")) {
+			playerFormLittleMaidVersion = 147;
+			minecraftVersion = "1.4.7";
+			return;
+		}
 		if (getVersion().startsWith("1.4.6")) {
 			playerFormLittleMaidVersion = 146;
 			minecraftVersion = "1.4.6";
@@ -288,7 +293,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.4.6-18";
+		return "1.4.6~7-18";
 	}
 
 	public void load()
@@ -315,7 +320,9 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				new MultiModel(0.5F)
 		});
 		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"MultiModel", "MultiModel"});
+		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"playerformlittlemaid", "playerformlittlemaid"});
 		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"MultiModel", "/mob/littleMaid/", "MultiModel_"});
+		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"playerformlittlemaid", "/mob/littleMaid/", "MultiModel_"});
 /*
 		Modchu_Reflect.debugMessage = false;
 		Object o = Modchu_Reflect.loadClass(getClassName("mod_LMM_littleMaidMob"));
@@ -2256,7 +2263,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				Physical_HurtSound = (Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_HurtSound", Physical_HurtSound)).toString();
 				isPlayerForm = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isPlayerForm", isPlayerForm)).toString());
 				isPlayerAPIDebug = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isPlayerAPIDebug", isPlayerAPIDebug)).toString());
-				isModelSize = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isModelSize", isModelSize)).toString());
+				//isModelSize = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isModelSize", isModelSize)).toString());
 				isClearWater = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isClearWater", isClearWater)).toString());
 				//isVoidFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isVoidFog", isVoidFog)).toString());
 				//isFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isFog", isFog)).toString());
@@ -2290,7 +2297,9 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						//"Physical_BurningPlayer", "Physical_MeltingPlayer", "Physical_Hammer",
 						//"Physical_Undead",
 						"Physical_HurtSound", "isPlayerForm",
-						"isPlayerAPIDebug", "isModelSize", "isClearWater",
+						"isPlayerAPIDebug",
+						//"isModelSize",
+						"isClearWater",
 						//"isVoidFog", "isFog", "isDimming",
 						"watherFog", "watherFog2", "waterStillLightOpacity",
 						"waterMovingLightOpacity",
@@ -2310,7 +2319,9 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						//""+Physical_BurningPlayer, ""+Physical_MeltingPlayer, ""+Physical_Hammer,
 						//""+Physical_Undead,
 						""+Physical_HurtSound, ""+isPlayerForm,
-						""+isPlayerAPIDebug, ""+isModelSize, ""+isClearWater,
+						""+isPlayerAPIDebug,
+						//""+isModelSize,
+						""+isClearWater,
 						//""+isVoidFog, ""+isFog, ""+isDimming,
 						""+watherFog, ""+watherFog2, ""+waterStillLightOpacity,
 						""+waterMovingLightOpacity,
@@ -2336,7 +2347,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				| Physical_MeltingPlayer != 0
 				| Physical_Hammer != 1.0F
 				| Physical_Undead
-				| !Physical_HurtSound.equalsIgnoreCase("random.hurt")
+				| !Physical_HurtSound.equalsIgnoreCase("damage.hit")
 				| isModelSize) entityReplaceFlag = true;
 	}
 
@@ -2995,7 +3006,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				// b166delete}
 			}
 		}
-
+//isModelSize
+/*
 		if (isModelSize) {
 			try {
 				Minecraft instance = Minecraft.getMinecraft();
@@ -3051,19 +3063,24 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						instance.entityRenderer = new PFLM_EntityRendererShaders(instance);
 						s3 = "PFLM_EntityRendererShaders";
 //@-@125
+
+*/
 /*//125delete
 						instance.entityRenderer = new PFLM_EntityRendererShadersHDM(instance);
 						s3 = "PFLM_EntityRendererShadersHDM";
 *///125delete
+/*
 					} else {
 //-@-125
 						instance.entityRenderer = new PFLM_EntityRendererOptiHD(instance);
 						s3 = "PFLM_EntityRendererOptiHD";
 //@-@125
+ */
 /*//125delete
 						instance.entityRenderer = new PFLM_EntityRendererOptiHDM(instance);
 						s3 = "PFLM_EntityRendererOptiHDM";
 *///125delete
+/*
 					}
 					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 					Modchu_Debug.Debug(s3 + " to set.");
@@ -3075,19 +3092,23 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						instance.entityRenderer = new PFLM_EntityRendererShadersHDU(instance);
 						s3 = "PFLM_EntityRendererShadersHDU";
 //@-@125
+ */
 /*//125delete
 						instance.entityRenderer = new PFLM_EntityRendererShaders(instance);
 						s3 = "PFLM_EntityRendererShaders";
 *///125delete
+/*
 					} else {
 //-@-125
 						instance.entityRenderer = new PFLM_EntityRendererOptiHDU(instance);
 						s3 = "PFLM_EntityRendererOptiHDU";
 //@-@125
+ */
 /*//125delete
 						instance.entityRenderer = new PFLM_EntityRendererOptiHD(instance);
 						s3 = "PFLM_EntityRendererOptiHD";
 *///125delete
+/*
 					}
 					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 					Modchu_Debug.Debug(s3 + " to set.");
@@ -3099,19 +3120,23 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 							instance.entityRenderer = new PFLM_EntityRendererShadersHDU3(instance);
 							s3 = "PFLM_EntityRendererShadersHDU3";
 //@-@125
+ */
 /*//125delete
 							instance.entityRenderer = new PFLM_EntityRendererShadersC(instance);
 							s3 = "PFLM_EntityRendererShadersC";
 *///125delete
+/*
 						} else {
 //-@-125
 							instance.entityRenderer = new PFLM_EntityRendererOptiHDU3(instance);
 							s3 = "PFLM_EntityRendererOptiHDU3";
 //@-@125
+ */
 /*//125delete
 							instance.entityRenderer = new PFLM_EntityRendererOptiHDC(instance);
 							s3 = "PFLM_EntityRendererOptiHDC";
 *///125delete
+/*
 						}
 						ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 						Modchu_Debug.Debug(s3 + " to set.");
@@ -3123,19 +3148,23 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 							instance.entityRenderer = new PFLM_EntityRendererShadersHDU3(instance);
 							s3 = "PFLM_EntityRendererShadersHDU3";
 //@-@125
+ */
 /*//125delete
 							instance.entityRenderer = new PFLM_EntityRendererShadersHDMTC(instance);
 							s3 = "PFLM_EntityRendererShadersHDMTC";
 *///125delete
+/*
 						} else {
 //-@-125
 							instance.entityRenderer = new PFLM_EntityRendererOptiHDU2(instance);
 							s3 = "PFLM_EntityRendererOptiHDU2";
 //@-@125
+ */
 /*//125delete
 							instance.entityRenderer = new PFLM_EntityRendererOptiHDMTC(instance);
 							s3 = "PFLM_EntityRendererOptiHDMTC";
 *///125delete
+/*
 						}
 						ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 						Modchu_Debug.Debug(s3 + " to set.");
@@ -3147,10 +3176,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						instance.entityRenderer = new PFLM_EntityRendererShader(instance);
 						s3 = "PFLM_EntityRendererShader";
 //@-@110
+ */
 /*//110delete
 						instance.entityRenderer = new PFLM_EntityRenderer(instance);
 						s3 = "PFLM_EntityRenderer";
 *///110delete
+/*
 						ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 						Modchu_Debug.Debug(s3 + " to set.");
 					}
@@ -3160,6 +3191,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				Modchu_Debug.Debug("PFLM_EntityRenderer Fail to set!");
 			}
 		}
+*/
 //-@-125
 		if(isSmartMoving) {
 			isModelSize = false;

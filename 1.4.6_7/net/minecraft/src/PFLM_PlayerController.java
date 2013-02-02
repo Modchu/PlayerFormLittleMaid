@@ -9,7 +9,7 @@ public class PFLM_PlayerController extends PlayerControllerMP {
     public static EntityClientPlayerMP pflm_entityPlayersp;
     /*b166//*/public static PFLM_EntityPlayer pflm_entityPlayer;
     public static PFLM_PlayerController gotcha;
-    public static PFLM_EntityRenderer erpflm;
+    //public static PFLM_EntityRenderer erpflm;
     private Minecraft mc;
     private NetClientHandler netClientHandler;
 

@@ -30,6 +30,8 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
 		}
 		mod_PFLM_PlayerFormLittleMaid.setFirstPersonHandResetFlag(true);
 		mod_PFLM_PlayerFormLittleMaid.clearPlayers();
+//ModelSize
+/*
 //-@-125
     	if (mod_PFLM_PlayerFormLittleMaid.isModelSize) {
     		PFLM_PlayerBaseServer.heightResetFlag = true;
@@ -37,6 +39,7 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
     		PFLM_PlayerBaseServer.yOffsetResetFlag = true;
     	}
 //@-@125
+*/
 	}
 
 	public void preparePlayerToSpawn() {
@@ -47,6 +50,8 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
 		deathTime = 0;
 		mod_PFLM_PlayerFormLittleMaid.setFirstPersonHandResetFlag(true);
 		mod_PFLM_PlayerFormLittleMaid.clearPlayers();
+//ModelSize
+/*
 //-@-125
     	if (mod_PFLM_PlayerFormLittleMaid.isModelSize) {
     		PFLM_PlayerBaseServer.heightResetFlag = true;
@@ -54,6 +59,7 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
     		PFLM_PlayerBaseServer.yOffsetResetFlag = true;
     	}
 //@-@125
+*/
 	}
 /*
 	public void setPosition(double par1, double par3, double par5)
@@ -70,6 +76,8 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
 		Modchu_Debug.mDebug("setPositionCorrection height="+height);
 		//yOffset = 1.62F;
 		//height = 1.8F;
+//ModelSize
+/*
 //-@-125
 		if (mod_PFLM_PlayerFormLittleMaid.isModelSize) {
 			super.setSize(0.6F, 1.8F);
@@ -77,6 +85,7 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
 			PFLM_PlayerBaseServer.widthResetFlag = true;
 		}
 //@-@125
+ */
 		setPosition(posX + par1, posY + par3, posZ + par5);
 	}
 
@@ -99,10 +108,13 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
 				// Modchu_Debug.mDebug("setSize Width=0.5 Height=1.35");
 				super.setSize(0.5F, 1.35F);
 			}
+//ModelSize
+/*
 //-@-125
 			PFLM_PlayerBaseServer.heightResetFlag = true;
 			PFLM_PlayerBaseServer.widthResetFlag = true;
 //@-@125
+*/
 		} else {
 			super.setSize(f, f1);
 		}
@@ -128,7 +140,12 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
 				&& !mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
 			yOffset = mod_PFLM_PlayerFormLittleMaid.getyOffset();
 			// Modchu_Debug.mDebug("resetHeight yOffset="+yOffset);
-			/*125//*/PFLM_PlayerBaseServer.yOffsetResetFlag = true;
+//ModelSize
+/*
+//-@-125
+				PFLM_PlayerBaseServer.yOffsetResetFlag = true;
+//@-@125
+*/
 			return;
 		}
 		yOffset = 1.62F;
@@ -142,7 +159,12 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
 				&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOffline
 				&& !mod_PFLM_PlayerFormLittleMaid.isSmartMoving
 				) {
-			/*125//*/PFLM_PlayerBaseServer.yOffsetResetFlag = true;
+//ModelSize
+/*
+//-@-125
+			PFLM_PlayerBaseServer.yOffsetResetFlag = true;
+//@-@125
+*/
 			if (ridingEntity != null) {
 				float f = mod_PFLM_PlayerFormLittleMaid.getRidingyOffset();
 				//Modchu_Debug.dDebug("getYOffset isRiding() f="+f,3);
@@ -196,8 +218,11 @@ public class PFLM_EntityPlayer extends EntityClientPlayerMP {
     	boolean b = false;
     	if (par1Entity instanceof EntityMinecart) {
     		yOffset = 1.62F;
+//ModelSize
+/*
     		//PFLM_PlayerBaseServer.gotcha.player.yOffset = 1.62F;
     		PFLM_PlayerBaseServer.yOffsetResetFlag = true;
+*/
     		if (par1Entity.interact(this)) return true;
     		b = true;
     	}
