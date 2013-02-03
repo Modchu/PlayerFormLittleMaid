@@ -74,7 +74,7 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 		setTextureValue();
 		if(mod_PFLM_PlayerFormLittleMaid.othersTextureModel[0] != null) {
 			if (mod_PFLM_PlayerFormLittleMaid.othersModelScale == 0.0F) {
-				mod_PFLM_PlayerFormLittleMaid.othersModelScale = mod_PFLM_PlayerFormLittleMaid.getModelScale(mod_PFLM_PlayerFormLittleMaid.othersTextureModel[0]);
+				mod_PFLM_PlayerFormLittleMaid.othersModelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.othersTextureModel[0]).getModelScale();
 			}
 		}
 	}
@@ -89,7 +89,7 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
         //isModelSize Default
         if(guibutton.id == 3)
         {
-        	mod_PFLM_PlayerFormLittleMaid.othersModelScale = mod_PFLM_PlayerFormLittleMaid.getModelScale(mod_PFLM_PlayerFormLittleMaid.othersTextureModel[0]);
+        	mod_PFLM_PlayerFormLittleMaid.othersModelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.othersTextureModel[0]).getModelScale();
         }
         //isModelSize UP
         if(guibutton.id == 4)

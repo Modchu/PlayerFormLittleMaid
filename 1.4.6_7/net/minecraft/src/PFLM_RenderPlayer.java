@@ -2,11 +2,12 @@ package net.minecraft.src;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Random;
-import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
@@ -48,7 +49,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		modelBasicOrig[0] = new MultiModel(0.0F);
 		modelBasicOrig[1] = new MultiModel(0.5F);
 		modelBasicOrig[2] = new MultiModel(0.1F);
-		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "armorFilenamePrefix");
+		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "h", "armorFilenamePrefix");
 		sizeMultiplier = Modchu_Reflect.getMethod(Entity.class, "getSizeMultiplier");
 		isSizeMultiplier = sizeMultiplier != null;
 		// b173deleterenderBlocks = new RenderBlocks();
@@ -59,7 +60,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData(entityplayer);
     	/*b181//*/byte byte0 = -1;
     	//b181 deleteboolean byte0 = false;
-    	if (modelDataPlayerFormLittleMaid != null) {} else return byte0;
+    	if (modelDataPlayerFormLittleMaid != null) ;else return byte0;
     	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return byte0;
     	// アーマーの表示設定
     	modelDataPlayerFormLittleMaid.modelFATT.renderParts = i;
@@ -310,8 +311,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 	}
 
     public void doRenderLivingPFLM(PFLM_ModelData modelDataPlayerFormLittleMaid, EntityLiving entityliving, double d, double d1, double d2,
-            float f, float f1)
-    {
+            float f, float f1) {
     	GL11.glPushMatrix();
     	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     	if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
@@ -319,22 +319,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		shadersGlDisableWrapper(GL11.GL_CULL_FACE);
     	} else {
     		GL11.glDisable(GL11.GL_CULL_FACE);
-    	}
-
-    	this.mainModel.onGround = this.renderSwingProgress(entityliving, f1);
-    	if (this.renderPassModel != null)
-    	{
-    		this.renderPassModel.onGround = this.mainModel.onGround;
-    	}
-    	this.mainModel.isRiding = entityliving.isRiding();
-    	if (this.renderPassModel != null)
-    	{
-    		this.renderPassModel.isRiding = this.mainModel.isRiding;
-    	}
-    	this.mainModel.isChild = entityliving.isChild();
-    	if (this.renderPassModel != null)
-    	{
-    		this.renderPassModel.isChild = this.mainModel.isChild;
     	}
 
     	try
@@ -665,10 +649,105 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	passSpecialRender(entityliving, d, d1, d2);
     }
 
-    public void doRenderPlayerFormLittleMaid(EntityPlayer entityplayer, double d, double d1, double d2, float f, float f1)
-    {
+    public void doRenderPlayerFormLittleMaid(EntityPlayer entityplayer, double d, double d1, double d2, float f, float f1) {
     	PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData(entityplayer);
-    	if (modelDataPlayerFormLittleMaid != null) {} else return;
+    	if (modelDataPlayerFormLittleMaid != null) ;else return;
+    	doRenderSetting(entityplayer, modelDataPlayerFormLittleMaid);
+
+    	float f8 = entityplayer.legSwing - entityplayer.legYaw * (1.0F - f1);
+    	waitModeSetting(modelDataPlayerFormLittleMaid, f8);
+    	if (modelDataPlayerFormLittleMaid.isPlayer) {
+    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.isWait =
+    				modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.isWait =
+    				modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isWait = mod_PFLM_PlayerFormLittleMaid.isWait;
+    	} else {
+    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.isWait =
+    				modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.isWait =
+    				modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isWait = modelDataPlayerFormLittleMaid.isWait;
+    	}
+    	modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.onGround =
+    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.onGround =
+    			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.onGround = renderSwingProgress((EntityLiving) entityplayer, f1);
+    	if (renderPassModel != null) renderPassModel.onGround = mainModel.onGround;
+    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isInventory =
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isInventory =
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isInventory =
+    			d == 0.0D && d1 == 0.0D && d2 == 0.0D && f == 0.0F && f1 == 1.0F;
+    	ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+    	if (modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isItemHolder()) {
+    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.heldItemRight =
+    				modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.heldItemRight =
+    				modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.heldItemRight = itemstack != null ? 1 : 0;
+    	}
+//-@-b173
+    	if (itemstack != null && entityplayer.getItemInUseCount() > 0) {
+    		EnumAction enumaction = itemstack.getItemUseAction();
+    		if (enumaction == EnumAction.block) {
+    			if (modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isItemHolder()) {
+    				modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.heldItemRight =
+    						modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.heldItemRight =
+    						modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.heldItemRight = 3;
+    			}
+    		} else if (enumaction == EnumAction.bow) {
+    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.aimedBow =
+    					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.aimedBow =
+    					modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.aimedBow = true;
+    		}
+    	}
+//@-@b173
+    	double d3;
+    	if (mod_PFLM_PlayerFormLittleMaid.isModelSize
+//-@-125
+    			&& mc.isSingleplayer()
+//@-@125
+    			// 125delete&& mc.thePlayer.worldObj.isRemote
+    			&& !entityplayer.isRiding()) {
+    		//d3 = d1 - (double)((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).getyOffset();
+    		d3 = d1 - (double)entityplayer.yOffset;
+    	}
+    	else d3 = d1 - (double)entityplayer.yOffset;
+    	if (entityplayer.isSneaking() && !(entityplayer instanceof EntityPlayerSP)) d3 -= 0.125D;
+    	//if (mod_PFLM_PlayerFormLittleMaid.isModelSize) d3 += 0.45D;
+
+    	if (entityplayer.isRiding()) {
+    		d3 += 0.25D;
+    		if (mod_PFLM_PlayerFormLittleMaid.isModelSize && mod_PFLM_PlayerFormLittleMaid.changeMode != PFLM_Gui.modeOnline)  d3 -= 0.43D;
+    	}
+    	if (entityplayer.isSneaking()) {
+    		if (entityplayer.isRiding()) {
+    			d3 -= 0.1D;
+    		}
+    	}
+    	byte byte0 = entityplayer.getDataWatcher().getWatchableObjectByte(16);
+    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isSitting =
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isSitting =
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isSitting = byte0 == 1;
+    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isSleeping =
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isSleeping =
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isSleeping = entityplayer.isPlayerSleeping() | byte0 == 2;
+    	if (byte0 == 1) d3 += ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).getSittingyOffset();
+    	if (byte0 == 2) d3 += ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).getSleepingyOffset();
+
+    	if (!(mc.currentScreen instanceof PFLM_GuiOthersPlayer)
+    			&& modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null) doRenderLivingPFLM(modelDataPlayerFormLittleMaid, (EntityLiving) entityplayer, d, d3, d2, f, f1);
+    	modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.aimedBow =
+    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.aimedBow =
+    			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.aimedBow = false;
+    	modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.isSneak =
+    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.isSneak =
+    			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isSneak = false;
+    	modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.heldItemRight =
+    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.heldItemRight =
+    			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.heldItemRight = 0;
+    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isInventory =
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isInventory =
+    				((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isInventory = false;
+    }
+
+    private void doRenderSetting(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid) {
+    	if (modelDataPlayerFormLittleMaid.isPlayer) {
+    		if (mod_PFLM_PlayerFormLittleMaid.mushroomConfusion) mod_PFLM_PlayerFormLittleMaid.mushroomConfusion(entityplayer, modelDataPlayerFormLittleMaid);
+    	}
     	if (modelDataPlayerFormLittleMaid.changeModelFlag) {
     		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).showPartsInit();
     		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.changeModel(entityplayer);
@@ -681,107 +760,18 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		setHandedness(entityplayer, modelDataPlayerFormLittleMaid.handedness);
     		modelDataPlayerFormLittleMaid.resetHandedness = false;
     	}
-    	byte byte0 = entityplayer.getDataWatcher().getWatchableObjectByte(16);
     	modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.isSneak =
     			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.isSneak =
     			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isSneak = entityplayer.isSneaking();
     	modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.isRiding =
     			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.isRiding =
     			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isRiding = entityplayer.isRiding();
-    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isSitting =
-    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isSitting =
-    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isSitting = byte0 == 1;
     	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isPlayer =
     			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isPlayer =
     			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isPlayer = modelDataPlayerFormLittleMaid.isPlayer;
-    	float f8 = entityplayer.legSwing - entityplayer.legYaw * (1.0F - f1);
-    	waitModeSetting(modelDataPlayerFormLittleMaid, f8);
-    	if (modelDataPlayerFormLittleMaid.isPlayer) {
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.isWait =
-    				modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.isWait =
-    				modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isWait = mod_PFLM_PlayerFormLittleMaid.isWait;
-    	} else {
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.isWait =
-    				modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.isWait =
-    				modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isWait = modelDataPlayerFormLittleMaid.isWait;
-    	}
-    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isSleeping =
-    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isSleeping =
-    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isSleeping = entityplayer.isPlayerSleeping() | byte0 == 2;
     	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).handedness =
     			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).handedness =
     			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).handedness = modelDataPlayerFormLittleMaid.handedness;
-    	modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.onGround =
-    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.onGround =
-    			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.onGround = renderSwingProgress((EntityLiving) entityplayer, f1);
-    	if (renderPassModel != null)
-    	{
-    		renderPassModel.onGround = mainModel.onGround;
-    	}
-    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isInventory =
-    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isInventory =
-    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isInventory =
-    			d == 0.0D && d1 == 0.0D && d2 == 0.0D && f == 0.0F && f1 == 1.0F;
-    	ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-    	if (modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isItemHolder()) {
-    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.heldItemRight =
-    				modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.heldItemRight =
-    				modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.heldItemRight = itemstack != null ? 1 : 0;
-    	}
-//-@-b173
-    	if (itemstack != null && entityplayer.getItemInUseCount() > 0)
-    	{
-    		EnumAction enumaction = itemstack.getItemUseAction();
-    		if (enumaction == EnumAction.block)
-    		{
-    			if (modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isItemHolder()) {
-    				modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.heldItemRight =
-    						modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.heldItemRight =
-    						modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.heldItemRight = 3;
-    			}
-    		}
-    		else if (enumaction == EnumAction.bow)
-    		{
-    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.aimedBow =
-    					modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.aimedBow =
-    					modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.aimedBow = true;
-    		}
-    	}
-//@-@b173
-    	double d3;
-
-    	if (mod_PFLM_PlayerFormLittleMaid.isModelSize
-//-@-125
-    			&& mc.isSingleplayer()
-//@-@125
-    			// 125delete&& mc.thePlayer.worldObj.isRemote
-    			&& !entityplayer.isRiding()) {
-    		//d3 = d1 - (double)((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).getyOffset();
-    		d3 = d1 - (double)entityplayer.yOffset;
-    	}
-    	else d3 = d1 - (double)entityplayer.yOffset;
-    	if (entityplayer.isSneaking() && !(entityplayer instanceof EntityPlayerSP))
-    	{
-    		d3 -= 0.125D;
-    	}
-
-    	//if (mod_PFLM_PlayerFormLittleMaid.isModelSize) d3 += 0.45D;
-
-    	if (entityplayer.isRiding()) {
-    		d3 += 0.25D;
-    		if (mod_PFLM_PlayerFormLittleMaid.isModelSize && mod_PFLM_PlayerFormLittleMaid.changeMode != PFLM_Gui.modeOnline)  d3 -= 0.43D;
-    	}
-    	if (entityplayer.isSneaking()) {
-    		if (entityplayer.isRiding()) {
-    			d3 -= 0.1D;
-    		}
-    	}
-    	if (byte0 == 1) {
-    		d3 += ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).getSittingyOffset();
-    	}
-    	if (byte0 == 2) {
-    		d3 += ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).getSleepingyOffset();
-    	}
     	if (modelDataPlayerFormLittleMaid.shortcutKeysAction) {
     		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).actionSpeed =
     				((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).actionSpeed =
@@ -802,29 +792,12 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).actionRelease(modelDataPlayerFormLittleMaid.runActionNumber);
     			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).actionRelease(modelDataPlayerFormLittleMaid.runActionNumber);
     		}
-
     	}
     	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).syncModel((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner);
     	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).syncModel((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner);
+	}
 
-    	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) {}
-    	else if (mainModel != null
-    			&& modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null) doRenderLivingPFLM(modelDataPlayerFormLittleMaid, (EntityLiving) entityplayer, d, d3, d2, f, f1);
-    	modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.aimedBow =
-    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.aimedBow =
-    			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.aimedBow = false;
-    	modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.isSneak =
-    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.isSneak =
-    			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isSneak = false;
-    	modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.heldItemRight =
-    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.heldItemRight =
-    			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.heldItemRight = 0;
-    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isInventory =
-    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isInventory =
-    				((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isInventory = false;
-    }
-
-    public void doRender(Entity entity, double d, double d1, double d2, float f, float f1)
+	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1)
     {
     	if(mc.currentScreen instanceof GuiSelectWorld) return;
     	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return;
@@ -902,98 +875,16 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	}
     }
 
-    private boolean decoBlockCheck(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid) {
-    	//DecoBlock, FavBlock用チェック
-    	ItemStack itemstack2 = entityplayer.inventory.getStackInSlot(9);
-    	Item item = itemstack2.getItem();
-    	Block block = Block.blocksList[item.itemID];
-    	boolean flag = false;
-    	boolean rotate = false;
-    	boolean translatef = false;
-    	boolean particle = false;
-    	int particleFrequency = 98;
-    	String particleString = null;
-    	float translatefX = 0.0F;
-    	float translatefY = 0.0F;
-    	float translatefZ = 0.0F;
-    	if (mod_PFLM_PlayerFormLittleMaid.isDecoBlock) {
-    		if (mod_PFLM_PlayerFormLittleMaid.decoBlock.isInstance(block)) {
-    			flag = rotate = true;
-    			particle = true;
-    			particleString = "heart";
-    		} else
-    		if (mod_PFLM_PlayerFormLittleMaid.decoBlockBase.isInstance(block)) {
-    			flag = rotate = true;
-    		}
-    	}
-    	if (mod_PFLM_PlayerFormLittleMaid.isFavBlock
-    			&& mod_PFLM_PlayerFormLittleMaid.favBlock.isInstance(block)) {
-    		flag = rotate = true;
-    		translatef = true;
-    		translatefX = 0.0F;
-    		translatefY = -0.1F;
-    		translatefZ = 0.0F;
-    		particle = true;
-    		particleString = "instantSpell";
-    		particleFrequency = 92;
-    	}
-
-    	if (flag) {
-    		GL11.glPushMatrix();
-    		loadTexture("/terrain.png");
-    		GL11.glEnable(GL11.GL_CULL_FACE);
-    		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.bipedHead.postRender(0.0625F);
-    		GL11.glScalef(1.0F, -1F, 1.0F);
-    		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).equippedItemPositionFlower();
-    		if (rotate) GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-    		else GL11.glRotatef(12F, 0.0F, 1.0F, 0.0F);
-//-@-b173
-    		int k = itemstack2.getItem().getColorFromItemStack(itemstack2, 0);
-    		float f9 = (float)(k >> 16 & 0xff) / 255F;
-    		float f10 = (float)(k >> 8 & 0xff) / 255F;
-    		float f12 = (float)(k & 0xff) / 255F;
-    		GL11.glColor4f(f9, f10, f12, 1.0F);
-//@-@b173
-    		ItemStack itemstack3 = entityplayer.inventory.getStackInSlot(10);
-    		if (itemstack3 != null) {
-    			Item item2 = itemstack3.getItem();
-    			if (item2 == item.dyePowder) {
-    				float f1 = 2.0F;
-    				GL11.glScalef(f1, f1, f1);
-    				((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).equippedItemPositionFlowerDyePowder();
-    				if (mod_PFLM_PlayerFormLittleMaid.isFavBlock
-    						&& mod_PFLM_PlayerFormLittleMaid.favBlock.isInstance(block)) {
-    					particleFrequency = 80;
-    				} else particleFrequency = 90;
-    			}
-    		}
-    		// b166deleteGL11.glColor4f(f20, f20, f20, 1.0F);
-    		if (translatef) GL11.glTranslatef(translatefX, translatefY, translatefZ);
-    		renderBlocks.renderBlockAsItem(block, itemstack2.getItemDamage(), 1.0F);
-    		if (particle
-    				&& rnd.nextInt(100) > particleFrequency) {
-    			double d = rnd.nextGaussian() * 0.02D;
-    			double d1 = rnd.nextGaussian() * 0.02D;
-    			double d2 = rnd.nextGaussian() * 0.02D;
-    			entityplayer.worldObj.spawnParticle(particleString, (entityplayer.posX + (double)(rnd.nextFloat() * entityplayer.width * 2.0F)) - (double)entityplayer.width, entityplayer.posY - 0.5D + (double)(rnd.nextFloat() * entityplayer.height), (entityplayer.posZ + (double)(rnd.nextFloat() * entityplayer.width * 2.0F)) - (double)entityplayer.width, d, d1, d2);
-    		}
-    		GL11.glDisable(GL11.GL_CULL_FACE);
-    		GL11.glPopMatrix();
-    		/*b173//*/GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-    	}
-    	return flag;
-    }
-
-    public void func_82441_a(EntityPlayer par1EntityPlayer)
-    {
+    public void func_82441_a(EntityPlayer entityplayer) {
     	if(mc.currentScreen instanceof GuiSelectWorld) return;
     	PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData(mc.thePlayer);
-    	if (modelDataPlayerFormLittleMaid != null) {} else return;
+    	if (modelDataPlayerFormLittleMaid != null) ;else return;
     	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return;
     	if (!modelDataPlayerFormLittleMaid.isPlayer) {
     		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).firstPerson = false;
     		return;
     	}
+    	doRenderSetting(entityplayer, modelDataPlayerFormLittleMaid);
     	float var2 = 1.0F;
     	GL11.glColor3f(var2, var2, var2);
     	modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.onGround = 0.0F;
@@ -1010,16 +901,14 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).firstPerson = false;
     }
 
-    public static boolean isActivatedForPlayer(EntityPlayer entityplayer)
-    {
+    public static boolean isActivatedForPlayer(EntityPlayer entityplayer) {
     	PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData(entityplayer);
     	if (modelDataPlayerFormLittleMaid != null) {} else return false;
     	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return false;
     	return modelDataPlayerFormLittleMaid.isActivated;
     }
 
-    public static PFLM_ModelData getPlayerData(EntityPlayer entityplayer)
-    {
+    public static PFLM_ModelData getPlayerData(EntityPlayer entityplayer) {
     	if (entityplayer != null) ;else return null;
     	PFLM_ModelData modelDataPlayerFormLittleMaid = playerData.get(entityplayer);
 
@@ -1033,7 +922,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			| resetFlag) {
     		if (resetFlag) {
     			resetFlag = false;
-    			Modchu_Debug.mDebug("resetFlag clearPlayers()");
+    			//Modchu_Debug.mDebug("resetFlag clearPlayers()");
     			mod_PFLM_PlayerFormLittleMaid.clearPlayers();
     			modelDataPlayerFormLittleMaid = null;
     		}
@@ -1405,11 +1294,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		modelDataPlayerFormLittleMaid.handedness = handedness;
 		if (modelDataPlayerFormLittleMaid.isPlayer) mod_PFLM_PlayerFormLittleMaid.handednessMode = handedness;
 		modelDataPlayerFormLittleMaid.modelScale = modelScale;
-		if (modelDataPlayerFormLittleMaid.isPlayer) {
-			mod_PFLM_PlayerFormLittleMaid.textureModel[0] = modelDataPlayerFormLittleMaid.modelMain.modelArmorInner;
-			mod_PFLM_PlayerFormLittleMaid.textureModel[1] = modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner;
-			mod_PFLM_PlayerFormLittleMaid.textureModel[2] = modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter;
-		}
 		return modelDataPlayerFormLittleMaid;
     }
 
@@ -1780,9 +1664,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	modelInit(entityplayer, modelDataPlayerFormLittleMaid, s3);
     	modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, s1);
     	if (modelDataPlayerFormLittleMaid.isPlayer) {
-    		mod_PFLM_PlayerFormLittleMaid.textureModel[0] = modelDataPlayerFormLittleMaid.modelMain.modelArmorInner;
-    		mod_PFLM_PlayerFormLittleMaid.textureModel[1] = modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner;
-    		mod_PFLM_PlayerFormLittleMaid.textureModel[2] = modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter;
     		if (mod_PFLM_PlayerFormLittleMaid.isModelSize) {
     			mod_PFLM_PlayerFormLittleMaid.setSize(0.6F, 1.8F);
     			mod_PFLM_PlayerFormLittleMaid.resetHeight();

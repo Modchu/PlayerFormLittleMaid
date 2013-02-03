@@ -117,16 +117,8 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 			double d1 = par3 - (double) j;
 			double d2 = par5 - (double) k;
 			int j1 = 0;
-			// j1 = mod_PFLM_PlayerFormLittleMaid.textureModel[0] != null ? (int)
-			// mod_PFLM_PlayerFormLittleMaid.textureModel[0].getHeight() : 1;
-			if (mod_PFLM_PlayerFormLittleMaid.textureModel[0] == null) {
-				j1 = 1;
-				// System.out.println("pushOutOfBlocks mod_PFLM_PlayerFormLittleMaid.textureModel[0] = null");
-			} else {
-				j1 = (int) mod_PFLM_PlayerFormLittleMaid.getHeight();
-			}
+			j1 = (int) mod_PFLM_PlayerFormLittleMaid.getHeight();
 			boolean g = worldObj.isBlockNormalCube(i, j + j1, k);
-			// System.out.println("pushOutOfBlocks j1="+j1+" g="+g);
 			if (g) {
 				boolean flag = true;
 				boolean flag1 = true;
@@ -137,31 +129,22 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 				int n;
 				for (n = j1; n > -1 && flag == true; n = n - 1) {
 					flag = !worldObj.isBlockNormalCube(i - 1, j + n, k);
-					// System.out.println("pushOutOfBlocks n="+n);
 				}
-				// System.out.println("pushOutOfBlocks n="+n+" flag="+flag);
-				// flag = n == -1 ? false : true;
 				for (n = j1; n > -1 && flag == true; n = n - 1) {
 					flag1 = !worldObj.isBlockNormalCube(i + 1, j + n, k);
 				}
-				// flag1 = n == -1 ? false : true;
 				for (n = j1; n > -1 && flag == true; n = n - 1) {
 					flag2 = !worldObj.isBlockNormalCube(i, j - 1 + n, k);
 				}
-				// flag2 = n == -1 ? false : true;
 				for (n = j1; n > -1 && flag == true; n = n - 1) {
 					flag3 = !worldObj.isBlockNormalCube(i, j + 1 + n, k);
 				}
-				// flag3 = n == -1 ? false : true;
 				for (n = j1; n > -1 && flag == true; n = n - 1) {
 					flag4 = !worldObj.isBlockNormalCube(i, j + n, k - 1);
 				}
-				// flag4 = n == -1 ? false : true;
 				for (n = j1; n > -1 && flag == true; n = n - 1) {
 					flag5 = !worldObj.isBlockNormalCube(i, j + n, k + 1);
 				}
-				// flag5 = n == -1 ? false : true;
-				// System.out.println("pushOutOfBlocks flag="+flag+" flag1="+flag1+" flag2="+flag2+" flag3="+flag3+" flag4="+flag4+" flag5="+flag5);
 				byte byte0 = -1;
 				double d3 = 9999D;
 
@@ -609,18 +592,14 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm
 				&& mod_PFLM_PlayerFormLittleMaid.isModelSize
 				&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOffline) {
-			if (mod_PFLM_PlayerFormLittleMaid.textureModel[0] != null) {
-				// System.out.println("setSize Width="+mod_PFLM_PlayerFormLittleMaid.textureModel[0].getWidth()+" Height="+mod_PFLM_PlayerFormLittleMaid.textureModel[0].getHeight());
-				if (isRiding()) {
-					super.setSize(mod_PFLM_PlayerFormLittleMaid.getRidingWidth(),
-							mod_PFLM_PlayerFormLittleMaid.getRidingHeight());
-				} else {
-					super.setSize(mod_PFLM_PlayerFormLittleMaid.getWidth(),
-							mod_PFLM_PlayerFormLittleMaid.getHeight());
-				}
+			if (isRiding()) {
+				super.setSize(mod_PFLM_PlayerFormLittleMaid.getRidingWidth(),
+						mod_PFLM_PlayerFormLittleMaid.getRidingHeight());
+				return;
 			} else {
-				// System.out.println("setSize Width=0.5 Height=1.35");
-				super.setSize(0.5F, 1.35F);
+				super.setSize(mod_PFLM_PlayerFormLittleMaid.getWidth(),
+						mod_PFLM_PlayerFormLittleMaid.getHeight());
+				return;
 			}
 		} else {
 			super.setSize(f, f1);
@@ -628,16 +607,10 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 	}
 
 	public double getMountedYOffset() {
-		// System.out.println("getMountedYOffset");
 		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm
 				&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOffline
 				&& mod_PFLM_PlayerFormLittleMaid.isModelSize) {
-			if (mod_PFLM_PlayerFormLittleMaid.textureModel[0] != null) {
-				return (double) height
-						* mod_PFLM_PlayerFormLittleMaid.getMountedYOffset();
-			} else {
-				return (double) height;
-			}
+			return (double) height * mod_PFLM_PlayerFormLittleMaid.getMountedYOffset();
 		}
 		return (double) height * 0.75D;
 	}
@@ -653,15 +626,8 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 				&& !isRiding
 				&& !isPlayerSleeping()) {
 			if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm) {
-				if (mod_PFLM_PlayerFormLittleMaid.textureModel[0] != null) {
-					yOffset = mod_PFLM_PlayerFormLittleMaid.getyOffset();
-					// System.out.println("resetHeight yOffset="+yOffset);
-					return;
-				} else {
-					// System.out.println("resetHeight null yOffset="+yOffset);
-					yOffset = 1.17F;
-					return;
-				}
+				yOffset = mod_PFLM_PlayerFormLittleMaid.getyOffset();
+				return;
 			}
 		}
 		yOffset = 1.62F;
@@ -673,12 +639,7 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 				&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOffline
 				&& !mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
 			if (isRiding() && !worldObj.isRemote) {
-				float f = yOffset + 0.2F;
-				if (mod_PFLM_PlayerFormLittleMaid.textureModel[0] != null) {
-					f = mod_PFLM_PlayerFormLittleMaid.getRidingyOffset();
-				}
-				// Modchu_Debug.mDebug("getYOffset isRiding() f="+f);
-				return (double) (f);
+				float f = mod_PFLM_PlayerFormLittleMaid.getRidingyOffset();
 			}
 			setSize(0.5F, 1.35F);
 		}

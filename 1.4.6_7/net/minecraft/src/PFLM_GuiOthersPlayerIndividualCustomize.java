@@ -65,7 +65,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		setTextureValue();
 		if(mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] != null) {
 			if (othersModelScale == 0.0F) {
-				othersModelScale = mod_PFLM_PlayerFormLittleMaid.getModelScale(mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0]);
+				othersModelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0]).getModelScale();
 			}
 		}
 	}
@@ -80,7 +80,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
         //isModelSize Default
         if(guibutton.id == 3)
         {
-			othersModelScale = mod_PFLM_PlayerFormLittleMaid.getModelScale(mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0]);
+			othersModelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0]).getModelScale();
         }
         //isModelSize UP
         if(guibutton.id == 4)

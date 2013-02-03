@@ -72,14 +72,10 @@ public class PFLM_PlayerBase extends PlayerBase {
 				player.setSize(0.6F, 1.8F);
 				player.resetHeight();
 			} else {
-				if (mod_PFLM_PlayerFormLittleMaid.textureModel[0] != null
-						&& mod_PFLM_PlayerFormLittleMaid.isModelSize
+				if (mod_PFLM_PlayerFormLittleMaid.isModelSize
 						&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOffline) {
-					player.setSize(
-							((MultiModel) mod_PFLM_PlayerFormLittleMaid.textureModel[0])
-									.getWidth(),
-							((MultiModel) mod_PFLM_PlayerFormLittleMaid.textureModel[0])
-									.getHeight());
+					player.setSize(mod_PFLM_PlayerFormLittleMaid.getWidth(),
+							mod_PFLM_PlayerFormLittleMaid.getHeight());
 				} else {
 					if (mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOnline
 							| !mod_PFLM_PlayerFormLittleMaid.isModelSize) {

@@ -32,7 +32,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		modelBasicOrig[0] = new MultiModel(0.0F);
 		modelBasicOrig[1] = new MultiModel(0.1F);
 		modelBasicOrig[2] = new MultiModel(0.5F);
-		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "armorFilenamePrefix");
+		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "h", "armorFilenamePrefix");
 	}
 
     protected int setArmorModel(EntityLiving entityliving, int i, float f)
@@ -58,7 +58,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     private void armorTextureSetting(EntityLiving entityliving, ItemStack is, int i) {
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	String t = entity.textureArmorName;
-    	boolean isBiped = MultiModel_Biped.class.isInstance(modelFATT.modelArmorOuter);
+    	boolean isBiped = MultiModel_Biped.class.isInstance(modelMain.modelArmorInner);
     	if (t != null) {
     		if (entity.textureName != null) {
     			if (isBiped) {
@@ -172,8 +172,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 	}
 
     public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2,
-            float f, float f1)
-    {
+            float f, float f1) {
     	GL11.glPushMatrix();
     	if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
     		shadersGlDisableWrapper(GL11.GL_CULL_FACE);
@@ -585,8 +584,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 	}
 
     public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1)
-    {
+            float f, float f1) {
     	PFLM_EntityPlayerDummy entityDummy = ((PFLM_EntityPlayerDummy) entity);
     	if (entityDummy.textureName == null) entityDummy.textureName = "default";
     	boolean flag = entityDummy.textureModel != null;

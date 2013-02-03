@@ -83,13 +83,7 @@ public class PFLM_Gui extends GuiScreen {
 		if (textureName == null) textureName = "default";
 		if (textureModel == null) {
 			//Modchu_Debug.mDebug("PFLM_EntityPlayerDummy default");
-//-@-110
-			if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-				textureModel = new MultiModelSmart[3];
-			} else {
-//@-@110
-				textureModel = new MultiModel[3];
-			/*110//*/}
+			textureModel = new MultiModel[3];
 		}
 		if (textureArmor0 == null) textureArmor0 = new String[4];
 		if (textureArmor1 == null) textureArmor1 = new String[4];
@@ -203,14 +197,7 @@ public class PFLM_Gui extends GuiScreen {
 						}
 						if (bufferedimage != null
 								&& mod_PFLM_PlayerFormLittleMaid.changeMode == modeOnline) {
-							Object[] s;
-//-@-110
-							if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-								s = PFLM_RenderPlayerSmart.checkimage(bufferedimage);
-							} else {
-//@-@110
-								s = PFLM_RenderPlayer.checkimage(bufferedimage);
-							/*110//*/}
+							Object[] s = PFLM_RenderPlayer.checkimage(bufferedimage);
 							modelArmorName = (String) s[2];
 							boolean returnflag = (Boolean) s[5];
 							if (!returnflag) {
@@ -256,15 +243,8 @@ public class PFLM_Gui extends GuiScreen {
 				if(!modelScaleButton) controlList.add(new Modchu_GuiSmallButton(11, x + 75, y + 10, 75, 15, "Customize"));
 			}
 		}
-		if(mod_PFLM_PlayerFormLittleMaid.textureModel[0] != null
-				&& modelScale == 0.0F) {
-//-@-110
-			if(mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-				modelScale = ((MultiModelSmart) mod_PFLM_PlayerFormLittleMaid.textureModel[0]).getModelScale();
-			} else {
-//@-@110
-				modelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.textureModel[0]).getModelScale();
-			/*110//*/}
+		if(modelScale == 0.0F) {
+			modelScale = mod_PFLM_PlayerFormLittleMaid.getModelScale();
 		}
 		guiMode = true;
 	}
@@ -316,11 +296,7 @@ public class PFLM_Gui extends GuiScreen {
     	//isModelSize Default
     	if(guibutton.id == 3)
     	{
-    		if(mod_PFLM_PlayerFormLittleMaid.textureModel[0] != null) {
-    			modelScale = mod_PFLM_PlayerFormLittleMaid.getModelScale();
-    		} else {
-    			modelScale = 0.9375F;
-    		}
+    		modelScale = mod_PFLM_PlayerFormLittleMaid.getModelScale();
     		return;
     	}
     	//isModelSize UP

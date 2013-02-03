@@ -182,20 +182,26 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 				return;
 			}
 			entityPlayerFormLittleMaidDummy.texture = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor);
-			//String s4 = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(entityPlayerFormLittleMaidDummy.textureName, "_");
 			Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(entityPlayerFormLittleMaidDummy.textureName);
-			if (ltb != null) entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-			else {
-				ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox("default");
-				if (ltb != null) entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+			if (ltb != null) {
+				if (entityPlayerFormLittleMaidDummy.textureName.indexOf("Biped") > -1) {
+					entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entityPlayerFormLittleMaidDummy, entityPlayerFormLittleMaidDummy.textureName, false);
+				} else {
+					entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+				}
+			} else {
+				if (entityPlayerFormLittleMaidDummy.textureName.indexOf("Biped") > -1) {
+					entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entityPlayerFormLittleMaidDummy, entityPlayerFormLittleMaidDummy.textureName, false);
+				} else {
+					ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox("default");
+					if (ltb != null) entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+					else return;
+				}
 			}
 			entityPlayerFormLittleMaidDummy.textureArmorName = modelSelectMode % 2 == 0 ? "" : mod_PFLM_PlayerFormLittleMaid.getTextureBoxPackegeName(ltb);
 			StringBuilder s = (new StringBuilder()).append("TextureName : ");
-	    	//StringBuilder s1 = (new StringBuilder()).append("ArmorName : ");
 			s = s.append(entityPlayerFormLittleMaidDummy.textureName);
 			fontRenderer.drawString(s.toString(), 220, 170, 0xffffff);
-			//s1 = s1.append(entityPlayerFormLittleMaidDummy.textureArmorName);
-			//fontRenderer.drawString(s1.toString(), width / 2 - 30, height / 2 + 70, 0xffffff);
 			GL11.glPushMatrix();
 			GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
 			GL11.glEnable(2903 /*GL_COLOR_MATERIAL*/);
@@ -238,17 +244,22 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 		if (i1 < 0
 				| i1 >= mod_PFLM_PlayerFormLittleMaid.textureManagerTexturesSize()) return;
 		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(i1);
-		String packgeName = "default";
+		String packgeName = null;
 		if (ltb != null) packgeName = mod_PFLM_PlayerFormLittleMaid.getTextureBoxPackegeName(ltb);
-		else {
-			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox("default");
+		if (packgeName != null) ;else {
+			packgeName = entityPlayerFormLittleMaidDummy.textureName.indexOf("Biped") > -1 ? "Biped" : "default";
+			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(packgeName);
 			if (ltb != null) packgeName = mod_PFLM_PlayerFormLittleMaid.getTextureBoxPackegeName(ltb);
 		}
 		entityPlayerFormLittleMaidDummy.textureName = packgeName;
 		if (entityPlayerFormLittleMaidDummy.textureName != null
 				&& ltb != null) ;else return;
 		entityPlayerFormLittleMaidDummy.texture = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor);
-		entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+		if (packgeName.indexOf("Biped") > -1) {
+			entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entityPlayerFormLittleMaidDummy, packgeName, false);
+		} else {
+			entityPlayerFormLittleMaidDummy.textureModel = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+		}
 		entityPlayerFormLittleMaidDummy.textureArmorName = modelSelectMode % 2 == 0 ? "" : packgeName;
 		//Modchu_Debug.mDebug("modelNamber="+modelNamber+" entityPlayerFormLittleMaidDummy.textureName="+entityPlayerFormLittleMaidDummy.textureName);
 		//Modchu_Debug.mDebug("drawModel entityPlayerFormLittleMaidDummy.textureName="+entityPlayerFormLittleMaidDummy.textureName);

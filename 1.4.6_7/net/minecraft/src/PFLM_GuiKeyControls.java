@@ -76,7 +76,7 @@ public class PFLM_GuiKeyControls extends
 					controlList.add(new Modchu_GuiSmallButton(3, width / 2 - 140, height / 2 + 20, 50, 20, "Default"));
 					controlList.add(new Modchu_GuiSmallButton(4, width / 2 - 90, height / 2 + 20, 30, 20, "UP"));
 					controlList.add(new Modchu_GuiSmallButton(5, width / 2 - 170, height / 2 + 20, 30, 20, "Down"));
-					controlList.add(new Modchu_GuiSmallButton(6, x + 75, y + 55, 75, 15, "Close"));
+					controlList.add(new Modchu_GuiSmallButton(6, x + 75, y + 40, 75, 15, "Close"));
 				} else {
 					controlList.add(new Modchu_GuiSmallButton(7, x + 75, y + 40, 75, 15, "ScaleChange"));
 				}
@@ -103,7 +103,7 @@ public class PFLM_GuiKeyControls extends
     	//isModelSize Default
     	if(guibutton.id == 3)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] = mod_PFLM_PlayerFormLittleMaid.getModelScale(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[0]);
+    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[0]).getModelScale();
     	}
     	//isModelSize UP
     	if(guibutton.id == 4)

@@ -21,9 +21,34 @@ public class PFLM_ModelData
 	public int initFlag = 0;
 	public int runActionNumber = 0;
 	public int handedness = 0;
+	public boolean motionResetFlag = false;
+	public boolean mushroomConfusionLeft = false;
+	public boolean mushroomConfusionRight = false;
+	public boolean mushroomConfusionFront = false;
+	public boolean mushroomConfusionBack = false;
+	public boolean motionSetFlag = false;
+	public boolean mushroomBack = false;
+	public boolean mushroomForward = false;
+	public boolean mushroomKeyBindResetFlag = false;
+	public boolean mushroomKeyBindSetFlag = false;
+	public int mushroomConfusionType = 0;
+	public int mushroomConfusionCount = 0;
+	public final int mushroomConfusionTypeMax = 4;
+	public boolean mushroomLeft = false;
+	public boolean mushroomRight = false;
+/*//b173delete
+	public boolean keyBindForwardPressed;
+	public boolean keyBindBackPressed;
+	public boolean keyBindLeftPressed;
+	public boolean keyBindRightPressed;
+	public KeyBinding keyBindForward;
+	public KeyBinding keyBindBack;
+	public KeyBinding keyBindLeft;
+	public KeyBinding keyBindRight;
+	public boolean mushroomConfusionFlag = false;
+*///b173delete
 
-	public PFLM_ModelData(RenderLiving renderLiving)
-	{
+	public PFLM_ModelData(RenderLiving renderLiving) {
 		modelMain = new MMM_ModelDuo(renderLiving);
 		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
 		modelMain.textureInner = new String [4];
