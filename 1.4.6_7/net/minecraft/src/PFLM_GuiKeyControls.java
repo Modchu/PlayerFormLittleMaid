@@ -468,9 +468,13 @@ public class PFLM_GuiKeyControls extends
 				mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], i);
 			}
 		}
-		mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[0] = null;
-		mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[1] = null;
-		mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[2] = null;
+		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel != null) {
+			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[0] = null;
+			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[1] = null;
+			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[2] = null;
+		} else {
+			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel = new Object[3];
+		}
 		//String s = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], "_");
 		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select]);
 		if (ltb != null) mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[0] = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb)[0];
