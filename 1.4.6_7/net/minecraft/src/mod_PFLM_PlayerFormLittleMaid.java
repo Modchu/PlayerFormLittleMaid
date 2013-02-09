@@ -138,6 +138,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public final String minecraftVersion;
 	public static int[][] texturesNamber;
 	public static int[] maxTexturesNamber = new int [16];
+	public static Class PFLM_PlayerBase;
+	public static Class PFLM_PlayerBaseSmart;
 	public static Class LMM_EntityLittleMaid;
 	public static Class LMM_InventoryLittleMaid;
 	public static Class LMM_SwingStatus;
@@ -270,7 +272,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.4.6~7-18";
+		return "1.4.6~7-18a";
 	}
 
 	public void load()
@@ -1575,7 +1577,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     		} else /*125delete*/
 //-@-b166
     		if (isPlayerAPI) {
-    			((PFLM_PlayerBase) gotcha).player.skinUrl = s;
+    			Modchu_Reflect.setFieldObject(PFLM_PlayerBase, "skinUrl", Modchu_Reflect.getFieldObject(PFLM_PlayerBase, "player", gotcha), s);
     		} else {
 //-@-125
     			if (isSSP) {
@@ -1597,7 +1599,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     		} else /*125delete*/
 //-@-b166
     		if (isPlayerAPI) {
-    			((PFLM_PlayerBase) gotcha).setPlayerTexture(s);
+    			Modchu_Reflect.invokeMethod(PFLM_PlayerBase, "setPlayerTexture", new Class[]{String.class}, gotcha, s);
     		} else {
 //-@-125
     			if (isSSP) {
@@ -1903,7 +1905,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     		} else /*125delete*/
 //-@-b166
     		if (isPlayerAPI) {
-    			if (gotcha != null) return ((PFLM_PlayerBase) gotcha).player.username;
+    			if (gotcha != null) return (String) Modchu_Reflect.getFieldObject(PFLM_PlayerBase, "username", Modchu_Reflect.getFieldObject(PFLM_PlayerBase, "player", gotcha));
     		} else {
 //-@-125
     			if (isSSP) {
@@ -2734,13 +2736,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			if (Modchu_Reflect.getField(Modchu_ItemRendererHD, "debugPFLM") != null) isItemRendererDebug = true;
 		}
 		if (isSmartMoving) {
-			Modchu_Debug.mDebug("isSmartMoving");
 			modelClassName = "MultiModelSmart";
-			Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", new MMM_ModelBiped[] {
-					new MultiModelSmart(0.0F),
-					new MultiModelSmart(0.1F),
-					new MultiModelSmart(0.5F)
-			});
+			Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", modelNewInstance((String) null));
 			Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{modelClassName, "/mob/littleMaid/", modelClassName+"_"});
 			Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"playerformlittlemaid", "/mob/littleMaid/", modelClassName+"_"});
 		}
@@ -3128,33 +3125,31 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 		// PlayerAPI”»’è
 		isPlayerAPI = false;
-			/*b166//*/if (!isPlayerAPIDebug
+//-@-b166
+		if (!isPlayerAPIDebug
 				&& entityReplaceFlag) {
-/*
-	        	PlayerAPI.getRegisteredIds();
-            	isPlayerAPI = true;
-        		PlayerAPI.register("PlayerFormLittleMaid", PFLM_PlayerBase.class);
-*/
-//-@-b166
-        		try {
-					s = getClassName("PlayerAPI");
-					Method mes = null;
-					mes = Class.forName(s).getMethod("register", new Class[] {String.class, Class.class});
+			//PlayerAPI.register("PlayerFormLittleMaid", PFLM_PlayerBase.class);
+			s = getClassName("PlayerAPI");
+			Class base;
 //@-@b166
-//-@-125
-					//@/if(isSmartMoving) mes.invoke(null, "PlayerFormLittleMaid", PFLM_PlayerBaseSmart.class);
-					//@/else {
-//@-@125
+//-@-110
+			if (isSmartMoving) {
+				PFLM_PlayerBaseSmart = Modchu_Reflect.loadClass("PFLM_PlayerBaseSmart");
+				base = PFLM_PlayerBaseSmart;
+			} else {
+//@-@110
 //-@-b166
-						mes.invoke(null, "PlayerFormLittleMaid", PFLM_PlayerBase.class);
-					/*125//*///@/}
-//	        		PlayerAPI.register("PlayerFormLittleMaid", PFLM_PlayerBase.class);
-					isPlayerAPI = true;
-					Modchu_Debug.Debug("PlayerAPI register.");
-				} catch (Exception e) {
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PlayerAPI not found! ")).toString());
-				}
-        	}
+				PFLM_PlayerBaseSmart = Modchu_Reflect.loadClass("PFLM_PlayerBase");
+				base = PFLM_PlayerBase;
+//@-@b166
+//-@-110
+			}
+//-@-110
+//-@-b166
+			Modchu_Reflect.invokeMethod(s, "register", new Class[] {String.class, Class.class}, null, new Object[]{ "PlayerFormLittleMaid", base });
+			isPlayerAPI = true;
+			Modchu_Debug.Debug("PlayerAPI register.");
+		}
 		if (!isPlayerAPI) {
 			ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PlayerAPI false.")).toString());
 			Modchu_Debug.Debug("PlayerAPI false.");
