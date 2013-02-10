@@ -1298,6 +1298,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				modelDataPlayerFormLittleMaid.modelArmorName = mod_PFLM_PlayerFormLittleMaid.textureArmorName = "Biped_Biped";
 			}
 			modelDataPlayerFormLittleMaid.skinMode = skinMode_online;
+			modelInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
+			modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
 			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isPlayer = ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isPlayer =
 					((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isPlayer = modelDataPlayerFormLittleMaid.isPlayer = entityplayer.username == mc.thePlayer.username;
 			return modelDataPlayerFormLittleMaid;
