@@ -1161,7 +1161,13 @@ public class PFLM_RenderPlayer extends RenderPlayer
 			} else {
 				url = mc.thePlayer.skinUrl;
 			}
-			Modchu_Debug.Debug((new StringBuilder()).append("Failed to read a player texture from a URL for ").append(url).toString());
+			StringBuilder s1 = (new StringBuilder()).append("Failed to read a player texture from a URL for ");
+			if (url != null) {
+				s1.append(url);
+			} else {
+				s1.append("null entityplayer.userName=").append(entityplayer.username);
+			}
+			Modchu_Debug.Debug(s1.toString());
 			//Modchu_Debug.Debug(ioexception.getMessage());
 			er = true;
 		}
@@ -1174,6 +1180,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				//Modchu_Debug.Debug("er /mob/char.png ");
 				modelDataPlayerFormLittleMaid.skinMode = skinMode_char;
 				modelDataPlayerFormLittleMaid.modelArmorName = "_Biped";
+				modelInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
+				modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
 				((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isPlayer = ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isPlayer =
 						((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isPlayer = modelDataPlayerFormLittleMaid.isPlayer = entityplayer.username == mc.thePlayer.username;
 				return modelDataPlayerFormLittleMaid;
@@ -1324,8 +1332,13 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isPlayer = ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).isPlayer =
 				((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).isPlayer = modelDataPlayerFormLittleMaid.isPlayer = entityplayer.username == mc.thePlayer.username;
 		modelDataPlayerFormLittleMaid.handedness = handedness;
-		if (modelDataPlayerFormLittleMaid.isPlayer) mod_PFLM_PlayerFormLittleMaid.handednessMode = handedness;
+		Modchu_Debug.Debug((new StringBuilder()).append("localflag handedness = ").append(handedness).append(" Random=-1 Right=0 Left=1").toString());
 		modelDataPlayerFormLittleMaid.modelScale = modelScale;
+		Modchu_Debug.Debug((new StringBuilder()).append("localflag modelScale = ").append(modelScale).toString());
+		if (modelDataPlayerFormLittleMaid.isPlayer) {
+			mod_PFLM_PlayerFormLittleMaid.handednessMode = handedness;
+			PFLM_Gui.modelScale = modelScale;
+		}
 		return modelDataPlayerFormLittleMaid;
     }
 
@@ -1425,7 +1438,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		checkY = checkPointUnder ? 30 : 1;
 		c1 = checkImageColor(bufferedimage, checkX, checkY);
 		object[6] = c1[0] == 255 ? 0 : c1[0] == 0 ? 1 : -1;
-		object[7] = (float)c1[1] * (0.9375F / 24F);
+		object[7] = (float)(255 - c1[1]) * (0.9375F / 24F);
+		//Modchu_Debug.mDebug((new StringBuilder()).append("checkimage modelScale color c1[1] = ").append(c1[1]).toString());
 		b = c1[2];
 		a = c1[3];
 		return object;

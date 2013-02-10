@@ -30,7 +30,7 @@ public class PFLM_ThreadVersionCheck extends Thread
                     String[] var5 = tokenize(var4, "\n\r");
                     if (var5.length < 1) return;
                     String var6 = var5[0];
-                    Modchu_Debug.Debug("Version found: " + var6);
+                    Modchu_Debug.Debug("PlayerFormLittleMaid Version found: " + var6);
                     if (mod_PFLM_PlayerFormLittleMaid.checkRelease(var6)) {
                     	mod_PFLM_PlayerFormLittleMaid.setNewRelease(var6);
                         return;

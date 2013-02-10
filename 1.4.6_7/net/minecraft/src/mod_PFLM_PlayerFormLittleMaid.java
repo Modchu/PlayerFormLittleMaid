@@ -3324,24 +3324,30 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static boolean checkRelease(String s) {
 		if (s != null) {
 			if (s.length() > 1) {
-				String ck = s.substring(s.length() - 1, s.length());
+				String ck = s.substring(s.length() - 1);
 				String mck = mod_pflm_playerformlittlemaid.getVersion();
 				String k = mck;
-				while (k.indexOf("-") != -1)
-				{
-					k = k.substring(k.indexOf("-") + 1);
+				if (k.lastIndexOf("-") > -1) k = k.substring(k.lastIndexOf("-") + 1);
+				mck = k.substring(k.length() - 1);
+				if (integerCheck(mck)) mck = "";
+				boolean check = integerCheck(k);
+				while(!check
+						&& k.length() > 1){
+					//Modchu_Debug.mDebug("checkRelease k="+k);
+					check = integerCheck(k.substring(0, k.length() - 1));
+					k = k.substring(0, k.length() - 1);
 				}
-				k = k.substring(k.indexOf("-") + 1);
-				int length = k.length() > 2 ? k.length() - 1 : k.length();
-				int m = Integer.valueOf(k.substring(0, length));
-				int i;
-				if (s.length() > 2) {
-					i = Integer.valueOf(s.substring(0, s.length() - 1));
-				} else {
-					i = Integer.valueOf(s);
-					ck = "";
+				int m = Integer.valueOf(k);
+				//Modchu_Debug.mDebug("checkRelease m="+m+" mck="+mck);
+				if (integerCheck(ck)) ck = "";
+				check = integerCheck(s);
+				while(!check
+						&& s.length() > 1){
+					//Modchu_Debug.mDebug("checkRelease s="+s);
+					check = integerCheck(s.substring(0, s.length() - 1));
+					s = s.substring(0, s.length() - 1);
 				}
-				mck = k.length() > 2 ? k.substring(2, k.length()) : "";
+				int i = Integer.valueOf(s);
 				Modchu_Debug.mDebug("m="+m+" mck="+mck+" i="+i+" ck="+ck);
 				if (i > m) {
 					return true;
@@ -3359,6 +3365,15 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static void setNewRelease(String s) {
 		newRelease = true;
 		newVersion = s;
+	}
+
+	public static boolean integerCheck(String s) {
+		try {
+			Integer.valueOf(s);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	public static String getPackege(int i, int j) {

@@ -672,6 +672,12 @@ public class PFLM_Gui extends GuiScreen {
     		fontRenderer.drawString("PlayerFormLittleMaid", 10, 10, 0xffffff);
     		fontRenderer.drawString((new StringBuilder()).append("newVersion v").append(mod_PFLM_PlayerFormLittleMaid.newVersion).append(" Release!").toString(), 10, 20, 0xffffff);
     	}
+    	if (mod_Modchu_ModchuLib.newRelease
+    			&& !partsButton
+    			&& !modelScaleButton) {
+    		fontRenderer.drawString("ModchuLib", 10, 30, 0xffffff);
+    		fontRenderer.drawString((new StringBuilder()).append("newVersion v").append(mod_Modchu_ModchuLib.newVersion).append(" Release!").toString(), 10, 40, 0xffffff);
+    	}
     	StringBuilder s = (new StringBuilder()).append("TextureName : ");
     	StringBuilder s1 = (new StringBuilder()).append("ArmorName : ");
     	StringBuilder s2 = (new StringBuilder()).append("MaidColor : ");
