@@ -55,11 +55,9 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		sizeMultiplier = Modchu_Reflect.getMethod(Entity.class, "getSizeMultiplier");
 		isSizeMultiplier = sizeMultiplier != null;
 		if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-			Modchu_Debug.mDebug("PFLM_RenderPlayer() isSmartMoving");
+			//Modchu_Debug.mDebug("PFLM_RenderPlayer() isSmartMoving");
 			pflm_RenderPlayerSmart = Modchu_Reflect.newInstance(mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.getClassName("PFLM_RenderPlayerSmart"), new Class[]{ PFLM_RenderPlayer.class }, new Object[]{ this });
 			PFLM_RenderPlayerSmart = Modchu_Reflect.loadClass(mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.getClassName("PFLM_RenderPlayerSmart"));
-		} else {
-			Modchu_Debug.mDebug("PFLM_RenderPlayer() isSmartMoving false");
 		}
 		// b173deleterenderBlocks = new RenderBlocks();
 	}
@@ -105,12 +103,12 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			flag = itemarmor != null && is.stackSize > 0;
     		}
     		if (flag) {
-    			modelDataPlayerFormLittleMaid.modelFATT.textureOuter[i] = "/armor/" + armorFilenamePrefix[itemarmor.renderIndex] + "_" + 2 + ".png";
-    			modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] = "/armor/" + armorFilenamePrefix[itemarmor.renderIndex] + "_" + 1 + ".png";
+    			modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] = "/armor/" + armorFilenamePrefix[itemarmor.renderIndex] + "_" + 2 + ".png";
+    			modelDataPlayerFormLittleMaid.modelFATT.textureOuter[i] = "/armor/" + armorFilenamePrefix[itemarmor.renderIndex] + "_" + 1 + ".png";
     		}
     	} else {
-    		modelDataPlayerFormLittleMaid.modelFATT.textureOuter[i] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetArmorTextureName(t, 64, is);
-    		modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetArmorTextureName(t, 80, is);
+    		modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetArmorTextureName(t, 64, is);
+    		modelDataPlayerFormLittleMaid.modelFATT.textureOuter[i] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetArmorTextureName(t, 80, is);
     		//Modchu_Debug.mDebug("modelDataPlayerFormLittleMaid.modelFATT.textureOuter["+i+"]="+modelDataPlayerFormLittleMaid.modelFATT.textureOuter[i]);
     		//Modchu_Debug.mDebug("modelDataPlayerFormLittleMaid.modelFATT.textureInner["+i+"]="+modelDataPlayerFormLittleMaid.modelFATT.textureInner[i]);
     		//if (modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] != null) ;else modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] = modelDataPlayerFormLittleMaid.modelFATT.textureOuter[i];
@@ -763,12 +761,12 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.changeModel(entityplayer);
     		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.changeModel(entityplayer);
     		modelDataPlayerFormLittleMaid.changeModelFlag = false;
-    		modelDataPlayerFormLittleMaid.resetHandedness = true;
+    		//modelDataPlayerFormLittleMaid.resetHandedness = true;
     	}
-    	if (modelDataPlayerFormLittleMaid.resetHandedness) {
+    	//if (modelDataPlayerFormLittleMaid.resetHandedness) {
     		setHandedness(entityplayer, modelDataPlayerFormLittleMaid.handedness);
-    		modelDataPlayerFormLittleMaid.resetHandedness = false;
-    	}
+    		//modelDataPlayerFormLittleMaid.resetHandedness = false;
+    	//}
     	modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.isSneak =
     			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.isSneak =
     			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.isSneak = entityplayer.isSneaking();
@@ -843,7 +841,9 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			GL11.glPopMatrix();
     		}
     	}
-    	if (loadDownloadableImageTexture(entityplayer.playerCloakUrl, null)
+    	if (entityplayer.playerCloakUrl != null
+    			&& renderManager != null
+    			&& loadDownloadableImageTexture(entityplayer.playerCloakUrl, null)
 //-@-132
     			&& !entityplayer.getHasActivePotion() && !entityplayer.getHideCape()
 //@-@132
@@ -903,12 +903,13 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	doRenderSetting(entityplayer, modelDataPlayerFormLittleMaid);
     	float var2 = 1.0F;
     	GL11.glColor3f(var2, var2, var2);
+    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).firstPerson = true;
     	if (i >= 2
     			&& i != 1) {
     		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.onGround = 0.0F;
-    		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).firstPerson = true;
     		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, mc.thePlayer);
     	}
+    	//Modchu_Debug.Debug("modelDataPlayerFormLittleMaid.modelMain.textureOuter[0]="+modelDataPlayerFormLittleMaid.modelMain.textureOuter[0]);
     	if (firstPersonHandResetFlag
     			&& modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null
     			&& modelDataPlayerFormLittleMaid.modelMain.textureOuter != null
@@ -916,7 +917,10 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		firstPersonHandResetFlag = false;
     		loadTexture(modelDataPlayerFormLittleMaid.modelMain.textureOuter[0]);
     	}
-    	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).renderFirstPersonHand(0.0625F);
+    	//Modchu_Debug.Debug("modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null ? ="+(modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null));
+    	//Modchu_Debug.Debug("modelDataPlayerFormLittleMaid.modelMain.textureOuter != null ? ="+(modelDataPlayerFormLittleMaid.modelMain.textureOuter != null));
+    	//Modchu_Debug.Debug("renderManager.renderEngine != null ? ="+(renderManager.renderEngine != null));
+    	if (!firstPersonHandResetFlag) ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).renderFirstPersonHand(0.0625F);
     	((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).firstPerson = false;
     }
 
@@ -1212,7 +1216,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 
 	private static void modelInit(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid, String s) {
 		Object[] models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entityplayer, s, false);
-		Modchu_Debug.mDebug("modelInit s="+s+" models[0] != null ? "+(models[0] != null));
+		//Modchu_Debug.mDebug("modelInit s="+s+" models[0] != null ? "+(models[0] != null));
 		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner = (MultiModelBaseBiped) (models[0] != null ? models[0] : new MultiModel(0.0F));
 		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).armorType = 0;
 	}
@@ -1224,7 +1228,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 						| s.equalsIgnoreCase("erasearmor"))) s = "Biped";
 		Object[] models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entityplayer, s, false);
 		float[] f1 = mod_PFLM_PlayerFormLittleMaid.getArmorModelsSize(models[0]);
-		Modchu_Debug.mDebug("modelArmorInit s="+s+" models[1] != null ? "+(models[1] != null));
+		//Modchu_Debug.mDebug("modelArmorInit s="+s+" models[1] != null ? "+(models[1] != null));
 		if (models != null
 				&& models[1] != null) ;else {
 					models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(isBiped ? "Biped" : null);
@@ -1580,7 +1584,9 @@ public class PFLM_RenderPlayer extends RenderPlayer
     protected void renderName(EntityPlayer entityplayer, double d, double d1, double d2)
     {
     	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) Modchu_Reflect.invokeMethod(PFLM_RenderPlayerSmart, "renderName", new Class[]{ EntityPlayer.class, double.class, double.class, double.class }, pflm_RenderPlayerSmart, new Object[]{ entityplayer, d, d1, d2 });
-    	if(mod_PFLM_PlayerFormLittleMaid.isRenderName) {
+    	if(mod_PFLM_PlayerFormLittleMaid.isRenderName
+    			&& renderManager != null
+    			&& renderManager.renderEngine != null) {
     		PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData(entityplayer);
     		if (modelDataPlayerFormLittleMaid == null) return;
     		double d3 = 0.0D;
@@ -1742,8 +1748,10 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isRendering = false;
     	} else {
 //@-@132
-    		loadDownloadableImageTexture(par1EntityLiving.skinUrl, par1EntityLiving.getTexture());
-    		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isRendering = true;
+    		if (renderManager != null) {
+    			loadDownloadableImageTexture(par1EntityLiving.skinUrl, par1EntityLiving.getTexture());
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).isRendering = true;
+    		}
 //-@-b132
     	}
 //@-@132

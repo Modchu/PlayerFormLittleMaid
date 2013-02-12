@@ -67,13 +67,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static boolean isOlddays = false;
 	public static boolean isSSP = false;
 	public static boolean isLMM = false;
+	public static boolean isHD = false;
 	public static boolean isItemRendererHD = false;
 	public static boolean isPlayerAPI = false;
 	public static boolean guiEnable = true;
 	public static boolean entityReplaceFlag = false;
+	public static boolean initItemRenderer = false;
+	public static boolean initItemRendererHD = false;
 	public boolean gotchaNullFlag = false;
-	private static boolean initItemRenderer = false;
-	private static boolean initItemRendererHD = false;
 	private boolean isItemRendererDebug = false;
 	private boolean setMultiAutochangeMode = true;
 	public static int changeMode = 0;
@@ -144,10 +145,11 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static Class LMM_InventoryLittleMaid;
 	public static Class LMM_SwingStatus;
 	public static Class LMM_EntityLittleMaidAvatar;
-	public static Class Modchu_ItemRendererHD;
 	public static Class MMM_TextureManager;
 	public static Class MMM_FileManager;
 	public static Class MMM_TextureBox;
+	public static Class Modchu_ItemRendererHD;
+	public static Class itemRendererClass;
 	private static int PFLMModelsKeyCode;
 	private static Random rnd = new Random();
 
@@ -272,7 +274,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.4.6~7-18b";
+		return "1.4.6~7-18c";
 	}
 
 	public void load()
@@ -716,26 +718,25 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (minecraft.currentScreen != null
 				&& !isForge) onTickInGUI(0.0F, minecraft, minecraft.currentScreen);
 
-		if (isItemRendererHD
-				&& !isItemRendererDebug) {
-			if (!Modchu_ItemRendererHD.isInstance(mc.entityRenderer.itemRenderer)) {
-				Object itemRenderer = Modchu_Reflect.newInstance(Modchu_ItemRendererHD, new Class[]{ Minecraft.class }, new Object[]{ mc });
-				if (itemRenderer != null) mc.entityRenderer.itemRenderer = (ItemRenderer) itemRenderer;
-				initItemRendererHD = true;
-			}
-			if (!Modchu_ItemRendererHD.isInstance(RenderManager.instance.itemRenderer)) {
-				Object itemRenderer = (ItemRenderer) Modchu_Reflect.newInstance(Modchu_ItemRendererHD, new Class[]{ Minecraft.class }, new Object[]{ mc });
-				if (itemRenderer != null) RenderManager.instance.itemRenderer = (ItemRenderer) itemRenderer;
-				initItemRendererHD = true;
-			}
-		} else {
-			if (!(mc.entityRenderer.itemRenderer instanceof Modchu_ItemRenderer)) {
-				mc.entityRenderer.itemRenderer = new Modchu_ItemRenderer(mc);
-				initItemRenderer = true;
-			}
-			if (!(RenderManager.instance.itemRenderer instanceof Modchu_ItemRenderer)) {
-				RenderManager.instance.itemRenderer = new Modchu_ItemRenderer(mc);
-				initItemRenderer = true;
+		if (itemRendererClass != null) {
+			ItemRenderer itemRenderer = null;
+			for(int i = 0; i < 2; i++) {
+				itemRenderer = i == 0 ? mc.entityRenderer.itemRenderer: RenderManager.instance.itemRenderer;
+				if (!instanceCheck(itemRendererClass, itemRenderer)) {
+					ItemRenderer itemRenderer2 = newInstanceItemRenderer();
+					if (itemRenderer2 != null) {
+						if (i == 0) {
+							mc.entityRenderer.itemRenderer = itemRenderer2;
+						} else if (i == 1) {
+							RenderManager.instance.itemRenderer = itemRenderer2;
+						}
+						if (isHD) {
+							initItemRendererHD = true;
+						} else {
+							initItemRenderer = true;
+						}
+					}
+				}
 			}
 		}
 
@@ -958,6 +959,22 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		}
 		/*b166//*/return true;
 		// b166deletereturn;
+	}
+
+	public static boolean instanceCheck(Class c, Object o) {
+		boolean b = true;
+		if (o != null) {
+			if(!c.isInstance(o)) {
+				b = false;
+			}
+		} else {
+			b = false;
+		}
+		return b;
+	}
+
+	public static ItemRenderer newInstanceItemRenderer() {
+		return (ItemRenderer) Modchu_Reflect.newInstance(itemRendererClass, new Class[]{ Minecraft.class }, new Object[]{ mc });
 	}
 
 	private double getPosX(Minecraft minecraft) {
@@ -1546,26 +1563,37 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static String getArmorName(String s) {
+    	return getArmorName(s, 0);
+    }
+
+    public static String getArmorName(String s, int i) {
 		if (s == null) return "";
 		String s1 = s;
 		Object ltb = getTextureBox(s);
-		if (ltb != null) {
-			return s1;
+		if (ltb != null
+				&& getTextureBoxHasArmor(ltb)) {
+			//Modchu_Debug.mDebug("getArmorName getTextureBoxHasArmor true s1="+s1);
 		} else {
-			if (s.indexOf("Biped") == -1) {
-				String[] cheackModelName = {
-						"Elsa","Pawapro"
-				};
-				for (int i = 0 ; i < cheackModelName.length ; i++) {
-					if (s.indexOf(cheackModelName[i]) != -1) {
-						return "_erasearmor";
-					}
+			s1 = getModelSpecificationArmorPackege(s);
+			if (s1 != null) return s1;
+			String[] cheackModelName = {
+					"Elsa"
+			};
+			boolean flag = false;
+			for (int i2 = 0 ; i2 < cheackModelName.length ; i2++) {
+				if (s.startsWith(cheackModelName[i2])) {
+					s1 = "erasearmor";
+					flag = true;
 				}
+			}
+			if (!flag
+					&& i == 0) {
 				s1 = "default";
 			} else {
-				s1 = "_Biped";
+				if (i == 2) s1 = "erasearmor";
 			}
 		}
+		Modchu_Debug.mDebug("getArmorName s1="+s1);
 		return s1;
 	}
 
@@ -1996,12 +2024,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				}
 			}
 		}
-		Object ltb = getTextureBox(textureName);
-		Object[] models = null;
-		if (ltb != null) {
-			models = getTextureBoxModels(ltb);
-			ltb = textureBoxCheck(ltb, textureName);
-		}
 		// setSizeの設定値はダミー。設定は呼び出し先で
 		if (isModelSize) {
 			setSize(0.5F, 1.35F);
@@ -2016,8 +2038,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		int i = getMaidColor();
 		String t = texture;
 		texture = textureManagerGetTextureName(textureName, i);
-		int n = 0;
-		for (; n < 16 && texture == null; n = n + 1) {
+		for (int n = 0; n < 16 && texture == null; n = n + 1) {
 			if (PFLM_Gui.colorReverse) {
 				i--;
 			} else {
@@ -2027,28 +2048,13 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			setMaidColor(i);
 			texture = textureManagerGetTextureName(textureName, i);
 		}
-		if (texture == null) {
-			texture = t;
-			return;
-		}
+		if (texture == null) texture = t;
 	}
 
 	public static void setArmorTextureValue() {
 		// Modchu_Debug.mDebug("setArmorTextureValue textureArmorName="+textureArmorName);
 		if (changeMode == PFLM_Gui.modeOnline) return;
-		if (textureArmorName == null) {
-			setTextureArmorName(textureName);
-			if (textureArmorName == null) {
-				return;
-			}
-		}
-		Object ltb = getTextureBox(textureArmorName);
-		if (ltb != null) {
-		} else {
-			String s1 = setArmorTexturePackege("default", 0);
-			if (s1 != null) setTextureArmorName(s1);
-			ltb = getTextureBox(textureArmorName);
-		}
+		if (textureArmorName == null) setTextureArmorName(getArmorName(textureName));
 	}
 
 	public static void setTexturePackege(boolean next, int i) {
@@ -2057,39 +2063,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			if (s != null) ;else return;
 			textureName = s;
 			setTextureArmorName(textureName);
-			String s1 = setArmorTexturePackege(textureArmorName, i);
+			String s1 = getArmorName(textureArmorName, i);
 			if (s1 != null) setTextureArmorName(s1);
 		}
 		if (i == 1) textureArmorName = next ? textureManagerGetNextArmorPackege(textureArmorName) : textureManagerGetPrevArmorPackege(textureArmorName);
-	}
-
-	public static String setArmorTexturePackege(String s, int i) {
-		Object ltb = getTextureBox(s);
-		String s1 = s;
-		if (ltb != null
-				&& !getTextureBoxHasArmor(ltb)
-				&& s != null) {
-			s = lastIndexProcessing(s, "_");
-			s1 = getModelSpecificationArmorPackege(s);
-			if (s1 != null) return s1;
-			String[] cheackModelName = {
-					"Elsa"
-			};
-			boolean flag = false;
-			for (int i2 = 0 ; i2 < cheackModelName.length ; i2++) {
-				if (s.startsWith(cheackModelName[i2])) {
-					s1 = "erasearmor";
-					flag = true;
-				}
-			}
-			if (!flag
-					&& i == 0) {
-				s1 = "default";
-			} else {
-				if (i == 2) s1 = "erasearmor";
-			}
-		}
-		return s1;
 	}
 
 	public static int getMaidColor() {
@@ -2733,8 +2710,15 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		}
 		if (isItemRendererHD) {
 			Modchu_ItemRendererHD = Modchu_Reflect.loadClass(getClassName("Modchu_ItemRendererHD"));
-			if (Modchu_Reflect.getField(Modchu_ItemRendererHD, "debugPFLM") != null) isItemRendererDebug = true;
+			Object b = Modchu_Reflect.getFieldObject(getClassName("ItemRendererHD"), "debugPFLM");
+			if (b != null
+					&& (Boolean) b) {
+				isItemRendererDebug = true;
+			}
 		}
+		isHD = isItemRendererHD
+				&& !isItemRendererDebug;
+		itemRendererClass = isHD ? Modchu_ItemRendererHD: Modchu_ItemRenderer.class;
 		if (isSmartMoving) {
 			modelClassName = "MultiModelSmart";
 			Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", modelNewInstance((String) null));

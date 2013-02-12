@@ -920,7 +920,7 @@ public class PFLM_Gui extends GuiScreen {
 		if (i == 0) {
 			setTextureArmorName(textureName);
 			setArmorNumber(setModel);
-			String s1 = mod_PFLM_PlayerFormLittleMaid.setArmorTexturePackege(textureArmorName, 0);
+			String s1 = mod_PFLM_PlayerFormLittleMaid.getArmorName(textureArmorName, 0);
 			if (s1.equalsIgnoreCase("erasearmor")) s1 = "x32_QB";
 			if (s1 != null) setTextureArmorName(s1);
 			//Modchu_Debug.mDebug("setTexturePackege i="+i+" textureArmorName="+textureArmorName);

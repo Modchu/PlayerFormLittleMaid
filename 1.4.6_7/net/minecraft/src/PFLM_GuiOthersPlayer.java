@@ -351,9 +351,13 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 				mod_PFLM_PlayerFormLittleMaid.othersTexture = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(mod_PFLM_PlayerFormLittleMaid.othersTextureName, i);
 			}
 		}
-		mod_PFLM_PlayerFormLittleMaid.othersTextureModel[0] = null;
-		mod_PFLM_PlayerFormLittleMaid.othersTextureModel[1] = null;
-		mod_PFLM_PlayerFormLittleMaid.othersTextureModel[2] = null;
+		if (mod_PFLM_PlayerFormLittleMaid.othersTextureModel != null) {
+			mod_PFLM_PlayerFormLittleMaid.othersTextureModel[0] = null;
+			mod_PFLM_PlayerFormLittleMaid.othersTextureModel[1] = null;
+			mod_PFLM_PlayerFormLittleMaid.othersTextureModel[2] = null;
+		} else {
+			mod_PFLM_PlayerFormLittleMaid.othersTextureModel = new Object[3];
+		}
 		//String s = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(mod_PFLM_PlayerFormLittleMaid.othersTextureName, "_");
 		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(mod_PFLM_PlayerFormLittleMaid.othersTextureName);
     	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
@@ -389,14 +393,13 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 
 	public void setArmorTextureValue() {
 		if (mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName == null) {
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.othersTextureName);
+			mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName = mod_PFLM_PlayerFormLittleMaid.getArmorName(mod_PFLM_PlayerFormLittleMaid.othersTextureName);
 			if (mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName == null) {
 				mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName = "default";
 			}
 		}
-		//String s = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName, "_");
 		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName);
-    	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+		Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
 		if (ltb != null) {
 			mod_PFLM_PlayerFormLittleMaid.othersTextureModel[1] = models[1];
 			mod_PFLM_PlayerFormLittleMaid.othersTextureModel[2] = models[2];
@@ -413,34 +416,19 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 		if (i == 0) {
 			mod_PFLM_PlayerFormLittleMaid.othersTextureName = mod_PFLM_PlayerFormLittleMaid.textureManagerGetNextPackege(mod_PFLM_PlayerFormLittleMaid.othersTextureName,
 							getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.othersTextureName);
-			Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(mod_PFLM_PlayerFormLittleMaid.othersTextureName);
-			if (ltb == null) {
-				if (mod_PFLM_PlayerFormLittleMaid.othersTextureName.indexOf("Biped") == -1) {
-					setTextureArmorName("default");
-				} else {
-					setTextureArmorName("_Biped");
-				}
-			}
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(mod_PFLM_PlayerFormLittleMaid.othersTextureName));
 		}
 		if (i == 1) {
 			mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName = mod_PFLM_PlayerFormLittleMaid.textureManagerGetNextArmorPackege(mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName);
+			Modchu_Debug.mDebug("setNextTexturePackege(int) mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName="+mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName);
 		}
 	}
 
 	public static void setPrevTexturePackege(int i) {
 		if (i == 0) {
-			mod_PFLM_PlayerFormLittleMaid.othersTextureName = mod_PFLM_PlayerFormLittleMaid.textureManagerGetPrevPackege(mod_PFLM_PlayerFormLittleMaid.othersTextureName,
-							getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.othersTextureName);
-			Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(mod_PFLM_PlayerFormLittleMaid.othersTextureName);
-			if (ltb == null) {
-				if (mod_PFLM_PlayerFormLittleMaid.othersTextureName.indexOf("Biped") == -1) {
-					setTextureArmorName("erasearmor");
-				} else {
-					setTextureArmorName("_Biped");
-				}
-			}
+			mod_PFLM_PlayerFormLittleMaid.othersTextureName =
+					mod_PFLM_PlayerFormLittleMaid.textureManagerGetPrevPackege(mod_PFLM_PlayerFormLittleMaid.othersTextureName, getMaidColor());
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(mod_PFLM_PlayerFormLittleMaid.othersTextureName));
 		}
 		if (i == 1) {
 			mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName = mod_PFLM_PlayerFormLittleMaid.textureManagerGetPrevArmorPackege(mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName);

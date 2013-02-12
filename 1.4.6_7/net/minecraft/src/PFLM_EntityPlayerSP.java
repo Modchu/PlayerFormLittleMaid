@@ -13,34 +13,8 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
     private ChunkCoordinates startMinecartRidingCoordinate;
 	private boolean initFlag;
 	private boolean isRidingCorrectionFlag = false;
-	private boolean motionResetFlag;
-	private boolean mushroomConfusionLeft;
-	private boolean mushroomConfusionRight;
-	private boolean mushroomConfusionFront;
-	private boolean mushroomConfusionBack;
-	private boolean motionSetFlag;
-	private boolean mushroomBack;
-	private boolean mushroomForward;
-	private boolean mushroomKeyBindResetFlag;
-	private boolean mushroomKeyBindSetFlag;
-	private int mushroomConfusionType = 0;
-	private int mushroomConfusionCount = 0;
 	private Random rnd;
-	private final int mushroomConfusionTypeMax = 4;
-	private boolean mushroomLeft;
-	private boolean mushroomRight;
-/*//b173delete
-	private boolean keyBindForwardPressed;
-	private boolean keyBindBackPressed;
-	private boolean keyBindLeftPressed;
-	private boolean keyBindRightPressed;
-	private KeyBinding keyBindForward;
-	private KeyBinding keyBindBack;
-	private KeyBinding keyBindLeft;
-	private KeyBinding keyBindRight;
-	private boolean mushroomConfusionFlag = false;
-	public static int sleepMotion = 0;
-*///b173delete
+	private Class EntityPlayerSP2;
 
     public PFLM_EntityPlayerSP(Minecraft par1Minecraft, World par2World, Session par3Session, NetClientHandler par4NetClientHandler) {
 		super(par1Minecraft, par2World, par3Session, par4NetClientHandler);
@@ -86,6 +60,7 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 		keyBindLeft = mc.gameSettings.keyBindLeft;
 		keyBindRight = mc.gameSettings.keyBindRight;
 *///b173delete
+		EntityPlayerSP2 = Modchu_Reflect.loadClass("EntityPlayerSP2", false);
 	}
 
 	public void wakeUpPlayer(boolean flag, boolean flag1, boolean flag2) {
@@ -278,44 +253,6 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 	}
 
 	public void onLivingUpdate() {
-        ItemStack itemstack = inventory.getStackInSlot(9);
-        //b173deleteboolean mushroomConfusionResetFlag = true;
-        if (itemstack != null) {
-        	Item item = itemstack.getItem();
-        	if (item instanceof ItemBlock) {
-        		Block block = Block.blocksList[item.itemID];
-        		if (block instanceof BlockMushroom) {
-        			ItemStack itemstack2 = inventory.getStackInSlot(10);
-        			if (itemstack2 != null) {
-        				Item item2 = itemstack2.getItem();
-        				if (item2 == item.dyePowder) {
-        					//b173deletemushroomConfusionResetFlag = false;
-        					//b173deleteif (!mushroomConfusionFlag) mushroomConfusionFlag = true;
-        					--mushroomConfusionCount;
-        					if(mushroomConfusionCount < 0) {
-        						mushroomConfusionCount = 500 + (100 * rnd.nextInt(10));
-        						mushroomConfusionType = rnd.nextInt(mushroomConfusionTypeMax);
-        						//b173deleteif (mushroomConfusionType != 0) mushroomConfusion1();
-        					}
-        					//b173deleteif (mushroomConfusionType == 0) mushroomConfusion0();
-        					/*b173//*/mushroomConfusion(mushroomConfusionType);
-        					//Modchu_Debug.dDebug("mushroomConfusionCount="+mushroomConfusionCount,5);
-        					//Modchu_Debug.dDebug("mushroomConfusionType="+mushroomConfusionType,6);
-        				}
-        			}
-        		}
-        	}
-        }
-/*//b173delete
-        if (mushroomConfusionFlag
-        		&& mushroomConfusionResetFlag) {
-        	mushroomConfusionFlag = false;
-    		mc.gameSettings.keyBindForward = keyBindForward;
-    		mc.gameSettings.keyBindBack = keyBindBack;
-    		mc.gameSettings.keyBindLeft = keyBindLeft;
-    		mc.gameSettings.keyBindRight = keyBindRight;
-        }
-*///b173delete
 		//if (!worldObj.isRemote) {
 			if (mod_PFLM_PlayerFormLittleMaid.Physical_BurningPlayer > 0) {
 				if (worldObj.getWorldInfo().getWorldTime() / 12000 % 2 == 0
@@ -358,202 +295,6 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 			}
 		}
 		super.onLivingUpdate();
-	}
-
-	private void mushroomConfusion(int i) {
-		switch (i) {
-		case 0:
-			mushroomConfusion0();
-			break;
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-			mushroomConfusion1();
-			break;
-		}
-	}
-
-	private void mushroomConfusion0() {
-		if (motionResetFlag) {
-			if (motionX > 0.0D
-					| motionZ > 0.0D) {
-				if (mc.gameSettings.keyBindForward.pressed
-						| mc.gameSettings.keyBindBack.pressed
-						| mc.gameSettings.keyBindLeft.pressed
-						| mc.gameSettings.keyBindRight.pressed) {
-					//Modchu_Debug.mDebug("pressed");
-					motionResetFlag = false;
-					mushroomConfusionLeft = false;
-					if(motionX > 0.001D) {
-						mushroomConfusionLeft = true;
-						//Modchu_Debug.mDebug("mushroomConfusionLeft");
-					}
-					mushroomConfusionRight = false;
-					if(motionX < -0.001D) {
-						mushroomConfusionRight = true;
-						//Modchu_Debug.mDebug("mushroomConfusionRight");
-					}
-					mushroomConfusionFront = false;
-					if(motionZ > 0.0001D) {
-						mushroomConfusionFront = true;
-						//Modchu_Debug.mDebug("mushroomConfusionFront");
-					}
-					mushroomConfusionBack = false;
-					if(motionZ < -0.001D) {
-						mushroomConfusionBack = true;
-						//Modchu_Debug.mDebug("mushroomConfusionBack");
-					}
-					motionSetFlag = true;
-				}
-			}
-		} else {
-			float f = moveForward * moveForward + moveStrafing * moveStrafing;
-			//Modchu_Debug.mDebug("f="+f);
-			if (!isRiding() && mc.inGameHasFocus && (double)f < 0.10000000000000001D && !isJumping) {
-				//Modchu_Debug.mDebug("motionResetFlag = true");
-				motionResetFlag = true;
-				motionX = 0.0D;
-				motionZ = 0.0D;
-				motionSetFlag = false;
-			} else {
-				if (motionSetFlag) {
-					if (mushroomConfusionLeft) {
-						if (motionX > 0.0D) motionX = -motionX - 0.1D;
-						//Modchu_Debug.mDebug("mushroomConfusionLeft "+motionX);
-					}
-					if (mushroomConfusionRight) {
-						if (motionX < 0.0D) motionX = -motionX + 0.4D;
-						//Modchu_Debug.mDebug("mushroomConfusionRight "+motionX);
-					}
-					if (mushroomConfusionFront) {
-						if (motionZ > 0.0D) motionZ = -motionZ - 0.1D;
-						//Modchu_Debug.mDebug("mushroomConfusionFront "+motionZ);
-					}
-					if (mushroomConfusionBack) {
-						if (motionZ < 0.0D) motionZ = -motionZ + 0.4D;
-						//Modchu_Debug.mDebug("mushroomConfusionBack "+motionZ);
-					}
-				}
-			}
-		}
-	}
-
-	private void mushroomConfusion1() {
-		boolean forward;
-		boolean back;
-		boolean left;
-		boolean right;
-		KeyBinding key1 = null;
-		KeyBinding key2 = null;
-		KeyBinding key3 = null;
-		KeyBinding key4 = null;
-		switch (mushroomConfusionType) {
-		case 1:
-			key1 = mc.gameSettings.keyBindForward;
-			key2 = mc.gameSettings.keyBindBack;
-			key3 = mc.gameSettings.keyBindLeft;
-			key4 = mc.gameSettings.keyBindRight;
-			break;
-		case 2:
-			key2 = mc.gameSettings.keyBindForward;
-			key3 = mc.gameSettings.keyBindBack;
-			key4 = mc.gameSettings.keyBindLeft;
-			key1 = mc.gameSettings.keyBindRight;
-			break;
-		case 3:
-			key2 = mc.gameSettings.keyBindForward;
-			key3 = mc.gameSettings.keyBindBack;
-			key1 = mc.gameSettings.keyBindLeft;
-			key4 = mc.gameSettings.keyBindRight;
-			break;
-		case 4:
-			key4 = mc.gameSettings.keyBindForward;
-			key1 = mc.gameSettings.keyBindBack;
-			key2 = mc.gameSettings.keyBindLeft;
-			key3 = mc.gameSettings.keyBindRight;
-			break;
-		}
-//-@-b173
-		if (mushroomBack) {
-			back = returnBoolean(Keyboard.isKeyDown(key2.keyCode));
-			if (!back) mushroomBack = false;
-			key2.pressed = false;
-		} else {
-			key2.pressed = Keyboard.isKeyDown(key2.keyCode);
-			back = returnBoolean(key2.pressed);
-		}
-		if (mushroomForward) {
-			forward = returnBoolean(Keyboard.isKeyDown(key1.keyCode));
-			if (!forward) mushroomForward = false;
-			key1.pressed = false;
-		} else {
-			key1.pressed = Keyboard.isKeyDown(key1.keyCode);
-			forward = returnBoolean(key1.pressed);
-		}
-		if (mushroomLeft) {
-			left = returnBoolean(Keyboard.isKeyDown(key3.keyCode));
-			if (!forward) mushroomLeft = false;
-			key3.pressed = false;
-		} else {
-			key3.pressed = Keyboard.isKeyDown(key3.keyCode);
-			left = returnBoolean(key3.pressed);
-		}
-		if (mushroomRight) {
-			right = returnBoolean(Keyboard.isKeyDown(key4.keyCode));
-			if (!forward) mushroomRight = false;
-			key4.pressed = false;
-		} else {
-			key4.pressed = Keyboard.isKeyDown(key4.keyCode);
-			right = returnBoolean(key4.pressed);
-		}
-		key1.pressed = returnBoolean(back);
-		key2.pressed = returnBoolean(forward);
-		key4.pressed = returnBoolean(left);
-		key3.pressed = returnBoolean(right);
-		//Modchu_Debug.dDebug("keyBindForward="+key1.pressed);
-		//Modchu_Debug.dDebug("keyBindBack="+key2.pressed, 1);
-		//Modchu_Debug.dDebug("forward="+forward, 2);
-		//Modchu_Debug.dDebug("back="+back, 3);
-		if (key1.pressed
-				&& key2.pressTime > 0) {
-			mushroomBack = true;
-			mushroomForward = false;
-			return;
-		}
-		mushroomBack = false;
-		if (key2.pressed
-				&& key1.pressTime > 0) {
-			mushroomForward = true;
-			mushroomBack = false;
-			return;
-		}
-		mushroomForward = false;
-		if (key3.pressed
-				&& key4.pressTime > 0) {
-			mushroomRight = true;
-			mushroomLeft = false;
-			return;
-		}
-		mushroomRight = false;
-		if (key4.pressed
-				&& key3.pressTime > 0) {
-			mushroomLeft = true;
-			mushroomRight = false;
-			return;
-		}
-		mushroomLeft = false;
-//@-@b173
-/*//b173delete
-		mc.gameSettings.keyBindBack = key1;
-		mc.gameSettings.keyBindForward = key2;
-		mc.gameSettings.keyBindRight = key3;
-		mc.gameSettings.keyBindLeft = key4;
-*///b173delete
-	}
-
-	private boolean returnBoolean(boolean b) {
-		return b;
 	}
 
 	public void moveEntityWithHeading(float f, float f1) {
@@ -661,6 +402,46 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
     public void setPlayerTexture(String s) {
     	texture = s;
     }
+
+    public void copyPlayer(EntityPlayer entityplayer)
+    {
+        copyInventory(entityplayer.inventory);
+        health = entityplayer.getHealth();
+        foodStats = entityplayer.getFoodStats();
+//-@-b173
+/*//b181delete
+        playerLevel = entityplayer.playerLevel;
+        totalXP = entityplayer.totalXP;
+        currentXP = entityplayer.currentXP;
+        score = entityplayer.score;
+*///b181delete
+//@-@b173
+//-@-125
+        if (EntityPlayerSP2 != null) Modchu_Reflect.setFieldObject(this.getClass(), "score", entityplayer, Modchu_Reflect.getFieldObject(EntityPlayerSP2, "score", entityplayer));
+//@-@125
+    }
+
+    public void copyInventory(InventoryPlayer inventoryplayer)
+    {
+        for(int i = 0; i < inventoryplayer.mainInventory.length; i++)
+        {
+        	inventory.mainInventory[i] = ItemStack.copyItemStack(inventoryplayer.mainInventory[i]);
+        }
+
+        for(int j = 0; j < inventoryplayer.armorInventory.length; j++)
+        {
+        	inventory.armorInventory[j] = ItemStack.copyItemStack(inventoryplayer.armorInventory[j]);
+        }
+    }
+
+	public void publicResetHeight() {
+		resetHeight();
+	}
+
+	public void publicSetSize(float f, float f1) {
+		setSize(f, f1);
+	}
+
 /*
     public boolean attackEntityFrom(Entity var1, DamageSource par1DamageSource, int par2)
     {
@@ -1066,32 +847,6 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
         if(i > getMaxHealth())
         {
             i = getMaxHealth();
-        }
-    }
-
-    public void copyPlayer(EntityPlayer entityplayer)
-    {
-        copyInventory(entityplayer.inventory);
-        health = entityplayer.health;
-//-@-b173
-        foodStats = entityplayer.foodStats;
-        playerLevel = entityplayer.playerLevel;
-        totalXP = entityplayer.totalXP;
-        currentXP = entityplayer.currentXP;
-//@-@b173
-        score = entityplayer.score;
-    }
-
-    public void copyInventory(InventoryPlayer inventoryplayer)
-    {
-        for(int i = 0; i < inventoryplayer.mainInventory.length; i++)
-        {
-        	inventory.mainInventory[i] = ItemStack.copyItemStack(inventoryplayer.mainInventory[i]);
-        }
-
-        for(int j = 0; j < inventoryplayer.armorInventory.length; j++)
-        {
-        	inventory.armorInventory[j] = ItemStack.copyItemStack(inventoryplayer.armorInventory[j]);
         }
     }
 *///b181delete

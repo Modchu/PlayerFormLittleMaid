@@ -4,13 +4,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
-/*//FMLdelete
-import net.minecraft.client.gui.*;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.*;
-import net.minecraft.entity.*;
-import net.minecraft.world.*;
-*///FMLdelete
+
 public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		PFLM_GuiOthersPlayer {
 	public static String playerName;
@@ -332,14 +326,16 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 				othersTexture = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(othersTextureName, i);
 			}
 		}
-		mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] = null;
-		mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[1] = null;
-		mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[2] = null;
-		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(othersTextureName);
-    	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
-		if (ltb != null) {
-			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] = models[0];
+		if (mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel != null) {
+			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] = null;
+			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[1] = null;
+			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[2] = null;
+		} else {
+			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel = new Object[3];
 		}
+		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(othersTextureName);
+		Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+		if (ltb != null) mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] = models[0];
 		setArmorTextureValue();
 	}
 
@@ -361,20 +357,16 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			setMaidColor(i);
 			othersTexture = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(othersTextureName, i);
 		}
-		if (othersTexture == null) {
-			othersTexture = t;
-			return;
-		}
+		if (othersTexture == null) othersTexture = t;
 	}
 
 	public void setArmorTextureValue() {
 		if (othersTextureArmorName == null) {
-			setTextureArmorName(othersTextureName);
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(othersTextureName));
 			if (othersTextureArmorName == null) {
 				othersTextureArmorName = "default";
 			}
 		}
-		//String s = mod_PFLM_PlayerFormLittleMaid.lastIndexProcessing(othersTextureArmorName, "_");
 		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(othersTextureArmorName);
     	Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
 		if (ltb != null) {
@@ -391,17 +383,9 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 
 	public static void setNextTexturePackege(int i) {
 		if (i == 0) {
-			othersTextureName = mod_PFLM_PlayerFormLittleMaid.textureManagerGetNextPackege(othersTextureName,
-							getMaidColor());
-			setTextureArmorName(othersTextureName);
-			Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(othersTextureName);
-			if (ltb == null) {
-				if (othersTextureName.indexOf("Biped") == -1) {
-					setTextureArmorName("default");
-				} else {
-					setTextureArmorName("_Biped");
-				}
-			}
+			othersTextureName =
+					mod_PFLM_PlayerFormLittleMaid.textureManagerGetNextPackege(othersTextureName, getMaidColor());
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(othersTextureName));
 		}
 		if (i == 1) {
 			othersTextureArmorName = mod_PFLM_PlayerFormLittleMaid.textureManagerGetNextArmorPackege(othersTextureArmorName);
@@ -411,15 +395,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 	public static void setPrevTexturePackege(int i) {
 		if (i == 0) {
 			othersTextureName = mod_PFLM_PlayerFormLittleMaid.textureManagerGetPrevPackege(othersTextureName, getMaidColor());
-			setTextureArmorName(othersTextureName);
-			Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(othersTextureName);
-			if (ltb == null) {
-				if (othersTextureName.indexOf("Biped") == -1) {
-					setTextureArmorName("erasearmor");
-				} else {
-					setTextureArmorName("_Biped");
-				}
-			}
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(othersTextureName));
 		}
 		if (i == 1) {
 			othersTextureArmorName = mod_PFLM_PlayerFormLittleMaid.textureManagerGetPrevArmorPackege(othersTextureArmorName);
