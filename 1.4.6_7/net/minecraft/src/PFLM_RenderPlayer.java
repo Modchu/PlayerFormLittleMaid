@@ -43,7 +43,10 @@ public class PFLM_RenderPlayer extends RenderPlayer
 	private boolean isSizeMultiplier = false;
 	private Method sizeMultiplier;
 	public static Object pflm_RenderPlayerSmart;
+	public static Object pflm_RenderRenderSmart;
 	public static Class PFLM_RenderPlayerSmart;
+	public static Class PFLM_RenderRenderSmart;
+	public static Class ForgeHooksClient;
     // b173deleteprivate RenderBlocks renderBlocks;
 
 	public PFLM_RenderPlayer() {
@@ -57,7 +60,12 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
 			//Modchu_Debug.mDebug("PFLM_RenderPlayer() isSmartMoving");
 			pflm_RenderPlayerSmart = Modchu_Reflect.newInstance(mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.getClassName("PFLM_RenderPlayerSmart"), new Class[]{ PFLM_RenderPlayer.class }, new Object[]{ this });
+			pflm_RenderRenderSmart = Modchu_Reflect.newInstance(mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.getClassName("PFLM_RenderRenderSmart"), new Class[]{ PFLM_RenderPlayer.class }, new Object[]{ this });
 			PFLM_RenderPlayerSmart = Modchu_Reflect.loadClass(mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.getClassName("PFLM_RenderPlayerSmart"));
+			PFLM_RenderRenderSmart = Modchu_Reflect.loadClass(mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.getClassName("PFLM_RenderRenderSmart"));
+		}
+		if (mod_PFLM_PlayerFormLittleMaid.isForge) {
+			ForgeHooksClient = Modchu_Reflect.loadClass("net.minecraftforge.client.ForgeHooksClient");
 		}
 		// b173deleterenderBlocks = new RenderBlocks();
 	}
@@ -71,6 +79,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return byte0;
     	// アーマーの表示設定
     	modelDataPlayerFormLittleMaid.modelFATT.renderParts = i;
+    	//if (mod_PFLM_PlayerFormLittleMaid.isForge) i = 3 - i;
     	ItemStack is = entityplayer.inventory.armorItemInSlot(i);
     	if (is != null && is.stackSize > 0) {
     		modelDataPlayerFormLittleMaid.modelFATT.showArmorParts(i);
@@ -78,7 +87,18 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		byte0 = (byte) (is.isItemEnchanted() ? 15 : 1);
 //@-@b181
     		armorTextureSetting(entityplayer, modelDataPlayerFormLittleMaid, is, i);
-    	}
+    		boolean flag1 = i == 1 ? true : false;
+    		boolean isBiped = MultiModel_Biped.class.isInstance(modelDataPlayerFormLittleMaid.modelMain.modelArmorInner);
+    		if (isBiped) {
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).setArmorBipedRightLegShowModel(flag1);
+    			((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).setArmorBipedLeftLegShowModel(flag1);
+    		}
+    	} else {
+    		if (mod_PFLM_PlayerFormLittleMaid.isForge) {
+    			//modelDataPlayerFormLittleMaid.modelFATT.textureInner[3 - i] = null;
+    			//modelDataPlayerFormLittleMaid.modelFATT.textureOuter[3 - i] = null;
+    		}
+		}
     	return byte0;
     }
 
@@ -97,14 +117,26 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		ItemArmor itemarmor = null;
     		boolean flag = false;
     		Item item = is.getItem();
-    		if(item instanceof ItemArmor)
-    		{
+    		if(item instanceof ItemArmor) {
     			itemarmor = (ItemArmor)item;
     			flag = itemarmor != null && is.stackSize > 0;
     		}
+    		String a1 = itemarmor.renderIndex < armorFilenamePrefix.length ? armorFilenamePrefix[itemarmor.renderIndex] : armorFilenamePrefix[armorFilenamePrefix.length - 1];
     		if (flag) {
-    			modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] = "/armor/" + armorFilenamePrefix[itemarmor.renderIndex] + "_" + 2 + ".png";
-    			modelDataPlayerFormLittleMaid.modelFATT.textureOuter[i] = "/armor/" + armorFilenamePrefix[itemarmor.renderIndex] + "_" + 1 + ".png";
+    			if (mod_PFLM_PlayerFormLittleMaid.isForge) {
+    				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
+    				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });
+    				if (i == 1) {
+    					//Modchu_Debug.mDebug("i="+i+" t2="+t2+" t1="+t1);
+    					for(int k = 0; k < 4; k++) {
+    						modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] = t2;
+    					}
+    				}
+    				modelDataPlayerFormLittleMaid.modelFATT.textureOuter[i] = t1;
+    			} else {
+    				modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] = "/armor/" + a1 + "_" + 2 + ".png";
+    				modelDataPlayerFormLittleMaid.modelFATT.textureOuter[i] = "/armor/" + a1 + "_" + 1 + ".png";
+    			}
     		}
     	} else {
     		modelDataPlayerFormLittleMaid.modelFATT.textureInner[i] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetArmorTextureName(t, 64, is);
@@ -660,7 +692,10 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData(entityplayer);
     	if (modelDataPlayerFormLittleMaid != null) ;else return;
     	doRenderSetting(entityplayer, modelDataPlayerFormLittleMaid);
-    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) Modchu_Reflect.invokeMethod(PFLM_RenderPlayerSmart, "renderPlayer", new Class[]{ EntityPlayer.class, double.class , double.class, double.class, float.class, float.class, PFLM_ModelData.class }, pflm_RenderPlayerSmart, new Object[]{ entityplayer, d, d1, d2, f, f1, modelDataPlayerFormLittleMaid });
+    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
+    		Modchu_Reflect.invokeMethod(PFLM_RenderPlayerSmart, "renderPlayer", new Class[]{ EntityPlayer.class, double.class , double.class, double.class, float.class, float.class, PFLM_ModelData.class }, pflm_RenderPlayerSmart, new Object[]{ entityplayer, d, d1, d2, f, f1, modelDataPlayerFormLittleMaid });
+    		Modchu_Reflect.invokeMethod(PFLM_RenderRenderSmart, "renderPlayer", new Class[]{ EntityPlayer.class, double.class , double.class, double.class, float.class, float.class, PFLM_ModelData.class }, pflm_RenderRenderSmart, new Object[]{ entityplayer, d, d1, d2, f, f1, modelDataPlayerFormLittleMaid });
+    	}
     	float f8 = entityplayer.legSwing - entityplayer.legYaw * (1.0F - f1);
     	waitModeSetting(modelDataPlayerFormLittleMaid, f8);
     	if (modelDataPlayerFormLittleMaid.isPlayer) {
@@ -1043,8 +1078,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 					s2 = t[1];
 					modelDataPlayerFormLittleMaid.modelArmorName = t[1];
 					modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, s2);
-					modelDataPlayerFormLittleMaid.handedness = othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5]));
-					modelDataPlayerFormLittleMaid.modelScale = Float.valueOf(t[3]);
+					modelDataPlayerFormLittleMaid.handedness = mod_PFLM_PlayerFormLittleMaid.integerCheck(t[5]) ? othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5])) : 0;
+					modelDataPlayerFormLittleMaid.modelScale = mod_PFLM_PlayerFormLittleMaid.integerCheck(t[3]) ? Float.valueOf(t[3]) : 0.0F;
 					break;
 				case PFLM_GuiOthersPlayerIndividualCustomize.modePlayerOffline:
 					modelDataPlayerFormLittleMaid.skinMode = skinMode_PlayerOffline;
@@ -1060,8 +1095,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				case PFLM_GuiOthersPlayerIndividualCustomize.modeRandom:
 					modelDataPlayerFormLittleMaid.skinMode = skinMode_Random;
 					skinMode_RandomSetting(entityplayer, modelDataPlayerFormLittleMaid);
-					modelDataPlayerFormLittleMaid.handedness = othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5]));
-					modelDataPlayerFormLittleMaid.modelScale = Float.valueOf(t[3]);
+					modelDataPlayerFormLittleMaid.handedness = mod_PFLM_PlayerFormLittleMaid.integerCheck(t[5]) ? othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5])) : 0;
+					modelDataPlayerFormLittleMaid.modelScale = mod_PFLM_PlayerFormLittleMaid.integerCheck(t[3]) ? Float.valueOf(t[3]) : 0.0F;
 					break;
 				}
 				if (modelDataPlayerFormLittleMaid.skinMode != skinMode_PlayerOnline
@@ -1782,7 +1817,10 @@ public class PFLM_RenderPlayer extends RenderPlayer
     @Override
     public void rotatePlayer(EntityPlayer var1, float var2, float var3, float var4)
     {
-    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) Modchu_Reflect.invokeMethod(PFLM_RenderPlayerSmart, "rotatePlayer", new Class[]{ EntityPlayer.class, float.class, float.class, float.class }, pflm_RenderPlayerSmart, new Object[]{ var1, var2, var3, var4 });
+    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
+    		Modchu_Reflect.invokeMethod(PFLM_RenderPlayerSmart, "rotatePlayer", new Class[]{ EntityPlayer.class, float.class, float.class, float.class }, pflm_RenderPlayerSmart, new Object[]{ var1, var2, var3, var4 });
+    		//Modchu_Reflect.invokeMethod(PFLM_RenderRenderSmart, "rotatePlayer", new Class[]{ EntityPlayer.class, float.class, float.class, float.class }, pflm_RenderRenderSmart, new Object[]{ var1, var2, var3, var4 });
+    	}
     	super.rotatePlayer(var1, var2, var3, var4);
     }
 
@@ -1797,3 +1835,4 @@ public class PFLM_RenderPlayer extends RenderPlayer
     }
     //smartMoving関連↑
 }
+

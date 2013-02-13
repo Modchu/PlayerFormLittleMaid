@@ -274,7 +274,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.4.6~7-18c";
+		return "1.4.6~7-18d";
 	}
 
 	public void load()
@@ -2371,13 +2371,13 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				writerOthersPlayerParamater();
 			} else {
 				// コンフィグファイルがある
-				othersTextureName = (Modchu_Config.loadConfig(showModelList, othersCfgfile, "othersTextureName", othersTextureName)).toString();
-				othersTextureArmorName = (Modchu_Config.loadConfig(showModelList, othersCfgfile, "othersTextureArmorName", othersTextureArmorName)).toString();
-				othersMaidColor = Integer.valueOf((Modchu_Config.loadConfig(showModelList, othersCfgfile, "othersMaidColor", othersMaidColor)).toString());
-				othersModelScale = Float.valueOf((Modchu_Config.loadConfig(showModelList, othersCfgfile, "othersModelScale", othersModelScale)).toString());
-				PFLM_GuiOthersPlayer.showArmor = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, othersCfgfile, "showArmor", PFLM_GuiOthersPlayer.showArmor)).toString());
-				PFLM_GuiOthersPlayer.changeMode = Integer.valueOf((Modchu_Config.loadConfig(showModelList, othersCfgfile, "changeMode", PFLM_GuiOthersPlayer.changeMode)).toString());
-				othersHandednessMode = Integer.valueOf((Modchu_Config.loadConfig(showModelList, othersCfgfile, "othersHandednessMode", othersHandednessMode)).toString());
+				othersTextureName = (Modchu_Config.loadConfig(othersCfgfile, "othersTextureName", othersTextureName)).toString();
+				othersTextureArmorName = (Modchu_Config.loadConfig(othersCfgfile, "othersTextureArmorName", othersTextureArmorName)).toString();
+				othersMaidColor = Integer.valueOf((Modchu_Config.loadConfig(othersCfgfile, "othersMaidColor", othersMaidColor)).toString());
+				othersModelScale = Float.valueOf((Modchu_Config.loadConfig(othersCfgfile, "othersModelScale", othersModelScale)).toString());
+				PFLM_GuiOthersPlayer.showArmor = Boolean.valueOf((Modchu_Config.loadConfig(othersCfgfile, "showArmor", PFLM_GuiOthersPlayer.showArmor)).toString());
+				PFLM_GuiOthersPlayer.changeMode = Integer.valueOf((Modchu_Config.loadConfig(othersCfgfile, "changeMode", PFLM_GuiOthersPlayer.changeMode)).toString());
+				othersHandednessMode = Integer.valueOf((Modchu_Config.loadConfig(othersCfgfile, "othersHandednessMode", othersHandednessMode)).toString());
 				Modchu_Config.loadConfigPlayerLocalData(playerLocalData, othersCfgfile);
 				if (PFLM_GuiOthersPlayer.changeMode > PFLM_GuiOthersPlayer.changeModeMax) PFLM_GuiOthersPlayer.changeMode = 0;
 				if (PFLM_GuiOthersPlayer.changeMode < 0) PFLM_GuiOthersPlayer.changeMode = PFLM_GuiOthersPlayer.changeModeMax;
@@ -2514,28 +2514,28 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				String k;
 				for(int i = 0; i < maxShortcutKeys;i++) {
 					k = shortcutKeysTextureName[i] != null ? shortcutKeysTextureName[i] : "";
-					s = Modchu_Config.loadConfig(showModelList, shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysTextureName[").append(i).append("]").toString(), k).toString();
-					shortcutKeysTextureName[i] = shortcutKeysTextureName[i] != null ? s: "default";
+					s = Modchu_Config.loadConfig(shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysTextureName[").append(i).append("]").toString(), k).toString();
+					shortcutKeysTextureName[i] = s != null ? s: "default";
 					k = shortcutKeysTextureArmorName[i] != null ? shortcutKeysTextureArmorName[i] : "";
-					s = Modchu_Config.loadConfig(showModelList, shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysTextureArmorName[").append(i).append("]").toString(), k).toString();
-					shortcutKeysTextureArmorName[i] = shortcutKeysTextureArmorName[i] != null ? s: "default";
-					s = Modchu_Config.loadConfig(showModelList, shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysMaidColor[").append(i).append("]").toString(), shortcutKeysMaidColor[i]).toString();
+					s = Modchu_Config.loadConfig(shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysTextureArmorName[").append(i).append("]").toString(), k).toString();
+					shortcutKeysTextureArmorName[i] = s != null ? s: "default";
+					s = Modchu_Config.loadConfig(shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysMaidColor[").append(i).append("]").toString(), shortcutKeysMaidColor[i]).toString();
 					shortcutKeysMaidColor[i] = s != null ? Integer.valueOf(s) : 0;
-					s = Modchu_Config.loadConfig(showModelList, shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysChangeMode[").append(i).append("]").toString(), shortcutKeysChangeMode[i]).toString();
+					s = Modchu_Config.loadConfig(shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysChangeMode[").append(i).append("]").toString(), shortcutKeysChangeMode[i]).toString();
 					shortcutKeysChangeMode[i] = s != null ? Integer.valueOf(s) : 0;
 					if (shortcutKeysChangeMode[i] > PFLM_GuiKeyControls.changeModeMax) shortcutKeysChangeMode[i] = 0;
 					if (shortcutKeysChangeMode[i] < 0) shortcutKeysChangeMode[i] = PFLM_GuiKeyControls.changeModeMax;
-					s = Modchu_Config.loadConfig(showModelList, shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysModelScale[").append(i).append("]").toString(), shortcutKeysModelScale[i]).toString();
+					s = Modchu_Config.loadConfig(shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysModelScale[").append(i).append("]").toString(), shortcutKeysModelScale[i]).toString();
 					shortcutKeysModelScale[i] = s != null ? Float.valueOf(s) : 0.9375F;
 					if (shortcutKeysModelScale[i] > 10.0F) shortcutKeysModelScale[i] = 10.0F;
 					if (shortcutKeysModelScale[i] < 0.0F) shortcutKeysModelScale[i] = 0.0F;
-					s = Modchu_Config.loadConfig(showModelList, shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysUse[").append(i).append("]").toString(), shortcutKeysUse[i]).toString();
+					s = Modchu_Config.loadConfig(shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysUse[").append(i).append("]").toString(), shortcutKeysUse[i]).toString();
 					shortcutKeysUse[i] = s != null ? Boolean.valueOf(s) : false;
-					s = Modchu_Config.loadConfig(showModelList, shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysPFLMModelsUse[").append(i).append("]").toString(), shortcutKeysPFLMModelsUse[i]).toString();
+					s = Modchu_Config.loadConfig(shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysPFLMModelsUse[").append(i).append("]").toString(), shortcutKeysPFLMModelsUse[i]).toString();
 					shortcutKeysPFLMModelsUse[i] = s != null ? Boolean.valueOf(s) : false;
-					s = Modchu_Config.loadConfig(showModelList, shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysCtrlUse[").append(i).append("]").toString(), shortcutKeysCtrlUse[i]).toString();
+					s = Modchu_Config.loadConfig(shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysCtrlUse[").append(i).append("]").toString(), shortcutKeysCtrlUse[i]).toString();
 					shortcutKeysCtrlUse[i] = s != null ? Boolean.valueOf(s) : false;
-					s = Modchu_Config.loadConfig(showModelList, shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysShiftUse[").append(i).append("]").toString(), shortcutKeysShiftUse[i]).toString();
+					s = Modchu_Config.loadConfig(shortcutKeysCfgfile, new StringBuilder().append("shortcutKeysShiftUse[").append(i).append("]").toString(), shortcutKeysShiftUse[i]).toString();
 					shortcutKeysShiftUse[i] = s != null ? Boolean.valueOf(s) : false;
 				}
 			}
@@ -3355,7 +3355,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		try {
 			Integer.valueOf(s);
 			return true;
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			return false;
 		}
 	}
