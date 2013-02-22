@@ -48,7 +48,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static float watherFog2 = 0.05F;
 	public static float lavaFog = 2.0F;
 	public static float transparency = 1.0F;
-	public static double locationPositionCorrectionY = 0.5D;
+	//public static double locationPositionCorrectionY = 0.5D;
 	public static String Physical_HurtSound = "damage.hit";
 	public static String textureSavedir = "/output/";
 
@@ -132,7 +132,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static mod_PFLM_PlayerFormLittleMaid mod_pflm_playerformlittlemaid;
 	public static HashMap playerLocalData = new HashMap();
 	public static HashMap<Entity, Map> playerModelMapData = new HashMap();
-	public static Minecraft mc = Minecraft.getMinecraft();
+	public static Minecraft mc = getMinecraft();
 	public final int playerFormLittleMaidVersion;
 	public static boolean newRelease = false;
 	public static String newVersion = "";
@@ -151,7 +151,9 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static Class Modchu_ItemRendererHD;
 	public static Class itemRendererClass;
 	private static int PFLMModelsKeyCode;
+	public static Class PFLM_EntityPlayer;
 	private static Random rnd = new Random();
+	public static PFLM_EntityPlayerMaster entityPlayerMaster;
 
 	//対応minecraftバージョンによって使っていたりいなかったり
 	public static boolean isSwapGuiSelectWorld = false;
@@ -170,6 +172,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static Class pflm_playerController2;
 	public static Class pflm_renderPlayer2;
 	public static Class pflm_entityPlayerSP2;
+	public static Class BipedClass;
 
 	public mod_PFLM_PlayerFormLittleMaid()
 	{
@@ -274,7 +277,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.4.6~7-18d";
+		return "1.4.6~7-18e";
 	}
 
 	public void load()
@@ -290,10 +293,16 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		loadOthersPlayerParamater();
 		loadShortcutKeysParamater();
 		if (versionCheck) startVersionCheckThread();
-		MMM_TextureManager = Modchu_Reflect.loadClass(getClassName("MMM_TextureManager"));
-		MMM_FileManager = Modchu_Reflect.loadClass(getClassName("MMM_FileManager"));
-		MMM_TextureBox = Modchu_Reflect.loadClass(getClassName("MMM_TextureBox"));
-			Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", new MMM_ModelBiped[] {
+		PFLM_EntityPlayer = Modchu_Reflect.loadClass(getClassName("PFLM_EntityPlayer"), false);
+		MMM_TextureManager = Modchu_Reflect.loadClass(getClassName("MMM_TextureManager"), false);
+		MMM_FileManager = Modchu_Reflect.loadClass(getClassName("MMM_FileManager"), false);
+		MMM_TextureBox = Modchu_Reflect.loadClass(getClassName("MMM_TextureBox"), false);
+		if (MMM_TextureManager != null) ;else {
+			MMM_TextureManager = Modchu_Reflect.loadClass(getClassName("Modchu_TextureManager"));
+			MMM_FileManager = Modchu_Reflect.loadClass(getClassName("Modchu_FileManager"));
+			MMM_TextureBox = Modchu_Reflect.loadClass(getClassName("Modchu_TextureBox"));
+		}
+		Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", new MMM_ModelBiped[] {
 					new MultiModel(0.0F),
 					new MultiModel(0.1F),
 					new MultiModel(0.5F)
@@ -302,18 +311,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"playerformlittlemaid", "playerformlittlemaid"});
 		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{modelClassName, "/mob/littleMaid/", modelClassName+"_"});
 		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"playerformlittlemaid", "/mob/littleMaid/", modelClassName+"_"});
-/*
-		Modchu_Reflect.debugMessage = false;
-		Object o = Modchu_Reflect.loadClass(getClassName("mod_LMM_littleMaidMob"));
-		if (o != null) {
-			Modchu_Debug.mDebug("load() mod_LMM_littleMaidMob check ok.");
-			Class mmm_FileManager = Modchu_Reflect.loadClass(getClassName("MMM_FileManager"));
-			Class mmm_TextureManager = Modchu_Reflect.loadClass(getClassName("MMM_TextureManager"));
-			Modchu_Reflect.invokeMethod(mmm_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"MultiModel", "MultiModel"});
-			Modchu_Reflect.invokeMethod(mmm_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"MultiModel", "/mob/littleMaid/", "MultiModel_"});
-		}
-		Modchu_Reflect.debugMessage = true;
-*/
 	}
 
 	public void addRenderer(Map map)
@@ -334,7 +331,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				if (isForge) {
 				PFLM_RenderPlayer var1 = new PFLM_RenderPlayer();
 				//isModelSize
-				//if (isPlayerAPI) map.put(PFLM_EntityPlayer.class, var1);
+				//if (isPlayerAPI
+				//&& !isPlayerAPIDebug) map.put(PFLM_EntityPlayer.class, var1);
 				//else
 					map.put(PFLM_EntityPlayerSP.class, var1);
 				map.put(EntityClientPlayerMP.class, var1);
@@ -471,7 +469,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				/*b173//*/((EntityPlayer)(entityplayersp)).getDataWatcher().updateObject(17, Byte.valueOf((byte)i));
 /*//b173delete
 //-@-b166
-				if (isPlayerAPI) {
+				if (isPlayerAPI
+				&& !isPlayerAPIDebug) {
 					if (entityplayersp instanceof PFLM_EntityPlayer) {
 						((PFLM_EntityPlayer) entityplayersp).setSleepMotion(i);
 					}
@@ -502,7 +501,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				//entityplayersp.addChatMessage((new StringBuilder()).append("POV Change has been ").append(EnablePOV ? "enabled" : "disabled").toString());
 			//}
 		}
-		else if (keybinding.keyDescription.startsWith("key.ModelChange")) {
+		else if (keybinding.keyDescription.startsWith("key.ModelChange")
+				&& isPlayerForm) {
 			int i = Integer.valueOf(keybinding.keyDescription.substring("key.ModelChange".length(), keybinding.keyDescription.length()));
 			boolean flag = true;
 			if (shortcutKeysPFLMModelsUse[i]
@@ -638,7 +638,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				&& isAether
 				&& guiSelectWorldSwapCount < 10) {
 			// ワールドセレクトを置き換え
-			if (!(par1GuiScreen instanceof GuiSelectWorldPlayerFormLittleMaidAether)) {
+			if (!(par1GuiScreen instanceof PFLM_GuiSelectWorldAether)) {
 				guiSelectWorldSwapCount++;
 				String guiMainMenu = getClassName("GuiMainMenu");
 				Field fi = null;
@@ -653,7 +653,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				}
 				try {
 					int ID = (Integer) fi.get(null);
-					minecraft.displayGuiScreen(new GuiSelectWorldPlayerFormLittleMaidAether((GuiSelectWorld)par1GuiScreen, ID));
+					minecraft.displayGuiScreen(new PFLM_GuiSelectWorldAether((GuiSelectWorld)par1GuiScreen, ID));
 					Modchu_Debug.Debug("Swap GuiSelectWorldAether.");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -668,42 +668,15 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				&& isSwapGuiSelectWorld
 				&& guiSelectWorldSwapCount < 10) {
 			// ワールドセレクトを置き換え
-			if (!(par1GuiScreen instanceof GuiSelectWorldPlayerFormLittleMaid)) {
+			if (!(par1GuiScreen instanceof PFLM_GuiSelectWorld)) {
 				guiSelectWorldSwapCount++;
-				minecraft.displayGuiScreen(new GuiSelectWorldPlayerFormLittleMaid((GuiSelectWorld)par1GuiScreen));
+				minecraft.displayGuiScreen(new PFLM_GuiSelectWorld((GuiSelectWorld)par1GuiScreen));
 				Modchu_Debug.Debug("Swap GuiSelectWorld.");
 //-@-b166
 				return true;
 //@-@b166
 				// b166deletereturn;
 			}
-		}
-
-		if (par1GuiScreen instanceof GuiMainMenu) {
-//-@-b166
-			if (isPlayerAPI) {
-				if (PFLM_EntityPlayer.gotcha != null) {
-					//Modchu_Debug.Debug("PFLM_EntityPlayer.gotcha != null");
-					PFLM_EntityPlayer.gotcha = null;
-					gotchaNullFlag = true;
-					return true;
-				}
-			} else {
-//@-@b166
-				if (gotcha != null) {
-					//Modchu_Debug.Debug("gotcha != null");
-					gotcha = null;
-					gotchaNullFlag = true;
-//-@-b166
-					return true;
-//@-@b166
-					// b166deletereturn;
-//-@-b166
-    		 	}
-//@-@b166
-			}
-		} else {
-			if (gotchaNullFlag) gotchaNullFlag = false;
 		}
 *///125delete
 //-@-b166
@@ -720,6 +693,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 		if (itemRendererClass != null) {
 			ItemRenderer itemRenderer = null;
+			mc = getMinecraft();
 			for(int i = 0; i < 2; i++) {
 				itemRenderer = i == 0 ? mc.entityRenderer.itemRenderer: RenderManager.instance.itemRenderer;
 				if (!instanceCheck(itemRendererClass, itemRenderer)) {
@@ -735,6 +709,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						} else {
 							initItemRenderer = true;
 						}
+					} else {
+						Modchu_Debug.mDebug("onTickInGame itemRenderer2 == null !!");
 					}
 				}
 			}
@@ -803,22 +779,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //@-@125
 /*//125delete
 			if(minecraft.thePlayer.worldObj.isRemote) {
-//-@-110
-				if (isPlayerForm
-						&& isSmartMoving
-						&& !isForge) {
-					if (!(RenderManager.instance.getEntityClassRenderObject(net.minecraft.src.EntityPlayerSP.class) instanceof PFLM_RenderPlayerSmart)) {
-						PFLM_PlayerController.addRenderer();
-						Modchu_Debug.Debug("onTickInGame SmartMovingAddRenderer");
-					}
-				}
-//@-@110
 				if (multiAutochangeMode) {
-					if (!changeMode
+					if (changeMode != PFLM_Gui.modeOnline
 						&& setMultiAutochangeMode) {
 						Modchu_Debug.mDebug("onTickInGame setMultiAutochangeMode");
 						setMultiAutochangeMode = false;
-						changeMode = true;
+						changeMode = PFLM_Gui.modeOnline;
 						clearPlayers();
 					} else {
 						setMultiAutochangeMode = false;
@@ -851,33 +817,19 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				}
 			}
 */
-/*//125delete
-//-@-110
-			if (!smartMovingAddRenderer2
-					&& isSmartMoving
-					&& isForge) {
-				if (!(RenderManager.instance.getEntityClassRenderObject(net.minecraft.src.EntityPlayerSP.class) instanceof PFLM_RenderPlayerSmart)) {
-					PFLM_PlayerController.addRenderer();
-					smartMovingAddRenderer2 = true;
-					Modchu_Debug.Debug("SmartMovingAddRenderer2");
-					ModLoader.getLogger().fine("playerFormLittleMaid-SmartMovingAddRenderer2");
-				}
-			}
-*///125delete
-//@-@110
 //-@-123
 			/*//125deleteif (!aetherAddRenderer && isAether) {
-				if (!(RenderManager.instance.getEntityClassRenderObject(net.minecraft.src.EntityPlayer.class) instanceof PFLM_RenderPlayerAether)) {
+				if (!(RenderManager.instance.getEntityClassRenderObject(EntityPlayer.class) instanceof PFLM_RenderPlayerAether)) {
 					aetherAddRenderer = true;
 					RenderPlayer renderplayer = new PFLM_RenderPlayerAether();
 					Object obj = null;
 					try {
-						obj = getPrivateValue(net.minecraft.src.RenderManager.class, RenderManager.instance, "entityRenderMap");
+						obj = getPrivateValue(RenderManager.class, RenderManager.instance, "entityRenderMap");
 					} catch (Exception e) {
 					}
 					if (obj == null) {
 						try {
-							obj = getPrivateValue(net.minecraft.src.RenderManager.class, RenderManager.instance, "o");
+							obj = getPrivateValue(RenderManager.class, RenderManager.instance, "o");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -896,33 +848,21 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			}
 //@-@123
 //-@-b166
-			if(!minecraft.thePlayer.worldObj.isRemote
-					&& minecraft.currentScreen == null
-					&& !isAether
-					&& !isSwapGuiSelectWorld) {
-				if ((isPlayerAPI
-						&& PFLM_EntityPlayer.gotcha == null)
-						| (!isPlayerAPI
-								&& gotcha == null)) {
-					Modchu_Debug.mDebug("playerControllerReplace");
-					playerControllerReplace(minecraft);
-					return true;
-				}
-			}*///125delete
-//@-@b166
+
+/*
 		boolean b = false;
 		if (!isAether) {
 			if(!(minecraft.renderGlobal instanceof PFLM_RenderGlobalAlt)) {
 				b = true;
 			}
 		}
-//-@-123
-		/*//125deleteif (isAether) {
+
+		if (isAether) {
 			if(!(minecraft.renderGlobal instanceof PFLM_RenderGlobalAltAether)) {
 				b = true;
 			}
-		}*///125delete
-//@-@123
+		}
+
 		if (b)
 		{
 			minecraft.theWorld.removeWorldAccess(minecraft.renderGlobal);
@@ -937,7 +877,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				minecraft.renderGlobal.releaseEntitySkin(entityplayer);
 			}
 		}
-
+*/
 		if (minecraft.thePlayer != null)
 		{
 			EntityPlayerSP entityplayersp = minecraft.thePlayer;
@@ -994,55 +934,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     		clientConnect(netClientHandler);
     		return;
     	}
-/*//125delete
-    	Modchu_Debug.mDebug("serverConnect");
-		double x = getPosX(mc);
-		double y = getPosY(mc);
-		double z = getPosZ(mc);
-		EntityPlayerSP var9 = mc.thePlayer;
-		int var10 = 0;
-
-		if (mc.thePlayer != null)
-		{
-			var10 = mc.thePlayer.entityId;
-			mc.theWorld.setEntityDead(mc.thePlayer);
-		}
-		Modchu_Debug.Debug("Replace PFLM_PlayerController.");
-		mc.playerController = new PFLM_PlayerControllerMP(mc, netClientHandler);
-		PFLM_PlayerControllerMP.entityplayerformlittlemaidmp = new PFLM_EntityPlayerMP(mc, mc.theWorld, mc.session, netClientHandler);
-		if (mc.thePlayer != null) mc.thePlayer.setDead();
-		mc.thePlayer = PFLM_PlayerControllerMP.entityplayerformlittlemaidmp;
-		mc.renderViewEntity = null;
-		setPosition(x, y, z);
-		if (mc.thePlayer instanceof PFLM_EntityPlayerMP) {
-			((PFLM_EntityPlayerMP) mc.thePlayer).copyPlayer(var9);
-		} else {
-//-@-b166
-			if (isPlayerAPI) {
-				((PFLM_EntityPlayer) mc.thePlayer).copyPlayer(var9);
-			} else {
-//@-@b166
-				((PFLM_EntityPlayerSP) mc.thePlayer).copyPlayer(var9);
-//-@-b166
-			}
-//@-@b166
-		}
-		mc.renderViewEntity = mc.thePlayer;
-		mc.playerController.flipPlayer(mc.thePlayer);
-		mc.theWorld.spawnPlayerWithLoadedChunks(mc.thePlayer);
-		mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
-		mc.thePlayer.entityId = var10;
-		mc.thePlayer.func_6420_o();
-//-@-b173
-		if (mc.theWorld.getWorldInfo().getGameType() == 1) {
-			((PlayerControllerMP) mc.playerController).setCreative(true);
-			mc.playerController.isInTestMode = true;
-		} else {
-			((PlayerControllerMP) mc.playerController).setCreative(false);
-			mc.playerController.func_6473_b(mc.thePlayer);
-		}
-//@-@b173
-*///125delete
     }
 
     public void clientConnect(NetClientHandler netClientHandler) {
@@ -1160,69 +1051,38 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 /*//125delete
 	public void playerControllerReplace(Minecraft minecraft) {
-		if (minecraft.thePlayer.worldObj.isRemote) return;
+		if (minecraft.theWorld == null
+				| minecraft.theWorld.worldProvider == null) return;
 		double x = getPosX(minecraft);
 		double y = getPosY(minecraft);
 		double z = getPosZ(minecraft);
-		//Modchu_Debug.Debug("get x="+x+" y+"+y+" z="+z);
+		//Modchu_Debug.Debug("playerControllerReplace get x="+x+" y+"+y+" z="+z);
 		EntityPlayerSP var9 = minecraft.thePlayer;
 		int var10 = 0;
 
-		if (minecraft.thePlayer != null)
-		{
+		if (minecraft.thePlayer != null) {
 			var10 = minecraft.thePlayer.entityId;
 			minecraft.theWorld.setEntityDead(minecraft.thePlayer);
 		}
 		//Modchu_Debug.Debug("x="+minecraft.thePlayer.posX+" y="+minecraft.thePlayer.posY+" z="+minecraft.thePlayer.posZ);
-*///125delete
-		/*b173//*/// 125deleteif (!minecraft.playerController.isInTestMode) {
-/*//125delete
-			mod_PFLM_PlayerFormLittleMaid
-					.Modchu_Debug.Debug("Replace PFLM_PlayerController.");
+//-@-b173
+ 		if (!minecraft.playerController.isInTestMode) {
+//@-@b173
+			Modchu_Debug.Debug("Replace PFLM_PlayerController.");
 			minecraft.playerController = new PFLM_PlayerController(minecraft);
-//-@-b166
-			if (isPlayerAPI) {
-				PFLM_PlayerController.entityplayerformlittlemaid = new PFLM_EntityPlayer(minecraft, minecraft.theWorld, minecraft.session, minecraft.theWorld.worldProvider.worldType);
-				if (minecraft.thePlayer != null) minecraft.thePlayer.setDead();
-				minecraft.thePlayer = PFLM_PlayerController.entityplayerformlittlemaid;
-			} else {
-//@-@b166
-				PFLM_PlayerController.entityplayerformlittlemaidsp = new PFLM_EntityPlayerSP(minecraft, minecraft.theWorld, minecraft.session, minecraft.theWorld.worldProvider.worldType);
-				if (minecraft.thePlayer != null) minecraft.thePlayer.setDead();
-				minecraft.thePlayer = PFLM_PlayerController.entityplayerformlittlemaidsp;
-//-@-b166
-			}
-//@-@b166
 //-@-b173
  		} else {
-			mod_PFLM_PlayerFormLittleMaid
-					.Modchu_Debug.Debug("Replace PFLM_PlayerControllerCreative.");
+			Modchu_Debug.Debug("Replace PFLM_PlayerControllerCreative.");
 			minecraft.playerController = new PFLM_PlayerControllerCreative(
 					minecraft);
-			if (isPlayerAPI) {
-				PFLM_PlayerControllerCreative.entityplayerformlittlemaid = new PFLM_EntityPlayer(minecraft, minecraft.theWorld, minecraft.session, minecraft.theWorld.worldProvider.worldType);
-				if (minecraft.thePlayer != null) minecraft.thePlayer.setDead();
-				minecraft.thePlayer = PFLM_PlayerControllerCreative.entityplayerformlittlemaid;
-			} else {
-				PFLM_PlayerControllerCreative.entityplayerformlittlemaidsp = new PFLM_EntityPlayerSP(minecraft, minecraft.theWorld, minecraft.session, minecraft.theWorld.worldProvider.worldType);
-				if (minecraft.thePlayer != null) minecraft.thePlayer.setDead();
-				minecraft.thePlayer = PFLM_PlayerControllerCreative.entityplayerformlittlemaidsp;
-			}
 		}
 //@-@b173
-		//if (minecraft.thePlayer != null) minecraft.theWorld.setEntityDead(minecraft.thePlayer);
-
+		if (minecraft.thePlayer != null) minecraft.thePlayer.setDead();
+		minecraft.thePlayer = (EntityPlayerSP) minecraft.playerController.createPlayer(minecraft.theWorld);
 		minecraft.renderViewEntity = null;
-		//minecraft.thePlayer = null;
-		//minecraft.thePlayer = (EntityPlayerSP)minecraft.playerController.createPlayer(minecraft.theWorld);
-		setPosition(x, y, z);
-		//Modchu_Debug.Debug("setPosition x="+x+" y+"+y+" z="+z);
 
-		// b181deleteif (mc.thePlayer instanceof PFLM_EntityPlayerMP) {
-			// b181delete((PFLM_EntityPlayerMP) mc.thePlayer).copyPlayer(var9);
-		// b181delete} else {
 //-@-b166
-			// b181deleteif (isPlayerAPI) {
+			// b181deleteif (isPlayerAPI && !isPlayerAPIDebug) {
 				// b181delete((PFLM_EntityPlayer) mc.thePlayer).copyPlayer(var9);
 			// b181delete} else {
 //@-@b166
@@ -1233,7 +1093,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		// b181delete}
 
 //-@-b166
-		minecraft.thePlayer.copyPlayer(var9);
+		if (minecraft.thePlayer != null
+				&& var9 != null) minecraft.thePlayer.copyPlayer(var9);
 //@-@b166
 		//minecraft.thePlayer.dimension = par2;
 		minecraft.renderViewEntity = minecraft.thePlayer;
@@ -1246,9 +1107,18 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 		minecraft.thePlayer.entityId = var10;
 		minecraft.thePlayer.func_6420_o();
+//-@-b173
+		if(minecraft.playerController.isInCreativeMode()) minecraft.playerController.func_6473_b(minecraft.thePlayer);
+//@-@b173
+		if (isPlayerAPI
+				&& !isPlayerAPIDebug) {
+			if (!(Boolean) Modchu_Reflect.getFieldObject(PFLM_PlayerBase, "initFlag", gotcha)) Modchu_Reflect.invokeMethod(PFLM_PlayerBase, "init", gotcha);
+		} else {
+			if (!((PFLM_EntityPlayerSP) minecraft.thePlayer).initFlag) ((PFLM_EntityPlayerSP) minecraft.thePlayer).init();
+		}
+		setPosition(x, y, z);
+	}
 *///125delete
-		/*b173//*/// 125deleteif(minecraft.playerController.isInCreativeMode()) minecraft.playerController.func_6473_b(minecraft.thePlayer);
-	// 125delete}
 
 	public static void mushroomConfusion(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid) {
 		ItemStack itemstack = entityplayer.inventory.getStackInSlot(9);
@@ -1483,49 +1353,46 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 *///b173delete
 	}
 
-	public void setPosition(double x, double y, double z) {
-		/*//125deleteif (mc.thePlayer != null
-    			&& mc.thePlayer.worldObj != null) {
+    public static void changeModel(EntityPlayer entityplayer) {
+    	if (entityplayer != null) ;else entityplayer = mc.thePlayer;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(entityplayer);
+    	if (data != null
+    			&& data.isPlayer) {
+    		if (isPlayerAPI
+    				&& !isPlayerAPIDebug
+    				&& gotcha != null) Modchu_Reflect.invokeMethod(PFLM_PlayerBase, "init", gotcha);
+    		else if (!isPlayerAPI
+    				&& gotcha != null) Modchu_Reflect.invokeMethod(PFLM_EntityPlayerSP.class, "init", gotcha);
+    	}
+    }
+
+    public void setPosition(double x, double y, double z) {
+    	if (mc.thePlayer != null
+    			&& mc.thePlayer.worldObj != null
+    			| !isMulti) {
     	} else return;
-    	if (mc.thePlayer.worldObj.isRemote) {
-    		((PFLM_EntityPlayerMP) gotcha).setPosition(x, y, z);
-    	} else /*125delete*/
-//-@-b166
-		if (isPlayerAPI) {
-			//isModelSize
-    		//PFLM_EntityPlayer.gotcha.setPosition(x, y, z);
-    	} else {
-//-@-125
-    		if (isSSP) {
-				//Object ret = Modchu_Reflect.invokeMethod(Entity.class, "setPosition", new Class[]{double.class, double.class, double.class}), gotcha, x, y, z);
-    			((Entity) gotcha).setPosition(x, y, z);
-    		} else
-//@-@125
-//@-@b166
-    		((PFLM_EntityPlayerSP) gotcha).setPosition(x, y, z);
-    	/*b166//*/}
+		mc.thePlayer.setPosition(x, y, z);
     }
 
     public static void setPositionCorrection(double x, double y, double z) {
-    	/*//125deleteif (mc.thePlayer != null
-    			&& mc.thePlayer.worldObj != null) {
+    	if (mc.thePlayer != null
+    			&& mc.thePlayer.worldObj != null
+    			| !isMulti) {
     	} else return;
-    	if (mc.thePlayer.worldObj.isRemote) {
-    		((PFLM_EntityPlayerMP) gotcha).setPositionCorrection(x, y, z);
-    	} else /*125delete*/
 //-@-b166
-    	if (isPlayerAPI) {
-    		//isModelSize
+    	if (isPlayerAPI
+    			&& !isPlayerAPIDebug) {
+    		Modchu_Reflect.invokeMethod(PFLM_EntityPlayer, "setPositionCorrection", new Class[]{ double.class, double.class, double.class }, mc.thePlayer, new Object[]{ x, y, z });
     		//PFLM_EntityPlayer.gotcha.setPositionCorrection(x, y, z);
     	} else {
-//-@-125
+/*
     		if (isSSP) {
     			Object ret = Modchu_Reflect.invokeMethod(pflm_entityPlayerSP2, "setPositionCorrection", new Class[]{double.class, double.class, double.class}, gotcha, x, y, z);
     			//((PFLM_EntityPlayerSP2) gotcha).setPositionCorrection(x, y, z);
     		} else
-//@-@125
+*/
 //@-@b166
-    		((PFLM_EntityPlayerSP) gotcha).setPositionCorrection(x, y, z);
+    		Modchu_Reflect.invokeMethod(PFLM_EntityPlayerSP.class, "setPositionCorrection", new Class[]{ double.class, double.class, double.class }, mc.thePlayer, new Object[]{ x, y, z });
     	/*b166//*/}
     }
 
@@ -1534,26 +1401,23 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	return true;
 //@-@125
 /*//125delete
+    	if (!entityReplaceFlag) return true;
     	if (mc.thePlayer != null
-    			&& mc.thePlayer.worldObj != null) {
+    			&& mc.thePlayer.worldObj != null
+    			| !isMulti) {
         } else return true;
-    	if (mc.thePlayer.worldObj.isRemote) {
-    		if (mc.thePlayer instanceof PFLM_EntityPlayerMP) return true;
-    		NetClientHandler netClientHandler = (NetClientHandler) getPrivateValue(PlayerControllerMP.class, mc.playerController, 9);
-    		if (netClientHandler == null) return false;
-    		mod_playerformlittlemaid.serverConnect(netClientHandler);
-    	} else
 //-@-b166
-    	if (isPlayerAPI) {
-    		if (PFLM_EntityPlayer.gotcha == null) {
-    			//if(mc.currentScreen != null) return;
-    			mod_playerformlittlemaid.playerControllerReplace(mc);
+    	if (isPlayerAPI
+				&& !isPlayerAPIDebug) {
+    		if (!PFLM_EntityPlayer.isInstance(mc.thePlayer)) {
+    			Modchu_Debug.mDebug("playerControllerReplace2");
+    			mod_pflm_playerformlittlemaid.playerControllerReplace(mc);
     		}
     	} else {
 //@-@b166
-    		if (gotcha == null) {
-    			//if(mc.currentScreen != null) return;
-    			mod_playerformlittlemaid.playerControllerReplace(mc);
+    		if (!(mc.thePlayer instanceof PFLM_EntityPlayerSP)) {
+    			Modchu_Debug.mDebug("playerControllerReplace3");
+    			mod_pflm_playerformlittlemaid.playerControllerReplace(mc);
     		}
 //-@-b166
     	}
@@ -1598,69 +1462,66 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
     public static void setSkinUrl(String s) {
-    	/*//125deleteif (mc.thePlayer != null
-    			&& mc.thePlayer.worldObj != null) {
-    		if (mc.thePlayer.worldObj.isRemote) {
-    			((PFLM_EntityPlayerMP) gotcha).skinUrl = s;
-    		} else /*125delete*/
+    	if (mc.thePlayer != null
+    			&& mc.thePlayer.worldObj != null
+    			| !isMulti) {
 //-@-b166
-    		if (isPlayerAPI) {
-    			Modchu_Reflect.setFieldObject(PFLM_PlayerBase, "skinUrl", Modchu_Reflect.getFieldObject(PFLM_PlayerBase, "player", gotcha), s);
+    		if (isPlayerAPI
+    				&& !isPlayerAPIDebug) {
+    			Modchu_Reflect.setFieldObject(PFLM_PlayerBase, "skinUrl", Modchu_Reflect.getFieldObject(PFLM_PlayerBase, "player", mc.thePlayer), s);
     		} else {
-//-@-125
+/*
     			if (isSSP) {
     				Modchu_Reflect.setFieldObject(Modchu_Reflect.getField(pflm_entityPlayerSP2, "skinUrl"), null, s);
     				//((PFLM_EntityPlayerSP2) gotcha).skinUrl = s;
     			} else
-//@-@125
+*/
 //@-@b166
-    			((PFLM_EntityPlayerSP) gotcha).skinUrl = s;
-        	/*b166//*/}
-    	// 125delete}
+    			Modchu_Reflect.setFieldObject(PFLM_EntityPlayerSP.class, "skinUrl", mc.thePlayer, s);
+    		/*b166//*/}
+    	}
     }
 
     public static void setTexture(String s) {
-    	/*//125deleteif (mc.thePlayer != null
-    			&& mc.thePlayer.worldObj != null) {
-    		if (mc.thePlayer.worldObj.isRemote) {
-    			((PFLM_EntityPlayerMP) gotcha).texture = s;
-    		} else /*125delete*/
+    	if (mc.thePlayer != null
+    			&& mc.thePlayer.worldObj != null
+    			| !isMulti) {
 //-@-b166
-    		if (isPlayerAPI) {
-    			Modchu_Reflect.invokeMethod(PFLM_PlayerBase, "setPlayerTexture", new Class[]{String.class}, gotcha, s);
+    		if (isPlayerAPI
+    				&& !isPlayerAPIDebug) {
+    			Modchu_Reflect.invokeMethod(PFLM_PlayerBase, "setPlayerTexture", new Class[]{String.class}, mc.thePlayer, s);
     		} else {
-//-@-125
+/*
     			if (isSSP) {
         			Object ret = Modchu_Reflect.invokeMethod(pflm_entityPlayerSP2, "setPlayerTexture", new Class[]{String.class}, gotcha, s);
     				//((PFLM_EntityPlayerSP2) gotcha).setPlayerTexture(s);
     			} else
-//@-@125
+*/
 //@-@b166
-    			((PFLM_EntityPlayerSP) gotcha).setPlayerTexture(s);
-        	/*b166//*/}
-    	// 125delete}
+    			Modchu_Reflect.invokeMethod(PFLM_EntityPlayerSP.class, "setPlayerTexture", new Class[]{String.class}, mc.thePlayer, s);
+    		/*b166//*/}
+    	}
     }
 
     public static void resetHeight() {
-    	/*//125deleteif (mc.thePlayer != null
-    			&& mc.thePlayer.worldObj != null) {
-    		if (mc.thePlayer.worldObj.isRemote) {
-    			if (gotcha != null) ((PFLM_EntityPlayerMP) gotcha).resetHeight();
-    		} else /*125delete*/
+    	if (mc.thePlayer != null
+    			&& mc.thePlayer.worldObj != null
+    			| !isMulti) {
 //-@-b166
-    		if (isPlayerAPI) {
-    			//isModelSize
+    		if (isPlayerAPI
+    				&& !isPlayerAPIDebug) {
+    			Modchu_Reflect.invokeMethod(PFLM_EntityPlayer, "resetHeight", mc.thePlayer);
     			//PFLM_EntityPlayer.gotcha.resetHeight();
     		} else {
-//-@-125
+/*
     			if (isSSP) {
     				Object ret = Modchu_Reflect.invokeMethod(pflm_entityPlayerSP2, "publicResetHeight", gotcha);
     			} else
-//@-@125
+*/
 //@-@b166
-    			((PFLM_EntityPlayerSP) gotcha).resetHeight();
+    			Modchu_Reflect.invokeMethod(PFLM_EntityPlayerSP.class, "resetHeight", mc.thePlayer);
         	/*b166//*/}
-    	// 125delete}
+    	}
     }
 
     public static void clearPlayers() {
@@ -1669,80 +1530,61 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     		mc.renderGlobal.releaseEntitySkin(mc.thePlayer);
     		mc.renderGlobal.obtainEntitySkin(mc.thePlayer);
     	}
-//-@-125
+/*
     		if (isOlddays) {
     			Object ret = Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "clearPlayers");
     			//PFLM_RenderPlayer2.clearPlayers();
     		} else
-//@-@125
+*/
     		PFLM_RenderPlayer.clearPlayers();
     		//PFLM_RenderPlayer.resetFlag = true;
     }
 
     public static Object[] getDefaultModel() {
-//-@-125
+/*
     	if (isOlddays) {
     		return (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
     		//return PFLM_RenderPlayer2.getModelBasicOrig();
     	} else
-//@-@125
+*/
     	return PFLM_RenderPlayer.modelBasicOrig;
     }
 
     public static void setResetFlag(boolean flag) {
-//-@-125
+/*
     	if (isOlddays) {
     		Modchu_Reflect.setFieldObject(Modchu_Reflect.getField(pflm_renderPlayer2, "resetFlag"), null, flag);
     		//PFLM_RenderPlayer2.resetFlag = flag;
     	} else
-//@-@125
+*/
     	PFLM_RenderPlayer.resetFlag = flag;
     }
 
     public static void setTextureResetFlag(boolean flag) {
-//-@-125
+/*
     	if (isOlddays) {
     		Modchu_Reflect.setFieldObject(Modchu_Reflect.getField(pflm_renderPlayer2, "textureResetFlag"), null, flag);
     		//PFLM_RenderPlayer2.textureResetFlag = flag;
     	} else
-//@-@125
+*/
     	PFLM_RenderPlayer.textureResetFlag = flag;
     }
 
     public static void setSize(float f1, float f2) {
-    	/*//125deleteif (mc.thePlayer != null
-    			&& mc.thePlayer.worldObj != null) {
-    		if (mc.thePlayer.worldObj.isRemote) {
-    			((PFLM_EntityPlayerMP) gotcha).setSize(f1, f2);
-    		} else /*125delete*/
-//-@-b166
-    		if (isPlayerAPI) {
-    			//isModelSize
-    			//if (gotcha != null) PFLM_EntityPlayer.gotcha.setSize(f1, f2);
-    		} else {
-//-@-125
-    			if (isSSP) {
-    				if (gotcha != null) {
-    					Object ret = Modchu_Reflect.invokeMethod(pflm_entityPlayerSP2, "publicSetSize", new Class[]{float.class, float.class}, gotcha, f1, f2);
-    				}
-    				//((PFLM_EntityPlayerSP2) gotcha).publicSetSize(f1, f2);
-    			} else
-//@-@125
-//@-@b166
-    			if (gotcha != null) ((PFLM_EntityPlayerSP) gotcha).setSize(f1, f2);
-    		/*b166//*/}
-    	// 125delete}
-    		if (mc != null
-    				&& mc.thePlayer != null) Modchu_Reflect.invokeMethod(Entity.class, "setSize", new Class[]{float.class, float.class}, mc.thePlayer, f1, f2);
+    	if (mc.thePlayer != null
+    			&& mc.thePlayer.worldObj != null
+    			| !isMulti) {
+    		Modchu_Reflect.invokeMethod(Entity.class, "a", "setSize", new Class[]{ float.class, float.class }, mc.thePlayer, new Object[]{ f1, f2 });
+    	}
     }
 
     public static void setFirstPersonHandResetFlag(boolean flag) {
-//-@-125
+/*
     	if (isOlddays) {
     		Modchu_Reflect.setFieldObject(Modchu_Reflect.getField(pflm_renderPlayer2, "firstPersonHandResetFlag"), null, flag);
     		//PFLM_RenderPlayer2.firstPersonHandResetFlag = flag;
     	} else
-//@-@125
+*/
 //@-@110
     		PFLM_RenderPlayer.firstPersonHandResetFlag = flag;
     }
@@ -1756,198 +1598,255 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	Object textureModel = PFLM_RenderPlayer.getPlayerData((EntityPlayer) entity).modelMain.textureInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getModelScale();
-//-@-125
+/*
     		if (isOlddays) {
     			Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
     			return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelScale", obj[0]));
     			//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getModelScale();
     		} else
-//@-@125
+*/
     			return PFLM_RenderPlayer.modelBasicOrig[0].getModelScale();
     }
 
     public static float getWidth() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	float f;
+//-@-125
+    	if (isOlddays) {
+    		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
+    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getWidth", obj[0]));
+    		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getWidth();
+    	} else
+//@-@125
+    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getWidth() : 0.6F;
+    	if (mc.thePlayer != null) ;else return f;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return f;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getWidth();
-//-@-125
-    		if (isOlddays) {
-    			Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    			return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getWidth", obj[0]));
-    			//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getWidth();
-    		} else
-//@-@125
-    			return PFLM_RenderPlayer.modelBasicOrig[0].getWidth();
+    	return f;
     }
 
     public static float getHeight() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	float f;
+//-@-125
+    	if (isOlddays) {
+    		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
+    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getHeight", obj[0]));
+    		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getHeight();
+    	} else
+//@-@125
+    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getHeight() : 1.8F;
+    	if (mc.thePlayer != null) ;else return f;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return f;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getHeight();
-//-@-125
-    		if (isOlddays) {
-    			Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    			return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getHeight", obj[0]));
-    			//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getHeight();
-    		} else
-//@-@125
-    			return PFLM_RenderPlayer.modelBasicOrig[0].getHeight();
+    	return f;
     }
 
     public static float getyOffset() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	float f;
+//-@-125
+    	if (isOlddays) {
+    		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
+    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getyOffset", obj[0]));
+    		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getyOffset();
+    	} else
+//@-@125
+    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getyOffset() : 1.62F;
+    	if (mc.thePlayer != null) ;else return f;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return f;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getyOffset();
-//-@-125
-    		if (isOlddays) {
-    			Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    			return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getyOffset", obj[0]));
-    			//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getyOffset();
-    		} else
-//@-@125
-    			return PFLM_RenderPlayer.modelBasicOrig[0].getyOffset();
+    	return f;
     }
 
     public static float getRidingWidth() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	float f;
+//-@-125
+    	if (isOlddays) {
+    		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
+    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingWidth", obj[0]));
+    		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getRidingWidth();
+    	} else
+//@-@125
+    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getRidingWidth() : 0.6F;
+    	if (mc.thePlayer != null) ;else return f;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return f;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingWidth();
-//-@-125
-    		if (isOlddays) {
-    			Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    			return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingWidth", obj[0]));
-    			//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getRidingWidth();
-    		} else
-//@-@125
-    			return PFLM_RenderPlayer.modelBasicOrig[0].getRidingWidth();
+    	return f;
     }
 
     public static float getRidingHeight() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	float f;
+//-@-125
+    	if (isOlddays) {
+    		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
+    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingHeight", obj[0]));
+    		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getRidingHeight();
+    	} else
+//@-@125
+    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getRidingHeight() : 1.8F;
+    	if (mc.thePlayer != null) ;else return f;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return f;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingHeight();
-//-@-125
-    		if (isOlddays) {
-    			Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    			return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingHeight", obj[0]));
-    			//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getRidingHeight();
-    		} else
-//@-@125
-    			return PFLM_RenderPlayer.modelBasicOrig[0].getRidingHeight();
+    	return f;
     }
 
     public static float getRidingyOffset() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	float f;
+//-@-125
+    	if (isOlddays) {
+    		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
+    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingyOffset", obj[0]));
+    		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getRidingyOffset();
+    	} else
+//@-@125
+    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getRidingyOffset() : 1.62F;
+    	if (mc.thePlayer != null) ;else return f;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return f;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingyOffset();
-//-@-125
-    		if (isOlddays) {
-    			Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    			return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingyOffset", obj[0]));
-    			//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getRidingyOffset();
-    		} else
-//@-@125
-    			return PFLM_RenderPlayer.modelBasicOrig[0].getRidingyOffset();
+    	return f;
     }
 
     public static double getMountedYOffset() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	double d;
+//-@-125
+    	if (isOlddays) {
+    		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
+    		d = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getMountedYOffset", obj[0]));
+    		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getMountedYOffset();
+    	} else
+//@-@125
+    		d = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getMountedYOffset() : 0.75D;
+    	if (mc.thePlayer != null) ;else return d;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return d;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getMountedYOffset();
-//-@-125
-    		if (isOlddays) {
-    			Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    			return Double.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getMountedYOffset", obj[0]));
-    			//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getMountedYOffset();
-    		} else
-//@-@125
-    			return PFLM_RenderPlayer.modelBasicOrig[0].getMountedYOffset();
+    	return d;
     }
 
     public static boolean getIsRiding() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	boolean b = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getIsRiding() : false;
+    	if (mc.thePlayer != null) ;else return b;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return b;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).isRiding;
     	return false;
     }
 
     public static float getPhysical_Hammer() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	float f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].Physical_Hammer() : 0.0F;
+    	if (mc.thePlayer != null) ;else return f;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return f;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).Physical_Hammer();
     	return Physical_Hammer;
     }
 
     public static float ridingViewCorrection() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	float f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].ridingViewCorrection() : 0.0F;
+    	if (mc.thePlayer != null) ;else return f;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return f;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).ridingViewCorrection();
     	return 0.0F;
     }
 
     public static boolean bipedCheck() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	if (mc.thePlayer != null) ;else return false;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return false;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
-    			&& textureModel instanceof MultiModelBaseBiped) return MultiModel_Biped.class.isInstance(textureModel);
+    			&& textureModel instanceof MultiModelBaseBiped) return BipedClass.isInstance(textureModel);
     	return false;
     }
 
     public static float getOnGround() {
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData(mc.thePlayer).modelMain.textureInner;
+    	float f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getOnGround() : 0.0F;
+    	if (mc.thePlayer != null) ;else return f;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return f;
+    	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getOnGround();
     	return 0.0F;
     }
 
     public static float getEyeHeight() {
-    	/*//125deleteif (mc.thePlayer != null
-    			&& mc.thePlayer.worldObj != null) {
-    		if (mc.thePlayer.worldObj.isRemote) {
-    			((PFLM_EntityPlayerMP) gotcha).resetHeight();
-    		} else /*125delete*/
-//-@-b166
-    		if (isPlayerAPI) {
-    			//isModelSize
-    			//if (gotcha != null) return PFLM_EntityPlayer.gotcha.getEyeHeight();
-    		} else {
+    	float f = 0.12F;
+    	if (mc.thePlayer != null
+    			&& mc.thePlayer.worldObj != null
+    			&& !isMulti) {
 //-@-125
-    			if (isSSP) {
-    				if (gotcha != null) return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getEyeHeight", gotcha));
-    				//return ((PFLM_EntityPlayerSP2) gotcha).getEyeHeight();
-    			} else
+    		if (isSSP) {
+    			if (gotcha != null) return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_entityPlayerSP2, "getEyeHeight", gotcha));
+    			//return ((PFLM_EntityPlayerSP2) gotcha).getEyeHeight();
+    		} else
 //@-@125
+    			if (gotcha != null) {
+//-@-b166
+    				if (isPlayerAPI
+    						&& !isPlayerAPIDebug) {
+    					Object o = Modchu_Reflect.getFieldObject(PFLM_EntityPlayer, "gotcha");
+    					if (o != null) return (Float) Modchu_Reflect.invokeMethod(EntityPlayer.class, "getEyeHeight", o);
+    				} else {
 //@-@b166
-    				if (gotcha != null) return ((PFLM_EntityPlayerSP) gotcha).getEyeHeight();
-        	/*b166//*/}
-    	// 125delete}
+    					if (gotcha != null) return ((PFLM_EntityPlayerSP) gotcha).getEyeHeight();
+//-@-b166
+    				}
+//@-@b166
+    			}
+    	}
     	if (mc != null
     			&& mc.thePlayer != null) return mc.thePlayer.getEyeHeight();
     	return 0.12F;
     }
 
     public static String getUsername() {
-    	/*//125deleteif (mc.thePlayer != null
-    			&& mc.thePlayer.worldObj != null) {
-    		if (mc.thePlayer.worldObj.isRemote) {
-    			return ((PFLM_EntityPlayerMP) gotcha).username;
-    		} else /*125delete*/
+    	if (mc.thePlayer != null
+    			&& mc.thePlayer.worldObj != null
+    			&& !isMulti) {
 //-@-b166
-    		if (isPlayerAPI) {
+    		if (isPlayerAPI
+    				&& !isPlayerAPIDebug) {
     			if (gotcha != null) return (String) Modchu_Reflect.getFieldObject(PFLM_PlayerBase, "username", Modchu_Reflect.getFieldObject(PFLM_PlayerBase, "player", gotcha));
     		} else {
-//-@-125
-    			if (isSSP) {
-    				if (gotcha != null) return (String) Modchu_Reflect.getFieldObject(Modchu_Reflect.getField(pflm_entityPlayerSP2, "username"), gotcha);
-    				//return ((PFLM_EntityPlayerSP2) gotcha).username;
-    			} else
-//@-@125
+/*
+    		if (isSSP) {
+    			if (gotcha != null) return (String) Modchu_Reflect.getFieldObject(Modchu_Reflect.getField(pflm_entityPlayerSP2, "username"), gotcha);
+    			//return ((PFLM_EntityPlayerSP2) gotcha).username;
+    		} else
+*/
 //@-@b166
-    				if (gotcha != null) return ((PFLM_EntityPlayerSP) gotcha).username;
+    			if (gotcha != null) return ((PFLM_EntityPlayerSP) gotcha).username;
     		/*b166//*/}
-    	// 125delete}
-    		if (mc != null
-    				&& mc.thePlayer != null) return mc.thePlayer.username;
-    		return null;
+    	}
+    	if (mc != null
+    			&& mc.thePlayer != null) return mc.thePlayer.username;
+    	return null;
     }
 
     public static boolean getChangeModelFlag() {
@@ -2134,101 +2033,103 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				// cfgファイルが無い = 新規作成
 				String s[] = {
 						"AlphaBlend=true",
-						//"Physical_BurningPlayer=0", "Physical_MeltingPlayer=0", "Physical_Hammer=1.0F",
-						//"Physical_Undead=false",
 						"Physical_HurtSound=damage.hit", "isPlayerForm=true",
 						"isPlayerAPIDebug=false",
-						//"isModelSize=false",
 						"isClearWater=false",
-						//"isVoidFog=true", "isFog=true", "isDimming=true",
 						"watherFog=0.1F", "watherFog2=0.05F", "waterStillLightOpacity=3",
 						"waterMovingLightOpacity=3",
-						//"lavaFog=2.0F",
 						"transparency=1.0F",
 						"textureSavedir=/output/", "guiMultiPngSaveButton=true",
 						"changeModeButton=true", "isRenderName=true",
-						//"isMouseOverMinecraftMenu=true",
-						"locationPositionCorrectionY=0.5D", "waitTime=600",
+						"waitTime=600",
 						"multiAutochangeMode=true", "skirtFloats=false", "skirtFloatsVolume=1.0F",
 						"othersPlayerWaitTime=600", "versionCheck=true",
 						"useScaleChange=true", "mushroomConfusion=true"
+/*//125delete
+						, "Physical_BurningPlayer=0", "Physical_MeltingPlayer=0", "Physical_Hammer=1.0F",
+						"Physical_Undead=false", "isVoidFog=true", "isFog=true",
+						"isDimming=true", "lavaFog=2.0F", "isMouseOverMinecraftMenu=true",
+						"isSwapGuiSelectWorld=false", "isModelSize=false"
+*///125delete
 				};
 				Modchu_Config.writerConfig(mainCfgfile, s);
 			} else {
 				// cfgファイルがある
 				AlphaBlend = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "AlphaBlend", AlphaBlend)).toString());
-				//Physical_BurningPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_BurningPlayer", Physical_BurningPlayer)).toString());
-				//Physical_MeltingPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_MeltingPlayer", Physical_MeltingPlayer)).toString());
-				//Physical_Hammer = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_Hammer", Physical_Hammer)).toString());
-				//Physical_Undead = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_Undead", Physical_Undead)).toString());
 				Physical_HurtSound = (Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_HurtSound", Physical_HurtSound)).toString();
 				isPlayerForm = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isPlayerForm", isPlayerForm)).toString());
 				isPlayerAPIDebug = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isPlayerAPIDebug", isPlayerAPIDebug)).toString());
-				//isModelSize = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isModelSize", isModelSize)).toString());
 				isClearWater = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isClearWater", isClearWater)).toString());
-				//isVoidFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isVoidFog", isVoidFog)).toString());
-				//isFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isFog", isFog)).toString());
-				//isDimming = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isDimming", isDimming)).toString());
 				watherFog = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "watherFog", watherFog)).toString());
 				watherFog2 = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "watherFog2", watherFog2)).toString());
 				waterStillLightOpacity = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "waterStillLightOpacity", waterStillLightOpacity)).toString());
 				waterMovingLightOpacity = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "waterMovingLightOpacity", waterMovingLightOpacity)).toString());
-				//lavaFog = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "lavaFog", lavaFog)).toString());
 				transparency = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "transparency", transparency)).toString());
 				textureSavedir = (Modchu_Config.loadConfig(showModelList, mainCfgfile, "textureSavedir", textureSavedir)).toString();
 				guiMultiPngSaveButton = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "guiMultiPngSaveButton", guiMultiPngSaveButton)).toString());
 				changeModeButton = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "changeModeButton", changeModeButton)).toString());
 				isRenderName = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isRenderName", isRenderName)).toString());
-				//isMouseOverMinecraftMenu = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isMouseOverMinecraftMenu", isMouseOverMinecraftMenu)).toString());
-				//locationPositionCorrectionY = Double.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "locationPositionCorrectionY", locationPositionCorrectionY)).toString());
 				waitTime = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "waitTime", waitTime)).toString());
 				multiAutochangeMode = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "multiAutochangeMode", multiAutochangeMode)).toString());
 				othersPlayerWaitTime = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "othersPlayerWaitTime", othersPlayerWaitTime)).toString());
 				versionCheck = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "versionCheck", versionCheck)).toString());
 				useScaleChange = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "useScaleChange", useScaleChange)).toString());
 				mushroomConfusion = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "mushroomConfusion", mushroomConfusion)).toString());
+/*//125delete
+				Physical_BurningPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_BurningPlayer", Physical_BurningPlayer)).toString());
+				Physical_MeltingPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_MeltingPlayer", Physical_MeltingPlayer)).toString());
+				Physical_Hammer = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_Hammer", Physical_Hammer)).toString());
+				Physical_Undead = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_Undead", Physical_Undead)).toString());
+				isVoidFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isVoidFog", isVoidFog)).toString());
+				isFog = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isFog", isFog)).toString());
+				isDimming = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isDimming", isDimming)).toString());
+				lavaFog = Float.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "lavaFog", lavaFog)).toString());
+				isMouseOverMinecraftMenu = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isMouseOverMinecraftMenu", isMouseOverMinecraftMenu)).toString());
+				isSwapGuiSelectWorld = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isSwapGuiSelectWorld", isSwapGuiSelectWorld)).toString());
+				isModelSize = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "isModelSize", isModelSize)).toString());
+*///125delete
 				cfgMaxMinCheck();
 				String k[] = {
 						"AlphaBlend",
-						//"Physical_BurningPlayer", "Physical_MeltingPlayer", "Physical_Hammer",
-						//"Physical_Undead",
 						"Physical_HurtSound", "isPlayerForm",
 						"isPlayerAPIDebug",
-						//"isModelSize",
 						"isClearWater",
-						//"isVoidFog", "isFog", "isDimming",
 						"watherFog", "watherFog2", "waterStillLightOpacity",
 						"waterMovingLightOpacity",
-						//"lavaFog",
 						"transparency",
 						"textureSavedir", "guiMultiPngSaveButton",
 						"changeModeButton", "isRenderName",
-						//"isMouseOverMinecraftMenu", "locationPositionCorrectionY",
 						"waitTime",
 						"multiAutochangeMode",
 						"othersPlayerWaitTime", "versionCheck",
 						"useScaleChange", "mushroomConfusion"
+/*//125delete
+						, "Physical_BurningPlayer", "Physical_MeltingPlayer", "Physical_Hammer",
+						"Physical_Undead", "isVoidFog", "isFog",
+						"isDimming", "lavaFog", "isMouseOverMinecraftMenu",
+						"isSwapGuiSelectWorld", "isModelSize"
+*///125delete
 				};
 				String k1[] = {
 						""+AlphaBlend,
-						//""+Physical_BurningPlayer, ""+Physical_MeltingPlayer, ""+Physical_Hammer,
-						//""+Physical_Undead,
 						""+Physical_HurtSound, ""+isPlayerForm,
 						""+isPlayerAPIDebug,
-						//""+isModelSize,
 						""+isClearWater,
-						//""+isVoidFog, ""+isFog, ""+isDimming,
 						""+watherFog, ""+watherFog2, ""+waterStillLightOpacity,
 						""+waterMovingLightOpacity,
-						//""+lavaFog,
 						""+transparency,
 						""+textureSavedir, ""+guiMultiPngSaveButton,
 						""+changeModeButton, ""+isRenderName,
-						//""+isMouseOverMinecraftMenu, ""+locationPositionCorrectionY,
 						""+waitTime,
 						""+multiAutochangeMode,
 						""+othersPlayerWaitTime, ""+versionCheck,
 						""+useScaleChange, ""+mushroomConfusion
+/*//125delete
+						, ""+Physical_BurningPlayer, ""+Physical_MeltingPlayer, ""+Physical_Hammer,
+						""+Physical_Undead, ""+isVoidFog, ""+isFog,
+						""+isDimming, ""+lavaFog, ""+isMouseOverMinecraftMenu,
+						""+isSwapGuiSelectWorld, ""+isModelSize
+*///125delete
 				};
 				Modchu_Config.writerSupplementConfig(mainCfgfile, k, k1);
 				checkEntityReplaceNecessity();
@@ -2242,6 +2143,9 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				| Physical_Hammer != 1.0F
 				| Physical_Undead
 				| !Physical_HurtSound.equalsIgnoreCase("damage.hit")
+/*//125delete
+				| isSwapGuiSelectWorld
+*///125delete
 				| isModelSize) entityReplaceFlag = true;
 	}
 
@@ -2258,8 +2162,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (lavaFog > 2.0F) lavaFog = 2.0F;
 		if (transparency < 0.0F) transparency = 0.0F;
 		if (transparency > 1.0F) transparency = 1.0F;
-		if (locationPositionCorrectionY < -1.0D) locationPositionCorrectionY = -1.0D;
-		if (locationPositionCorrectionY > 1.0D) locationPositionCorrectionY = 1.0D;
 	}
 
 	public static void writerParamater() {
@@ -2621,15 +2523,27 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					isForge = true;
 					erpflmCheck = 1;
 				}
-				if(n == 5) isSSP = true;
+				if(n == 5) {
+					try {
+						String s = getClassName("EntityPlayerSP2");
+						if (s != null) {
+							Object o = Modchu_Reflect.getFieldObject(s, "armor", false);
+							if (o != null) isSSP = true;
+						}
+					} catch(Exception e) {
+					}
+				}
 				if(n == 6) {
-					Object o = Modchu_Reflect.getFieldObject(ItemRenderer.class, "olddays");
-					if (o != null) {
-						isOlddays = true;
-						ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-ItemRenderer olddays Check ok.")).toString());
-						Modchu_Debug.Debug("ItemRenderer olddays Check ok.");
-					} else {
-						Modchu_Debug.Debug("ItemRenderer olddays Check false.");
+					try {
+						Object o = Modchu_Reflect.getFieldObject(ItemRenderer.class, "olddays", false);
+						if (o != null) {
+							isOlddays = true;
+							ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-ItemRenderer olddays Check ok.")).toString());
+							Modchu_Debug.Debug("ItemRenderer olddays Check ok.");
+						} else {
+							Modchu_Debug.Debug("ItemRenderer olddays Check false.");
+						}
+					} catch(Exception e) {
 					}
 				}
 				if(n == 7) isItemRendererHD = true;
@@ -2721,9 +2635,24 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		itemRendererClass = isHD ? Modchu_ItemRendererHD: Modchu_ItemRenderer.class;
 		if (isSmartMoving) {
 			modelClassName = "MultiModelSmart";
-			Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", modelNewInstance((String) null));
+			BipedClass = Modchu_Reflect.loadClass(getClassName("MultiModelSmart_Biped"));
+			Object[] o1 = modelNewInstance((String) null);
+/*
+			if (o1 != null
+					&& o1[0] != null
+					&& o1[1] != null
+					&& o1[2] != null) Modchu_Debug.mDebug("MultiModelSmart o1 != null");
+			else Modchu_Debug.mDebug("MultiModelSmart o1 == null !!");
+*/
+			MMM_ModelBiped[] o = new MMM_ModelBiped[3];
+			o[0] = (MMM_ModelBiped) o1[0];
+			o[1] = (MMM_ModelBiped) o1[1];
+			o[2] = (MMM_ModelBiped) o1[2];
+			Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", o);
 			Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{modelClassName, "/mob/littleMaid/", modelClassName+"_"});
 			Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"playerformlittlemaid", "/mob/littleMaid/", modelClassName+"_"});
+		} else {
+			BipedClass = MultiModel_Biped.class;
 		}
 
 		boolean keyFlag = playerFormLittleMaidVersion > 129 ? isForge : false;
@@ -2769,7 +2698,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //-@-100
 				// OptiFine判定L
 				try {
-					s = (String) getPrivateValue(net.minecraft.src.RenderGlobal.class, this, "version");
+					s = (String) getPrivateValue(RenderGlobal.class, this, "version");
 					String s1 = "OptiFine";
 					if (s.indexOf(s1) != -1) {
 						Modchu_Debug.Debug(s + " Check ok.");
@@ -2907,49 +2836,36 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 /*
 		if (isModelSize) {
 			try {
-				Minecraft instance = Minecraft.getMinecraft();
 				if (isCCTV) {
 					String s3;
-					instance.entityRenderer = new PFLM_EntityRendererCCTV(instance);
+					mc.entityRenderer = new PFLM_EntityRendererCCTV(mc);
+					mc.entityRenderer.itemRenderer = newInstanceItemRenderer();
 					s3 = "PFLM_EntityRendererCCTV";
 					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 					Modchu_Debug.Debug(s3 + " to set.");
-					try {
-						s = "mod_CCTV";
-						Package pac = getClass().getPackage();
-						if (pac != null) s = pac.getName().concat(".").concat(s);
-						Class CCTV = Class.forName(s);
-						Field f11;
-						try {
-							f11 = CCTV.getDeclaredField("rendererReplaced");
-							f11.setAccessible(true);
-							f11.set(null, true);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					Class CCTV = Modchu_Reflect.loadClass(getClassName("mod_CCTV"));
+					Modchu_Reflect.setFieldObject(CCTV, "c", mc.entityRenderer);
+					Modchu_Reflect.setFieldObject(CCTV, "rendererReplaced", true);
 				} else
 				if (is2D) {
 					String s3;
-					instance.entityRenderer = new PFLM_EntityRenderer2D(instance);
+					mc.entityRenderer = new PFLM_EntityRenderer2D(mc);
 					s3 = "PFLM_EntityRenderer2D";
 					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 					Modchu_Debug.Debug(s3 + " to set.");
 				} else
 				if (erpflmCheck == 0) {
-					instance.entityRenderer = new PFLM_EntityRenderer(instance);
+					mc.entityRenderer = new PFLM_EntityRenderer(mc);
 					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRenderer to set.")).toString());
 					Modchu_Debug.Debug("PFLM_EntityRenderer to set.");
 				} else
 				if (erpflmCheck == 1) {
-					instance.entityRenderer = new PFLM_EntityRendererForge(instance);
+					mc.entityRenderer = new PFLM_EntityRendererForge(mc);
 					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRendererForge to set.")).toString());
 					Modchu_Debug.Debug("PFLM_EntityRendererForge to set.");
 				} else
 				if (erpflmCheck == 2) {
-					instance.entityRenderer = new PFLM_EntityRendererOptiL(instance);
+					mc.entityRenderer = new PFLM_EntityRendererOptiL(mc);
 					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRendererOptiL to set.")).toString());
 					Modchu_Debug.Debug("PFLM_EntityRendererOptiL to set.");
 				} else
@@ -2957,24 +2873,24 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					String s3;
 					if(isShaders) {
 //-@-125
-						instance.entityRenderer = new PFLM_EntityRendererShaders(instance);
+						mc.entityRenderer = new PFLM_EntityRendererShaders(mc);
 						s3 = "PFLM_EntityRendererShaders";
 //@-@125
 
 */
 /*//125delete
-						instance.entityRenderer = new PFLM_EntityRendererShadersHDM(instance);
+						mc.entityRenderer = new PFLM_EntityRendererShadersHDM(mc);
 						s3 = "PFLM_EntityRendererShadersHDM";
 *///125delete
 /*
 					} else {
 //-@-125
-						instance.entityRenderer = new PFLM_EntityRendererOptiHD(instance);
+						mc.entityRenderer = new PFLM_EntityRendererOptiHD(mc);
 						s3 = "PFLM_EntityRendererOptiHD";
 //@-@125
  */
 /*//125delete
-						instance.entityRenderer = new PFLM_EntityRendererOptiHDM(instance);
+						mc.entityRenderer = new PFLM_EntityRendererOptiHDM(mc);
 						s3 = "PFLM_EntityRendererOptiHDM";
 *///125delete
 /*
@@ -2986,23 +2902,23 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					String s3;
 					if(isShaders) {
 						//-@-125
-						instance.entityRenderer = new PFLM_EntityRendererShadersHDU(instance);
+						mc.entityRenderer = new PFLM_EntityRendererShadersHDU(mc);
 						s3 = "PFLM_EntityRendererShadersHDU";
 //@-@125
  */
 /*//125delete
-						instance.entityRenderer = new PFLM_EntityRendererShaders(instance);
+						mc.entityRenderer = new PFLM_EntityRendererShaders(mc);
 						s3 = "PFLM_EntityRendererShaders";
 *///125delete
 /*
 					} else {
 //-@-125
-						instance.entityRenderer = new PFLM_EntityRendererOptiHDU(instance);
+						mc.entityRenderer = new PFLM_EntityRendererOptiHDU(mc);
 						s3 = "PFLM_EntityRendererOptiHDU";
 //@-@125
  */
 /*//125delete
-						instance.entityRenderer = new PFLM_EntityRendererOptiHD(instance);
+						mc.entityRenderer = new PFLM_EntityRendererOptiHD(mc);
 						s3 = "PFLM_EntityRendererOptiHD";
 *///125delete
 /*
@@ -3014,23 +2930,23 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						String s3;
 						if(isShaders) {
 //-@-125
-							instance.entityRenderer = new PFLM_EntityRendererShadersHDU3(instance);
+							mc.entityRenderer = new PFLM_EntityRendererShadersHDU3(mc);
 							s3 = "PFLM_EntityRendererShadersHDU3";
 //@-@125
  */
 /*//125delete
-							instance.entityRenderer = new PFLM_EntityRendererShadersC(instance);
+							mc.entityRenderer = new PFLM_EntityRendererShadersC(mc);
 							s3 = "PFLM_EntityRendererShadersC";
 *///125delete
 /*
 						} else {
 //-@-125
-							instance.entityRenderer = new PFLM_EntityRendererOptiHDU3(instance);
+							mc.entityRenderer = new PFLM_EntityRendererOptiHDU3(mc);
 							s3 = "PFLM_EntityRendererOptiHDU3";
 //@-@125
  */
 /*//125delete
-							instance.entityRenderer = new PFLM_EntityRendererOptiHDC(instance);
+							mc.entityRenderer = new PFLM_EntityRendererOptiHDC(mc);
 							s3 = "PFLM_EntityRendererOptiHDC";
 *///125delete
 /*
@@ -3042,23 +2958,23 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						String s3;
 						if(isShaders) {
 //-@-125
-							instance.entityRenderer = new PFLM_EntityRendererShadersHDU3(instance);
+							mc.entityRenderer = new PFLM_EntityRendererShadersHDU3(mc);
 							s3 = "PFLM_EntityRendererShadersHDU3";
 //@-@125
  */
 /*//125delete
-							instance.entityRenderer = new PFLM_EntityRendererShadersHDMTC(instance);
+							mc.entityRenderer = new PFLM_EntityRendererShadersHDMTC(mc);
 							s3 = "PFLM_EntityRendererShadersHDMTC";
 *///125delete
 /*
 						} else {
 //-@-125
-							instance.entityRenderer = new PFLM_EntityRendererOptiHDU2(instance);
+							mc.entityRenderer = new PFLM_EntityRendererOptiHDU2(mc);
 							s3 = "PFLM_EntityRendererOptiHDU2";
 //@-@125
  */
 /*//125delete
-							instance.entityRenderer = new PFLM_EntityRendererOptiHDMTC(instance);
+							mc.entityRenderer = new PFLM_EntityRendererOptiHDMTC(mc);
 							s3 = "PFLM_EntityRendererOptiHDMTC";
 *///125delete
 /*
@@ -3070,12 +2986,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					String s3;
 					if(isShader) {
 //-@-110
-						instance.entityRenderer = new PFLM_EntityRendererShader(instance);
+						mc.entityRenderer = new PFLM_EntityRendererShader(mc);
 						s3 = "PFLM_EntityRendererShader";
 //@-@110
  */
 /*//110delete
-						instance.entityRenderer = new PFLM_EntityRenderer(instance);
+						mc.entityRenderer = new PFLM_EntityRenderer(mc);
 						s3 = "PFLM_EntityRenderer";
 *///110delete
 /*
@@ -3086,9 +3002,31 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			} catch(Exception exception) {
 				ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRenderer Fail to set.")).toString());
 				Modchu_Debug.Debug("PFLM_EntityRenderer Fail to set!");
+				exception.printStackTrace();
+			}
+		} else {
+			if (itemRendererClass != null) {
+				if (!instanceCheck(itemRendererClass, mc.entityRenderer.itemRenderer)) {
+					ItemRenderer itemRenderer2 = newInstanceItemRenderer();
+					if (itemRenderer2 != null) {
+						Modchu_Debug.mDebug("modsLoaded itemRenderer2 != null");
+						mc.entityRenderer.itemRenderer = itemRenderer2;
+						if (isHD) {
+							initItemRendererHD = true;
+						} else {
+							initItemRenderer = true;
+						}
+						if (isCCTV) {
+							Class CCTV = Modchu_Reflect.loadClass(getClassName("mod_CCTV"));
+							Class EntityExtensibleRenderer = Modchu_Reflect.loadClass(getClassName("EntityExtensibleRenderer"));
+							Modchu_Reflect.setFieldObject(EntityExtensibleRenderer, "c", "itemRenderer", Modchu_Reflect.getFieldObject(CCTV, "c"), itemRenderer2);
+						}
+					} else {
+						Modchu_Debug.mDebug("modsLoaded itemRenderer2 == null !!");
+					}
+				}
 			}
 		}
-*/
 /*
 		if(isSmartMoving) {
 			isModelSize = false;
@@ -3114,25 +3052,26 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				&& entityReplaceFlag) {
 			//PlayerAPI.register("PlayerFormLittleMaid", PFLM_PlayerBase.class);
 			s = getClassName("PlayerAPI");
-			Class base;
-//@-@b166
-//-@-110
-			if (isSmartMoving) {
-				PFLM_PlayerBaseSmart = Modchu_Reflect.loadClass("PFLM_PlayerBaseSmart");
-				base = PFLM_PlayerBaseSmart;
-			} else {
-//@-@110
+			if (Modchu_Reflect.loadClass(s) != null) {
+				Class base;
+/*
+				if (isSmartMoving) {
+					PFLM_PlayerBaseSmart = Modchu_Reflect.loadClass(getClassName("PFLM_PlayerBaseSmart"));
+					base = PFLM_PlayerBaseSmart;
+				} else {
+*/
 //-@-b166
-				PFLM_PlayerBaseSmart = Modchu_Reflect.loadClass("PFLM_PlayerBase");
-				base = PFLM_PlayerBase;
+					PFLM_PlayerBase = Modchu_Reflect.loadClass(getClassName("PFLM_PlayerBase"));
+					base = PFLM_PlayerBase;
 //@-@b166
-//-@-110
+/*
+				}
+*/
+//-@-b166
+				Modchu_Reflect.invokeMethod(s, "register", new Class[] {String.class, Class.class}, null, new Object[]{ "PlayerFormLittleMaid", base });
+				isPlayerAPI = true;
+				Modchu_Debug.Debug("PlayerAPI register.");
 			}
-//-@-110
-//-@-b166
-			Modchu_Reflect.invokeMethod(s, "register", new Class[] {String.class, Class.class}, null, new Object[]{ "PlayerFormLittleMaid", base });
-			isPlayerAPI = true;
-			Modchu_Debug.Debug("PlayerAPI register.");
 		}
 		if (!isPlayerAPI) {
 			ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PlayerAPI false.")).toString());
@@ -3430,19 +3369,26 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (map != null) {
 			if (!b) {
 				models = map.get(s);
-				if (models != null) {
+				if (models != null
+						&& models[0] != null
+						&& models[1] != null
+						&& models[2] != null) {
 					//Modchu_Debug.mDebug("modelNewInstance return models.");
 					return models;
 				} else {
 					//Modchu_Debug.mDebug("modelNewInstance models == null s="+s);
 				}
 			}
-		} else {
+		}
+		if (map != null) ;else {
 			map = new HashMap<String, Object[]>();
 			//Modchu_Debug.mDebug("modelNewInstance map = new HashMap");
 		}
 		models = modelNewInstance(s);
-		if (models != null) {
+		if (models != null
+				&& models[0] != null
+				&& models[1] != null
+				&& models[2] != null) {
 			map.put(s, models);
 			playerModelMapData.put(entity, map);
 			return models;
@@ -3450,7 +3396,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		boolean isBiped = s.equalsIgnoreCase("Biped");
 		String t = isBiped ? "Biped" : null;
 		models = modelNewInstance(t);
-		if (map != null) {
+		if (models != null
+				&& models[0] != null
+				&& models[1] != null
+				&& models[2] != null) {
 			map.put(s, models);
 			playerModelMapData.put(entity, map);
 		}
@@ -3463,6 +3412,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				&& !s.equalsIgnoreCase("default") ?
 						new StringBuilder().append(modelClassName).append("_").append(s).toString()
 						: modelClassName;
+		Modchu_Debug.mDebug("modelNewInstance s1="+s1);
 		Class c = Modchu_Reflect.loadClass(mod_pflm_playerformlittlemaid.getClassName(s1), false);
 		Modchu_Debug.mDebug("modelNewInstance s="+s+" c="+c);
 		if (c != null) {
@@ -3471,11 +3421,28 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			Object o = Modchu_Reflect.newInstance(c, new Class[]{ float.class }, new Object[]{ 0.0F });
 			if (o != null) {
 				models[0] = o;
-				float[] f1 = getArmorModelsSize(models[0]);
-				models[1] = Modchu_Reflect.newInstance(c, new Class[]{ float.class }, new Object[]{ f1[0] });
-				models[2] = Modchu_Reflect.newInstance(c, new Class[]{ float.class }, new Object[]{ f1[1] });
+/*//125delete
+				if (isSmartMoving
+						&& mod_pflm_playerformlittlemaid.playerFormLittleMaidVersion <= 124) {
+					boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass != null ?
+							mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(models[0]) : s.equalsIgnoreCase("Biped");
+					float[] f1 = new float[2];
+					f1[0] = isBiped ? 0.5F : 0.1F;
+					f1[1] = isBiped ? 1.0F : 0.5F;
+					//Modchu_Debug.mDebug("4modelNewInstance o != null isBiped="+isBiped);
+					models[1] = Modchu_Reflect.newInstance(c, new Class[]{ float.class, int.class, int.class }, new Object[]{ f1[0], MultiModelSmart.NoScaleStart, MultiModelSmart.Scale });
+					models[2] = Modchu_Reflect.newInstance(c, new Class[]{ float.class, int.class, int.class }, new Object[]{ f1[1], MultiModelSmart.NoScaleStart, MultiModelSmart.NoScaleEnd });
+					//Modchu_Debug.mDebug("5modelNewInstance o != null models[1] != null ? "+(models[1] != null));
+				} else {
+*///125delete
+					float[] f1 = getArmorModelsSize(models[0]);
+					models[1] = Modchu_Reflect.newInstance(c, new Class[]{ float.class }, new Object[]{ f1[0] });
+					models[2] = Modchu_Reflect.newInstance(c, new Class[]{ float.class }, new Object[]{ f1[1] });
+/*//125delete
+				}
+*///125delete
+				return models;
 			}
-			return models;
 		}
 		return null;
 	}
@@ -3555,5 +3522,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public static float[] getArmorModelsSize(Object o) {
 		return (float[]) Modchu_Reflect.invokeMethod(MMM_ModelBiped.class, "getArmorModelsSize", o);
+	}
+
+	public static  Minecraft getMinecraft() {
+//-@-125
+		return Minecraft.getMinecraft();
+//@-@125
+/*//125delete
+		return (Minecraft) getPrivateValue(Minecraft.class, null, 1);
+*///125delete
 	}
 }

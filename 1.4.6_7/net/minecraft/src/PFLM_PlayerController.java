@@ -8,7 +8,7 @@ public class PFLM_PlayerController extends PlayerControllerMP {
 
     public static EntityClientPlayerMP pflm_entityPlayersp;
     //isModelSize
-    /*b166//*/ //public static PFLM_EntityPlayer pflm_entityPlayer;
+    /*b166//*/ //public static Object pflm_entityPlayer;
     public static PFLM_PlayerController gotcha;
     //public static PFLM_EntityRenderer erpflm;
     private Minecraft mc;
@@ -40,8 +40,7 @@ public class PFLM_PlayerController extends PlayerControllerMP {
     	} else {
 //-@-b166
     		// EntityClientPlayerMP‚Ì’u‚«Š·‚¦ PlayerAPI—p
-    		//isModelSize
-    		/*
+/*//125delete
     		if (mod_PFLM_PlayerFormLittleMaid.isPlayerAPI) {
     			Modchu_Debug.Debug("Replace PFLM_EntityPlayer.");
     			if (pflm_entityPlayer != null
@@ -49,11 +48,13 @@ public class PFLM_PlayerController extends PlayerControllerMP {
     			pflm_entityPlayer = new PFLM_EntityPlayer(mc, world, mc.session, netClientHandler);
     			return pflm_entityPlayer;
     		} else {
-    		*/
+*///125delete
 //@-@b166
     			Modchu_Debug.Debug("createPlayer.");
     			return super.func_78754_a(world);
-    		/*b166//*/ //}
+/*//125delete
+    		}
+*///125delete
     	}
     }
 /*

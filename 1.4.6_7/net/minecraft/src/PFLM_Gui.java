@@ -606,7 +606,7 @@ public class PFLM_Gui extends GuiScreen {
     }
 
     public void modelChange() {
-    	mod_PFLM_PlayerFormLittleMaid.setTextureValue();
+    	//mod_PFLM_PlayerFormLittleMaid.setTextureValue();
     	if (mod_PFLM_PlayerFormLittleMaid.isModelSize) {
     		closePlayerToSpawn = true;
     	}
