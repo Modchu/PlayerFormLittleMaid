@@ -36,6 +36,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static boolean versionCheck = true;
 	public static boolean useScaleChange = true;
 	public static boolean mushroomConfusion = true;
+	public static boolean entityReplace = false;
 	public static int Physical_BurningPlayer = 0;
 	public static int Physical_MeltingPlayer = 0;
 	public static int waterStillLightOpacity = 3;
@@ -277,7 +278,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.4.6~7-18e";
+		return "1.4.6~7-18i";
 	}
 
 	public void load()
@@ -640,19 +641,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			// ワールドセレクトを置き換え
 			if (!(par1GuiScreen instanceof PFLM_GuiSelectWorldAether)) {
 				guiSelectWorldSwapCount++;
-				String guiMainMenu = getClassName("GuiMainMenu");
-				Field fi = null;
 				try {
-					fi = Class.forName(guiMainMenu).getField("musicId");
-				} catch (Exception e1) {
-					try {
-						fi = Class.forName("xt").getField("musicId");
-					} catch (Exception e2) {
-						e2.printStackTrace();
-					}
-				}
-				try {
-					int ID = (Integer) fi.get(null);
+					int ID = (Integer) Modchu_Reflect.getFieldObject(GuiMainMenu.class, "musicId", par1GuiScreen);
 					minecraft.displayGuiScreen(new PFLM_GuiSelectWorldAether((GuiSelectWorld)par1GuiScreen, ID));
 					Modchu_Debug.Debug("Swap GuiSelectWorldAether.");
 				} catch (Exception e) {
@@ -690,7 +680,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //-@-125
 		if (minecraft.currentScreen != null
 				&& !isForge) onTickInGUI(0.0F, minecraft, minecraft.currentScreen);
-
+//@-@125
 		if (itemRendererClass != null) {
 			ItemRenderer itemRenderer = null;
 			mc = getMinecraft();
@@ -699,6 +689,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				if (!instanceCheck(itemRendererClass, itemRenderer)) {
 					ItemRenderer itemRenderer2 = newInstanceItemRenderer();
 					if (itemRenderer2 != null) {
+						Modchu_Debug.mDebug("onTickInGame itemRenderer2 != null");
 						if (i == 0) {
 							mc.entityRenderer.itemRenderer = itemRenderer2;
 						} else if (i == 1) {
@@ -715,7 +706,19 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				}
 			}
 		}
-
+/*//125delete
+//-@-110
+		if (isPlayerForm
+				&& isSmartMoving
+				&& !isForge) {
+			if (!(RenderManager.instance.getEntityClassRenderObject(EntityPlayerSP.class) instanceof PFLM_RenderPlayer)) {
+				PFLM_PlayerController.addRenderer();
+				Modchu_Debug.Debug("onTickInGame SmartMovingAddRenderer");
+			}
+		}
+//@-@110
+*///125delete
+//-@-125
 		if (isSSP) {
 			if (!pflm_playerController2.isInstance(mc.playerController)
 				&& netclienthandler != null) {
@@ -819,7 +822,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 */
 //-@-123
 			/*//125deleteif (!aetherAddRenderer && isAether) {
-				if (!(RenderManager.instance.getEntityClassRenderObject(EntityPlayer.class) instanceof PFLM_RenderPlayerAether)) {
+				if (!(RenderManager.instance.getEntityClassRenderObject(mc.thePlayer.getClass()) instanceof PFLM_RenderPlayerAether)) {
 					aetherAddRenderer = true;
 					RenderPlayer renderplayer = new PFLM_RenderPlayerAether();
 					Object obj = null;
@@ -835,11 +838,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						}
 					}
 					if (obj != null) {
-						((Map) obj).put(EntityPlayer.class, renderplayer);
+						((Map) obj).put(mc.thePlayer.getClass(), renderplayer);
 						((Map) obj).put(EntityOtherPlayerMP.class, renderplayer);
 						renderplayer.setRenderManager(RenderManager.instance);
 						Modchu_Debug.Debug("aetherAddRenderer");
 						ModLoader.getLogger().fine("playerFormLittleMaid-aetherAddRenderer");
+						//Modchu_Debug.Debug("getEntityClassRenderObject "+(RenderManager.instance.getEntityClassRenderObject(mc.thePlayer.getClass())));
 					} else {
 						Modchu_Debug.Debug("aetherAddRenderer obj null !!");
 						ModLoader.getLogger().warning("playerFormLittleMaid-aetherAddRenderer obj null !!");
@@ -953,7 +957,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			z = getPosZ(mc);
 		}
 		EntityPlayerSP var9 = mc.thePlayer;
-		//Modchu_Debug.Debug("get x="+x+" y+"+y+" z="+z);
+		Modchu_Debug.Debug("get x="+x+" y="+y+" z="+z);
 		try {
 			EnumGameType enumGameType = (EnumGameType) getPrivateValue(PlayerControllerMP.class, mc.playerController, 11);
 			//int var2 = 0;
@@ -1035,15 +1039,18 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				//double d = (double)(1.8F - getHeight());
 				//if (d < 0) d = -d + 1.0D;
 				//d = d + 0.5D;
-				Modchu_Debug.mDebug("setPositionFlag getHeight()="+getHeight());
+				//Modchu_Debug.mDebug("setPositionFlag getHeight()="+getHeight());
 				if (isModelSize) {
 					setPosition(x, y, z);
 					setPositionCorrection(0.0D, 0.5D, 0.0D);
 				}
+/*//125delete
 				else setPosition(x, y, z);
+*///125delete
+				//mc.thePlayer.setPositionAndRotation2(x, y, z, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, 3);
+				//Modchu_Debug.mDebug("setPositionAndRotation2 x="+x+" y="+y+" z="+z);
 			}
 			clearPlayers();
-			//Modchu_Debug.mDebug("setPosition x="+x+" y+"+y+" z="+z);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1369,7 +1376,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public void setPosition(double x, double y, double z) {
     	if (mc.thePlayer != null
     			&& mc.thePlayer.worldObj != null
-    			| !isMulti) {
+    			&& !isMulti) {
     	} else return;
 		mc.thePlayer.setPosition(x, y, z);
     }
@@ -1377,7 +1384,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static void setPositionCorrection(double x, double y, double z) {
     	if (mc.thePlayer != null
     			&& mc.thePlayer.worldObj != null
-    			| !isMulti) {
+    			&& !isMulti) {
     	} else return;
 //-@-b166
     	if (isPlayerAPI
@@ -1401,11 +1408,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	return true;
 //@-@125
 /*//125delete
-    	if (!entityReplaceFlag) return true;
+    	if (!entityReplaceFlag
+    			| isMulti) return true;
     	if (mc.thePlayer != null
     			&& mc.thePlayer.worldObj != null
-    			| !isMulti) {
-        } else return true;
+    			&& !(mc.currentScreen instanceof GuiMainMenu)) {
+        } else return false;
 //-@-b166
     	if (isPlayerAPI
 				&& !isPlayerAPIDebug) {
@@ -1464,7 +1472,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static void setSkinUrl(String s) {
     	if (mc.thePlayer != null
     			&& mc.thePlayer.worldObj != null
-    			| !isMulti) {
+    			&& !isMulti) {
 //-@-b166
     		if (isPlayerAPI
     				&& !isPlayerAPIDebug) {
@@ -1485,7 +1493,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static void setTexture(String s) {
     	if (mc.thePlayer != null
     			&& mc.thePlayer.worldObj != null
-    			| !isMulti) {
+    			&& !isMulti) {
 //-@-b166
     		if (isPlayerAPI
     				&& !isPlayerAPIDebug) {
@@ -1506,21 +1514,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static void resetHeight() {
     	if (mc.thePlayer != null
     			&& mc.thePlayer.worldObj != null
-    			| !isMulti) {
-//-@-b166
-    		if (isPlayerAPI
-    				&& !isPlayerAPIDebug) {
-    			Modchu_Reflect.invokeMethod(PFLM_EntityPlayer, "resetHeight", mc.thePlayer);
-    			//PFLM_EntityPlayer.gotcha.resetHeight();
-    		} else {
-/*
-    			if (isSSP) {
-    				Object ret = Modchu_Reflect.invokeMethod(pflm_entityPlayerSP2, "publicResetHeight", gotcha);
-    			} else
-*/
-//@-@b166
-    			Modchu_Reflect.invokeMethod(PFLM_EntityPlayerSP.class, "resetHeight", mc.thePlayer);
-        	/*b166//*/}
+    			&& !isMulti) {
+    		Modchu_Reflect.invokeMethod(EntityPlayer.class, "aa", "resetHeight", mc.thePlayer);
     	}
     }
 
@@ -1573,7 +1568,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static void setSize(float f1, float f2) {
     	if (mc.thePlayer != null
     			&& mc.thePlayer.worldObj != null
-    			| !isMulti) {
+    			&& !isMulti) {
     		Modchu_Reflect.invokeMethod(Entity.class, "a", "setSize", new Class[]{ float.class, float.class }, mc.thePlayer, new Object[]{ f1, f2 });
     	}
     }
@@ -2044,7 +2039,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						"waitTime=600",
 						"multiAutochangeMode=true", "skirtFloats=false", "skirtFloatsVolume=1.0F",
 						"othersPlayerWaitTime=600", "versionCheck=true",
-						"useScaleChange=true", "mushroomConfusion=true"
+						"useScaleChange=true", "mushroomConfusion=true", "entityReplace=false"
 /*//125delete
 						, "Physical_BurningPlayer=0", "Physical_MeltingPlayer=0", "Physical_Hammer=1.0F",
 						"Physical_Undead=false", "isVoidFog=true", "isFog=true",
@@ -2075,6 +2070,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				versionCheck = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "versionCheck", versionCheck)).toString());
 				useScaleChange = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "useScaleChange", useScaleChange)).toString());
 				mushroomConfusion = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "mushroomConfusion", mushroomConfusion)).toString());
+				entityReplace = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "entityReplace", entityReplace)).toString());
 /*//125delete
 				Physical_BurningPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_BurningPlayer", Physical_BurningPlayer)).toString());
 				Physical_MeltingPlayer = Integer.valueOf((Modchu_Config.loadConfig(showModelList, mainCfgfile, "Physical_MeltingPlayer", Physical_MeltingPlayer)).toString());
@@ -2102,7 +2098,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						"waitTime",
 						"multiAutochangeMode",
 						"othersPlayerWaitTime", "versionCheck",
-						"useScaleChange", "mushroomConfusion"
+						"useScaleChange", "mushroomConfusion", "entityReplace"
 /*//125delete
 						, "Physical_BurningPlayer", "Physical_MeltingPlayer", "Physical_Hammer",
 						"Physical_Undead", "isVoidFog", "isFog",
@@ -2123,7 +2119,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						""+waitTime,
 						""+multiAutochangeMode,
 						""+othersPlayerWaitTime, ""+versionCheck,
-						""+useScaleChange, ""+mushroomConfusion
+						""+useScaleChange, ""+mushroomConfusion, ""+entityReplace
 /*//125delete
 						, ""+Physical_BurningPlayer, ""+Physical_MeltingPlayer, ""+Physical_Hammer,
 						""+Physical_Undead, ""+isVoidFog, ""+isFog,
@@ -2138,7 +2134,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	private static void checkEntityReplaceNecessity() {
-		if (Physical_BurningPlayer != 0
+		if (entityReplace
+				&& (Physical_BurningPlayer != 0
 				| Physical_MeltingPlayer != 0
 				| Physical_Hammer != 1.0F
 				| Physical_Undead
@@ -2146,7 +2143,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 /*//125delete
 				| isSwapGuiSelectWorld
 *///125delete
-				| isModelSize) entityReplaceFlag = true;
+				| isModelSize)) entityReplaceFlag = true;
 	}
 
 	public static void cfgMaxMinCheck() {
@@ -2236,7 +2233,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				"e11color_Elsa3", "e11under_Elsa3", "Catcher_Pawapro", "Batter_Pawapro", "b4under_Beverly4",
 				"kimono_pl_Shion", "Sword_NM", "Ar_NM", "x16_QB", "Hituji",
 				"Udonge_usagi", "neta_chu", "ColorVariation_chu", "NetaPetit_Petit", "CV_DressYukari",
-				"e12color_Elsa3", "b14color_Beverly5"
+				"e12color_Elsa3", "b14color_Beverly5", "e14color_Elsa4", "e14under_Elsa4", "b15color_Beverly6",
+				"b15under_Beverly6"
 		};
 		Modchu_Config.writerModelList(s, textureListfile, textureList);
 	}
@@ -2634,6 +2632,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				&& !isItemRendererDebug;
 		itemRendererClass = isHD ? Modchu_ItemRendererHD: Modchu_ItemRenderer.class;
 		if (isSmartMoving) {
+			isModelSize = false;
+			mod_Modchu_ModchuLib.skirtFloats = false;
 			modelClassName = "MultiModelSmart";
 			BipedClass = Modchu_Reflect.loadClass(getClassName("MultiModelSmart_Biped"));
 			Object[] o1 = modelNewInstance((String) null);
@@ -2832,13 +2832,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				// b166delete}
 			}
 		}
-//isModelSize
-/*
+/*//125delete
 		if (isModelSize) {
 			try {
 				if (isCCTV) {
 					String s3;
-					mc.entityRenderer = new PFLM_EntityRendererCCTV(mc);
+					mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererCCTV"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 					mc.entityRenderer.itemRenderer = newInstanceItemRenderer();
 					s3 = "PFLM_EntityRendererCCTV";
 					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
@@ -2849,23 +2848,23 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				} else
 				if (is2D) {
 					String s3;
-					mc.entityRenderer = new PFLM_EntityRenderer2D(mc);
+					mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRenderer2D"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 					s3 = "PFLM_EntityRenderer2D";
 					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 					Modchu_Debug.Debug(s3 + " to set.");
 				} else
 				if (erpflmCheck == 0) {
-					mc.entityRenderer = new PFLM_EntityRenderer(mc);
+					mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRenderer"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRenderer to set.")).toString());
 					Modchu_Debug.Debug("PFLM_EntityRenderer to set.");
 				} else
 				if (erpflmCheck == 1) {
-					mc.entityRenderer = new PFLM_EntityRendererForge(mc);
+					mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererForge"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRendererForge to set.")).toString());
 					Modchu_Debug.Debug("PFLM_EntityRendererForge to set.");
 				} else
 				if (erpflmCheck == 2) {
-					mc.entityRenderer = new PFLM_EntityRendererOptiL(mc);
+					mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererOptiL"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRendererOptiL to set.")).toString());
 					Modchu_Debug.Debug("PFLM_EntityRendererOptiL to set.");
 				} else
@@ -2873,27 +2872,27 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					String s3;
 					if(isShaders) {
 //-@-125
-						mc.entityRenderer = new PFLM_EntityRendererShaders(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererShaders"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRendererShaders";
 //@-@125
 
-*/
+*///125delete
 /*//125delete
-						mc.entityRenderer = new PFLM_EntityRendererShadersHDM(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererShadersHDM"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRendererShadersHDM";
 *///125delete
-/*
+/*//125delete
 					} else {
 //-@-125
-						mc.entityRenderer = new PFLM_EntityRendererOptiHD(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererOptiHD"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRendererOptiHD";
 //@-@125
- */
+*///125delete
 /*//125delete
-						mc.entityRenderer = new PFLM_EntityRendererOptiHDM(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererOptiHDM"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRendererOptiHDM";
 *///125delete
-/*
+/*//125delete
 					}
 					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 					Modchu_Debug.Debug(s3 + " to set.");
@@ -2902,26 +2901,26 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					String s3;
 					if(isShaders) {
 						//-@-125
-						mc.entityRenderer = new PFLM_EntityRendererShadersHDU(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererShadersHDU"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRendererShadersHDU";
 //@-@125
- */
+*///125delete
 /*//125delete
-						mc.entityRenderer = new PFLM_EntityRendererShaders(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererShaders"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRendererShaders";
 *///125delete
-/*
+/*//125delete
 					} else {
 //-@-125
-						mc.entityRenderer = new PFLM_EntityRendererOptiHDU(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererOptiHDU"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRendererOptiHDU";
 //@-@125
- */
+*///125delete
 /*//125delete
-						mc.entityRenderer = new PFLM_EntityRendererOptiHD(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererOptiHD"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRendererOptiHD";
 *///125delete
-/*
+/*//125delete
 					}
 					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 					Modchu_Debug.Debug(s3 + " to set.");
@@ -2930,26 +2929,26 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						String s3;
 						if(isShaders) {
 //-@-125
-							mc.entityRenderer = new PFLM_EntityRendererShadersHDU3(mc);
+							mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererShadersHDU3"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 							s3 = "PFLM_EntityRendererShadersHDU3";
 //@-@125
- */
+*///125delete
 /*//125delete
-							mc.entityRenderer = new PFLM_EntityRendererShadersC(mc);
+							mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererShadersC"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 							s3 = "PFLM_EntityRendererShadersC";
 *///125delete
-/*
+/*//125delete
 						} else {
 //-@-125
-							mc.entityRenderer = new PFLM_EntityRendererOptiHDU3(mc);
+							mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererOptiHDU3"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 							s3 = "PFLM_EntityRendererOptiHDU3";
 //@-@125
- */
+*///125delete
 /*//125delete
-							mc.entityRenderer = new PFLM_EntityRendererOptiHDC(mc);
+							mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererOptiHDC"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 							s3 = "PFLM_EntityRendererOptiHDC";
 *///125delete
-/*
+/*//125delete
 						}
 						ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 						Modchu_Debug.Debug(s3 + " to set.");
@@ -2958,26 +2957,26 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						String s3;
 						if(isShaders) {
 //-@-125
-							mc.entityRenderer = new PFLM_EntityRendererShadersHDU3(mc);
+							mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererShadersHDU3"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 							s3 = "PFLM_EntityRendererShadersHDU3";
 //@-@125
- */
+*///125delete
 /*//125delete
-							mc.entityRenderer = new PFLM_EntityRendererShadersHDMTC(mc);
+							mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererShadersHDMTC"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 							s3 = "PFLM_EntityRendererShadersHDMTC";
 *///125delete
-/*
+/*//125delete
 						} else {
 //-@-125
-							mc.entityRenderer = new PFLM_EntityRendererOptiHDU2(mc);
+							mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererOptiHDU2"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 							s3 = "PFLM_EntityRendererOptiHDU2";
 //@-@125
- */
+*///125delete
 /*//125delete
-							mc.entityRenderer = new PFLM_EntityRendererOptiHDMTC(mc);
+							mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererOptiHDMTC"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 							s3 = "PFLM_EntityRendererOptiHDMTC";
 *///125delete
-/*
+/*//125delete
 						}
 						ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 						Modchu_Debug.Debug(s3 + " to set.");
@@ -2986,15 +2985,15 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					String s3;
 					if(isShader) {
 //-@-110
-						mc.entityRenderer = new PFLM_EntityRendererShader(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRendererShader"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRendererShader";
 //@-@110
- */
+*///125delete
 /*//110delete
-						mc.entityRenderer = new PFLM_EntityRenderer(mc);
+						mc.entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(getClassName("PFLM_EntityRenderer"), new Class[]{ Minecraft.class }, new Object[]{ mc });
 						s3 = "PFLM_EntityRenderer";
 *///110delete
-/*
+/*//125delete
 						ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
 						Modchu_Debug.Debug(s3 + " to set.");
 					}
@@ -3052,7 +3051,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				&& entityReplaceFlag) {
 			//PlayerAPI.register("PlayerFormLittleMaid", PFLM_PlayerBase.class);
 			s = getClassName("PlayerAPI");
-			if (Modchu_Reflect.loadClass(s) != null) {
+			if (Modchu_Reflect.loadClass(s, false) != null) {
 				Class base;
 /*
 				if (isSmartMoving) {
@@ -3115,6 +3114,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				maxTexturesNamber[color] = i1[color];
 			}
 		}
+		if (entityReplaceFlag) Modchu_Debug.Debug("PFLM-EntityPlayerReplace setting on.");
+		else Modchu_Debug.Debug("PFLM-EntityPlayerReplace setting off.");
     }
 
 	public static void shortcutKeysinit() {
@@ -3408,13 +3409,13 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public static Object[] modelNewInstance(String s) {
 		Object[] models = new Object[3];
-		String s1 = s != null
-				&& !s.equalsIgnoreCase("default") ?
-						new StringBuilder().append(modelClassName).append("_").append(s).toString()
-						: modelClassName;
+		String s1 = s != null ?
+				new StringBuilder().append(modelClassName).append("_").append(s).toString()
+				: modelClassName;
+				//: new StringBuilder().append(modelClassName).append("_default").toString();
 		Modchu_Debug.mDebug("modelNewInstance s1="+s1);
 		Class c = Modchu_Reflect.loadClass(mod_pflm_playerformlittlemaid.getClassName(s1), false);
-		Modchu_Debug.mDebug("modelNewInstance s="+s+" c="+c);
+		Modchu_Debug.mDebug("modelNewInstance c="+c);
 		if (c != null) {
 			//Modchu_Debug.mDebug("modelNewInstance s="+s+" c="+c);
 			models = new Object[3];

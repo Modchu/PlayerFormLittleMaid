@@ -15,7 +15,7 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
     public PFLM_EntityPlayerSP(Minecraft par1Minecraft, World par2World, Session par3Session, NetClientHandler par4NetClientHandler) {
 		super(par1Minecraft, par2World, par3Session, par4NetClientHandler);
 		/*125//*/sendQueue = par4NetClientHandler;
-		if (mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster != null) mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster = new PFLM_EntityPlayerMaster(this);
+		mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster = new PFLM_EntityPlayerMaster(this);
 	}
 
 	public void init() {
@@ -114,7 +114,11 @@ public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
 	public void copyPlayer(EntityPlayer entityplayer) {
 		if (mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster != null) mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster.copyPlayer(entityplayer);
 	}
-
+/*//125delete
+	public void supercopyPlayer(EntityPlayer entityplayer) {
+		super.copyPlayer(entityplayer);
+	}
+*///125delete
 	public void copyInventory(InventoryPlayer inventoryplayer) {
 		if (mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster != null) mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster.copyInventory(inventoryplayer);
 	}

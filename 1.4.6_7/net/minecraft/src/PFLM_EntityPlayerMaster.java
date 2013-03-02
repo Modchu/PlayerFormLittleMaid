@@ -10,16 +10,22 @@ public class PFLM_EntityPlayerMaster {
 	private float oldHeight = 1.81F;
 	private float locationPositionCorrectionY;
 	private Class EntityPlayerSP2;
-	private EntityClientPlayerMP player;
+	private EntityPlayer player;
+	private Object base;
 	// b173deletepublic static int sleepMotion = 0;
 
-	public PFLM_EntityPlayerMaster(EntityClientPlayerMP entity) {
+	public PFLM_EntityPlayerMaster(EntityPlayer entity) {
+		this(entity, null);
+	}
+
+	public PFLM_EntityPlayerMaster(EntityPlayer entity, Object o) {
 		player = entity;
+		base = o;
 		EntityPlayerSP2 = Modchu_Reflect.loadClass("EntityPlayerSP2", false);
 	}
 
 	public void init() {
-		Modchu_Reflect.setFieldObject(player.getClass(), "initFlag", player, true);
+		Modchu_Reflect.setFieldObject(base != null ? base.getClass() : player.getClass(), "initFlag", base != null ? base : player, true);
 		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm) {
 			if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving
 					| !mod_PFLM_PlayerFormLittleMaid.isModelSize) {
@@ -97,7 +103,7 @@ public class PFLM_EntityPlayerMaster {
 			player.attackEntityFrom(DamageSource.drown,
 					mod_PFLM_PlayerFormLittleMaid.Physical_MeltingPlayer);
 		}
-		if (player.mc.currentScreen == null
+		if (Minecraft.getMinecraft().currentScreen == null
 				&& locationPositionCorrectionY != 0.0F) {
 			setPositionCorrection(0.0D, locationPositionCorrectionY, 0.0D);
 			locationPositionCorrectionY = 0.0F;
@@ -126,7 +132,7 @@ public class PFLM_EntityPlayerMaster {
 		if (mod_PFLM_PlayerFormLittleMaid.Physical_Undead && !player.worldObj.isRemote) {
 			return EnumCreatureAttribute.UNDEAD;
 		} else {
-			return (EnumCreatureAttribute) Modchu_Reflect.invokeMethod(player.getClass(), "supergetCreatureAttribute", player);
+			return (EnumCreatureAttribute) Modchu_Reflect.invokeMethod(base != null ? base.getClass() : player.getClass(), "supergetCreatureAttribute", base != null ? base : player);
 		}
 	}
 //@-@b181
@@ -150,7 +156,7 @@ public class PFLM_EntityPlayerMaster {
 			}
 			Modchu_Debug.mDebug("width="+player.width+" height="+player.height+" yOffset="+player.yOffset);
 		}
-		Modchu_Reflect.invokeMethod(player.getClass(), "supersetSize", new Class[]{ float.class, float.class }, player, new Object[]{ f, f1 });
+		Modchu_Reflect.invokeMethod(base != null ? base.getClass() : player.getClass(), "supersetSize", new Class[]{ float.class, float.class }, base != null ? base : player, new Object[]{ f, f1 });
 	}
 
 	public double getMountedYOffset() {
@@ -274,7 +280,7 @@ public class PFLM_EntityPlayerMaster {
 			}
 			pushOutOfBlocksFlag = hit;
 		} else {
-			return (Boolean) Modchu_Reflect.invokeMethod(player.getClass(), "superpushOutOfBlocks", new Class[]{ double.class, double.class, double.class }, player, new Object[]{ d, d1, d2 });
+			return (Boolean) Modchu_Reflect.invokeMethod(base != null ? base.getClass() : player.getClass(), "superpushOutOfBlocks", new Class[]{ double.class, double.class, double.class }, base != null ? base : player, new Object[]{ d, d1, d2 });
 		}
 		return false;
 	}
@@ -289,9 +295,19 @@ public class PFLM_EntityPlayerMaster {
 
     public void copyPlayer(EntityPlayer entityplayer)
     {
-        copyInventory(entityplayer.inventory);
+/*//125delete
+    	if (entityplayer != null) ;else return;
+    	if (player != null) {
+    		Modchu_Reflect.invokeMethod(base != null ? base.getClass() : player.getClass(), "supercopyPlayer", new Class[]{ EntityPlayer.class }, base != null ? base : player, new Object[]{ entityplayer });
+    		return;
+    	}
+    	entityplayer.copyPlayer(entityplayer);
+*///125delete
+//-@-125~b181
+    	copyInventory(entityplayer.inventory);
         player.health = entityplayer.getHealth();
         player.foodStats = entityplayer.getFoodStats();
+//@-@125~b181
 //-@-b173
 /*//b181delete
         player.playerLevel = entityplayer.playerLevel;
@@ -300,9 +316,9 @@ public class PFLM_EntityPlayerMaster {
         player.score = entityplayer.score;
 *///b181delete
 //@-@b173
-/*
+//-@-125
         if (EntityPlayerSP2 != null) Modchu_Reflect.setFieldObject(player.getClass(), "score", entityplayer, Modchu_Reflect.getFieldObject(EntityPlayerSP2, "score", entityplayer));
-*/
+//@-@125
     }
 
     public void copyInventory(InventoryPlayer inventoryplayer)

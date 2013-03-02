@@ -9,12 +9,13 @@ import org.lwjgl.input.Mouse;
 
 public class PFLM_PlayerBase extends PlayerBase {
 
-	public boolean initFlag = false;
+	public static boolean initFlag = false;
 	public static Minecraft mc = ModLoader.getMinecraftInstance();
 
 	public PFLM_PlayerBase(PlayerAPI playerapi) {
 		super(playerapi);
 		mod_PFLM_PlayerFormLittleMaid.gotcha = this;
+		mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster = new PFLM_EntityPlayerMaster(player, this);
 	}
 
 	public void init() {
@@ -45,6 +46,10 @@ public class PFLM_PlayerBase extends PlayerBase {
 //@-@b181
 	public void setPlayerTexture(String s) {
 		if (mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster != null) mod_PFLM_PlayerFormLittleMaid.entityPlayerMaster.setPlayerTexture(s);
+	}
+
+	protected void supersetSize(float f, float f1) {
+		player.setSize(f, f1);
 	}
 /*
     public MovingObjectPosition rayTrace(double par1, float par3)

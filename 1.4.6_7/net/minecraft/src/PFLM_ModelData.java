@@ -21,6 +21,7 @@ public class PFLM_ModelData
 	public int initFlag = 0;
 	public int runActionNumber = 0;
 	public int handedness = 0;
+	public int maidColor = 0;
 	public boolean motionResetFlag = false;
 	public boolean mushroomConfusionLeft = false;
 	public boolean mushroomConfusionRight = false;

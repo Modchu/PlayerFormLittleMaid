@@ -83,7 +83,7 @@ public class PFLM_Gui extends GuiScreen {
 		if (textureName == null) textureName = "default";
 		if (textureModel == null) {
 			//Modchu_Debug.mDebug("PFLM_EntityPlayerDummy default");
-			textureModel = new MultiModel[3];
+			textureModel = new MultiModelBaseBiped[3];
 		}
 		if (textureArmor0 == null) textureArmor0 = new String[4];
 		if (textureArmor1 == null) textureArmor1 = new String[4];
