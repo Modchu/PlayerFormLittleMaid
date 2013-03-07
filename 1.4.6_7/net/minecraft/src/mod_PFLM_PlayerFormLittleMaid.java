@@ -278,7 +278,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.4.6~7-18i";
+		return "1.4.6~7-18j";
 	}
 
 	public void load()

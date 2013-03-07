@@ -41,10 +41,12 @@ public class PFLM_RenderPlayer extends RenderPlayer
 	private boolean checkGlEnableWrapper = true;
 	private boolean checkGlDisableWrapper = true;
 	private boolean isSizeMultiplier = false;
+	private boolean shadersHurtFlashFlag = false;
 	private Method sizeMultiplier;
 	public static Object pflm_RenderPlayerSmart;
 	public static Class PFLM_RenderPlayerSmart;
 	public static Class ForgeHooksClient;
+	public static Class Shaders;
 //-@-125
 	public static Object pflm_RenderRenderSmart;
 	public static Class PFLM_RenderRenderSmart;
@@ -73,6 +75,13 @@ public class PFLM_RenderPlayer extends RenderPlayer
 			ForgeHooksClient = Modchu_Reflect.loadClass("net.minecraftforge.client.ForgeHooksClient");
 		}
 //@-@125
+		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+			Shaders = Modchu_Reflect.loadClass("Shaders");
+			if (Modchu_Reflect.getMethod(Shaders, "setEntityHurtFlash", new Class[]{ int.class, int.class }) != null
+					&& Modchu_Reflect.getFieldObject(Shaders, "useEntityHurtFlash") != null) {
+				shadersHurtFlashFlag = true;
+			}
+		}
 		// b173deleterenderBlocks = new RenderBlocks();
 	}
 
@@ -360,7 +369,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	GL11.glPushMatrix();
 
     	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-    	if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    	if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			&& !shadersHurtFlashFlag) {
     		//Shaders.glDisableWrapper(k1);
     		shadersGlDisableWrapper(GL11.GL_CULL_FACE);
     	} else {
@@ -395,7 +405,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		float f5 = handleRotationFloat(entityliving, f1);
     		rotateCorpse(entityliving, f5, f2, f1);
     		float f6 = 0.0625F;
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+        			&& !shadersHurtFlashFlag) {
     			//Shaders.glEnableWrapper(GL12.GL_RESCALE_NORMAL);
     			shadersGlEnableWrapper(GL12.GL_RESCALE_NORMAL);
     		} else {
@@ -417,7 +428,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			f7 = 1.0F;
     		}
 
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+        			&& !shadersHurtFlashFlag) {
     			//Shaders.glEnableWrapper(GL11.GL_ALPHA_TEST);
     			shadersGlEnableWrapper(GL11.GL_ALPHA_TEST);
     		} else {
@@ -425,7 +437,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		}
     		if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
     		{
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    	    			&& !shadersHurtFlashFlag) {
     				//Shaders.glEnableWrapper(GL11.GL_BLEND);
     				shadersGlEnableWrapper(GL11.GL_BLEND);
     			} else {
@@ -435,7 +448,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		}
     		else
     		{
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    	    			&& !shadersHurtFlashFlag) {
     				//Shaders.glDisableWrapper(k1);
     				shadersGlDisableWrapper(GL11.GL_BLEND);
     			} else {
@@ -468,7 +482,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     				// b166deletefloat f10 = 1.0F;
     				if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			    			&& !shadersHurtFlashFlag) {
     						//Shaders.glEnableWrapper(GL11.GL_BLEND);
     						shadersGlEnableWrapper(GL11.GL_BLEND);
     					} else {
@@ -498,7 +513,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 
     				float f11 = (float)entityliving.ticksExisted + f1;
     				loadTexture("%blur%/misc/glint.png");
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    		    			&& !shadersHurtFlashFlag) {
     					//Shaders.glEnableWrapper(GL11.GL_BLEND);
     					shadersGlEnableWrapper(GL11.GL_BLEND);
     				} else {
@@ -511,7 +527,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 
     				for (int j1 = 0; j1 < 2; j1++)
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			    			&& !shadersHurtFlashFlag) {
     						//Shaders.glDisableWrapper(GL11.GL_LIGHTING);
     						shadersGlDisableWrapper(GL11.GL_LIGHTING);
     					} else {
@@ -544,7 +561,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     				GL11.glDepthMask(true);
     				GL11.glLoadIdentity();
     				GL11.glMatrixMode(GL11.GL_MODELVIEW);
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    		    			&& !shadersHurtFlashFlag) {
     					//Shaders.glEnableWrapper(GL11.GL_LIGHTING);
     					shadersGlEnableWrapper(GL11.GL_LIGHTING);
     				} else {
@@ -553,7 +571,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 
     				if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			    			&& !shadersHurtFlashFlag) {
     						//Shaders.glEnableWrapper(GL11.GL_BLEND);
     						shadersGlEnableWrapper(GL11.GL_BLEND);
     					} else {
@@ -563,7 +582,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     				}
     				else
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			    			&& !shadersHurtFlashFlag) {
     						//Shaders.glDisableWrapper(GL11.GL_BLEND);
     						shadersGlDisableWrapper(GL11.GL_BLEND);
     					} else {
@@ -578,7 +598,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			GL11.glEnable(GL11.GL_ALPHA_TEST);
     		}
 
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+        			&& !shadersHurtFlashFlag) {
     			//Shaders.glDisableWrapper(GL11.GL_BLEND);
     			shadersGlDisableWrapper(GL11.GL_BLEND);
     			//Shaders.glEnableWrapper(GL11.GL_ALPHA_TEST);
@@ -589,89 +610,110 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		}
     		// b173deleteGL11.glColor4f(f9, f9, f9, 1.0F);
     		/*132//*/if (entityliving.getHasActivePotion()) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
-    		renderEquippedItems(entityliving, f1);
-    		/*b173//*/float f9 = entityliving.getBrightness(f1);
-    		int k = getColorMultiplier(entityliving, f9, f1);
-    		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
-    			//Shaders.glDisableWrapper(GL11.GL_TEXTURE_2D);
-    			shadersGlDisableWrapper(GL11.GL_TEXTURE_2D);
-    		} else {
-    			GL11.glDisable(GL11.GL_TEXTURE_2D);
+    		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    				&& shadersHurtFlashFlag
+    				&& (Boolean) Modchu_Reflect.getFieldObject(Shaders, "useEntityHurtFlash")) {
+    			Modchu_Reflect.invokeMethod(Shaders, "setEntityHurtFlash", new Class[]{ int.class, int.class }, new Object[]{ 0, 0 });
     		}
-    		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-
-    		if ((k >> 24 & 0xff) > 0 || entityliving.hurtTime > 0 || entityliving.deathTime > 0)
-    		{
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    		renderEquippedItems(entityliving, f1);
+    		boolean hurtFlag = mod_PFLM_PlayerFormLittleMaid.isShaders
+    				&& shadersHurtFlashFlag
+    				&& !(Boolean) Modchu_Reflect.getFieldObject(Shaders, "useEntityHurtFlash")
+    				? true : false;
+    		if (!hurtFlag) {
+    			/*b173//*/float f9 = entityliving.getBrightness(f1);
+    			int k = getColorMultiplier(entityliving, f9, f1);
+    			OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    					&& !shadersHurtFlashFlag) {
     				//Shaders.glDisableWrapper(GL11.GL_TEXTURE_2D);
     				shadersGlDisableWrapper(GL11.GL_TEXTURE_2D);
-    				//Shaders.glDisableWrapper(GL11.GL_ALPHA_TEST);
-    				shadersGlDisableWrapper(GL11.GL_ALPHA_TEST);
-    				//Shaders.glEnableWrapper(GL11.GL_BLEND);
-    				shadersGlEnableWrapper(GL11.GL_BLEND);
     			} else {
     				GL11.glDisable(GL11.GL_TEXTURE_2D);
-    				GL11.glDisable(GL11.GL_ALPHA_TEST);
-    				GL11.glEnable(GL11.GL_BLEND);
     			}
-    			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-    			GL11.glDepthFunc(GL11.GL_EQUAL);
+    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    					&& shadersHurtFlashFlag) Modchu_Reflect.invokeMethod(Shaders, "disableLightmap");
+    			OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 
-    			if (entityliving.hurtTime > 0 || entityliving.deathTime > 0)
+    			if ((k >> 24 & 0xff) > 0 || entityliving.hurtTime > 0 || entityliving.deathTime > 0)
     			{
-    				GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
-    				modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    						&& shadersHurtFlashFlag) Modchu_Reflect.invokeMethod(Shaders, "beginLivingDamage");
+    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    						&& !shadersHurtFlashFlag) {
+    					//Shaders.glDisableWrapper(GL11.GL_TEXTURE_2D);
+    					shadersGlDisableWrapper(GL11.GL_TEXTURE_2D);
+    					//Shaders.glDisableWrapper(GL11.GL_ALPHA_TEST);
+    					shadersGlDisableWrapper(GL11.GL_ALPHA_TEST);
+    					//Shaders.glEnableWrapper(GL11.GL_BLEND);
+    					shadersGlEnableWrapper(GL11.GL_BLEND);
+    				} else {
+    					GL11.glDisable(GL11.GL_TEXTURE_2D);
+    					GL11.glDisable(GL11.GL_ALPHA_TEST);
+    					GL11.glEnable(GL11.GL_BLEND);
+    				}
+    				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    				GL11.glDepthFunc(GL11.GL_EQUAL);
 
-    				for (int i1 = 0; i1 < 4; i1++)
+    				if (entityliving.hurtTime > 0 || entityliving.deathTime > 0)
     				{
-    					if (inheritRenderPass(entityliving, i1, f1) >= 0)
+    					GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
+    					modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+
+    					for (int i1 = 0; i1 < 4; i1++)
     					{
-    						GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
-    						renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    						if (inheritRenderPass(entityliving, i1, f1) >= 0)
+    						{
+    							GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
+    							renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    						}
     					}
     				}
-    			}
 
-    			if ((k >> 24 & 0xff) > 0)
-    			{
-    				float f10 = (float)(k >> 16 & 0xff) / 255F;
-    				float f12 = (float)(k >> 8 & 0xff) / 255F;
-    				float f14 = (float)(k & 0xff) / 255F;
-    				float f15 = (float)(k >> 24 & 0xff) / 255F;
-    				GL11.glColor4f(f10, f12, f14, f15);
-    				modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
-
-    				for (int k1 = 0; k1 < 4; k1++)
+    				if ((k >> 24 & 0xff) > 0)
     				{
-    					if (inheritRenderPass(entityliving, k1, f1) >= 0)
+    					float f10 = (float)(k >> 16 & 0xff) / 255F;
+    					float f12 = (float)(k >> 8 & 0xff) / 255F;
+    					float f14 = (float)(k & 0xff) / 255F;
+    					float f15 = (float)(k >> 24 & 0xff) / 255F;
+    					GL11.glColor4f(f10, f12, f14, f15);
+    					modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+
+    					for (int k1 = 0; k1 < 4; k1++)
     					{
-    						GL11.glColor4f(f10, f12, f14, f15);
-    						renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    						if (inheritRenderPass(entityliving, k1, f1) >= 0)
+    						{
+    							GL11.glColor4f(f10, f12, f14, f15);
+    							renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    						}
     					}
     				}
+
+    				GL11.glDepthFunc(GL11.GL_LEQUAL);
+    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    						&& !shadersHurtFlashFlag) {
+    					//Shaders.glDisableWrapper(GL11.GL_BLEND);
+    					shadersGlDisableWrapper(GL11.GL_BLEND);
+    					//Shaders.glEnableWrapper(GL11.GL_ALPHA_TEST);
+    					shadersGlEnableWrapper(GL11.GL_ALPHA_TEST);
+    					//Shaders.glEnableWrapper(GL11.GL_TEXTURE_2D);
+    					shadersGlEnableWrapper(GL11.GL_TEXTURE_2D);
+    				} else {
+    					GL11.glDisable(GL11.GL_BLEND);
+    					GL11.glEnable(GL11.GL_ALPHA_TEST);
+    					GL11.glEnable(GL11.GL_TEXTURE_2D);
+    				}
+    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    						&& shadersHurtFlashFlag) Modchu_Reflect.invokeMethod(Shaders, "endLivingDamage");
     			}
 
-    			GL11.glDepthFunc(GL11.GL_LEQUAL);
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
-    				//Shaders.glDisableWrapper(GL11.GL_BLEND);
-    				shadersGlDisableWrapper(GL11.GL_BLEND);
-    				//Shaders.glEnableWrapper(GL11.GL_ALPHA_TEST);
-    				shadersGlEnableWrapper(GL11.GL_ALPHA_TEST);
-    				//Shaders.glEnableWrapper(GL11.GL_TEXTURE_2D);
-    				shadersGlEnableWrapper(GL11.GL_TEXTURE_2D);
+    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    					&& !shadersHurtFlashFlag) {
+    				//Shaders.glDisableWrapper(GL12.GL_RESCALE_NORMAL);
+    				shadersGlDisableWrapper(GL12.GL_RESCALE_NORMAL);
     			} else {
-    				GL11.glDisable(GL11.GL_BLEND);
-    				GL11.glEnable(GL11.GL_ALPHA_TEST);
-    				GL11.glEnable(GL11.GL_TEXTURE_2D);
+    				GL11.glDisable(GL12.GL_RESCALE_NORMAL);
     			}
-    		}
-
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
-    			//Shaders.glDisableWrapper(GL12.GL_RESCALE_NORMAL);
-    			shadersGlDisableWrapper(GL12.GL_RESCALE_NORMAL);
-    		} else {
-    			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
     		}
     	}
     	catch (Exception exception)
@@ -680,14 +722,16 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	}
 
     	OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-    	if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    	if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			&& !shadersHurtFlashFlag) {
     		//Shaders.glEnableWrapper(GL11.GL_TEXTURE_2D);
     		shadersGlEnableWrapper(GL11.GL_TEXTURE_2D);
     	} else {
     		GL11.glEnable(GL11.GL_TEXTURE_2D);
     	}
     	OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-    	if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    	if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			&& !shadersHurtFlashFlag) {
     		//Shaders.glEnableWrapper(GL11.GL_CULL_FACE);
     		shadersGlEnableWrapper(GL11.GL_CULL_FACE);
     	} else {

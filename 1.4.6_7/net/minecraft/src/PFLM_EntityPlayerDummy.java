@@ -1,10 +1,5 @@
 package net.minecraft.src;
-/*//FMLdelete
-import net.minecraft.entity.*;
-import net.minecraft.nbt.*;
-import net.minecraft.util.*;
-import net.minecraft.world.*;
-*///FMLdelete
+
 public class PFLM_EntityPlayerDummy extends EntityLiving {
 
 	public String armorPrefix[] = new String[] {"", "", "", ""};
