@@ -529,6 +529,7 @@ public class PFLM_Gui extends GuiScreen {
     		imageWriteComplete = false;
     		imageWriteFail = false;
     		noSaveFlag = true;
+    		mod_PFLM_PlayerFormLittleMaid.changeColor(null);
     		return;
     	}
     	//ArmorChange

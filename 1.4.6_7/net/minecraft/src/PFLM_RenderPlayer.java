@@ -1011,6 +1011,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	if (firstPersonHandResetFlag
     			&& modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null
     			&& modelDataPlayerFormLittleMaid.modelMain.textureOuter != null
+    			&& modelDataPlayerFormLittleMaid.modelMain.textureOuter[0] != null
     			&& renderManager.renderEngine != null) {
     		firstPersonHandResetFlag = false;
     		loadTexture(modelDataPlayerFormLittleMaid.modelMain.textureOuter[0]);

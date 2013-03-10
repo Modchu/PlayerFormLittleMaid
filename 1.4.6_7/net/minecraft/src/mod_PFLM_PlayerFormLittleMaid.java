@@ -155,6 +155,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static Class PFLM_EntityPlayer;
 	private static Random rnd = new Random();
 	public static PFLM_EntityPlayerMaster entityPlayerMaster;
+	public static String packageName;
 
 	//対応minecraftバージョンによって使っていたりいなかったり
 	public static boolean isSwapGuiSelectWorld = false;
@@ -278,7 +279,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.4.6~7-18j";
+		return "1.4.6~7-18k";
 	}
 
 	public void load()
@@ -1370,6 +1371,17 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     				&& gotcha != null) Modchu_Reflect.invokeMethod(PFLM_PlayerBase, "init", gotcha);
     		else if (!isPlayerAPI
     				&& gotcha != null) Modchu_Reflect.invokeMethod(PFLM_EntityPlayerSP.class, "init", gotcha);
+    	}
+    }
+
+    public static void changeColor(EntityPlayer entityplayer) {
+    	if (entityplayer != null) ;else entityplayer = mc.thePlayer;
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(entityplayer);
+    	if (data != null
+    			&& data.isPlayer) {
+    		((MultiModelBaseBiped) data.modelMain.modelArmorInner).changeColor(entityplayer);
+    		((MultiModelBaseBiped) data.modelFATT.modelArmorInner).changeColor(entityplayer);
+    		((MultiModelBaseBiped) data.modelFATT.modelArmorOuter).changeColor(entityplayer);
     	}
     }
 
