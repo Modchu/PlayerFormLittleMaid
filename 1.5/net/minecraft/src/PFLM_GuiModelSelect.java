@@ -1,11 +1,17 @@
 package net.minecraft.src;
 
 import java.awt.image.BufferedImage;
-
 import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
-
+/*//FMLdelete
+import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.entity.*;
+import net.minecraft.world.*;
+*///FMLdelete
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
@@ -14,7 +20,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 	private float ySize_lo;
 	private World popWorld;
 	private int modelSelectMode;
-	private int modelColor;
+	public int modelColor;
 	private PFLM_EntityPlayerDummy entityPlayerFormLittleMaidDummy;
 	private int modelListx = 30;
 	private int modelListy = 60;

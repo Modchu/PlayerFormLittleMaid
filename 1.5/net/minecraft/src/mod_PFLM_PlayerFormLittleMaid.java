@@ -3,8 +3,10 @@ package net.minecraft.src;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -282,7 +284,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.5-19";
+		return "1.4.6~7-18k";
 	}
 
 	public void load()
@@ -947,7 +949,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public void clientConnect(NetClientHandler netClientHandler) {
 //-@-125
     	if (!entityReplaceFlag) return;
-    	Modchu_Debug.mDebug("clientConnect");
+    	//Modchu_Debug.mDebug("clientConnect");
     	netclienthandler = netClientHandler;
     	mc = Minecraft.getMinecraft();
 		double x = 0.0D;
@@ -961,7 +963,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			z = getPosZ(mc);
 		}
 		EntityPlayerSP var9 = mc.thePlayer;
-		Modchu_Debug.Debug("get x="+x+" y="+y+" z="+z);
+		//Modchu_Debug.Debug("get x="+x+" y="+y+" z="+z);
 		try {
 			EnumGameType enumGameType = (EnumGameType) Modchu_Reflect.getPrivateValue(PlayerControllerMP.class, mc.playerController, 11);
 			//int var2 = 0;
@@ -1588,17 +1590,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	}
     }
 
-    public static void setFirstPersonHandResetFlag(boolean flag) {
-/*
-    	if (isOlddays) {
-    		Modchu_Reflect.setFieldObject(Modchu_Reflect.getField(pflm_renderPlayer2, "firstPersonHandResetFlag"), null, flag);
-    		//PFLM_RenderPlayer2.firstPersonHandResetFlag = flag;
-    	} else
-*/
-//@-@110
-    		PFLM_RenderPlayer.firstPersonHandResetFlag = flag;
-    }
-
     public static float getModelScale() {
     	return getModelScale(null);
     }
@@ -1795,13 +1786,13 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static float getOnGround() {
-    	float f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? (Float) PFLM_RenderPlayer.modelBasicOrig[0].getCapsValue(PFLM_RenderPlayer.modelBasicOrig[0].caps_getOnGround) : 0.0F;
+    	float f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? (Float) PFLM_RenderPlayer.modelBasicOrig[0].getCapsValue(PFLM_RenderPlayer.modelBasicOrig[0].caps_onGround) : 0.0F;
     	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
-    			&& textureModel instanceof MultiModelBaseBiped) return (Float) ((MultiModelBaseBiped) textureModel).getCapsValue(((MultiModelBaseBiped) textureModel).caps_getOnGround);
+    			&& textureModel instanceof MultiModelBaseBiped) return (Float) ((MultiModelBaseBiped) textureModel).getCapsValue(((MultiModelBaseBiped) textureModel).caps_onGround);
     	return 0.0F;
     }
 

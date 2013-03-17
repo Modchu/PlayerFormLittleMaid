@@ -1,6 +1,9 @@
 package net.minecraft.src;
 
+import java.io.File;
 import java.lang.reflect.Method;
+
+import net.minecraft.client.Minecraft;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -621,7 +624,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		Object[] models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entity, s, false);
 		//Modchu_Debug.mDebug("modelInit s="+s+" models[0] != null ? "+(models[0] != null));
 		modelMain.modelArmorInner = (MultiModelBaseBiped) (models[0] != null ? models[0] : new MultiModel(0.0F));
-		((MultiModelBaseBiped) modelMain.modelArmorInner).setCapsValue(((MultiModelBaseBiped) modelMain.modelArmorInner).caps_setArmorType, 0);
+		((MultiModelBaseBiped) modelMain.modelArmorInner).setCapsValue(((MultiModelBaseBiped) modelMain.modelArmorInner).caps_armorType, 0);
 	}
 
 	private static void modelArmorInit(Entity entity, String s) {
@@ -646,8 +649,8 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 			modelFATT.modelArmorOuter = (MultiModelBaseBiped) (models[2] != null ?
 					models[2] : !isBiped ? new MultiModel(f1[1]) : new MultiModel_Biped(f1[1]));
 		}
-		((MultiModelBaseBiped) modelFATT.modelArmorInner).setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorInner).caps_setArmorType, 1);
-		((MultiModelBaseBiped) modelFATT.modelArmorOuter).setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorOuter).caps_setArmorType, 2);
+		((MultiModelBaseBiped) modelFATT.modelArmorInner).setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorInner).caps_armorType, 1);
+		((MultiModelBaseBiped) modelFATT.modelArmorOuter).setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorOuter).caps_armorType, 2);
 	}
 
     protected void renderEquippedItems(EntityLiving entityliving, float f)
