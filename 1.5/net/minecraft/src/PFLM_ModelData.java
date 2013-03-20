@@ -25,6 +25,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	public boolean shortcutKeysActionInitFlag = true;
 	public boolean changeModelFlag = true;
 	public boolean resetHandedness = true;
+    public boolean partsSetInit = false;
 	public float isWaitF = 0.0F;
 	public float modelScale = 0.0F;
 	public int isWaitTime = 0;
@@ -33,6 +34,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	public int runActionNumber = 0;
 	public int handedness = 0;
 	public int maidColor = 0;
+    public int partsSetFlag = 1;
 	public boolean motionResetFlag = false;
 	public boolean mushroomConfusionLeft = false;
 	public boolean mushroomConfusionRight = false;
@@ -101,7 +103,6 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		caps.put("firstPerson", caps_firstPerson);
 		caps.put("oldwalking", caps_oldwalking);
 		caps.put("motionY", caps_motionY);
-		caps.put("partsSetFlag", caps_partsSetFlag);
 		caps.put("showModelFlag", caps_showModelFlag);
 		caps.put("shortcutKeysAction", caps_shortcutKeysAction);
 		caps.put("runActionNumber", caps_runActionNumber);
@@ -142,11 +143,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		caps.put("actionInit", caps_actionInit);
 		caps.put("actionRelease", caps_actionRelease);
 		caps.put("syncModel", caps_syncModel	);
-		caps.put("settingShowParts", caps_settingShowParts);
 		caps.put("maidColor", caps_maidColor);
-		caps.put("guiShowModelFlag", caps_guiShowModelFlag);
-		caps.put("showModelList", caps_showModelList);
-		caps.put("loadShowModelList", caps_loadShowModelList);
 	}
 
 	/**
@@ -162,7 +159,24 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		boolean isRiding = model.getCapsValueBoolean(caps_isRiding);
 		model.setCapsValue(caps_isRiding, !isRiding ? model.getCapsValueBoolean(caps_isSitting) : isRiding);
 		if (entityliving != null) ;else return;
-		model.setCapsValue(caps_settingShowParts);
+		if(partsSetFlag == 1) {
+			if (((MultiModelBaseBiped) model).getShowPartsList().isEmpty()) ((MultiModelBaseBiped) model).showPartsInit();
+			((MultiModelBaseBiped) model).defaultPartsSettingBefore();
+			PFLM_Gui.setParts(((MultiModelBaseBiped) model).getShowPartsList(), ((MultiModelBaseBiped) model).getShowPartsHideList());
+			((MultiModelBaseBiped) model).defaultPartsSettingAfter();
+			partsSetFlag = 2;
+			if(!partsSetInit) {
+				partsSetInit = true;
+				PFLM_Gui.showModelFlag = true;
+				Modchu_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
+			}
+		}
+
+		//GUI パーツ表示・非表示反映
+		if(PFLM_Gui.showModelFlag) {
+			((MultiModelBaseBiped) model).showModelSettingReflects();
+			PFLM_Gui.showModelFlag = false;
+		}
 	}
 
 	/**
@@ -252,21 +266,6 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) setIsSleeping((Boolean) pArg[0]);
-		case caps_partsSetFlag:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) setPartsSetFlag((Integer) pArg[0]);
-			return true;
-		case caps_guiShowModelFlag:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) setGuiShowModelFlag((Boolean) pArg[0]);
-			return true;
-		case caps_loadShowModelList:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) setLoadShowModelList((List<String>) pArg[0]);
-			return true;
 		}
 
 		return false;
@@ -323,12 +322,6 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			return getItems();
 		case caps_Actions:
 			return getActions();
-		case caps_partsSetFlag:
-			return getPartsSetFlag();
-		case caps_guiShowModelFlag:
-			return getGuiShowModelFlag();
-		case caps_showModelList:
-			return getShowModelList();
 		}
 
 		return null;
@@ -438,30 +431,6 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     private Object getInventory() {
     	return ((EntityPlayer) owner).inventory;
     }
-
-    private int getPartsSetFlag() {
-    	return PFLM_Gui.partsSetFlag;
-    }
-
-    private void setPartsSetFlag(int i) {
-    	PFLM_Gui.partsSetFlag = i;
-    }
-
-    private boolean getGuiShowModelFlag() {
-    	return PFLM_Gui.showModelFlag;
-    }
-
-    private void setGuiShowModelFlag(boolean b) {
-    	PFLM_Gui.showModelFlag = b;
-    }
-
-    private List<String> getShowModelList() {
-    	return mod_PFLM_PlayerFormLittleMaid.showModelList;
-    }
-
-	private void setLoadShowModelList(List<String> list) {
-		Modchu_Config.loadShowModelList(list);
-	}
 
     private int getMaidColor() {
     	if (owner instanceof EntityPlayer) {

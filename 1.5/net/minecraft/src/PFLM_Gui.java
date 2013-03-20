@@ -1,11 +1,25 @@
 package net.minecraft.src;
 
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.awt.image.ImageObserver;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -1204,5 +1218,7 @@ public class PFLM_Gui extends GuiScreen {
     			count++;
     		}
     	}
+    	if(partsButton
+    			&& Minecraft.getMinecraft().currentScreen instanceof PFLM_Gui) Minecraft.getMinecraft().currentScreen.initGui();
     }
 }

@@ -199,7 +199,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     		GL11.glScalef(-1F, -1F, 1.0F);
     		preRenderCallback(entityliving, f1);
     		GL11.glTranslatef(0.0F, -24F * f6 - 0.0078125F, 0.0F);
-    		float f7 = entityliving.prevLimbYaw + (entityliving.limbYaw - entityliving.prevLimbYaw) * f1;
+    		float f7 = entityliving.limbYaw + (entityliving.limbYaw - entityliving.limbYaw) * f1;
     		float f8 = entityliving.limbSwing - entityliving.limbYaw * (1.0F - f1);
 //-@-b181
     		if (entityliving.isChild())
@@ -624,7 +624,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		Object[] models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entity, s, false);
 		//Modchu_Debug.mDebug("modelInit s="+s+" models[0] != null ? "+(models[0] != null));
 		modelMain.modelArmorInner = (MultiModelBaseBiped) (models[0] != null ? models[0] : new MultiModel(0.0F));
-		((MultiModelBaseBiped) modelMain.modelArmorInner).setCapsValue(((MultiModelBaseBiped) modelMain.modelArmorInner).caps_armorType, 0);
+		modelMain.modelArmorInner.setCapsValue(((MultiModelBaseBiped) modelMain.modelArmorInner).caps_armorType, 0);
 	}
 
 	private static void modelArmorInit(Entity entity, String s) {
@@ -649,8 +649,8 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 			modelFATT.modelArmorOuter = (MultiModelBaseBiped) (models[2] != null ?
 					models[2] : !isBiped ? new MultiModel(f1[1]) : new MultiModel_Biped(f1[1]));
 		}
-		((MultiModelBaseBiped) modelFATT.modelArmorInner).setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorInner).caps_armorType, 1);
-		((MultiModelBaseBiped) modelFATT.modelArmorOuter).setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorOuter).caps_armorType, 2);
+		modelFATT.modelArmorInner.setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorInner).caps_armorType, 1);
+		modelFATT.modelArmorOuter.setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorOuter).caps_armorType, 2);
 	}
 
     protected void renderEquippedItems(EntityLiving entityliving, float f)
