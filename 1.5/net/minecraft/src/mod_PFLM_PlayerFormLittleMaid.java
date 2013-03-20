@@ -284,7 +284,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.4.6~7-18k";
+		return "1.5-19";
 	}
 
 	public void load()
@@ -1552,16 +1552,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     		//PFLM_RenderPlayer.resetFlag = true;
     }
 
-    public static Object[] getDefaultModel() {
-/*
-    	if (isOlddays) {
-    		return (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    		//return PFLM_RenderPlayer2.getModelBasicOrig();
-    	} else
-*/
-    	return PFLM_RenderPlayer.modelBasicOrig;
-    }
-
     public static void setResetFlag(boolean flag) {
 /*
     	if (isOlddays) {
@@ -1599,27 +1589,18 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	Object textureModel = PFLM_RenderPlayer.getPlayerData((EntityPlayer) entity).modelMain.textureInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getModelScale();
-/*
-    		if (isOlddays) {
-    			Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    			return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelScale", obj[0]));
-    			//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getModelScale();
-    		} else
-*/
-    			return PFLM_RenderPlayer.modelBasicOrig[0].getModelScale();
+    	return 0.9375F;
     }
 
     public static float getWidth() {
-    	float f;
+    	float f = 0.6F;
 //-@-125
     	if (isOlddays) {
     		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getWidth", obj[0]));
+    		return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getWidth", obj[0]));
     		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getWidth();
-    	} else
+    	}
 //@-@125
-    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getWidth() : 0.6F;
-    	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.modelArmorInner;
@@ -1629,16 +1610,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static float getHeight() {
-    	float f;
+    	float f = 1.8F;
 //-@-125
     	if (isOlddays) {
     		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getHeight", obj[0]));
+    		return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getHeight", obj[0]));
     		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getHeight();
-    	} else
+    	}
 //@-@125
-    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getHeight() : 1.8F;
-    	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.modelArmorInner;
@@ -1648,16 +1627,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static float getyOffset() {
-    	float f;
+    	float f = 1.62F;
 //-@-125
     	if (isOlddays) {
     		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getyOffset", obj[0]));
+    		return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getyOffset", obj[0]));
     		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getyOffset();
-    	} else
+    	}
 //@-@125
-    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getyOffset() : 1.62F;
-    	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.modelArmorInner;
@@ -1667,16 +1644,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static float getRidingWidth() {
-    	float f;
+    	float f = 0.6F;
 //-@-125
     	if (isOlddays) {
     		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingWidth", obj[0]));
+    		return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingWidth", obj[0]));
     		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getRidingWidth();
-    	} else
+    	}
 //@-@125
-    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getRidingWidth() : 0.6F;
-    	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.modelArmorInner;
@@ -1686,16 +1661,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static float getRidingHeight() {
-    	float f;
+    	float f = 1.8F;
 //-@-125
     	if (isOlddays) {
     		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingHeight", obj[0]));
+    		return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingHeight", obj[0]));
     		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getRidingHeight();
-    	} else
+    	}
 //@-@125
-    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getRidingHeight() : 1.8F;
-    	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.modelArmorInner;
@@ -1705,16 +1678,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static float getRidingyOffset() {
-    	float f;
+    	float f = 1.62F;
 //-@-125
     	if (isOlddays) {
     		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    		f = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingyOffset", obj[0]));
+    		return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getRidingyOffset", obj[0]));
     		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getRidingyOffset();
-    	} else
+    	}
 //@-@125
-    		f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getRidingyOffset() : 1.62F;
-    	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.modelArmorInner;
@@ -1724,16 +1695,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static double getMountedYOffset() {
-    	double d;
+    	double d = 0.75D;
 //-@-125
     	if (isOlddays) {
     		Object[] obj = (Object[]) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getModelBasicOrig");
-    		d = Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getMountedYOffset", obj[0]));
+    		return Float.valueOf((String) Modchu_Reflect.invokeMethod(pflm_renderPlayer2, "getMountedYOffset", obj[0]));
     		//return PFLM_RenderPlayer2.getModelBasicOrig()[0].getMountedYOffset();
-    	} else
+    	}
 //@-@125
-    		d = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].getMountedYOffset() : 0.75D;
-    	if (mc.thePlayer != null) ;else return d;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return d;
     	Object textureModel = data.modelMain.modelArmorInner;
@@ -1743,10 +1712,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static boolean getIsRiding() {
-    	boolean b = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? (Boolean) PFLM_RenderPlayer.modelBasicOrig[0].getCapsValue(PFLM_RenderPlayer.modelBasicOrig[0].caps_getIsRiding) : false;
-    	if (mc.thePlayer != null) ;else return b;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
-    	if (data != null) ;else return b;
+    	if (data != null) ;else return false;
     	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).isRiding;
@@ -1754,10 +1721,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static float getPhysical_Hammer() {
-    	float f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].Physical_Hammer() : 0.0F;
-    	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
-    	if (data != null) ;else return f;
+    	if (data != null) ;else return Physical_Hammer;
     	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).Physical_Hammer();
@@ -1765,10 +1730,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static float ridingViewCorrection() {
-    	float f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? PFLM_RenderPlayer.modelBasicOrig[0].ridingViewCorrection() : 0.0F;
-    	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
-    	if (data != null) ;else return f;
+    	if (data != null) ;else return 0.0F;
     	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).ridingViewCorrection();
@@ -1786,10 +1749,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
     public static float getOnGround() {
-    	float f = PFLM_RenderPlayer.modelBasicOrig != null && PFLM_RenderPlayer.modelBasicOrig[0] != null ? (Float) PFLM_RenderPlayer.modelBasicOrig[0].getCapsValue(PFLM_RenderPlayer.modelBasicOrig[0].caps_onGround) : 0.0F;
-    	if (mc.thePlayer != null) ;else return f;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
-    	if (data != null) ;else return f;
+    	if (data != null) ;else return 0.0F;
     	Object textureModel = data.modelMain.modelArmorInner;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return (Float) ((MultiModelBaseBiped) textureModel).getCapsValue(((MultiModelBaseBiped) textureModel).caps_onGround);

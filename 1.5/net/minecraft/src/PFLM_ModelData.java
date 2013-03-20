@@ -20,8 +20,6 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	public boolean isActivated = false;
 	public boolean isPlayer = false;
 	public boolean isWait = false;
-	public boolean isSitting = false;
-	public boolean isSleeping = false;
 	public boolean isWaitFSetFlag = false;
 	public boolean shortcutKeysAction = false;
 	public boolean shortcutKeysActionInitFlag = true;
@@ -73,6 +71,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
 		modelFATT.textureInner = new String [4];
 		modelFATT.textureOuter = new String [4];
+		modelMain.capsLink = modelFATT;
 	}
 
 
@@ -94,6 +93,60 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		caps.put("Actions", caps_Actions);
 		caps.put("Inventory", caps_Inventory);
 		caps.put("interestedAngle", caps_interestedAngle);
+		caps.put("getIsSneak", caps_getIsSneak);
+		caps.put("getIsRiding", caps_getIsRiding);
+		caps.put("getIsWait", caps_getIsWait);
+		caps.put("isSitting", caps_isSitting);
+		caps.put("isSleeping", caps_isSleeping);
+		caps.put("firstPerson", caps_firstPerson);
+		caps.put("oldwalking", caps_oldwalking);
+		caps.put("motionY", caps_motionY);
+		caps.put("partsSetFlag", caps_partsSetFlag);
+		caps.put("showModelFlag", caps_showModelFlag);
+		caps.put("shortcutKeysAction", caps_shortcutKeysAction);
+		caps.put("runActionNumber", caps_runActionNumber);
+		caps.put("skirtFloats", caps_skirtFloats	);
+		caps.put("renderFirstPersonHand", caps_renderFirstPersonHand);
+		caps.put("bipedHead", caps_bipedHead);
+		caps.put("bipedRightArm", caps_bipedRightArm);
+		caps.put("notDominantArm", caps_notDominantArm);
+		caps.put("visible", caps_visible);
+		caps.put("Physical_Hammer", caps_Physical_Hammer);
+		caps.put("convertDegtoRad", caps_convertDegtoRad);
+		caps.put("shiftArray", caps_shiftArray);
+		caps.put("className", caps_className	);
+		caps.put("textureList", caps_textureList);
+		caps.put("texture", caps_texture);
+		caps.put("pastX", caps_pastX);
+		caps.put("pastY", caps_pastY);
+		caps.put("pastZ", caps_pastZ);
+		caps.put("sneakBan", caps_sneakBan);
+		caps.put("aimedBowBan", caps_aimedBowBan);
+		caps.put("waitBan", caps_waitBan);
+		caps.put("sittingBan", caps_sittingBan);
+		caps.put("sleepingBan", caps_sleepingBan);
+		caps.put("ridingBan", caps_ridingBan);
+		caps.put("indexOfAllVisible", caps_indexOfAllVisible);
+		caps.put("modchuRemodelingModel", caps_modchuRemodelingModel);
+		caps.put("actionSpeed", caps_actionSpeed);
+		caps.put("actionReverse", caps_actionReverse);
+		caps.put("actionFlag", caps_actionFlag);
+		caps.put("actionCount", caps_actionCount);
+		caps.put("armorType", caps_armorType);
+		caps.put("isItemHolder", caps_isItemHolder);
+		caps.put("isPlayer", caps_isPlayer);
+		caps.put("sittingyOffset", caps_sittingyOffset);
+		caps.put("sleepingyOffset", caps_sleepingyOffset);
+		caps.put("showPartsInit", caps_showPartsInit);
+		caps.put("changeModel", caps_changeModel);
+		caps.put("actionInit", caps_actionInit);
+		caps.put("actionRelease", caps_actionRelease);
+		caps.put("syncModel", caps_syncModel	);
+		caps.put("settingShowParts", caps_settingShowParts);
+		caps.put("maidColor", caps_maidColor);
+		caps.put("guiShowModelFlag", caps_guiShowModelFlag);
+		caps.put("showModelList", caps_showModelList);
+		caps.put("loadShowModelList", caps_loadShowModelList);
 	}
 
 	/**
@@ -199,6 +252,20 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) setIsSleeping((Boolean) pArg[0]);
+		case caps_partsSetFlag:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) setPartsSetFlag((Integer) pArg[0]);
+			return true;
+		case caps_guiShowModelFlag:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) setGuiShowModelFlag((Boolean) pArg[0]);
+			return true;
+		case caps_loadShowModelList:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) setLoadShowModelList((List<String>) pArg[0]);
 			return true;
 		}
 
@@ -236,6 +303,10 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			return getIsPlayer();
 		case caps_isWait:
 			return getIsWait();
+		case caps_isSitting:
+			return getIsSitting();
+		case caps_isSleeping:
+			return getIsSleeping();
 		case caps_isCamouflage:
 			return isCamouflage();
 		case caps_isPlanter:
@@ -252,6 +323,12 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			return getItems();
 		case caps_Actions:
 			return getActions();
+		case caps_partsSetFlag:
+			return getPartsSetFlag();
+		case caps_guiShowModelFlag:
+			return getGuiShowModelFlag();
+		case caps_showModelList:
+			return getShowModelList();
 		}
 
 		return null;
@@ -288,22 +365,23 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 
     private boolean getIsSitting()
     {
-    	return isSitting;
+    	return ((EntityPlayer) owner).getDataWatcher().getWatchableObjectByte(16) == 1;
     }
 
     private void setIsSitting(boolean b)
     {
-    	isSitting = b;
+    	((EntityPlayer) owner).getDataWatcher().updateObject(16, Byte.valueOf((byte)(b ? 1 : 0)));
     }
 
     private boolean getIsSleeping()
     {
-    	return isSleeping;
+    	return ((EntityPlayer) owner).getDataWatcher().getWatchableObjectByte(16) == 2
+    			| ((EntityPlayer) owner).isPlayerSleeping();
     }
 
     private void setIsSleeping(boolean b)
     {
-    	isSleeping = b;
+    	((EntityPlayer) owner).getDataWatcher().updateObject(16, Byte.valueOf((byte)(b ? 2 : 0)));
     }
 
 	private boolean getIsPlayer() {
@@ -360,6 +438,30 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     private Object getInventory() {
     	return ((EntityPlayer) owner).inventory;
     }
+
+    private int getPartsSetFlag() {
+    	return PFLM_Gui.partsSetFlag;
+    }
+
+    private void setPartsSetFlag(int i) {
+    	PFLM_Gui.partsSetFlag = i;
+    }
+
+    private boolean getGuiShowModelFlag() {
+    	return PFLM_Gui.showModelFlag;
+    }
+
+    private void setGuiShowModelFlag(boolean b) {
+    	PFLM_Gui.showModelFlag = b;
+    }
+
+    private List<String> getShowModelList() {
+    	return mod_PFLM_PlayerFormLittleMaid.showModelList;
+    }
+
+	private void setLoadShowModelList(List<String> list) {
+		Modchu_Config.loadShowModelList(list);
+	}
 
     private int getMaidColor() {
     	if (owner instanceof EntityPlayer) {

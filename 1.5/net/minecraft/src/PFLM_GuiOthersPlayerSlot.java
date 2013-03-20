@@ -1,10 +1,22 @@
 package net.minecraft.src;
 
-import net.minecraft.client.Minecraft;
+import java.text.Format;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
+import net.minecraft.client.Minecraft;
+/*//FMLdelete
+import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.entity.*;
+import net.minecraft.world.*;
+*///FMLdelete
 public class PFLM_GuiOthersPlayerSlot extends GuiSlot {
 	protected Minecraft mc;
 	public PFLM_GuiOthersPlayerIndividualCustomizeSelect ownerGui;
@@ -153,8 +165,8 @@ public class PFLM_GuiOthersPlayerSlot extends GuiSlot {
 		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
 		Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
 		if (ltb == null) {
-			if (s1.indexOf("Biped") == -1) return mod_PFLM_PlayerFormLittleMaid.getDefaultModel();
-			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox("Biped");
+			if (s1.indexOf("Biped") == -1) s1 = "default";
+			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
 			models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
 		}
 		return models;

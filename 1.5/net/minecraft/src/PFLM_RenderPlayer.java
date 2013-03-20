@@ -18,7 +18,6 @@ import org.lwjgl.opengl.GL12;
 public class PFLM_RenderPlayer extends RenderPlayer
 {
 	public static HashMap<Entity, PFLM_ModelData> playerData = new HashMap();
-	protected static MultiModelBaseBiped modelBasicOrig[];
 	public static String[] armorFilenamePrefix;
 	private static Minecraft mc = mod_PFLM_PlayerFormLittleMaid.getMinecraft();
 	public static boolean resetFlag = false;
@@ -53,10 +52,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
     // b173deleteprivate RenderBlocks renderBlocks;
 
 	public PFLM_RenderPlayer() {
-		modelBasicOrig = new MultiModelBaseBiped[3];
-		modelBasicOrig[0] = new MultiModel(0.0F);
-		modelBasicOrig[1] = new MultiModel(0.5F);
-		modelBasicOrig[2] = new MultiModel(0.1F);
 		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "h", "armorFilenamePrefix");
 		sizeMultiplier = Modchu_Reflect.getMethod(Entity.class, "getSizeMultiplier", false);
 		isSizeMultiplier = sizeMultiplier != null;
@@ -751,7 +746,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 //@-@125
     	}
 
-    	modelDataPlayerFormLittleMaid.modelMain.setCapsValue(MMM_IModelCaps.caps_isChild, entityplayer.isChild());
     	float f8 = entityplayer.limbSwing - entityplayer.limbYaw * (1.0F - f1);
     	waitModeSetting(modelDataPlayerFormLittleMaid, f8);
     	if (modelDataPlayerFormLittleMaid.isPlayer) {
@@ -801,10 +795,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		}
     	}
     	byte byte0 = entityplayer.getDataWatcher().getWatchableObjectByte(16);
-    	modelDataPlayerFormLittleMaid.setCapsValue(modelDataPlayerFormLittleMaid.caps_isSitting, byte0 == 1);
-    	modelDataPlayerFormLittleMaid.setCapsValue(modelDataPlayerFormLittleMaid.caps_isSleeping, entityplayer.isPlayerSleeping() | byte0 == 2);
-    	if (byte0 == 1) d3 += (Double) ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).getCapsValue(modelDataPlayerFormLittleMaid.caps_sittingyOffset);
-    	if (byte0 == 2) d3 += (Double) ((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).getCapsValue(modelDataPlayerFormLittleMaid.caps_sleepingyOffset);
+    	if (byte0 == 1) d3 += modelDataPlayerFormLittleMaid.modelMain.getCapsValueDouble(modelDataPlayerFormLittleMaid.caps_sittingyOffset);
+    	if (byte0 == 2) d3 += modelDataPlayerFormLittleMaid.modelMain.getCapsValueDouble(modelDataPlayerFormLittleMaid.caps_sleepingyOffset);
 
     	if (!(mc.currentScreen instanceof PFLM_GuiOthersPlayer)
     			&& modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null) doRenderLivingPFLM(modelDataPlayerFormLittleMaid, (EntityLiving) entityplayer, d, d3, d2, f, f1);
@@ -816,10 +808,13 @@ public class PFLM_RenderPlayer extends RenderPlayer
     }
 
     private void doRenderSetting(EntityPlayer entityplayer, PFLM_ModelData modelDataPlayerFormLittleMaid) {
+    	modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
     	if (modelDataPlayerFormLittleMaid.isPlayer) {
     		if (mod_PFLM_PlayerFormLittleMaid.mushroomConfusion) mod_PFLM_PlayerFormLittleMaid.mushroomConfusion(entityplayer, modelDataPlayerFormLittleMaid);
     	}
     	if (modelDataPlayerFormLittleMaid.changeModelFlag) {
+    		if (mod_PFLM_PlayerFormLittleMaid.isOlddays) modelDataPlayerFormLittleMaid.modelMain.setCapsValue(modelDataPlayerFormLittleMaid.caps_oldwalking, (Boolean) Modchu_Reflect.getFieldObject(ModelBiped.class, "oldwalking", modelDataPlayerFormLittleMaid.modelMain.modelArmorInner));
+    		modelDataPlayerFormLittleMaid.setCapsValue(modelDataPlayerFormLittleMaid.caps_partsSetFlag , 1);
     		modelDataPlayerFormLittleMaid.modelMain.setCapsValue(modelDataPlayerFormLittleMaid.caps_showPartsInit);
     		modelDataPlayerFormLittleMaid.modelMain.setCapsValue(modelDataPlayerFormLittleMaid.caps_changeModel, entityplayer);
     		mod_PFLM_PlayerFormLittleMaid.changeModel(entityplayer);
@@ -1129,7 +1124,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				if (modelDataPlayerFormLittleMaid.skinMode != skinMode_PlayerOnline
 						&& modelDataPlayerFormLittleMaid.skinMode != skinMode_online) {
 					modelDataPlayerFormLittleMaid.initFlag = 2;
-					modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
 					return modelDataPlayerFormLittleMaid;
 				}
 			} else
@@ -1177,7 +1171,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				if (modelDataPlayerFormLittleMaid.skinMode != skinMode_PlayerOnline
 						&& modelDataPlayerFormLittleMaid.skinMode != skinMode_online) {
 					modelDataPlayerFormLittleMaid.initFlag = 2;
-					modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
 					return modelDataPlayerFormLittleMaid;
 				}
 			}
@@ -1187,7 +1180,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				modelDataPlayerFormLittleMaid.skinMode = skinMode_Random;
 				skinMode_RandomSetting(entityplayer, modelDataPlayerFormLittleMaid);
 				modelDataPlayerFormLittleMaid.initFlag = 2;
-				modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
 				return modelDataPlayerFormLittleMaid;
 			}
 		}
@@ -1218,7 +1210,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 					modelDataPlayerFormLittleMaid.initFlag = 1;
 					initResetFlag = true;
 					resetFlag = true;
-					modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
 					return modelDataPlayerFormLittleMaid;
 				}
 				modelDataPlayerFormLittleMaid.initFlag = 2;
@@ -1258,7 +1249,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				modelInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
 				modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
 				modelDataPlayerFormLittleMaid.setCapsValue(modelDataPlayerFormLittleMaid.caps_isPlayer, entityplayer.username == mc.thePlayer.username);
-				modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
 				return modelDataPlayerFormLittleMaid;
 			} else {
 				//Modchu_Debug.mDebug("er offline only set.");
@@ -1344,7 +1334,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 			modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
 			modelDataPlayerFormLittleMaid.skinMode = skinMode_offline;
 			modelDataPlayerFormLittleMaid.maidColor = mod_PFLM_PlayerFormLittleMaid.maidColor;
-			modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
 			return modelDataPlayerFormLittleMaid;
 		}
 		if (bufferedimage == null) {
@@ -1353,7 +1342,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 			modelDataPlayerFormLittleMaid.modelArmorName = "_Biped";
 			modelInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
 			modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
-			modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
 			return modelDataPlayerFormLittleMaid;
 		}
 		modelDataPlayerFormLittleMaid.isActivated = true;
@@ -1375,7 +1363,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 			modelDataPlayerFormLittleMaid.skinMode = skinMode_online;
 			modelInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
 			modelArmorInit(entityplayer, modelDataPlayerFormLittleMaid, "_Biped");
-			modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
 			return modelDataPlayerFormLittleMaid;
 		}
 		if (modelDataPlayerFormLittleMaid.isPlayer) {
@@ -1414,7 +1401,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 			mod_PFLM_PlayerFormLittleMaid.handednessMode = handedness;
 			PFLM_Gui.modelScale = modelScale;
 		}
-		modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
 		return modelDataPlayerFormLittleMaid;
     }
 
@@ -1842,9 +1828,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	return f;
     }
 
-    public static MultiModelBaseBiped[] getModelBasicOrig() {
-    	return modelBasicOrig;
-    }
     //smartMovingä÷òAÅ´
     public RenderManager getRenderManager() {
     	return renderManager;
