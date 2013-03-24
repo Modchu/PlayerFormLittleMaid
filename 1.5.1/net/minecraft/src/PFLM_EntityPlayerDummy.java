@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-
 public class PFLM_EntityPlayerDummy extends EntityLiving {
 
 	public String armorPrefix[] = new String[] {"", "", "", ""};
@@ -31,6 +30,12 @@ public class PFLM_EntityPlayerDummy extends EntityLiving {
 	/*b181//*/@Override
 	public int getMaxHealth() {
 		return 0;
+	}
+
+	@Override
+	public float getShadowSize()
+	{
+		return 0.0F;
 	}
 
     /**

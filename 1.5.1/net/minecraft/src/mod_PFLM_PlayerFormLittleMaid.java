@@ -179,9 +179,9 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public mod_PFLM_PlayerFormLittleMaid()
 	{
 		// b181deleteload();
-		if (getVersion().startsWith("1.5")) {
-			playerFormLittleMaidVersion = 150;
-			minecraftVersion = "1.5";
+		if (getVersion().startsWith("1.5.1")) {
+			playerFormLittleMaidVersion = 151;
+			minecraftVersion = "1.5.1";
 			return;
 		}
 		if (getVersion().startsWith("1.4.6~7")) {
@@ -284,7 +284,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.5-19";
+		return "1.5.1-19";
 	}
 
 	public void load()
@@ -366,7 +366,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		Object var2 = null;
 
 		//if (isSmartMoving) {
-			//var2 = new PFLM_RenderPlayerDummySmart();
+			//var2 = new PFLM_RenderPlayerSmart();
 			//map.put(PFLM_EntityPlayerDummy.class, var2);
 		//} else {
 
@@ -880,11 +880,11 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			minecraft.renderGlobal.setWorldAndLoadRenderers(minecraft.theWorld);
 			EntityPlayer entityplayer;
 
-			for (Iterator iterator = minecraft.theWorld.playerEntities.iterator(); iterator.hasNext(); minecraft.renderGlobal.onEntityCreate(entityplayer))
+			for (Iterator iterator = minecraft.theWorld.playerEntities.iterator(); iterator.hasNext(); minecraft.renderGlobal.obtainEntitySkin(entityplayer))
 			{
 				Object obj = iterator.next();
 				entityplayer = (EntityPlayer)obj;
-				minecraft.renderGlobal.onEntityDestroy(entityplayer);
+				minecraft.renderGlobal.releaseEntitySkin(entityplayer);
 			}
 		}
 */
@@ -1539,8 +1539,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static void clearPlayers() {
     	if (mc.renderGlobal != null
     			&& mc.thePlayer != null) {
-    		mc.renderGlobal.onEntityDestroy(mc.thePlayer);
-    		mc.renderGlobal.onEntityCreate(mc.thePlayer);
+    		mc.renderGlobal.releaseEntitySkin(mc.thePlayer);
+    		mc.renderGlobal.obtainEntitySkin(mc.thePlayer);
     	}
 /*
     		if (isOlddays) {
@@ -2645,10 +2645,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						(new StringBuilder()).append("PFLMWait").toString()
 						);
 			}
-/*//147delete
+
 			int ID = ModLoader.getUniqueEntityId();
-*///147delete
-//-@-147
+
+/*
 			Map map = (Map) Modchu_Reflect.getFieldObject(EntityList.class, "IDtoClassMapping");
 			int ID = -1;
 			if (map != null) {
@@ -2663,7 +2663,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			} else {
 				Modchu_Debug.Debug("IDtoClassMapping map == null !!");
 			}
-//@-@147
+*/
 			if (guiMultiPngSaveButton
 					&& ID > -1) ModLoader.registerEntityID(PFLM_EntityPlayerDummy.class, "PFLM_EntityPlayerDummy", ID);
 		}

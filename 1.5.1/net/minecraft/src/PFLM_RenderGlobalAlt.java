@@ -1,7 +1,14 @@
 package net.minecraft.src;
 
 import net.minecraft.client.Minecraft;
-
+/*//FMLdelete
+import net.minecraft.client.entity.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.util.*;
+*///FMLdelete
 public class PFLM_RenderGlobalAlt extends RenderGlobal
 {
     public PFLM_RenderGlobalAlt(Minecraft minecraft, RenderEngine renderengine)

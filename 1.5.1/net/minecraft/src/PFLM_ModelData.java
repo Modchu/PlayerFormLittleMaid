@@ -144,6 +144,8 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		caps.put("actionRelease", caps_actionRelease);
 		caps.put("syncModel", caps_syncModel	);
 		caps.put("maidColor", caps_maidColor);
+		caps.put("getIsSleeping", caps_getIsSleeping);
+		caps.put("armorItemInSlot", caps_armorItemInSlot);
 	}
 
 	/**
@@ -156,9 +158,9 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	 * setLivingAnimationsLM ŒÄ‚Ño‚µŒã‚ÉŒÄ‚Î‚ê‚éB
 	 */
 	public void setLivingAnimationsAfter(MMM_ModelBiped model, EntityLiving entityliving, float f, float f1, float f2) {
-		boolean isRiding = model.getCapsValueBoolean(caps_isRiding);
-		model.setCapsValue(caps_isRiding, !isRiding ? model.getCapsValueBoolean(caps_isSitting) : isRiding);
+		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter");
 		if (entityliving != null) ;else return;
+		model.setCapsValue(caps_isRiding, !entityliving.isRiding() ? getIsSitting() : true);
 		if(partsSetFlag == 1) {
 			if (((MultiModelBaseBiped) model).getShowPartsList().isEmpty()) ((MultiModelBaseBiped) model).showPartsInit();
 			((MultiModelBaseBiped) model).defaultPartsSettingBefore();
@@ -317,14 +319,29 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		case caps_YOffset:
 			return owner.yOffset;
 		case caps_HeadMount:
-			return ((EntityPlayer) owner).inventory.getStackInSlot(17);
+			return getHeadMount();
 		case caps_Items:
 			return getItems();
 		case caps_Actions:
 			return getActions();
+		case caps_armorItemInSlot:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) return getArmorItemInSlot((Integer) pArg[0]);
 		}
 
 		return null;
+	}
+
+	private ItemStack getArmorItemInSlot(int i) {
+		return ((EntityPlayer) owner).inventory.armorItemInSlot(i);
+	}
+
+	private ItemStack getHeadMount() {
+		ItemStack itemStack = ((EntityPlayer) owner).inventory.getStackInSlot(9);
+		int addSupport = ((MultiModelBaseBiped) modelMain.modelArmorInner).addSupportChecks(owner, itemStack);
+		return addSupport != 3
+				&& addSupport != 4 ? itemStack : null;
 	}
 
 	private EnumAction[] getActions() {
@@ -341,10 +358,32 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	}
 
 	private boolean isPlanter() {
+		ItemStack itemStack = ((EntityPlayer) owner).inventory.getStackInSlot(9);
+		if (itemStack != null) ;else return false;
+		Item item = itemStack.getItem();
+		if (item != null) ;else return false;
+		Block block = null;
+		try {
+			block = Block.blocksList[item.itemID];
+			return block instanceof BlockFlower;
+		} catch(Exception e) {
+		}
 		return false;
 	}
 
 	private boolean isCamouflage() {
+		ItemStack itemStack = ((EntityPlayer) owner).inventory.getStackInSlot(9);
+		if (itemStack != null) ;else return false;
+		Item item = itemStack.getItem();
+		if (item != null) ;else return false;
+		Block block = null;
+		try {
+			block = Block.blocksList[item.itemID];
+			return item instanceof ItemBlock
+					&& block instanceof BlockLeaves
+					|| block instanceof BlockPumpkin;
+		} catch(Exception e) {
+		}
 		return false;
 	}
 
@@ -451,8 +490,10 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 
     private String getTexture(String s, int i) {
     	if (owner instanceof EntityPlayer) {
+    		//Modchu_Debug.mDebug("PFLM_ModelData owner instanceof EntityPlayer getTexture ="+mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(s, i));
     		return mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(s, i);
     	}
+    	//Modchu_Debug.mDebug("PFLM_ModelData getTexture null");
     	return null;
     }
 }

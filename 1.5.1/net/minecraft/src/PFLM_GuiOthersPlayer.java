@@ -3,6 +3,14 @@ package net.minecraft.src;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.Minecraft;
+/*//FMLdelete
+import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.entity.*;
+import net.minecraft.world.*;
+*///FMLdelete
 public class PFLM_GuiOthersPlayer extends GuiScreen {
 	protected int xSize_lo;
 	protected int ySize_lo;
@@ -31,35 +39,35 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		buttonList.clear();
+		controlList.clear();
 		int x = width / 2 + 55;
 		int y = height / 2 - 85;
-		buttonList.add(new Modchu_GuiSmallButton(400, x + 75, y + 10, 75, 15, "ChangeMode"));
-		buttonList.add(new Modchu_GuiSmallButton(401, x, y + 85 , 100, 15, "IndividualCustomize"));
-		buttonList.add(new Modchu_GuiSmallButton(200, x, y + 100, 75, 20, "Save"));
-		buttonList.add(new Modchu_GuiSmallButton(201, x + 75, y + 100, 75, 20, "Return"));
+		controlList.add(new Modchu_GuiSmallButton(400, x + 75, y + 10, 75, 15, "ChangeMode"));
+		controlList.add(new Modchu_GuiSmallButton(401, x, y + 85 , 100, 15, "IndividualCustomize"));
+		controlList.add(new Modchu_GuiSmallButton(200, x, y + 100, 75, 20, "Save"));
+		controlList.add(new Modchu_GuiSmallButton(201, x + 75, y + 100, 75, 20, "Return"));
 		if(changeMode == modeOthersSettingOffline
 				| changeMode == modeRandom) {
-			buttonList.add(new Modchu_GuiSmallButton(58, x + 75, y + 55, 75, 15, "Handedness"));
+			controlList.add(new Modchu_GuiSmallButton(58, x + 75, y + 55, 75, 15, "Handedness"));
 		}
 		if(changeMode == modeOthersSettingOffline) {
-			buttonList.add(new Modchu_GuiSmallButton(56, x - 10, y + 10, 85, 15, "ModelListSelect"));
-			//buttonList.add(new Modchu_GuiSmallButton(57, x - 10, y + 10, 85, 15, "ArmorListSelect"));
-			buttonList.add(new Modchu_GuiSmallButton(50, x + 40, y + 25, 15, 15, "<"));
-			buttonList.add(new Modchu_GuiSmallButton(51, x + 55, y + 25, 15, 15, ">"));
-			buttonList.add(new Modchu_GuiSmallButton(52, x + 40, y + 40, 15, 15, "-"));
-			buttonList.add(new Modchu_GuiSmallButton(53, x + 55, y + 40, 15, 15, "+"));
-			buttonList.add(new Modchu_GuiSmallButton(54, x + 40, y + 55, 15, 15, "<"));
-			buttonList.add(new Modchu_GuiSmallButton(55, x + 55, y + 55, 15, 15, ">"));
-			buttonList.add(new Modchu_GuiSmallButton(20, x, y + 70, 75, 15, "showArmor"));
+			controlList.add(new Modchu_GuiSmallButton(56, x - 10, y + 10, 85, 15, "ModelListSelect"));
+			//controlList.add(new Modchu_GuiSmallButton(57, x - 10, y + 10, 85, 15, "ArmorListSelect"));
+			controlList.add(new Modchu_GuiSmallButton(50, x + 40, y + 25, 15, 15, "<"));
+			controlList.add(new Modchu_GuiSmallButton(51, x + 55, y + 25, 15, 15, ">"));
+			controlList.add(new Modchu_GuiSmallButton(52, x + 40, y + 40, 15, 15, "-"));
+			controlList.add(new Modchu_GuiSmallButton(53, x + 55, y + 40, 15, 15, "+"));
+			controlList.add(new Modchu_GuiSmallButton(54, x + 40, y + 55, 15, 15, "<"));
+			controlList.add(new Modchu_GuiSmallButton(55, x + 55, y + 55, 15, 15, ">"));
+			controlList.add(new Modchu_GuiSmallButton(20, x, y + 70, 75, 15, "showArmor"));
 			if (mod_PFLM_PlayerFormLittleMaid.useScaleChange) {
 				if(modelScaleButton) {
-					buttonList.add(new Modchu_GuiSmallButton(3, width / 2 - 140, height / 2 + 20, 50, 20, "Default"));
-					buttonList.add(new Modchu_GuiSmallButton(4, width / 2 - 90, height / 2 + 20, 30, 20, "UP"));
-					buttonList.add(new Modchu_GuiSmallButton(5, width / 2 - 170, height / 2 + 20, 30, 20, "Down"));
-					buttonList.add(new Modchu_GuiSmallButton(6, x + 75, y + 25, 75, 15, "Close"));
+					controlList.add(new Modchu_GuiSmallButton(3, width / 2 - 140, height / 2 + 20, 50, 20, "Default"));
+					controlList.add(new Modchu_GuiSmallButton(4, width / 2 - 90, height / 2 + 20, 30, 20, "UP"));
+					controlList.add(new Modchu_GuiSmallButton(5, width / 2 - 170, height / 2 + 20, 30, 20, "Down"));
+					controlList.add(new Modchu_GuiSmallButton(6, x + 75, y + 25, 75, 15, "Close"));
 				} else {
-					buttonList.add(new Modchu_GuiSmallButton(7, x + 75, y + 25, 75, 15, "ScaleChange"));
+					controlList.add(new Modchu_GuiSmallButton(7, x + 75, y + 25, 75, 15, "ScaleChange"));
 				}
 			}
 		}

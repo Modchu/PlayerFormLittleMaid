@@ -19,6 +19,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 {
 	public static HashMap<Entity, PFLM_ModelData> playerData = new HashMap();
 	public static String[] armorFilenamePrefix;
+	private static final ItemStack[] dummyArmorItemStack = {new ItemStack(Item.helmetDiamond), new ItemStack(Item.plateDiamond), new ItemStack(Item.legsDiamond), new ItemStack(Item.bootsDiamond)};
 	private static Minecraft mc = mod_PFLM_PlayerFormLittleMaid.getMinecraft();
 	public static boolean resetFlag = false;
 	public static boolean textureResetFlag = false;
@@ -161,8 +162,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
     	PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData((EntityPlayer)entityliving);
-    	if (modelDataPlayerFormLittleMaid != null) ;else return -1;
-    	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return -1;
+    	if (modelDataPlayerFormLittleMaid != null
+    			&& !(mc.currentScreen instanceof PFLM_GuiOthersPlayer)) ;else return -1;
     	String t = null;
     	if (i < 4 && modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter != null)
     	{
@@ -409,8 +410,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		GL11.glScalef(-1F, -1F, 1.0F);
     		preRenderCallback(entityliving, f1);
     		GL11.glTranslatef(0.0F, -24F * f6 - 0.0078125F, 0.0F);
-    		float f7 = entityliving.limbYaw + (entityliving.limbYaw - entityliving.limbYaw) * f1;
-    		float f8 = entityliving.limbSwing - entityliving.limbYaw * (1.0F - f1);
+    		float f7 = entityliving.prevLegYaw + (entityliving.legYaw - entityliving.prevLegYaw) * f1;
+    		float f8 = entityliving.legSwing - entityliving.legYaw * (1.0F - f1);
 //-@-b181
     		if (entityliving.isChild())
     		{
@@ -603,7 +604,15 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			GL11.glEnable(GL11.GL_ALPHA_TEST);
     		}
     		// b173deleteGL11.glColor4f(f9, f9, f9, 1.0F);
-    		/*132//*/if (entityliving.getHasActivePotion()) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
+//-@-132
+    		if (entityliving.getHasActivePotion()) {
+//@-@132
+    			modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
+    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
+    			modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
+//-@-132
+    		}
+//@-@132
     		if (mod_PFLM_PlayerFormLittleMaid.isShaders
     				&& shadersHurtFlashFlag
     				&& (Boolean) Modchu_Reflect.getFieldObject(Shaders, "useEntityHurtFlash")) {
@@ -746,7 +755,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 //@-@125
     	}
 
-    	float f8 = entityplayer.limbSwing - entityplayer.limbYaw * (1.0F - f1);
+    	float f8 = entityplayer.legSwing - entityplayer.legYaw * (1.0F - f1);
     	waitModeSetting(modelDataPlayerFormLittleMaid, f8);
     	if (modelDataPlayerFormLittleMaid.isPlayer) {
     		modelDataPlayerFormLittleMaid.setCapsValue(MMM_IModelCaps.caps_isWait, mod_PFLM_PlayerFormLittleMaid.isWait);
@@ -883,9 +892,9 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			GL11.glPopMatrix();
     		}
     	}
-    	if (entityplayer.cloakUrl != null
+    	if (entityplayer.playerCloakUrl != null
     			&& renderManager != null
-    			&& loadDownloadableImageTexture(entityplayer.cloakUrl, null)
+    			&& loadDownloadableImageTexture(entityplayer.playerCloakUrl, null)
 //-@-132
     			&& !entityplayer.getHasActivePotion() && !entityplayer.getHideCape()
 //@-@132
@@ -929,11 +938,11 @@ public class PFLM_RenderPlayer extends RenderPlayer
     }
 
     @Override
-    public void renderFirstPersonArm(EntityPlayer entityplayer) {
-    	renderFirstPersonArm(entityplayer, 2);
+    public void func_82441_a(EntityPlayer entityplayer) {
+    	func_82441_a(entityplayer, 2);
     }
 
-    public void renderFirstPersonArm(EntityPlayer entityplayer, int i) {
+    public void func_82441_a(EntityPlayer entityplayer, int i) {
     	//olddays“±“üŽž‚É2ˆÈŠO‚Ìint•t‚«‚ÅŒÄ‚Î‚ê‚éB
 /*//125delete
     	EntityPlayer entityplayer = mc.thePlayer;
@@ -954,6 +963,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			&& i != 1) {
     		modelDataPlayerFormLittleMaid.modelMain.setCapsValue(MMM_IModelCaps.caps_onGround, 0.0F);
     		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, mc.thePlayer);
+    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, mc.thePlayer);
+    		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, mc.thePlayer);
     	}
     	//Modchu_Debug.Debug("modelDataPlayerFormLittleMaid.modelMain.textureOuter[0]="+modelDataPlayerFormLittleMaid.modelMain.textureOuter[0]);
     	if (modelDataPlayerFormLittleMaid.modelMain.modelArmorInner != null
@@ -969,8 +980,225 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		//Modchu_Debug.Debug("renderManager.renderEngine != null ? ="+(renderManager.renderEngine != null));
     		//Modchu_Debug.Debug("modelDataPlayerFormLittleMaid.modelMain.textureOuter[0] ="+modelDataPlayerFormLittleMaid.modelMain.textureOuter[0]);
     		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).renderFirstPersonHand(0.0625F);
+    		renderFirstPersonArmorRender(modelDataPlayerFormLittleMaid, entityplayer, 0.0D, 0.0D, 0.0D, 0.0F, 0.0625F);
     	}
     	modelDataPlayerFormLittleMaid.modelMain.setCapsValue(modelDataPlayerFormLittleMaid.caps_firstPerson, false);
+    }
+
+    public void renderFirstPersonArmorRender(PFLM_ModelData modelDataPlayerFormLittleMaid, EntityLiving entityliving, double d, double d1, double d2,
+            float f, float f1) {
+    	GL11.glPushMatrix();
+		float f2;
+		float f3;
+		float f4;
+		if (mc.currentScreen != null
+				&& mc.currentScreen instanceof PFLM_Gui
+				| mc.currentScreen instanceof PFLM_GuiOthersPlayer
+				| mc.currentScreen instanceof PFLM_GuiModelSelect) {
+			f2 = entityliving.prevRenderYawOffset + (entityliving.renderYawOffset - entityliving.prevRenderYawOffset) * f1;
+			f3 = entityliving.prevRotationYaw + (entityliving.rotationYaw - entityliving.prevRotationYaw) * f1;
+			f4 = entityliving.prevRotationPitch + (entityliving.rotationPitch - entityliving.prevRotationPitch) * f1;
+		} else {
+			f2 = this.interpolateRotation(entityliving.prevRenderYawOffset, entityliving.renderYawOffset, f1);
+			f3 = this.interpolateRotation(entityliving.prevRotationYawHead, entityliving.rotationYawHead, f1);
+			f4 = entityliving.prevRotationPitch + (entityliving.rotationPitch - entityliving.prevRotationPitch) * f1;
+		}
+//@-@132
+		float f5 = handleRotationFloat(entityliving, f1);
+		float f6 = 0.0625F;
+		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			&& !shadersHurtFlashFlag) {
+			//Shaders.glEnableWrapper(GL12.GL_RESCALE_NORMAL);
+			shadersGlEnableWrapper(GL12.GL_RESCALE_NORMAL);
+		} else {
+			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		}
+		float f7 = entityliving.prevLegYaw + (entityliving.legYaw - entityliving.prevLegYaw) * f1;
+		float f8 = entityliving.legSwing - entityliving.legYaw * (1.0F - f1);
+//-@-b181
+		if (entityliving.isChild())
+		{
+			f8 *= 3F;
+		}
+//@-@b181
+		if (f7 > 1.0F)
+		{
+			f7 = 1.0F;
+		}
+
+		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			&& !shadersHurtFlashFlag) {
+			//Shaders.glEnableWrapper(GL11.GL_ALPHA_TEST);
+			shadersGlEnableWrapper(GL11.GL_ALPHA_TEST);
+		} else {
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+		}
+		if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
+		{
+			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+	    			&& !shadersHurtFlashFlag) {
+				//Shaders.glEnableWrapper(GL11.GL_BLEND);
+				shadersGlEnableWrapper(GL11.GL_BLEND);
+			} else {
+				GL11.glEnable(GL11.GL_BLEND);
+			}
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		}
+		else
+		{
+			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+	    			&& !shadersHurtFlashFlag) {
+				//Shaders.glDisableWrapper(k1);
+				shadersGlDisableWrapper(GL11.GL_BLEND);
+			} else {
+				GL11.glDisable(GL11.GL_BLEND);
+			}
+		}
+		modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner.showAllParts();
+		modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter.showAllParts();
+		for (int i = 0; i < 4; i++)
+		{
+			int j = setArmorModel((EntityPlayer)entityliving, i, f);
+
+			//b181 deleteif (!j)
+			/*b181//*/if (j <= 0)
+			{
+				continue;
+			}
+
+			for (int l = 0; l < 5; l += 4)
+			{
+				if (shouldRenderPass(entityliving, i + l, f1) < 0)
+				{
+					continue;
+				}
+
+				// b166deletefloat f10 = 1.0F;
+				if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
+				{
+					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+			    			&& !shadersHurtFlashFlag) {
+						//Shaders.glEnableWrapper(GL11.GL_BLEND);
+						shadersGlEnableWrapper(GL11.GL_BLEND);
+					} else {
+						GL11.glEnable(GL11.GL_BLEND);
+					}
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					/*b173//*/GL11.glColor4f(1.0F, 1.0F, 1.0F, mod_PFLM_PlayerFormLittleMaid.transparency);
+					// b173deletef10 = mod_PFLM_PlayerFormLittleMaid.transparency;
+				}
+				// b173deleteGL11.glColor4f(f9, f9, f9, f10);
+//-@-132
+				if (mod_Modchu_ModchuLib.useInvisibilityArmor) {
+					if (!entityliving.getHasActivePotion()) {
+//@-@132
+						((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).renderFirstPersonHand(0.0625F);
+						((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).renderFirstPersonHand(0.0625F);
+//-@-132
+					}
+				} else {
+					((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).renderFirstPersonHand(0.0625F);
+					((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).renderFirstPersonHand(0.0625F);
+				}
+//@-@132
+				if (mod_PFLM_PlayerFormLittleMaid.transparency != 1.0F) GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+//-@-b181
+				if (j != 15)
+				{
+					continue;
+				}
+
+				float f11 = (float)entityliving.ticksExisted + f1;
+				loadTexture("%blur%/misc/glint.png");
+				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+		    			&& !shadersHurtFlashFlag) {
+					//Shaders.glEnableWrapper(GL11.GL_BLEND);
+					shadersGlEnableWrapper(GL11.GL_BLEND);
+				} else {
+					GL11.glEnable(GL11.GL_BLEND);
+				}
+				float f13 = 0.5F;
+				GL11.glColor4f(f13, f13, f13, 1.0F);
+				GL11.glDepthFunc(GL11.GL_EQUAL);
+				GL11.glDepthMask(false);
+
+				for (int j1 = 0; j1 < 2; j1++)
+				{
+					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+			    			&& !shadersHurtFlashFlag) {
+						//Shaders.glDisableWrapper(GL11.GL_LIGHTING);
+						shadersGlDisableWrapper(GL11.GL_LIGHTING);
+					} else {
+						GL11.glDisable(GL11.GL_LIGHTING);
+					}
+					float f16 = 0.76F;
+					GL11.glColor4f(0.5F * f16, 0.25F * f16, 0.8F * f16, 1.0F);
+					GL11.glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE);
+					GL11.glMatrixMode(GL11.GL_TEXTURE);
+					GL11.glLoadIdentity();
+					float f17 = f11 * (0.001F + (float)j1 * 0.003F) * 20F;
+					float f18 = 0.3333333F;
+					GL11.glScalef(f18, f18, f18);
+					GL11.glRotatef(30F - (float)j1 * 60F, 0.0F, 0.0F, 1.0F);
+					GL11.glTranslatef(0.0F, f17, 0.0F);
+					GL11.glMatrixMode(GL11.GL_MODELVIEW);
+//-@-132
+					if (mod_Modchu_ModchuLib.useInvisibilityArmor) {
+						if (!entityliving.getHasActivePotion()) {
+//@-@132
+							((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).renderFirstPersonHand(0.0625F);
+							((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).renderFirstPersonHand(0.0625F);
+//-@-132
+						}
+					} else {
+						((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorInner).renderFirstPersonHand(0.0625F);
+						((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelFATT.modelArmorOuter).renderFirstPersonHand(0.0625F);
+					}
+//@-@132
+				}
+
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				GL11.glMatrixMode(GL11.GL_TEXTURE);
+				GL11.glDepthMask(true);
+				GL11.glLoadIdentity();
+				GL11.glMatrixMode(GL11.GL_MODELVIEW);
+				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+		    			&& !shadersHurtFlashFlag) {
+					//Shaders.glEnableWrapper(GL11.GL_LIGHTING);
+					shadersGlEnableWrapper(GL11.GL_LIGHTING);
+				} else {
+					GL11.glEnable(GL11.GL_LIGHTING);
+				}
+
+				if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
+				{
+					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+			    			&& !shadersHurtFlashFlag) {
+						//Shaders.glEnableWrapper(GL11.GL_BLEND);
+						shadersGlEnableWrapper(GL11.GL_BLEND);
+					} else {
+						GL11.glEnable(GL11.GL_BLEND);
+					}
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				}
+				else
+				{
+					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+			    			&& !shadersHurtFlashFlag) {
+						//Shaders.glDisableWrapper(GL11.GL_BLEND);
+						shadersGlDisableWrapper(GL11.GL_BLEND);
+					} else {
+						GL11.glDisable(GL11.GL_BLEND);
+					}
+				}
+
+				GL11.glDepthFunc(GL11.GL_LEQUAL);
+//@-@b181
+			}
+
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+		}
+		GL11.glPopMatrix();
     }
 
     public static boolean isActivatedForPlayer(EntityPlayer entityplayer) {
@@ -1644,12 +1872,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
      * Used to render a player's name above their head
      */
     @Override
-//-@-147
-    protected void renderLivingLabel(EntityLiving entityplayer, String par2Str, double d, double d1, double d2, int i)
-//@-@147
-/*//147delete
     protected void renderName(EntityPlayer entityplayer, double d, double d1, double d2)
-*///147delete
     {
 //-@-125
     	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) Modchu_Reflect.invokeMethod(PFLM_RenderPlayerSmart, "renderName", new Class[]{ EntityPlayer.class, double.class, double.class, double.class }, pflm_RenderPlayerSmart, new Object[]{ entityplayer, d, d1, d2 });
@@ -1657,7 +1880,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	if(mod_PFLM_PlayerFormLittleMaid.isRenderName
     			&& renderManager != null
     			&& renderManager.renderEngine != null) {
-    		PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData((EntityPlayer) entityplayer);
+    		PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData(entityplayer);
     		if (modelDataPlayerFormLittleMaid == null) return;
     		double d3 = 0.0D;
     		double d4 = 0.0D;
@@ -1669,7 +1892,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			d4 = -height * d5;
     			if (modelDataPlayerFormLittleMaid.modelScale > 0.9375F) d4 -= 0.4D * d5;
     		}
-    		super.renderLivingLabel(entityplayer, par2Str, d, (d1 - 1.8D) + height + d3 + d4, d2, i);
+    		super.renderName(entityplayer, d, (d1 - 1.8D) + height + d3 + d4, d2);
     	}
     }
 

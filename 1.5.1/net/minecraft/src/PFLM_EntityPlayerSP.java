@@ -1,5 +1,11 @@
 package net.minecraft.src;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.Minecraft;
 
 public class PFLM_EntityPlayerSP extends EntityClientPlayerMP {
