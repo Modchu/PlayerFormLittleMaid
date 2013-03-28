@@ -410,8 +410,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		GL11.glScalef(-1F, -1F, 1.0F);
     		preRenderCallback(entityliving, f1);
     		GL11.glTranslatef(0.0F, -24F * f6 - 0.0078125F, 0.0F);
-    		float f7 = entityliving.prevLegYaw + (entityliving.legYaw - entityliving.prevLegYaw) * f1;
-    		float f8 = entityliving.legSwing - entityliving.legYaw * (1.0F - f1);
+    		float f7 = entityliving.prevLimbYaw + (entityliving.limbYaw - entityliving.prevLimbYaw) * f1;
+    		float f8 = entityliving.limbSwing - entityliving.limbYaw * (1.0F - f1);
 //-@-b181
     		if (entityliving.isChild())
     		{
@@ -755,7 +755,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 //@-@125
     	}
 
-    	float f8 = entityplayer.legSwing - entityplayer.legYaw * (1.0F - f1);
+    	float f8 = entityplayer.limbSwing - entityplayer.limbYaw * (1.0F - f1);
     	waitModeSetting(modelDataPlayerFormLittleMaid, f8);
     	if (modelDataPlayerFormLittleMaid.isPlayer) {
     		modelDataPlayerFormLittleMaid.setCapsValue(MMM_IModelCaps.caps_isWait, mod_PFLM_PlayerFormLittleMaid.isWait);
@@ -892,9 +892,9 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			GL11.glPopMatrix();
     		}
     	}
-    	if (entityplayer.playerCloakUrl != null
+    	if (entityplayer.cloakUrl != null
     			&& renderManager != null
-    			&& loadDownloadableImageTexture(entityplayer.playerCloakUrl, null)
+    			&& loadDownloadableImageTexture(entityplayer.cloakUrl, null)
 //-@-132
     			&& !entityplayer.getHasActivePotion() && !entityplayer.getHideCape()
 //@-@132
@@ -938,11 +938,11 @@ public class PFLM_RenderPlayer extends RenderPlayer
     }
 
     @Override
-    public void func_82441_a(EntityPlayer entityplayer) {
-    	func_82441_a(entityplayer, 2);
+    public void renderFirstPersonArm(EntityPlayer entityplayer) {
+    	renderFirstPersonArm(entityplayer, 2);
     }
 
-    public void func_82441_a(EntityPlayer entityplayer, int i) {
+    public void renderFirstPersonArm(EntityPlayer entityplayer, int i) {
     	//olddays“±“üŽž‚É2ˆÈŠO‚Ìint•t‚«‚ÅŒÄ‚Î‚ê‚éB
 /*//125delete
     	EntityPlayer entityplayer = mc.thePlayer;
@@ -980,7 +980,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		//Modchu_Debug.Debug("renderManager.renderEngine != null ? ="+(renderManager.renderEngine != null));
     		//Modchu_Debug.Debug("modelDataPlayerFormLittleMaid.modelMain.textureOuter[0] ="+modelDataPlayerFormLittleMaid.modelMain.textureOuter[0]);
     		((MultiModelBaseBiped) modelDataPlayerFormLittleMaid.modelMain.modelArmorInner).renderFirstPersonHand(0.0625F);
-    		renderFirstPersonArmorRender(modelDataPlayerFormLittleMaid, entityplayer, 0.0D, 0.0D, 0.0D, 0.0F, 0.0625F);
+    		//renderFirstPersonArmorRender(modelDataPlayerFormLittleMaid, entityplayer, 0.0D, 0.0D, 0.0D, 0.0F, 0.0625F);
     	}
     	modelDataPlayerFormLittleMaid.modelMain.setCapsValue(modelDataPlayerFormLittleMaid.caps_firstPerson, false);
     }
@@ -1013,8 +1013,8 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		} else {
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		}
-		float f7 = entityliving.prevLegYaw + (entityliving.legYaw - entityliving.prevLegYaw) * f1;
-		float f8 = entityliving.legSwing - entityliving.legYaw * (1.0F - f1);
+		float f7 = entityliving.prevLimbYaw + (entityliving.limbYaw - entityliving.prevLimbYaw) * f1;
+		float f8 = entityliving.limbSwing - entityliving.limbYaw * (1.0F - f1);
 //-@-b181
 		if (entityliving.isChild())
 		{
@@ -1872,7 +1872,12 @@ public class PFLM_RenderPlayer extends RenderPlayer
      * Used to render a player's name above their head
      */
     @Override
+//-@-147
+    protected void renderLivingLabel(EntityLiving entityplayer, String par2Str, double d, double d1, double d2, int i)
+//@-@147
+/*//147delete
     protected void renderName(EntityPlayer entityplayer, double d, double d1, double d2)
+*///147delete
     {
 //-@-125
     	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) Modchu_Reflect.invokeMethod(PFLM_RenderPlayerSmart, "renderName", new Class[]{ EntityPlayer.class, double.class, double.class, double.class }, pflm_RenderPlayerSmart, new Object[]{ entityplayer, d, d1, d2 });
@@ -1880,7 +1885,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	if(mod_PFLM_PlayerFormLittleMaid.isRenderName
     			&& renderManager != null
     			&& renderManager.renderEngine != null) {
-    		PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData(entityplayer);
+    		PFLM_ModelData modelDataPlayerFormLittleMaid = getPlayerData((EntityPlayer) entityplayer);
     		if (modelDataPlayerFormLittleMaid == null) return;
     		double d3 = 0.0D;
     		double d4 = 0.0D;
@@ -1892,7 +1897,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			d4 = -height * d5;
     			if (modelDataPlayerFormLittleMaid.modelScale > 0.9375F) d4 -= 0.4D * d5;
     		}
-    		super.renderName(entityplayer, d, (d1 - 1.8D) + height + d3 + d4, d2);
+    		super.renderLivingLabel(entityplayer, par2Str, d, (d1 - 1.8D) + height + d3 + d4, d2, i);
     	}
     }
 

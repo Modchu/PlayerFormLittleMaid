@@ -93,38 +93,38 @@ public class PFLM_Gui extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		controlList.clear();
+		buttonList.clear();
 		int x = width / 2 + 55;
 		int y = height / 2 - 85;
-		controlList.add(new Modchu_GuiSmallButton(200, x, y + 100, 75, 20, "Save"));
-		controlList.add(new Modchu_GuiSmallButton(13, x, y + 70, 75, 15, "ChangeMode"));
-		controlList.add(new Modchu_GuiSmallButton(58, x + 75, y + 55, 75, 15, "Handedness"));
-		controlList.add(new Modchu_GuiSmallButton(57, x + 75, y + 70, 75, 15, "KeyControls"));
+		buttonList.add(new Modchu_GuiSmallButton(200, x, y + 100, 75, 20, "Save"));
+		buttonList.add(new Modchu_GuiSmallButton(13, x, y + 70, 75, 15, "ChangeMode"));
+		buttonList.add(new Modchu_GuiSmallButton(58, x + 75, y + 55, 75, 15, "Handedness"));
+		buttonList.add(new Modchu_GuiSmallButton(57, x + 75, y + 70, 75, 15, "KeyControls"));
 		if (mod_PFLM_PlayerFormLittleMaid.changeMode != modeRandom) {
 			if(mod_PFLM_PlayerFormLittleMaid.changeMode != modeOnline) {
-				controlList.add(new Modchu_GuiSmallButton(56, x - 10, y + 10, 85, 15, "ModelListSelect"));
-				//controlList.add(new Modchu_GuiSmallButton(57, x - 10, y + 10, 85, 15, "ArmorListSelect"));
-				controlList.add(new Modchu_GuiSmallButton(50, x + 40, y + 25, 15, 15, "<"));
-				controlList.add(new Modchu_GuiSmallButton(51, x + 55, y + 25, 15, 15, ">"));
-				controlList.add(new Modchu_GuiSmallButton(52, x + 40, y + 40, 15, 15, "-"));
-				controlList.add(new Modchu_GuiSmallButton(53, x + 55, y + 40, 15, 15, "+"));
-				controlList.add(new Modchu_GuiSmallButton(54, x + 40, y + 55, 15, 15, "<"));
-				controlList.add(new Modchu_GuiSmallButton(55, x + 55, y + 55, 15, 15, ">"));
+				buttonList.add(new Modchu_GuiSmallButton(56, x - 10, y + 10, 85, 15, "ModelListSelect"));
+				//buttonList.add(new Modchu_GuiSmallButton(57, x - 10, y + 10, 85, 15, "ArmorListSelect"));
+				buttonList.add(new Modchu_GuiSmallButton(50, x + 40, y + 25, 15, 15, "<"));
+				buttonList.add(new Modchu_GuiSmallButton(51, x + 55, y + 25, 15, 15, ">"));
+				buttonList.add(new Modchu_GuiSmallButton(52, x + 40, y + 40, 15, 15, "-"));
+				buttonList.add(new Modchu_GuiSmallButton(53, x + 55, y + 40, 15, 15, "+"));
+				buttonList.add(new Modchu_GuiSmallButton(54, x + 40, y + 55, 15, 15, "<"));
+				buttonList.add(new Modchu_GuiSmallButton(55, x + 55, y + 55, 15, 15, ">"));
 			}
 			if(mod_PFLM_PlayerFormLittleMaid.guiMultiPngSaveButton
     				&& !partsButton
     				&& !modelScaleButton) {
-				controlList.add(new Modchu_GuiSmallButton(12, x + 75, y + 100, 80, 20, "MultiPngSave"));
+				buttonList.add(new Modchu_GuiSmallButton(12, x + 75, y + 100, 80, 20, "MultiPngSave"));
 				bufferedimageMode = false;
 				if (mod_PFLM_PlayerFormLittleMaid.bipedCheck()
 						| mod_PFLM_PlayerFormLittleMaid.changeMode == modeOnline) {
-					controlList.add(new Modchu_GuiSmallButton(15, 50, y + 55, 15, 15, "<"));
-					controlList.add(new Modchu_GuiSmallButton(14, 65, y + 55, 15, 15, ">"));
-					controlList.add(new Modchu_GuiSmallButton(17, 50, y + 72, 15, 15, "-"));
-					controlList.add(new Modchu_GuiSmallButton(16, 65, y + 72, 15, 15, "+"));
-					controlList.add(new Modchu_GuiSmallButton(19, 50, y + 89, 15, 15, "<"));
-					controlList.add(new Modchu_GuiSmallButton(18, 65, y + 89, 15, 15, ">"));
-					controlList.add(new Modchu_GuiSmallButton(20, 70, y + 107, 30, 15, ""+showArmor));
+					buttonList.add(new Modchu_GuiSmallButton(15, 50, y + 55, 15, 15, "<"));
+					buttonList.add(new Modchu_GuiSmallButton(14, 65, y + 55, 15, 15, ">"));
+					buttonList.add(new Modchu_GuiSmallButton(17, 50, y + 72, 15, 15, "-"));
+					buttonList.add(new Modchu_GuiSmallButton(16, 65, y + 72, 15, 15, "+"));
+					buttonList.add(new Modchu_GuiSmallButton(19, 50, y + 89, 15, 15, "<"));
+					buttonList.add(new Modchu_GuiSmallButton(18, 65, y + 89, 15, 15, ">"));
+					buttonList.add(new Modchu_GuiSmallButton(20, 70, y + 107, 30, 15, ""+showArmor));
 					if (bufferedimage == null) {
 						String url;
 						url = mod_PFLM_PlayerFormLittleMaid.changeMode == modeOnline ? "http://s3.amazonaws.com/MinecraftSkins/" + mod_PFLM_PlayerFormLittleMaid.getUsername() + ".png" : null;
@@ -222,25 +222,25 @@ public class PFLM_Gui extends GuiScreen {
 		}
 		if (mod_PFLM_PlayerFormLittleMaid.useScaleChange
 				&& modelScaleButton) {
-				controlList.add(new Modchu_GuiSmallButton(3, width / 2 - 170, height / 2 - 40, 50, 20, "Default"));
-				controlList.add(new Modchu_GuiSmallButton(4, width / 2 - 120, height / 2 - 40, 30, 20, "UP"));
-				controlList.add(new Modchu_GuiSmallButton(5, width / 2 - 200, height / 2 - 40, 30, 20, "Down"));
-				controlList.add(new Modchu_GuiSmallButton(6, x + 75, y + 25, 75, 15, "Close"));
+				buttonList.add(new Modchu_GuiSmallButton(3, width / 2 - 170, height / 2 - 40, 50, 20, "Default"));
+				buttonList.add(new Modchu_GuiSmallButton(4, width / 2 - 120, height / 2 - 40, 30, 20, "UP"));
+				buttonList.add(new Modchu_GuiSmallButton(5, width / 2 - 200, height / 2 - 40, 30, 20, "Down"));
+				buttonList.add(new Modchu_GuiSmallButton(6, x + 75, y + 25, 75, 15, "Close"));
 		} else {
 			if(!partsButton) {
-				if (mod_PFLM_PlayerFormLittleMaid.useScaleChange) controlList.add(new Modchu_GuiSmallButton(7, x + 75, y + 25, 75, 15, "ScaleChange"));
+				if (mod_PFLM_PlayerFormLittleMaid.useScaleChange) buttonList.add(new Modchu_GuiSmallButton(7, x + 75, y + 25, 75, 15, "ScaleChange"));
 				if (mod_PFLM_PlayerFormLittleMaid.isMulti
 						| !mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.isRelease()) {
-					controlList.add(new Modchu_GuiSmallButton(30, x + 75, y - 5, 75, 15, "othersPlayer"));
+					buttonList.add(new Modchu_GuiSmallButton(30, x + 75, y - 5, 75, 15, "othersPlayer"));
 				}
 			}
 		}
 		if (mod_PFLM_PlayerFormLittleMaid.changeMode != modeRandom) {
 			if(partsButton) {
-				controlList.add(new Modchu_GuiSmallButton(10, x + 75, y + 10, 75, 15, "Close"));
+				buttonList.add(new Modchu_GuiSmallButton(10, x + 75, y + 10, 75, 15, "Close"));
 				partsButtonAdd();
 			} else {
-				if(!modelScaleButton) controlList.add(new Modchu_GuiSmallButton(11, x + 75, y + 10, 75, 15, "Customize"));
+				if(!modelScaleButton) buttonList.add(new Modchu_GuiSmallButton(11, x + 75, y + 10, 75, 15, "Customize"));
 			}
 		}
 		if(modelScale == 0.0F) {
@@ -258,8 +258,8 @@ public class PFLM_Gui extends GuiScreen {
 		String s;
 		int x;
 		int y;
-		//Modchu_Debug.mDebug("PartsButtonAdd "+controlList.size());
-		controlList.add(new Modchu_GuiSmallButton(99, width / 2 - 200, 12 - scrollY, 70, 15, "Default"));
+		//Modchu_Debug.mDebug("PartsButtonAdd "+buttonList.size());
+		buttonList.add(new Modchu_GuiSmallButton(99, width / 2 - 200, 12 - scrollY, 70, 15, "Default"));
 		String s2 = null;
 		for (int i = 1; i <= parts.size()
 				&& i <= showPartsNemeList.size(); i++) {
@@ -273,7 +273,7 @@ public class PFLM_Gui extends GuiScreen {
 					&& showPartsReneme.containsKey(s2)) {
 				s2 = showPartsReneme.get(s2);
 			}
-			controlList.add(new Modchu_GuiSmallButton(10000 + i - 1, x, y, 70, 15, s2 + ":" + s));
+			buttonList.add(new Modchu_GuiSmallButton(10000 + i - 1, x, y, 70, 15, s2 + ":" + s));
 		}
 	}
 
@@ -377,8 +377,8 @@ public class PFLM_Gui extends GuiScreen {
     		case modeOffline:
     			break;
     		case modeOnline:
-    			mc.renderGlobal.releaseEntitySkin(mc.thePlayer);
-    			mc.renderGlobal.obtainEntitySkin(mc.thePlayer);
+    			mc.renderGlobal.onEntityDestroy(mc.thePlayer);
+    			mc.renderGlobal.onEntityCreate(mc.thePlayer);
     			break;
     		case modeRandom:
     			break;

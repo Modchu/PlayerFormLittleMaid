@@ -67,13 +67,13 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		controlList.clear();
-		controlList.add(new GuiButton(300, width / 2 - 60, height - 44, 120, 20, "Select"));
-		controlList.add(new GuiButton(0, width / 2 + 65, height - 44, 70, 20, "delete"));
-		controlList.add(new GuiButton(201, width / 2 - 135, height - 44, 70, 20, "Return"));
+		buttonList.clear();
+		buttonList.add(new GuiButton(300, width / 2 - 60, height - 44, 120, 20, "Select"));
+		buttonList.add(new GuiButton(0, width / 2 + 65, height - 44, 70, 20, "delete"));
+		buttonList.add(new GuiButton(201, width / 2 - 135, height - 44, 70, 20, "Return"));
 
 		selectPanel = new PFLM_GuiOthersPlayerSlot(mc, this, popWorld);
-		selectPanel.registerScrollButtons(controlList, 3, 4);
+		selectPanel.registerScrollButtons(buttonList, 3, 4);
 
 		localScroll = new GuiButton(3, 0, 0, "");
 	}

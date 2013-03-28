@@ -32,6 +32,12 @@ public class PFLM_EntityPlayerDummy extends EntityLiving {
 		return 0;
 	}
 
+	@Override
+	public float getShadowSize()
+	{
+		return 0.0F;
+	}
+
     /**
      * Called when the mob's health reaches 0.
      */

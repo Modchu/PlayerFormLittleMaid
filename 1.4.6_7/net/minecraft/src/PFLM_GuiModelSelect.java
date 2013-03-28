@@ -20,7 +20,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 	private float ySize_lo;
 	private World popWorld;
 	private int modelSelectMode;
-	private int modelColor;
+	public int modelColor;
 	private PFLM_EntityPlayerDummy entityPlayerFormLittleMaidDummy;
 	private int modelListx = 30;
 	private int modelListy = 60;
@@ -77,14 +77,14 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		controlList.clear();
-		controlList.add(new Modchu_GuiSmallButton(0, 80, 185, 15, 15, "<"));
-		controlList.add(new Modchu_GuiSmallButton(1, 100, 185, 15, 15, ">"));
-		controlList.add(new Modchu_GuiSmallButton(2, 145, 180, 15, 15, "<"));
-		controlList.add(new Modchu_GuiSmallButton(3, 160, 180, 15, 15, ">"));
-		controlList.add(new Modchu_GuiSmallButton(100, 155, 205, 75, 20, "select"));
-		controlList.add(new Modchu_GuiSmallButton(101, 240, 205, 75, 20, "return"));
-		controlList.add(new Modchu_GuiSmallButton(999, 0, 0, 0, 0, ""));
+		buttonList.clear();
+		buttonList.add(new Modchu_GuiSmallButton(0, 80, 185, 15, 15, "<"));
+		buttonList.add(new Modchu_GuiSmallButton(1, 100, 185, 15, 15, ">"));
+		buttonList.add(new Modchu_GuiSmallButton(2, 145, 180, 15, 15, "<"));
+		buttonList.add(new Modchu_GuiSmallButton(3, 160, 180, 15, 15, ">"));
+		buttonList.add(new Modchu_GuiSmallButton(100, 155, 205, 75, 20, "select"));
+		buttonList.add(new Modchu_GuiSmallButton(101, 240, 205, 75, 20, "return"));
+		buttonList.add(new Modchu_GuiSmallButton(999, 0, 0, 0, 0, ""));
 	}
 
     @Override
@@ -212,7 +212,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 			}
 			GL11.glTranslatef(300, 150, 50F);
 			GL11.glScalef(-f1, f1, f1);
-			GL11.glRotatef(180F, 180F, 0.0F, 1.0F);
+			GL11.glRotatef(180F, 0F, 0.0F, 0.0F);
 			float f5 = (float)(width / 2 + 100) - xSize_lo;
 			float f6 = (float)((height / 2 + 40) - 10) - ySize_lo;
 			GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
@@ -223,7 +223,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 			entityPlayerFormLittleMaidDummy.rotationYaw = (float)Math.atan(f5 / 40F) * 40F;
 			entityPlayerFormLittleMaidDummy.rotationPitch = -(float)Math.atan(f6 / 40F) * 20F;
 			GL11.glTranslatef(0.0F, entityPlayerFormLittleMaidDummy.yOffset, 0.0F);
-			RenderManager.instance.playerViewY = 180F;
+			//RenderManager.instance.playerViewY = 180F;
 			RenderManager.instance.renderEntityWithPosYaw(entityPlayerFormLittleMaidDummy, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 			GL13.glMultiTexCoord2f(33985 /*GL_TEXTURE1_ARB*/, 240.0F, 240.0F);
 			GL11.glPopMatrix();
@@ -272,9 +272,9 @@ public class PFLM_GuiModelSelect extends GuiScreen {
     	//GL11.glEnable(GL11.GL_COLOR_MATERIAL);
     	GL11.glPushMatrix();
     	GL11.glTranslatef(x, y, 50F);
-    	entity.setWorld(popWorld);
+    	//entity.setWorld(popWorld);
     	GL11.glScalef(f, f, f);
-    	GL11.glRotatef(180F, 180.0F, 0.0F, 1.0F);
+    	GL11.glRotatef(180F, 0.0F, 0.0F, 0.0F);
     	//RenderHelper.enableStandardItemLighting();
     	Render var10 = RenderManager.instance.getEntityRenderObject(entity);
     	if (var10 != null) var10.doRender(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);

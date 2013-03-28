@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import java.util.Map;
-
 import net.minecraft.client.Minecraft;
 
 public class PFLM_PlayerController extends PlayerControllerMP {

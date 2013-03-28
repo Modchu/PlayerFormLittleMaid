@@ -19,7 +19,7 @@ public class PFLM_RenderGlobalAlt extends RenderGlobal
     /**
      * Start the skin for this entity downloading, if necessary, and increment its reference counter
      */
-    public void obtainEntitySkin(Entity entity)
+    public void onEntityCreate(Entity entity)
     {
         entity.updateCloak();
         Minecraft minecraft = Minecraft.getMinecraft();

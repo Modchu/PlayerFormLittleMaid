@@ -77,14 +77,14 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		controlList.clear();
-		controlList.add(new Modchu_GuiSmallButton(0, 80, 185, 15, 15, "<"));
-		controlList.add(new Modchu_GuiSmallButton(1, 100, 185, 15, 15, ">"));
-		controlList.add(new Modchu_GuiSmallButton(2, 145, 180, 15, 15, "<"));
-		controlList.add(new Modchu_GuiSmallButton(3, 160, 180, 15, 15, ">"));
-		controlList.add(new Modchu_GuiSmallButton(100, 155, 205, 75, 20, "select"));
-		controlList.add(new Modchu_GuiSmallButton(101, 240, 205, 75, 20, "return"));
-		controlList.add(new Modchu_GuiSmallButton(999, 0, 0, 0, 0, ""));
+		buttonList.clear();
+		buttonList.add(new Modchu_GuiSmallButton(0, 80, 185, 15, 15, "<"));
+		buttonList.add(new Modchu_GuiSmallButton(1, 100, 185, 15, 15, ">"));
+		buttonList.add(new Modchu_GuiSmallButton(2, 145, 180, 15, 15, "<"));
+		buttonList.add(new Modchu_GuiSmallButton(3, 160, 180, 15, 15, ">"));
+		buttonList.add(new Modchu_GuiSmallButton(100, 155, 205, 75, 20, "select"));
+		buttonList.add(new Modchu_GuiSmallButton(101, 240, 205, 75, 20, "return"));
+		buttonList.add(new Modchu_GuiSmallButton(999, 0, 0, 0, 0, ""));
 	}
 
     @Override

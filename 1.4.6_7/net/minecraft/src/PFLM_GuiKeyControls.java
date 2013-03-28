@@ -9,21 +9,22 @@ public class PFLM_GuiKeyControls extends
 		PFLM_GuiOthersPlayer {
 
 	private static int select;
-	public static final int modeOthersSettingOffline 	= 0;
+	public static final int modeOthersSettingOffline 		= 0;
 	public static final int modeSetModelAndArmor 		= 1;
-	public static final int modeSetModelAndColor		= 2;
-	public static final int modeSetModel 				= 3;
-	public static final int modeSetColor 				= 4;
-	public static final int modeSetColorAndArmor 		= 5;
-	public static final int modeSetArmor 				= 6;
-	public static final int modeModelScale 				= 7;
-	public static final int modePlayerOffline 			= 8;
-	public static final int modePlayerOnline			= 9;
-	public static final int modeRandom 					= 10;
-	public static final int modeActionRelease			= 11;
-	public static final int modeAction 					= 12;
-	public static final int modeActionLast 				= 41;
-	public static final int changeModeMax =	42;
+	public static final int modeSetModelAndColor			= 2;
+	public static final int modeSetModel 						= 3;
+	public static final int modeSetColor 						= 4;
+	public static final int modeSetColorAndArmor	 		= 5;
+	public static final int modeSetArmor 						= 6;
+	public static final int modeModelScale 					= 7;
+	public static final int modePlayerOffline 					= 8;
+	public static final int modePlayerOnline					= 9;
+	public static final int modeRandom 						= 10;
+	public static final int modeActionRelease				= 11;
+	public static final int modeAction 							= 12;
+	public static final int modeActionLast 					= 41;
+	public static final int modeCustomModelCfgReLoad	= 42;
+	public static final int changeModeMax 					= 43;
 	private String shortcutKey;
 
 	public PFLM_GuiKeyControls(GuiScreen par1GuiScreen, World world) {
@@ -32,61 +33,61 @@ public class PFLM_GuiKeyControls extends
 
 	@Override
 	public void initGui() {
-		controlList.clear();
+		buttonList.clear();
 		int x = width / 2 + 55;
 		int y = height / 2 - 85;
-		controlList.add(new Modchu_GuiSmallButton(403, x + 75, y + 10, 75, 15, "Use Change"));
-		controlList.add(new Modchu_GuiSmallButton(200, x, y + 115, 75, 20, "Save"));
-		controlList.add(new Modchu_GuiSmallButton(201, x + 75, y + 115, 75, 20, "Return"));
-		controlList.add(new Modchu_GuiSmallButton(407, x + 75, y - 6, 20, 15, "-10"));
-		controlList.add(new Modchu_GuiSmallButton(401, x + 95, y - 6, 15, 15, "-"));
-		controlList.add(new Modchu_GuiSmallButton(402, x + 110, y - 6, 15, 15, "+"));
-		controlList.add(new Modchu_GuiSmallButton(408, x + 125, y - 6, 20, 15, "+10"));
+		buttonList.add(new Modchu_GuiSmallButton(403, x + 75, y + 10, 75, 15, "Use Change"));
+		buttonList.add(new Modchu_GuiSmallButton(200, x, y + 115, 75, 20, "Save"));
+		buttonList.add(new Modchu_GuiSmallButton(201, x + 75, y + 115, 75, 20, "Return"));
+		buttonList.add(new Modchu_GuiSmallButton(407, x + 75, y - 6, 20, 15, "-10"));
+		buttonList.add(new Modchu_GuiSmallButton(401, x + 95, y - 6, 15, 15, "-"));
+		buttonList.add(new Modchu_GuiSmallButton(402, x + 110, y - 6, 15, 15, "+"));
+		buttonList.add(new Modchu_GuiSmallButton(408, x + 125, y - 6, 20, 15, "+10"));
 		if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysUse[select]) {
-			controlList.add(new Modchu_GuiSmallButton(404, x + 75, y + 70, 75, 15, "Use ModelsKey"));
-			controlList.add(new Modchu_GuiSmallButton(405, x + 75, y + 85, 75, 15, "Use CtrlKey"));
-			controlList.add(new Modchu_GuiSmallButton(406, x + 75, y + 100, 75, 15, "Use ShiftKey"));
-			controlList.add(new Modchu_GuiSmallButton(400, x + 75, y + 25, 75, 15, "ChangeMode"));
+			buttonList.add(new Modchu_GuiSmallButton(404, x + 75, y + 70, 75, 15, "Use ModelsKey"));
+			buttonList.add(new Modchu_GuiSmallButton(405, x + 75, y + 85, 75, 15, "Use CtrlKey"));
+			buttonList.add(new Modchu_GuiSmallButton(406, x + 75, y + 100, 75, 15, "Use ShiftKey"));
+			buttonList.add(new Modchu_GuiSmallButton(400, x + 75, y + 25, 75, 15, "ChangeMode"));
 			if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
 					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModel
 					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndColor
 					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
-				controlList.add(new Modchu_GuiSmallButton(56, x - 10, y + 10, 85, 15, "ModelListSelect"));
-				controlList.add(new Modchu_GuiSmallButton(50, x + 40, y + 25, 15, 15, "<"));
-				controlList.add(new Modchu_GuiSmallButton(51, x + 55, y + 25, 15, 15, ">"));
+				buttonList.add(new Modchu_GuiSmallButton(56, x - 10, y + 10, 85, 15, "ModelListSelect"));
+				buttonList.add(new Modchu_GuiSmallButton(50, x + 40, y + 25, 15, 15, "<"));
+				buttonList.add(new Modchu_GuiSmallButton(51, x + 55, y + 25, 15, 15, ">"));
 			}
 			if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
 					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetColor
 					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndColor
 	    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
-				controlList.add(new Modchu_GuiSmallButton(52, x + 40, y + 40, 15, 15, "-"));
-				controlList.add(new Modchu_GuiSmallButton(53, x + 55, y + 40, 15, 15, "+"));
+				buttonList.add(new Modchu_GuiSmallButton(52, x + 40, y + 40, 15, 15, "-"));
+				buttonList.add(new Modchu_GuiSmallButton(53, x + 55, y + 40, 15, 15, "+"));
 			}
 			if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
 					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetArmor
 	    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetColorAndArmor
 					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
-				controlList.add(new Modchu_GuiSmallButton(54, x + 40, y + 55, 15, 15, "<"));
-				controlList.add(new Modchu_GuiSmallButton(55, x + 55, y + 55, 15, 15, ">"));
-				controlList.add(new Modchu_GuiSmallButton(20, x, y + 70, 75, 15, "showArmor"));
+				buttonList.add(new Modchu_GuiSmallButton(54, x + 40, y + 55, 15, 15, "<"));
+				buttonList.add(new Modchu_GuiSmallButton(55, x + 55, y + 55, 15, 15, ">"));
+				buttonList.add(new Modchu_GuiSmallButton(20, x, y + 70, 75, 15, "showArmor"));
 			}
 			if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
 					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeModelScale) {
 				if(modelScaleButton) {
-					controlList.add(new Modchu_GuiSmallButton(3, width / 2 - 140, height / 2 + 20, 50, 20, "Default"));
-					controlList.add(new Modchu_GuiSmallButton(4, width / 2 - 90, height / 2 + 20, 30, 20, "UP"));
-					controlList.add(new Modchu_GuiSmallButton(5, width / 2 - 170, height / 2 + 20, 30, 20, "Down"));
-					controlList.add(new Modchu_GuiSmallButton(6, x + 75, y + 40, 75, 15, "Close"));
+					buttonList.add(new Modchu_GuiSmallButton(3, width / 2 - 140, height / 2 + 20, 50, 20, "Default"));
+					buttonList.add(new Modchu_GuiSmallButton(4, width / 2 - 90, height / 2 + 20, 30, 20, "UP"));
+					buttonList.add(new Modchu_GuiSmallButton(5, width / 2 - 170, height / 2 + 20, 30, 20, "Down"));
+					buttonList.add(new Modchu_GuiSmallButton(6, x + 75, y + 40, 75, 15, "Close"));
 				} else {
-					controlList.add(new Modchu_GuiSmallButton(7, x + 75, y + 40, 75, 15, "ScaleChange"));
+					buttonList.add(new Modchu_GuiSmallButton(7, x + 75, y + 40, 75, 15, "ScaleChange"));
 				}
 			}
 			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] >= modeAction
 					&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] <= modeActionLast) {
-				controlList.add(new Modchu_GuiSmallButton(409, x + 50, y + 165, 15, 15, "+"));
-				controlList.add(new Modchu_GuiSmallButton(410, x + 35, y + 165, 15, 15, "-"));
-				controlList.add(new Modchu_GuiSmallButton(411, x + 65, y + 165, 20, 15, "+10"));
-				controlList.add(new Modchu_GuiSmallButton(412, x + 15, y + 165, 20, 15, "-10"));
+				buttonList.add(new Modchu_GuiSmallButton(409, x + 50, y + 165, 15, 15, "+"));
+				buttonList.add(new Modchu_GuiSmallButton(410, x + 35, y + 165, 15, 15, "-"));
+				buttonList.add(new Modchu_GuiSmallButton(411, x + 65, y + 165, 20, 15, "+10"));
+				buttonList.add(new Modchu_GuiSmallButton(412, x + 15, y + 165, 20, 15, "-10"));
 			}
 		}
 		setTextureValue();
@@ -208,10 +209,10 @@ public class PFLM_GuiKeyControls extends
     			mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]--;
     			if ((mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeAction
     					&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] <= modeActionLast + 1)
-    					| (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < 0
     					//TODO modeを増やしたときに問題ないかチェックする
     					//&& changeModeMax == modeActionLast + 1
-    					)) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
+    					) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
+    			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < 0) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = changeModeMax - 1;
     		} else {
     			mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]++;
     			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeAction
@@ -608,6 +609,9 @@ public class PFLM_GuiKeyControls extends
 			break;
 		case modeActionRelease:
 			s = "ActionRelease";
+			break;
+		case modeCustomModelCfgReLoad:
+			s = "CustomModelCfgReLoad";
 			break;
 		}
 		if (i >= modeAction

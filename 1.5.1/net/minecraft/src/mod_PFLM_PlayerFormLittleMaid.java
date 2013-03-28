@@ -573,6 +573,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				case PFLM_GuiKeyControls.modeActionRelease:
 					setShortcutKeysAction(false);
 					break;
+				case PFLM_GuiKeyControls.modeCustomModelCfgReLoad:
+					customModelCfgReLoad();
+					clear = true;
+					break;
 				}
 				if (shortcutKeysChangeMode[i] >= PFLM_GuiKeyControls.modeAction
 						&& shortcutKeysChangeMode[i] <= PFLM_GuiKeyControls.modeActionLast) {
@@ -880,11 +884,11 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			minecraft.renderGlobal.setWorldAndLoadRenderers(minecraft.theWorld);
 			EntityPlayer entityplayer;
 
-			for (Iterator iterator = minecraft.theWorld.playerEntities.iterator(); iterator.hasNext(); minecraft.renderGlobal.obtainEntitySkin(entityplayer))
+			for (Iterator iterator = minecraft.theWorld.playerEntities.iterator(); iterator.hasNext(); minecraft.renderGlobal.onEntityCreate(entityplayer))
 			{
 				Object obj = iterator.next();
 				entityplayer = (EntityPlayer)obj;
-				minecraft.renderGlobal.releaseEntitySkin(entityplayer);
+				minecraft.renderGlobal.onEntityDestroy(entityplayer);
 			}
 		}
 */
@@ -1539,8 +1543,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static void clearPlayers() {
     	if (mc.renderGlobal != null
     			&& mc.thePlayer != null) {
-    		mc.renderGlobal.releaseEntitySkin(mc.thePlayer);
-    		mc.renderGlobal.obtainEntitySkin(mc.thePlayer);
+    		mc.renderGlobal.onEntityDestroy(mc.thePlayer);
+    		mc.renderGlobal.onEntityCreate(mc.thePlayer);
     	}
 /*
     		if (isOlddays) {
@@ -1988,6 +1992,24 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	return false;
     }
 
+    public void customModelCfgReLoad() {
+    	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (data != null) ;else return;
+    	Object[] textureModel = {
+    			data.modelMain.modelArmorInner,
+    			data.modelFATT.modelArmorInner,
+    			data.modelFATT.modelArmorOuter
+    	};
+    	float[] f1;
+    	for(int i = 0; i < textureModel.length; i++) {
+    		if (textureModel != null
+    				&& textureModel[i] instanceof MultiModelCustom) {
+    			f1 = getArmorModelsSize(textureModel[i]);
+    			if (f1 != null) ((MultiModelCustom) textureModel[i]).customModel.init(null, f1[0], f1[1]);
+    		}
+    	}
+    }
+
     public static void loadcfg() {
 		// cfg“Ç‚Ýž‚Ý
 		if (cfgdir.exists()) {
@@ -2201,7 +2223,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				"kimono_pl_Shion", "Sword_NM", "Ar_NM", "x16_QB", "Hituji",
 				"Udonge_usagi", "neta_chu", "ColorVariation_chu", "NetaPetit_Petit", "CV_DressYukari",
 				"e12color_Elsa3", "b14color_Beverly5", "e14color_Elsa4", "e14under_Elsa4", "b15color_Beverly6",
-				"b15under_Beverly6"
+				"b15under_Beverly6", "default_Custom1"
 		};
 		Modchu_Config.writerModelList(s, textureListfile, textureList);
 	}
@@ -2645,10 +2667,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						(new StringBuilder()).append("PFLMWait").toString()
 						);
 			}
-
+/*//147delete
 			int ID = ModLoader.getUniqueEntityId();
-
-/*
+*///147delete
+//-@-147
 			Map map = (Map) Modchu_Reflect.getFieldObject(EntityList.class, "IDtoClassMapping");
 			int ID = -1;
 			if (map != null) {
@@ -2663,7 +2685,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			} else {
 				Modchu_Debug.Debug("IDtoClassMapping map == null !!");
 			}
-*/
+//@-@147
 			if (guiMultiPngSaveButton
 					&& ID > -1) ModLoader.registerEntityID(PFLM_EntityPlayerDummy.class, "PFLM_EntityPlayerDummy", ID);
 		}

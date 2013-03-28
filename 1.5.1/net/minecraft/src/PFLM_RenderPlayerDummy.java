@@ -199,8 +199,8 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     		GL11.glScalef(-1F, -1F, 1.0F);
     		preRenderCallback(entityliving, f1);
     		GL11.glTranslatef(0.0F, -24F * f6 - 0.0078125F, 0.0F);
-    		float f7 = entityliving.prevLegYaw + (entityliving.legYaw - entityliving.prevLegYaw) * f1;
-    		float f8 = entityliving.legSwing - entityliving.legYaw * (1.0F - f1);
+    		float f7 = entityliving.prevLimbYaw + (entityliving.limbYaw - entityliving.prevLimbYaw) * f1;
+    		float f8 = entityliving.limbSwing - entityliving.limbYaw * (1.0F - f1);
 //-@-b181
     		if (entityliving.isChild())
     		{

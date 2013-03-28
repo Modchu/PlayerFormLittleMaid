@@ -165,8 +165,8 @@ public class PFLM_GuiOthersPlayerSlot extends GuiSlot {
 		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
 		Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
 		if (ltb == null) {
-			if (s1.indexOf("Biped") == -1) return mod_PFLM_PlayerFormLittleMaid.getDefaultModel();
-			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox("Biped");
+			if (s1.indexOf("Biped") == -1) s1 = "default";
+			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
 			models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
 		}
 		return models;
