@@ -452,6 +452,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			}
     		}
 
+    		modelDataPlayerFormLittleMaid.modelMain.setModelCaps(modelDataPlayerFormLittleMaid);
     		modelDataPlayerFormLittleMaid.modelMain.modelArmorInner.setLivingAnimations(entityliving, f8, f7, f1);
     		renderModel(entityliving, f8, f7, f5, f3 - f2, f4, f6);
             // b173deletefloat f9 = mc.currentScreen == null | mc.currentScreen instanceof GuiIngameMenu ? entityliving.getEntityBrightness(f1) : 1.0F;

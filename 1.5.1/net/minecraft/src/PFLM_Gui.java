@@ -1198,6 +1198,8 @@ public class PFLM_Gui extends GuiScreen {
     }
 
     public static void setParts(List<String> list, List<String> hideList) {
+    	if (list != null
+    			&& !list.isEmpty()) ;else return;
     	parts.clear();
     	showPartsNemeList.clear();
     	String s = null;

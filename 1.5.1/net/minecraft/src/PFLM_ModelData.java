@@ -159,10 +159,13 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	 */
 	public void setLivingAnimationsAfter(MMM_ModelBiped model, EntityLiving entityliving, float f, float f1, float f2) {
 		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter");
-		if (entityliving != null) ;else return;
+		if (entityliving != null
+				&& model != null
+				&& model instanceof MultiModelBaseBiped) ;else return;
 		model.setCapsValue(caps_isRiding, !entityliving.isRiding() ? getIsSitting() : true);
 		if(partsSetFlag == 1) {
-			if (((MultiModelBaseBiped) model).getShowPartsList().isEmpty()) ((MultiModelBaseBiped) model).showPartsInit();
+			if (((MultiModelBaseBiped) model).getShowPartsList() != null
+					&& ((MultiModelBaseBiped) model).getShowPartsList().isEmpty()) ((MultiModelBaseBiped) model).showPartsInit();
 			((MultiModelBaseBiped) model).defaultPartsSettingBefore();
 			PFLM_Gui.setParts(((MultiModelBaseBiped) model).getShowPartsList(), ((MultiModelBaseBiped) model).getShowPartsHideList());
 			((MultiModelBaseBiped) model).defaultPartsSettingAfter();
@@ -191,7 +194,9 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	 * setRotationAnglesLM åƒÇ—èoÇµå„Ç…åƒÇŒÇÍÇÈÅB
 	 */
 	public void setRotationAnglesAfter(MMM_ModelBiped model, float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-		if (entity != null) ;else return;
+		if (entity != null
+				&& model != null
+				&& model instanceof MultiModelBaseBiped) ;else return;
 		if (model.getCapsValueBoolean(caps_firstPerson)) ((MultiModelBaseBiped) model).setRotationAnglesfirstPerson(f, f1, f2, f3, f4, f5, entity);
 		if (model.getCapsValueBoolean(caps_shortcutKeysAction)) {
 			((MultiModelBaseBiped) model).action(entity, model.getCapsValueInt(caps_runActionNumber));

@@ -2671,7 +2671,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			int ID = ModLoader.getUniqueEntityId();
 *///147delete
 //-@-147
-			Map map = (Map) Modchu_Reflect.getFieldObject(EntityList.class, "IDtoClassMapping");
+			Map map = (Map) Modchu_Reflect.getFieldObject(EntityList.class, "d", "IDtoClassMapping");
 			int ID = -1;
 			if (map != null) {
 				for(int i = 0; i < 3000; i++) {
