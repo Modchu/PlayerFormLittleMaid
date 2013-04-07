@@ -1,12 +1,9 @@
-
 package net.minecraft.src;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -284,7 +281,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.5.1-19";
+		return "1.5.1-19a";
 	}
 
 	public void load()
@@ -1536,7 +1533,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	if (mc.thePlayer != null
     			&& mc.thePlayer.worldObj != null
     			&& !isMulti) {
-    		Modchu_Reflect.invokeMethod(EntityPlayer.class, "aa", "resetHeight", mc.thePlayer);
+    		Modchu_Reflect.invokeMethod(EntityPlayer.class, "func_71061_d_", "resetHeight", mc.thePlayer);
     	}
     }
 
@@ -1580,7 +1577,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	if (mc.thePlayer != null
     			&& mc.thePlayer.worldObj != null
     			&& !isMulti) {
-    		Modchu_Reflect.invokeMethod(Entity.class, "a", "setSize", new Class[]{ float.class, float.class }, mc.thePlayer, new Object[]{ f1, f2 });
+    		Modchu_Reflect.invokeMethod(Entity.class, "func_70105_a", "setSize", new Class[]{ float.class, float.class }, mc.thePlayer, new Object[]{ f1, f2 });
     	}
     }
 
@@ -2155,7 +2152,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		String s[] = {
 				"textureName="+textureName, "textureArmorName="+textureArmorName, "maidColor="+maidColor,
 				"ModelScale="+PFLM_Gui.modelScale, "changeMode="+changeMode, "setModel="+PFLM_Gui.setModel,
-				"setColor="+PFLM_Gui.setColor, "setArmor="+PFLM_Gui.setArmor, "showArmor="+PFLM_Gui.showArmor
+				"setColor="+PFLM_Gui.setColor, "setArmor="+PFLM_Gui.setArmor, "showArmor="+PFLM_Gui.showArmor,
+				"changeMode="+changeMode
 		};
 		Modchu_Config.writerConfig(cfgfile, s);
 	}
@@ -2179,6 +2177,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				PFLM_Gui.setArmor = Integer.valueOf((Modchu_Config.loadConfig(showModelList, cfgfile, "setArmor", PFLM_Gui.setArmor)).toString());
 				PFLM_Gui.showArmor = Boolean.valueOf((Modchu_Config.loadConfig(showModelList, cfgfile, "showArmor", PFLM_Gui.showArmor)).toString());
 				handednessMode = Integer.valueOf((Modchu_Config.loadConfig(showModelList, cfgfile, "handednessMode", handednessMode)).toString());
+				changeMode = Integer.valueOf((Modchu_Config.loadConfig(showModelList, cfgfile, "changeMode", changeMode)).toString());
 				Modchu_Config.loadConfigShowModel(showModelList, cfgfile);
 				if (handednessMode < -1) handednessMode = -1;
 				if (handednessMode > 1) handednessMode = 1;
@@ -2190,11 +2189,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		// Guiê›íËçÄñ⁄ÇcfgÉtÉ@ÉCÉãÇ…ï€ë∂
 		String k[] = {
 				"textureName", "textureArmorName", "maidColor", "ModelScale", "setModel",
-				"setColor", "setArmor", "showArmor", "handednessMode"
+				"setColor", "setArmor", "showArmor", "handednessMode", "changeMode"
 		};
 		String k1[] = {
 				""+textureName, ""+textureArmorName, ""+maidColor, ""+PFLM_Gui.modelScale, ""+PFLM_Gui.setModel,
-				""+PFLM_Gui.setColor, ""+PFLM_Gui.setArmor, ""+PFLM_Gui.showArmor, ""+handednessMode
+				""+PFLM_Gui.setColor, ""+PFLM_Gui.setArmor, ""+PFLM_Gui.showArmor, ""+handednessMode,
+				""+changeMode
 		};
 		Modchu_Config.saveParamater(cfgfile, k, k1);
 	}
@@ -2671,7 +2671,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			int ID = ModLoader.getUniqueEntityId();
 *///147delete
 //-@-147
-			Map map = (Map) Modchu_Reflect.getFieldObject(EntityList.class, "d", "IDtoClassMapping");
+			Map map = (Map) Modchu_Reflect.getFieldObject(EntityList.class, "field_75623_d", "IDtoClassMapping");
 			int ID = -1;
 			if (map != null) {
 				for(int i = 0; i < 3000; i++) {
@@ -3455,11 +3455,13 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static int textureManagerTexturesSize() {
-		return (Integer) Modchu_Reflect.invokeMethod(List.class, "size", Modchu_Reflect.getFieldObject(MMM_TextureManager, "textures"));
+		List list = (List) Modchu_Reflect.getFieldObject(MMM_TextureManager, "textures");
+		return list.size();
 	}
 
 	public static Object textureManagerTexturesGet(int i) {
-		return Modchu_Reflect.invokeMethod(List.class, "get", new Class[]{ int.class }, Modchu_Reflect.getFieldObject(MMM_TextureManager, "textures"), new Object[]{ i });
+		List list = (List) Modchu_Reflect.getFieldObject(MMM_TextureManager, "textures");
+		return list.get(i);
 	}
 
 	public static float[] getArmorModelsSize(Object o) {

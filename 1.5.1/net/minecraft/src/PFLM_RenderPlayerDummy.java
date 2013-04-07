@@ -1,9 +1,6 @@
 package net.minecraft.src;
 
-import java.io.File;
 import java.lang.reflect.Method;
-
-import net.minecraft.client.Minecraft;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -33,7 +30,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		modelBasicOrig[0] = new MultiModel(0.0F);
 		modelBasicOrig[1] = new MultiModel(0.1F);
 		modelBasicOrig[2] = new MultiModel(0.5F);
-		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "h", "armorFilenamePrefix");
+		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "field_77110_j", "armorFilenamePrefix");
 		if (mod_PFLM_PlayerFormLittleMaid.isForge) {
 			ForgeHooksClient = PFLM_RenderPlayer.ForgeHooksClient;
 		}
