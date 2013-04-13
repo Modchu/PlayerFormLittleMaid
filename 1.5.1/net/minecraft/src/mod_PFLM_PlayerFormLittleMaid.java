@@ -276,12 +276,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public boolean isRelease() {
-		return getClass().getPackage() == null;
+		return mod_Modchu_ModchuLib.mod_modchu_modchulib.getPackage() == null;
 	}
 
 	public String getVersion()
 	{
-		return "1.5.1-19a";
+		return "1.5.1-19b";
 	}
 
 	public void load()

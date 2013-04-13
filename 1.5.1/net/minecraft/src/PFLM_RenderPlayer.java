@@ -66,11 +66,9 @@ public class PFLM_RenderPlayer extends RenderPlayer
 //@-@125
 		}
 //-@-125
-/*//147delete
 		if (mod_PFLM_PlayerFormLittleMaid.isForge) {
 			ForgeHooksClient = Modchu_Reflect.loadClass("net.minecraftforge.client.ForgeHooksClient");
 		}
-*///147delete
 //@-@125
 		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
 			Shaders = Modchu_Reflect.loadClass("Shaders");
@@ -131,26 +129,26 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		String a1 = itemarmor.renderIndex < armorFilename.length ? armorFilename[itemarmor.renderIndex] : armorFilename[armorFilename.length - 1];
     		if (flag) {
 //-@-125
-/*//147delete
     			if (mod_PFLM_PlayerFormLittleMaid.isForge) {
+/*//147delete
     				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
     				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });
+*///147delete
+//-@-147
+    				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class }, null, new Object[]{ entityplayer, is, "/armor/" + a1 + "_" + 2 + ".png", i, 1 });
+    				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class }, null, new Object[]{ entityplayer, is, "/armor/" + a1 + "_" + 1 + ".png", i, 1 });
+//@-@147
     				if (i == 1) {
     					//Modchu_Debug.mDebug("i="+i+" t2="+t2+" t1="+t1);
-    					for(int k = 0; k < 4; k++) {
-    						modelData.modelFATT.textureInner[i] = t2;
-    					}
+    					modelData.modelFATT.textureInner[i] = t2;
     				}
     				modelData.modelFATT.textureOuter[i] = t1;
     			} else {
-*///147delete
 //@-@125
     				modelData.modelFATT.textureInner[i] = "/armor/" + a1 + "_" + 2 + ".png";
     				modelData.modelFATT.textureOuter[i] = "/armor/" + a1 + "_" + 1 + ".png";
 //-@-125
-/*//147delete
     			}
-*///147delete
 //@-@125
     		}
     	} else {
