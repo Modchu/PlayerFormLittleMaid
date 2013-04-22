@@ -247,7 +247,8 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 		String packgeName = null;
 		if (ltb != null) packgeName = mod_PFLM_PlayerFormLittleMaid.getTextureBoxPackegeName(ltb);
 		if (packgeName != null) ;else {
-			packgeName = entityPlayerFormLittleMaidDummy.textureName.indexOf("Biped") > -1 ? "Biped" : "default";
+			packgeName = entityPlayerFormLittleMaidDummy.textureName != null
+					&& entityPlayerFormLittleMaidDummy.textureName.indexOf("Biped") > -1 ? "Biped" : "default";
 			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(packgeName);
 			if (ltb != null) packgeName = mod_PFLM_PlayerFormLittleMaid.getTextureBoxPackegeName(ltb);
 		}

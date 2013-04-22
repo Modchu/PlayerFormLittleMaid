@@ -163,13 +163,15 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				&& model != null
 				&& model instanceof MultiModelBaseBiped) ;else return;
 		model.setCapsValue(caps_isRiding, !entityliving.isRiding() ? getIsSitting() : true);
-		if(partsSetFlag == 1) {
+		if(partsSetFlag == 1
+				| PFLM_Gui.partsSetFlag == 1) {
 			if (((MultiModelBaseBiped) model).getShowPartsList() != null
 					&& ((MultiModelBaseBiped) model).getShowPartsList().isEmpty()) ((MultiModelBaseBiped) model).showPartsInit();
 			((MultiModelBaseBiped) model).defaultPartsSettingBefore();
 			PFLM_Gui.setParts(((MultiModelBaseBiped) model).getShowPartsList(), ((MultiModelBaseBiped) model).getShowPartsHideList());
 			((MultiModelBaseBiped) model).defaultPartsSettingAfter();
 			partsSetFlag = 2;
+			PFLM_Gui.partsSetFlag = 2;
 			if(!partsSetInit) {
 				partsSetInit = true;
 				PFLM_Gui.showModelFlag = true;
