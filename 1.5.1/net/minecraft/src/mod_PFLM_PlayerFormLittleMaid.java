@@ -56,7 +56,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static boolean isShaders = false;
 	public static boolean isShader = false;
 	public static boolean isDynamicLights = false;
-	public static boolean isForge = false;
+	//public static boolean isForge = false;
 	public static boolean isAether = false;
 	public static boolean is2D = false;
 	public static boolean isCCTV = false;
@@ -153,6 +153,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	private static Random rnd = new Random();
 	public static PFLM_EntityPlayerMaster entityPlayerMaster;
 	public static String packageName;
+	private boolean loadInitFlag = false;
 
 	//対応minecraftバージョンによって使っていたりいなかったり
 	public static boolean isSwapGuiSelectWorld = false;
@@ -175,6 +176,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public mod_PFLM_PlayerFormLittleMaid()
 	{
+		mod_pflm_playerformlittlemaid = this;
 		// b181deleteload();
 		if (getVersion().startsWith("1.5.1")) {
 			playerFormLittleMaidVersion = 151;
@@ -281,40 +283,16 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.5.1-19c";
+		return "1.5.1-19d";
 	}
 
 	public void load()
 	{
-		mod_pflm_playerformlittlemaid = this;
-		loadcfg();
+	}
+
+	public void loadInit() {
+		loadInitFlag = true;
 		ModLoader.setInGameHook(this, true, true);
-		String s = mod_Modchu_ModchuLib.mod_modchu_modchulib.getPackage();
-		Modchu_Debug.init(s);
-		Modchu_Config.init(s);
-		loadParamater();
-		loadTextureList();
-		loadOthersPlayerParamater();
-		loadShortcutKeysParamater();
-		if (versionCheck) startVersionCheckThread();
-		PFLM_EntityPlayer = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("PFLM_EntityPlayer"), false);
-		MMM_TextureManager = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MMM_TextureManager"), false);
-		MMM_FileManager = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MMM_FileManager"), false);
-		MMM_TextureBox = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MMM_TextureBox"), false);
-		if (MMM_TextureManager != null) ;else {
-			MMM_TextureManager = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("Modchu_TextureManager"));
-			MMM_FileManager = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("Modchu_FileManager"));
-			MMM_TextureBox = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("Modchu_TextureBox"));
-		}
-		Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", new MMM_ModelBiped[] {
-					new MultiModel(0.0F),
-					new MultiModel(0.1F),
-					new MultiModel(0.5F)
-			});
-		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"MultiModel", "MultiModel"});
-		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"playerformlittlemaid", "playerformlittlemaid"});
-		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{modelClassName, "/mob/littleMaid/", modelClassName+"_"});
-		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"playerformlittlemaid", "/mob/littleMaid/", modelClassName+"_"});
 	}
 
 	public void addRenderer(Map map)
@@ -332,7 +310,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			//}
 			//else
 
-				if (isForge) {
+				if (mod_Modchu_ModchuLib.isForge) {
 				PFLM_RenderPlayer var1 = new PFLM_RenderPlayer();
 				//isModelSize
 				//if (isPlayerAPI
@@ -370,7 +348,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			var2 = new PFLM_RenderPlayerDummy();
 			map.put(PFLM_EntityPlayerDummy.class, var2);
 		//}
-		if (isForge) ((Render) var2).setRenderManager(RenderManager.instance);
+		if (mod_Modchu_ModchuLib.isForge) ((Render) var2).setRenderManager(RenderManager.instance);
 //@-@125
 /*//125delete
 		if (!isAether) {
@@ -392,10 +370,11 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public void keyboardEvent(KeyBinding keybinding) {
+		Modchu_Debug.Debug("keyboardEvent");
 		if (mc.currentScreen instanceof GuiChat) return;
 //-@-125
 		if (playerFormLittleMaidVersion > 129) {
-			if (isForge) {
+			if (mod_Modchu_ModchuLib.isForge) {
 				if (keybinding.keyCode == keyCode
 						&& keybindingTime > 0) return;
 				setKeyCode(keybinding.keyCode);
@@ -633,7 +612,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (!smartMovingAddRenderer
 				&& isPlayerForm
 				&& isSmartMoving
-				&& !isForge) {
+				&& !mod_Modchu_ModchuLib.isForge) {
 			PFLM_PlayerController.addRenderer();
 			smartMovingAddRenderer = true;
 			Modchu_Debug.Debug("SmartMovingAddRenderer");
@@ -686,7 +665,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	{
 //-@-125
 		if (minecraft.currentScreen != null
-				&& !isForge) onTickInGUI(0.0F, minecraft, minecraft.currentScreen);
+				&& !mod_Modchu_ModchuLib.isForge) onTickInGUI(0.0F, minecraft, minecraft.currentScreen);
 //@-@125
 		if (itemRendererClass != null) {
 			ItemRenderer itemRenderer = null;
@@ -717,7 +696,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //-@-110
 		if (isPlayerForm
 				&& isSmartMoving
-				&& !isForge) {
+				&& !mod_Modchu_ModchuLib.isForge) {
 			if (!(RenderManager.instance.getEntityClassRenderObject(EntityPlayerSP.class) instanceof PFLM_RenderPlayer)) {
 				PFLM_PlayerController.addRenderer();
 				Modchu_Debug.Debug("onTickInGame SmartMovingAddRenderer");
@@ -758,7 +737,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			}
 		}
 
-		if (isForge
+		if (mod_Modchu_ModchuLib.isForge
 				&& keybindingTime > 0) --keybindingTime;
 		if (minecraft.getServerData() != null) {
 			if (!minecraft.isSingleplayer()) {
@@ -2432,7 +2411,76 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public void modsLoaded()
-    {
+	{
+		boolean keyFlag = playerFormLittleMaidVersion > 129 ? mod_Modchu_ModchuLib.isForge : false;
+		//キーの登録と名称変換テーブルの登録
+		String s;
+		if (isPlayerForm) {
+			s = "key.PlayerFormLittleMaid";
+			ModLoader.registerKey(this, new KeyBinding(s, 41), keyFlag);
+			ModLoader.addLocalization(
+					(new StringBuilder()).append(s).toString(),
+					(new StringBuilder()).append("PlayerFormLittleMaidGui").toString()
+					);
+			s = "key.PFLM Models Key";
+			ModLoader.registerKey(this, new KeyBinding(s, 64), keyFlag);
+			ModLoader.addLocalization(
+					(new StringBuilder()).append(s).toString(),
+					(new StringBuilder()).append("PFLMModelsKey").toString()
+					);
+			if(waitTime == 0) {
+				s = "key.PFLM wait";
+				ModLoader.registerKey(this, new KeyBinding(s, 26), keyFlag);
+				ModLoader.addLocalization(
+						(new StringBuilder()).append(s).toString(),
+						(new StringBuilder()).append("PFLMWait").toString()
+						);
+			}
+		}
+		s = "key.Sit";
+		ModLoader.registerKey(this, new KeyBinding(s, 39), keyFlag);
+		ModLoader.addLocalization(
+					(new StringBuilder()).append(s).toString(),
+					(new StringBuilder()).append("Sit").toString()
+					);
+		s = "key.LieDown";
+		ModLoader.registerKey(this, new KeyBinding(s, 27), keyFlag);
+		ModLoader.addLocalization(
+				(new StringBuilder()).append(s).toString(),
+				(new StringBuilder()).append("LieDown").toString()
+				);
+		shortcutKeysinit();
+	}
+
+	public void modsLoadedInit() {
+		if (!loadInitFlag) throw new RuntimeException("mod_PFLM_PlayerFormLittleMaid-modsLoaded() loadInit error !");
+		loadcfg();
+		String s = mod_Modchu_ModchuLib.mod_modchu_modchulib.getPackage();
+		Modchu_Debug.init(s);
+		Modchu_Config.init(s);
+		loadParamater();
+		loadTextureList();
+		loadOthersPlayerParamater();
+		loadShortcutKeysParamater();
+		if (versionCheck) startVersionCheckThread();
+		PFLM_EntityPlayer = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("PFLM_EntityPlayer"), false);
+		MMM_TextureManager = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MMM_TextureManager"), false);
+		MMM_FileManager = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MMM_FileManager"), false);
+		MMM_TextureBox = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MMM_TextureBox"), false);
+		if (MMM_TextureManager != null) ;else {
+			MMM_TextureManager = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("Modchu_TextureManager"));
+			MMM_FileManager = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("Modchu_FileManager"));
+			MMM_TextureBox = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("Modchu_TextureBox"));
+		}
+		Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", new MMM_ModelBiped[] {
+					new MultiModel(0.0F),
+					new MultiModel(0.1F),
+					new MultiModel(0.5F)
+			});
+		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"MultiModel", "MultiModel"});
+		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"playerformlittlemaid", "playerformlittlemaid"});
+		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{modelClassName, "/mob/littleMaid/", modelClassName+"_"});
+		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"playerformlittlemaid", "/mob/littleMaid/", modelClassName+"_"});
 		//対応MOD導入チェック
 		List list = ModLoader.getLoadedMods();
 		int size = list.size();
@@ -2450,14 +2498,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				ModLoader.getLogger().fine("playerFormLittleMaid-mod_noBiomesX Check ok.");
 				Modchu_Debug.Debug("mod_noBiomesX Check ok.");
 			}
-/*//125delete
-			else if (name.equals("mod_MinecraftForge")) {
-				erpflmCheck = 1;
-				isForge = true;
-				ModLoader.getLogger().fine("playerFormLittleMaid-mod_MinecraftForge Check ok.");
-				Modchu_Debug.Debug("mod_MinecraftForge Check ok.");
-			}
-*///125delete
 			else if (name.equals("mod_SmartMoving")) {
 				if (!isRelease()) {
 					isSmartMoving = true;
@@ -2488,8 +2528,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		}
 		//mod_SmartMovingMp Shaders MinecraftForgeなど対応クラス存在チェック
 		String className1[] = {
-				"mod_SmartMovingMp", "Shaders", "DynamicLights", "Shader", "FMLRenderAccessLibrary",
-				"EntityPlayerSP2", "RenderPlayer2", "ItemRendererHD"
+				"mod_SmartMovingMp", "Shaders", "DynamicLights", "Shader", "EntityPlayerSP2",
+				"RenderPlayer2", "ItemRendererHD"
 		};
 		String test2 = null;
 		for(int n = 0 ; n < className1.length ; n++){
@@ -2507,12 +2547,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					erpflmCheck = 7;
 				}
 				if(n == 4) {
-					isForge = true;
-					erpflmCheck = 1;
-				}
-				if(n == 5) {
 					try {
-						String s = mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("EntityPlayerSP2");
+						s = mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("EntityPlayerSP2");
 						if (s != null) {
 							Object o = Modchu_Reflect.getFieldObject(s, "armor", false);
 							if (o != null) isSSP = true;
@@ -2520,7 +2556,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					} catch(Exception e) {
 					}
 				}
-				if(n == 6) {
+				if(n == 5) {
 					try {
 						Object o = Modchu_Reflect.getFieldObject(ItemRenderer.class, "olddays", false);
 						if (o != null) {
@@ -2533,7 +2569,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					} catch(Exception e) {
 					}
 				}
-				if(n == 7) isItemRendererHD = true;
+				if(n == 6) isItemRendererHD = true;
 			} catch (ClassNotFoundException e) {
 			}
 		}
@@ -2572,10 +2608,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (!isCCTV) {
 			ModLoader.getLogger().fine("playerFormLittleMaid-isCCTV false.");
 			Modchu_Debug.Debug("isCCTV false.");
-		}
-		if (!isForge) {
-			ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No Forge.")).toString());
-			Modchu_Debug.Debug("No Forge.");
 		}
 		if (!isOlddays) {
 			ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No Olddays.")).toString());
@@ -2644,37 +2676,15 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			BipedClass = MultiModel_Biped.class;
 		}
 
-		boolean keyFlag = playerFormLittleMaidVersion > 129 ? isForge : false;
-		// GUI を開くキーの登録と名称変換テーブルの登録
 		if (isPlayerForm) {
-			String s = "key.PlayerFormLittleMaid";
-			ModLoader.registerKey(this, new KeyBinding(s, 41), keyFlag);
-			ModLoader.addLocalization(
-					(new StringBuilder()).append(s).toString(),
-					(new StringBuilder()).append("PlayerFormLittleMaidGui").toString()
-					);
-			s = "key.PFLM Models Key";
-			ModLoader.registerKey(this, new KeyBinding(s, 64), keyFlag);
-			ModLoader.addLocalization(
-					(new StringBuilder()).append(s).toString(),
-					(new StringBuilder()).append("PFLMModelsKey").toString()
-					);
-			if(waitTime == 0) {
-				s = "key.PFLM wait";
-				ModLoader.registerKey(this, new KeyBinding(s, 26), keyFlag);
-				ModLoader.addLocalization(
-						(new StringBuilder()).append(s).toString(),
-						(new StringBuilder()).append("PFLMWait").toString()
-						);
-			}
-/*//147delete
+			/*//147delete
 			int ID = ModLoader.getUniqueEntityId();
 *///147delete
 //-@-147
 			Map map = (Map) Modchu_Reflect.getFieldObject(EntityList.class, "field_75623_d", "IDtoClassMapping");
 			int ID = -1;
 			if (map != null) {
-				for(int i = 0; i < 3000; i++) {
+				for(int i = 64; i < 3000; i++) {
 					//Modchu_Debug.mDebug("i"+i+" !map.containsKey(i) = "+(!map.containsKey(i)));
 					if (!map.containsKey(i)) {
 						ID = i;
@@ -2689,19 +2699,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			if (guiMultiPngSaveButton
 					&& ID > -1) ModLoader.registerEntityID(PFLM_EntityPlayerDummy.class, "PFLM_EntityPlayerDummy", ID);
 		}
-		String s = "key.Sit";
-		ModLoader.registerKey(this, new KeyBinding(s, 39), keyFlag);
-		ModLoader.addLocalization(
-					(new StringBuilder()).append(s).toString(),
-					(new StringBuilder()).append("Sit").toString()
-					);
-		s = "key.LieDown";
-		ModLoader.registerKey(this, new KeyBinding(s, 27), keyFlag);
-		ModLoader.addLocalization(
-				(new StringBuilder()).append(s).toString(),
-				(new StringBuilder()).append("LieDown").toString()
-				);
-		shortcutKeysinit();
 		if (isModelSize) {
 /*//110delete
 //-@-100
@@ -3128,7 +3125,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     }
 
 	public static void shortcutKeysinit() {
-		boolean keyFlag = mod_pflm_playerformlittlemaid.playerFormLittleMaidVersion > 129 ? isForge : false;
+		boolean keyFlag = mod_pflm_playerformlittlemaid.playerFormLittleMaidVersion > 129 ? mod_Modchu_ModchuLib.isForge : false;
 		String s;
 		for(int i = 0; i < maxShortcutKeys;i++) {
 			if (shortcutKeysUse[i]) {
@@ -3288,7 +3285,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				&& !MultiModelBaseBiped.class.isInstance(models[0])) {
 			//Modchu_Debug.mDebug("getTextureBox !MultiModelBaseBiped s="+s);
 			s = lastIndexProcessing(s, "_");
-			Class c = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName(new StringBuilder().append(modelClassName).append("_").append(s).toString()), false);
+			String s1 = s.equals("default") ? mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName(new StringBuilder().append(modelClassName).toString()) : mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName(new StringBuilder().append(modelClassName).append("_").append(s).toString());
+			Class c = Modchu_Reflect.loadClass(s1, false);
 			if (c != null) {
 				//Modchu_Debug.mDebug("getTextureBox newInstance s ="+s);
 				models[0] = (MultiModelBaseBiped) Modchu_Reflect.newInstance(c, new Class[]{ float.class }, new Object[]{ 0.0F });
@@ -3439,19 +3437,23 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public static Object[] getTextureBoxModels(Object ltb) {
-		return (Object[]) Modchu_Reflect.getFieldObject(MMM_TextureBox, "models", ltb);
+		if (ltb != null) return (Object[]) Modchu_Reflect.getFieldObject(MMM_TextureBox, "models", ltb);
+		return null;
 	}
 
 	public static boolean getTextureBoxHasArmor(Object ltb) {
-		return (Boolean) Modchu_Reflect.invokeMethod(MMM_TextureBox, "hasArmor", ltb);
+		if (ltb != null) return (Boolean) Modchu_Reflect.invokeMethod(MMM_TextureBox, "hasArmor", ltb);
+		return false;
 	}
 
 	public static boolean getTextureBoxHasColor(Object ltb, int i) {
-		return (Boolean) Modchu_Reflect.invokeMethod(MMM_TextureBox, "hasColor", new Class[]{ int.class }, ltb, new Object[]{ i });
+		if (ltb != null) return (Boolean) Modchu_Reflect.invokeMethod(MMM_TextureBox, "hasColor", new Class[]{ int.class }, ltb, new Object[]{ i });
+		return false;
 	}
 
 	public static String getTextureBoxPackegeName(Object ltb) {
-		return (String) Modchu_Reflect.getFieldObject(MMM_TextureBox, "packegeName", ltb);
+		if (ltb != null) return (String) Modchu_Reflect.getFieldObject(MMM_TextureBox, "packegeName", ltb);
+		return null;
 	}
 
 	public static int textureManagerTexturesSize() {
@@ -3461,7 +3463,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public static Object textureManagerTexturesGet(int i) {
 		List list = (List) Modchu_Reflect.getFieldObject(MMM_TextureManager, "textures");
-		return list.get(i);
+		return list != null
+				&& i > -1 ? list.get(i) : null;
 	}
 
 	public static float[] getArmorModelsSize(Object o) {

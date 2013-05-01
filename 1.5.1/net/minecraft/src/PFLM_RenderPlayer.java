@@ -66,7 +66,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 //@-@125
 		}
 //-@-125
-		if (mod_PFLM_PlayerFormLittleMaid.isForge) {
+		if (mod_Modchu_ModchuLib.isForge) {
 			ForgeHooksClient = Modchu_Reflect.loadClass("net.minecraftforge.client.ForgeHooksClient");
 		}
 //@-@125
@@ -129,7 +129,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		String a1 = itemarmor.renderIndex < armorFilename.length ? armorFilename[itemarmor.renderIndex] : armorFilename[armorFilename.length - 1];
     		if (flag) {
 //-@-125
-    			if (mod_PFLM_PlayerFormLittleMaid.isForge) {
+    			if (mod_Modchu_ModchuLib.isForge) {
 /*//147delete
     				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
     				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });

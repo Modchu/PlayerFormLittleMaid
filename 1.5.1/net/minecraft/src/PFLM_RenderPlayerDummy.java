@@ -31,7 +31,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		modelBasicOrig[1] = new MultiModel(0.1F);
 		modelBasicOrig[2] = new MultiModel(0.5F);
 		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "field_77110_j", "armorFilenamePrefix");
-		if (mod_PFLM_PlayerFormLittleMaid.isForge) {
+		if (mod_Modchu_ModchuLib.isForge) {
 			ForgeHooksClient = PFLM_RenderPlayer.ForgeHooksClient;
 		}
 	}
@@ -84,7 +84,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     		}
     		String a1 = itemarmor.renderIndex < armorFilenamePrefix.length ? armorFilenamePrefix[itemarmor.renderIndex] : armorFilenamePrefix[armorFilenamePrefix.length - 1];
     		if (flag) {
-    			if (mod_PFLM_PlayerFormLittleMaid.isForge) {
+    			if (mod_Modchu_ModchuLib.isForge) {
     				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
     				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });
     				if (i == 1) {
