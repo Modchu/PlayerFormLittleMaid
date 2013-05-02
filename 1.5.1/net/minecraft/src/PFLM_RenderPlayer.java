@@ -497,7 +497,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     				renderPassModel.setLivingAnimations(entityliving, f8, f7, f1);
 //-@-132
     				if (mod_Modchu_ModchuLib.useInvisibilityArmor) {
-    					if (!entityliving.getHasActivePotion()) {
+    					if (!entityliving.isInvisible()) {
 //@-@132
     						renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
 //-@-132
@@ -547,7 +547,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     					GL11.glMatrixMode(GL11.GL_MODELVIEW);
 //-@-132
     					if (mod_Modchu_ModchuLib.useInvisibilityArmor) {
-    						if (!entityliving.getHasActivePotion()) {
+    						if (!entityliving.isInvisible()) {
 //@-@132
     							renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
 //-@-132
@@ -610,7 +610,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		}
     		// b173deleteGL11.glColor4f(f9, f9, f9, 1.0F);
 //-@-132
-    		if (entityliving.getHasActivePotion()) {
+    		if (entityliving.isInvisible()) {
 //@-@132
     			modelData.modelMain.modelArmorInner.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
     			modelData.modelFATT.modelArmorInner.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
@@ -901,7 +901,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			&& renderManager != null
     			&& loadDownloadableImageTexture(entityplayer.cloakUrl, null)
 //-@-132
-    			&& !entityplayer.getHasActivePotion() && !entityplayer.getHideCape()
+    			&& !entityplayer.isInvisible() && !entityplayer.getHideCape()
 //@-@132
     			) {
     		GL11.glPushMatrix();
@@ -1102,7 +1102,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				// b173deleteGL11.glColor4f(f9, f9, f9, f10);
 //-@-132
 				if (mod_Modchu_ModchuLib.useInvisibilityArmor) {
-					if (!entityliving.getHasActivePotion()) {
+					if (!entityliving.isInvisible()) {
 //@-@132
 						((MultiModelBaseBiped) modelData.modelFATT.modelArmorInner).renderFirstPersonHand(0.0625F);
 						((MultiModelBaseBiped) modelData.modelFATT.modelArmorOuter).renderFirstPersonHand(0.0625F);
@@ -1156,7 +1156,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 					GL11.glMatrixMode(GL11.GL_MODELVIEW);
 //-@-132
 					if (mod_Modchu_ModchuLib.useInvisibilityArmor) {
-						if (!entityliving.getHasActivePotion()) {
+						if (!entityliving.isInvisible()) {
 //@-@132
 							((MultiModelBaseBiped) modelData.modelFATT.modelArmorInner).renderFirstPersonHand(0.0625F);
 							((MultiModelBaseBiped) modelData.modelFATT.modelArmorOuter).renderFirstPersonHand(0.0625F);
@@ -2050,7 +2050,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     {
     	PFLM_ModelData modelData = getPlayerData((EntityPlayer) par1EntityLiving);
 //-@-132
-    	if (par1EntityLiving.getHasActivePotion()
+    	if (par1EntityLiving.isInvisible()
     			&& mod_Modchu_ModchuLib.useInvisibilityBody) {
     		((MultiModelBaseBiped) modelData.modelMain.modelArmorInner).isRendering = false;
     	} else {
