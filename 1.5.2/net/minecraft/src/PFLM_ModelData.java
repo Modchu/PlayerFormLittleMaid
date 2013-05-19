@@ -13,8 +13,8 @@ import net.minecraft.client.Minecraft;
 
 public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 
-	public MMM_ModelDuo modelMain;
-	public MMM_ModelDuo modelFATT;
+	public MMM_ModelBaseDuo modelMain;
+	public MMM_ModelBaseDuo modelFATT;
 	public EntityLiving owner;
 	private Minecraft mc = Minecraft.getMinecraft();
 	private static Map<String, Integer> caps;
@@ -74,11 +74,11 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 *///b173delete
 
 	public PFLM_ModelData(RenderLiving renderLiving) {
-		modelMain = new MMM_ModelDuo(renderLiving);
+		modelMain = new MMM_ModelBaseDuo(renderLiving);
 		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
 		modelMain.textureInner = new String [4];
 		modelMain.textureOuter = new String [4];
-		modelFATT = new MMM_ModelDuo(renderLiving);
+		modelFATT = new MMM_ModelBaseDuo(renderLiving);
 		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
 		modelFATT.textureInner = new String [4];
 		modelFATT.textureOuter = new String [4];
@@ -91,6 +91,11 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	}
 
 	@Override
+	public boolean setCapsValue(MultiModelBaseBiped model, MMM_IModelCaps entityCaps, int pIndex, Object... pArg) {
+		return false;
+	}
+
+	@Override
 	public boolean setCapsValue(MultiModelBaseBiped model, int pIndex, Object... pArg) {
 		switch (pIndex) {
 		case caps_maidColor:
@@ -100,6 +105,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMaidColor((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_dominantArm:
 			if (pArg != null
 			&& pArg.length > 0
@@ -107,6 +113,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setHandedness((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_isOpenInv:
 			if (pArg != null
 			&& pArg.length > 0
@@ -114,6 +121,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setIsInventory((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_localFlag:
 			if (pArg != null
 			&& pArg.length > 0
@@ -121,6 +129,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setLocalFlag((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_isPlayer:
 			if (pArg != null
 			&& pArg.length > 0
@@ -128,6 +137,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setIsPlayer((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_partsSetFlag:
 			if (pArg != null
 			&& pArg.length > 0
@@ -135,6 +145,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setPartsSetFlag((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_initFlag:
 			if (pArg != null
 			&& pArg.length > 0
@@ -142,6 +153,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setInitFlag((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_skinMode:
 			if (pArg != null
 			&& pArg.length > 0
@@ -149,6 +161,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setSkinMode((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_isWaitTime:
 			if (pArg != null
 			&& pArg.length > 0
@@ -156,6 +169,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setIsWaitTime((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_isWait:
 			if (pArg != null
 			&& pArg.length > 0
@@ -163,6 +177,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setIsWait((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_isSitting:
 			if (pArg != null
 			&& pArg.length > 0
@@ -170,6 +185,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setIsSitting((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_isSleeping:
 			if (pArg != null
 			&& pArg.length > 0
@@ -177,6 +193,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setIsSleeping((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_isActivated:
 			if (pArg != null
 			&& pArg.length > 0
@@ -184,6 +201,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setIsActivated((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_isWaitFSetFlag:
 			if (pArg != null
 			&& pArg.length > 0
@@ -191,6 +209,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setIsWaitFSetFlag((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_modelScale:
 			if (pArg != null
 			&& pArg.length > 0
@@ -198,6 +217,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setModelScale((Float) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_isWaitF:
 			if (pArg != null
 			&& pArg.length > 0
@@ -205,6 +225,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setIsWaitF((Float) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_shortcutKeysAction:
 			if (pArg != null
 			&& pArg.length > 0
@@ -212,26 +233,29 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setShortcutKeysAction((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_actionInit:
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) {
-				if (modelMain.modelArmorInner instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelArmorInner).actionInit((Integer) pArg[0]);
-				if (modelMain.modelArmorOuter instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelArmorOuter).actionInit((Integer) pArg[0]);
-				if (modelFATT.modelArmorInner instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelArmorInner).actionInit((Integer) pArg[0]);;
-				if (modelFATT.modelArmorOuter instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelArmorOuter).actionInit((Integer) pArg[0]);
+				if (modelMain.modelInner instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelInner).actionInit(this, (Integer) pArg[0]);
+				if (modelMain.modelOuter instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelOuter).actionInit(this, (Integer) pArg[0]);
+				if (modelFATT.modelInner instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelInner).actionInit(this, (Integer) pArg[0]);;
+				if (modelFATT.modelOuter instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelOuter).actionInit(this, (Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_actionRelease:
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) {
-				if (modelMain.modelArmorInner instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelArmorInner).actionRelease((Integer) pArg[0]);
-				if (modelMain.modelArmorOuter instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelArmorOuter).actionRelease((Integer) pArg[0]);
-				if (modelFATT.modelArmorInner instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelArmorInner).actionRelease((Integer) pArg[0]);;
-				if (modelFATT.modelArmorOuter instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelArmorOuter).actionRelease((Integer) pArg[0]);
+				if (modelMain.modelInner instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelInner).actionRelease(this, (Integer) pArg[0]);
+				if (modelMain.modelOuter instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelOuter).actionRelease(this, (Integer) pArg[0]);
+				if (modelFATT.modelInner instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelInner).actionRelease(this, (Integer) pArg[0]);;
+				if (modelFATT.modelOuter instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelOuter).actionRelease(this, (Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_runActionNumber:
 			if (pArg != null
 			&& pArg.length > 0
@@ -239,6 +263,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setRunActionNumber((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_actionCount:
 			if (pArg != null
 			&& pArg.length > 0
@@ -246,6 +271,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setActionCount((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_actionFlag:
 			if (pArg != null
 			&& pArg.length > 0
@@ -253,11 +279,15 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setActionFlag((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_actionSpeed:
 			if (pArg != null
 			&& pArg.length > 0
-			&& pArg[0] != null) setActionSpeed((Float) pArg[0]);
-			return true;
+			&& pArg[0] != null) {
+				setActionSpeed((Float) pArg[0]);
+				return true;
+			}
+			return false;
 		case caps_actionReverse:
 			if (pArg != null
 			&& pArg.length > 0
@@ -265,6 +295,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setActionReverse((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_changeModelFlag:
 			if (pArg != null
 			&& pArg.length > 0
@@ -272,6 +303,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setChangeModelFlag((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_motionResetFlag:
 			if (pArg != null
 			&& pArg.length > 0
@@ -279,6 +311,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMotionResetFlag((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 /*
 		case caps_partsSetInit:
 			if (pArg != null
@@ -295,6 +328,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setShortcutKeysActionInitFlag((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_mushroomConfusionCount:
 			if (pArg != null
 			&& pArg.length > 0
@@ -302,6 +336,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMushroomConfusionCount((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_mushroomConfusionType:
 			if (pArg != null
 			&& pArg.length > 0
@@ -309,6 +344,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMushroomConfusionType((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_mushroomConfusionLeft:
 			if (pArg != null
 			&& pArg.length > 0
@@ -316,6 +352,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMushroomConfusionLeft((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_mushroomConfusionRight:
 			if (pArg != null
 			&& pArg.length > 0
@@ -323,6 +360,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMushroomConfusionRight((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_mushroomConfusionFront:
 			if (pArg != null
 			&& pArg.length > 0
@@ -330,6 +368,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMushroomConfusionFront((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_mushroomConfusionBack:
 			if (pArg != null
 			&& pArg.length > 0
@@ -337,6 +376,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMushroomConfusionBack((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_motionSetFlag:
 			if (pArg != null
 			&& pArg.length > 0
@@ -344,6 +384,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMotionSetFlag((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_mushroomBack:
 			if (pArg != null
 			&& pArg.length > 0
@@ -351,6 +392,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMushroomBack((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_mushroomLeft:
 			if (pArg != null
 			&& pArg.length > 0
@@ -358,6 +400,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMushroomLeft((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_mushroomRight:
 			if (pArg != null
 			&& pArg.length > 0
@@ -365,17 +408,19 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setMushroomRight((Boolean) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_changeColor:
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) {
-				Modchu_Debug.mDebug("caps_changeColor modelFATT.modelArmorInner instanceof  MultiModelBaseBiped ? "+(modelFATT.modelArmorInner instanceof  MultiModelBaseBiped));
-				if (modelMain.modelArmorInner instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelMain.modelArmorInner).changeColor(this);
-				if (modelMain.modelArmorOuter instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelMain.modelArmorOuter).changeColor(this);
-				if (modelFATT.modelArmorInner instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelArmorInner).changeColor(this);
-				if (modelFATT.modelArmorOuter instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelArmorOuter).changeColor(this);
+				Modchu_Debug.mDebug("caps_changeColor modelFATT.modelInner instanceof  MultiModelBaseBiped ? "+(modelFATT.modelInner instanceof  MultiModelBaseBiped));
+				if (modelMain.modelInner instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelMain.modelInner).changeColor(this);
+				if (modelMain.modelOuter instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelMain.modelOuter).changeColor(this);
+				if (modelFATT.modelInner instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelInner).changeColor(this);
+				if (modelFATT.modelOuter instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelOuter).changeColor(this);
 				return true;
 			}
+			return false;
 		case caps_indexOfAllVisible:
 			if (pArg != null
 			&& pArg.length > 1
@@ -386,6 +431,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				else indexOfAllSetVisible((String) pArg[0], (Integer) pArg[1]);
 				return true;
 			}
+			return false;
 		case caps_showModelSettingReflects:
 			if (pArg != null
 			&& pArg.length > 0
@@ -393,6 +439,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				showModelSettingReflects((Integer) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_showPartsHideList:
 			if (pArg != null
 			&& pArg.length > 0
@@ -400,6 +447,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				addShowPartsHideList((String[]) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_showPartsRenemeMap:
 			if (pArg != null
 			&& pArg.length > 1
@@ -408,6 +456,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				addShowPartsRenemeMap((String[]) pArg[0], (String[]) pArg[1]);
 				return true;
 			}
+			return false;
 /*
 		case caps_showPartsNemeMap:
 			if (pArg != null
@@ -425,6 +474,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setTextureName((String) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_textureArmorName:
 			if (pArg != null
 			&& pArg.length > 0
@@ -432,6 +482,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setTextureArmorName((String) pArg[0]);
 				return true;
 			}
+			return false;
 		case caps_defaultShowPartsMap:
 			if (pArg != null
 			&& pArg.length > 2
@@ -441,6 +492,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				putDefaultShowPartsMap((String) pArg[0], (Integer) pArg[1], (Boolean) pArg[2]);
 				return true;
 			}
+			return false;
 		case caps_setLivingAnimationsBefore:
 			if (pArg != null
 			&& pArg.length > 3
@@ -451,6 +503,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setLivingAnimationsBefore((MMM_ModelMultiBase) pArg[0], (Float) pArg[1], (Float) pArg[2], (Float) pArg[3]);
 				return true;
 			}
+			return false;
 		case caps_setLivingAnimationsAfter:
 			if (pArg != null
 			&& pArg.length > 3
@@ -461,6 +514,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setLivingAnimationsAfter((MMM_ModelMultiBase) pArg[0], (Float) pArg[1], (Float) pArg[2], (Float) pArg[3]);
 				return true;
 			}
+			return false;
 		case caps_setRotationAnglesBefore:
 			if (pArg != null
 			&& pArg.length > 6
@@ -474,6 +528,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setRotationAnglesBefore((MMM_ModelMultiBase) pArg[0], (Float) pArg[1] ,(Float) pArg[2], (Float) pArg[3], (Float) pArg[4], (Float) pArg[5], (Float) pArg[6]);
 				return true;
 			}
+			return false;
 		case caps_setRotationAnglesAfter:
 			if (pArg != null
 			&& pArg.length > 6
@@ -487,6 +542,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				setRotationAnglesAfter((MMM_ModelMultiBase) pArg[0], (Float) pArg[1] ,(Float) pArg[2], (Float) pArg[3], (Float) pArg[4], (Float) pArg[5], (Float) pArg[6]);
 				return true;
 			}
+			return false;
 		}
 		return false;
 	}
@@ -499,6 +555,11 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	@Override
 	public Object getCapsValue(int pIndex, Object ...pArg) {
 		return getCapsValue(null, pIndex, pArg);
+	}
+
+	@Override
+	public Object getCapsValue(MultiModelBaseBiped model, MMM_IModelCaps entityCaps, int pIndex, Object ...pArg) {
+		return null;
 	}
 
 	@Override
@@ -646,18 +707,19 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			if (pArg != null
 			&& pArg.length > 1
 			&& pArg[0] != null
-			&& pArg[1] != null) return getModelRendererName((ModelRenderer) pArg[0], (Integer) pArg[1]);
+			&& pArg[1] != null) return getModelRendererName((MMM_ModelRenderer) pArg[0], (Integer) pArg[1]);
 		case caps_Entity:
 				return owner;
 		}
-		if (model != null) ;else return modelMain.modelArmorInner.getCapsValue(pIndex, pArg);
+		if (model != null) ;else return modelMain.modelInner.getCapsValue(pIndex, pArg);
 		return null;
 	}
 
-	private String getModelRendererName(ModelRenderer modelRenderer, int i) {
-		ModelRenderer modelRenderer2;
+	private String getModelRendererName(MMM_ModelRenderer modelRenderer, int i) {
+		MMM_ModelRenderer modelRenderer2;
 		Object model = getModel(i);
-		HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, textureName, i);
+		HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+		Modchu_Debug.mDebug("getModelRendererName modelRendererMap != null ?"+(modelRendererMap != null));
 		Iterator<Entry<String, Field>> iterator = modelRendererMap.entrySet().iterator();
 		Entry<String, Field> entry;
 		Field f;
@@ -668,13 +730,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			s = entry.getKey();
 			f = entry.getValue();
 			o = null;
+			Modchu_Debug.mDebug("getModelRendererName s="+s);
 			try {
 				o = f.get(model);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			if (o != null) {
-				modelRenderer2 = (ModelRenderer) o;
+				modelRenderer2 = (MMM_ModelRenderer) o;
 				if (modelRenderer2.equals(modelRenderer)) {
 					return s;
 				}
@@ -706,7 +769,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			partsSetFlag = 1;
 		}
 		if(partsSetFlag == 1) {
-			Modchu_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
+			PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
 			multiModelBaseBiped.defaultPartsSettingBefore();
 			multiModelBaseBiped.defaultPartsSettingAfter();
 			partsSetFlag = 2;
@@ -729,12 +792,12 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				&& model != null
 				&& model instanceof MultiModelBaseBiped) ;else return;
 		MultiModelBaseBiped multiModelBaseBiped = (MultiModelBaseBiped) model;
-		if (Modchu_ModelCapsHelper.getCapsValueBoolean(multiModelBaseBiped, caps_firstPerson)) ((MultiModelBaseBiped) model).setRotationAnglesfirstPerson(f, f1, f2, f3, f4, f5);
-		if (Modchu_ModelCapsHelper.getCapsValueBoolean(multiModelBaseBiped, caps_shortcutKeysAction)) {
-			if (model instanceof MultiModelAction) ((MultiModelAction) model).action(f, f1, f2, f3, f4, f5, Modchu_ModelCapsHelper.getCapsValueInt(multiModelBaseBiped, caps_runActionNumber));
-			if (Modchu_ModelCapsHelper.getCapsValueBoolean(multiModelBaseBiped, caps_actionFlag)) {
-				multiModelBaseBiped.setCapsValue(caps_actionSpeed, 0.0F);
-				multiModelBaseBiped.setCapsValue(caps_actionFlag, false);
+		if (Modchu_ModelCapsHelper.getCapsValueBoolean(multiModelBaseBiped, caps_firstPerson)) ((MultiModelBaseBiped) model).setRotationAnglesfirstPerson(f, f1, f2, f3, f4, f5, this);
+		if (getShortcutKeysAction()) {
+			if (model instanceof MultiModelAction) ((MultiModelAction) model).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
+			if (getActionFlag()) {
+				setActionSpeed(0.0F);
+				setActionFlag(false);
 			}
 		}
 	}
@@ -742,13 +805,13 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private Object getModel(int i) {
 		switch(i) {
 		case 0:
-			return modelMain.modelArmorInner;
+			return modelMain.modelInner;
 		case 1:
-			return modelMain.modelArmorOuter;
+			return modelMain.modelOuter;
 		case 2:
-			return modelFATT.modelArmorInner;
+			return modelFATT.modelInner;
 		case 3:
-			return modelFATT.modelArmorOuter;
+			return modelFATT.modelOuter;
 		}
 		return null;
 	}
@@ -802,11 +865,11 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	}
 
 	private HashMap<String, Boolean> getShowPartsMap(int i) {
-		return Modchu_Config.getConfigShowPartsMap(textureName, maidColor, i);
+		return PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
 	}
 
 	private int getShowPartsMapBoolean(String s, int i) {
-		return Modchu_Config.getConfigShowPartsMapBoolean(textureName, s, maidColor, i);
+		return PFLM_Config.getConfigShowPartsMapBoolean(textureName, s, maidColor, i);
 	}
 
 	private ItemStack getArmorItemInSlot(int i) {
@@ -817,7 +880,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private ItemStack getHeadMount() {
 		if (!(owner instanceof EntityPlayer)) return null;
 		ItemStack itemStack = ((EntityPlayer) owner).inventory.getStackInSlot(9);
-		int addSupport = ((MultiModelBaseBiped) modelMain.modelArmorInner).addSupportChecks(itemStack);
+		int addSupport = ((MultiModelBaseBiped) modelMain.modelInner).addSupportChecks(itemStack);
 		return addSupport != 3
 				&& addSupport != 4 ? itemStack : null;
 	}
@@ -1192,20 +1255,16 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     }
 
     private String getTexture(String s, int i) {
-    	if (owner instanceof EntityPlayer) {
-    		//Modchu_Debug.mDebug("PFLM_ModelData owner instanceof EntityPlayer getTexture ="+mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(s, i));
-    		return mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(s, i);
-    	}
-    	return null;
+    	return mod_Modchu_ModchuLib.textureManagerGetTexture(s, i);
     }
 
 
     private String getArmorTexture(String s, int i) {
-    	return mod_PFLM_PlayerFormLittleMaid.textureManagerGetArmorTextureName(s, i, new ItemStack(Item.helmetDiamond));
+    	return mod_Modchu_ModchuLib.textureManagerGetArmorTexture(s, i, new ItemStack(Item.helmetDiamond));
     }
 
     private String getArmorTexture(String s, int i, ItemStack itemStack) {
-    	return mod_PFLM_PlayerFormLittleMaid.textureManagerGetArmorTextureName(s, i, itemStack);
+    	return mod_Modchu_ModchuLib.textureManagerGetArmorTexture(s, i, itemStack);
     }
 
     /**
@@ -1213,16 +1272,16 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
      */
     private void showModelSettingReflects(int i) {
     	//Modchu_Debug.mDebug("showModelSettingReflects i="+i);
-    	HashMap<String, Boolean> showPartsMap = Modchu_Config.getConfigShowPartsMap(textureName, maidColor, i);
+    	HashMap<String, Boolean> showPartsMap = PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
     	HashMap<String, Boolean> defaultShowPartsMap = getDefaultShowPartsMap(i);
     	Object model = getModel(i);
-    	HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, textureName, i);
+    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
     	//Modchu_Debug.mDebug("showModelSettingReflects textureName="+textureName+" modelRendererMap != null ?"+(modelRendererMap != null));
     	if (modelRendererMap != null) ;else return;
     	if (defaultShowPartsMap != null) settingReflects(modelRendererMap, defaultShowPartsMap, null, null, i);
-    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = Modchu_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
+    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
     	if (showPartsMap != null
-    			&& !showPartsMap.isEmpty()) settingReflects(modelRendererMap, showPartsMap, Modchu_Config.getIndexOfAllSetVisibleMap(textureName, i), indexOfAllSetVisibleBooleanMap, i);
+    			&& !showPartsMap.isEmpty()) settingReflects(modelRendererMap, showPartsMap, PFLM_Config.getIndexOfAllSetVisibleMap(textureName, i), indexOfAllSetVisibleBooleanMap, i);
     }
 
     private void settingReflects(HashMap<String, Field> modelRendererMap, HashMap<String, Boolean> map,
@@ -1230,7 +1289,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     	Object model = getModel(i);
     	Field f = null;
     	String s2 = null;
-    	ModelRenderer modelRenderer = null;
+    	MMM_ModelRenderer modelRenderer = null;
     	boolean b;
     	Iterator<Entry<String, Boolean>> iterator = map.entrySet().iterator();
     	Entry<String, Boolean> entry;
@@ -1246,11 +1305,11 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     			//Modchu_Debug.mDebug("showModelSettingReflects f != null");
     			try {
     				Object o = f.get(model);
-    				modelRenderer = o != null ? (ModelRenderer) o : null;
+    				modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
     				if (modelRenderer != null) {
     					((MultiModelBaseBiped) model).setCapsValue(caps_visible, modelRenderer, b, true);
-    					if (mod_PFLM_PlayerFormLittleMaid.ngPlayerModelList != null
-    							&& !mod_PFLM_PlayerFormLittleMaid.ngPlayerModelList.contains(textureName)) mod_PFLM_PlayerFormLittleMaid.ngPlayerModelList.add(textureName);
+    					if (mod_Modchu_ModchuLib.ngPlayerModelList != null
+    							&& !mod_Modchu_ModchuLib.ngPlayerModelList.contains(textureName)) mod_Modchu_ModchuLib.ngPlayerModelList.add(textureName);
     				}
     			} catch (Exception e) {
     				//e.printStackTrace();
@@ -1273,7 +1332,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     				//Modchu_Debug.mDebug("showModelSettingReflects indexOfAllSetVisibleMap f != null");
     				try {
     					Object o = f.get(model);
-    					modelRenderer = o != null ? (ModelRenderer) o : null;
+    					modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
     					if (modelRenderer != null) {
     						b = modelRenderer.showModel;
     						for(int i1 = 0; i1 < list.size(); i1++) {
@@ -1285,7 +1344,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     								//Modchu_Debug.mDebug("showModelSettingReflects indexOfAllSetVisibleList f != null");
     								try {
     									o = f.get(model);
-    								modelRenderer = o != null ? (ModelRenderer) o : null;
+    								modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
     								if (modelRenderer != null) {
     									((MultiModelBaseBiped) model).setCapsValue(caps_visible, modelRenderer, b, true);
     								}
@@ -1321,7 +1380,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     					//Modchu_Debug.mDebug("showModelSettingReflects indexOfAllSetVisibleBooleanMap f != null");
     					try {
     						Object o = f.get(model);
-    						modelRenderer = o != null ? (ModelRenderer) o : null;
+    						modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
     						if (modelRenderer != null) {
     							((MultiModelBaseBiped) model).setCapsValue(caps_visible, modelRenderer, b, true);
     						}
@@ -1365,8 +1424,8 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
      */
     private void indexOfAllSetVisible(String s, int i) {
     	MultiModelBaseBiped model = (MultiModelBaseBiped) getModel(i);
-    	List<String> indexOfAllSetVisibleList = Modchu_Config.getIndexOfAllSetVisibleMap(textureName, s, i);
-    	HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, textureName, i);
+    	List<String> indexOfAllSetVisibleList = PFLM_Config.getIndexOfAllSetVisibleMap(textureName, s, i);
+    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
     	if (modelRendererMap != null
     			&& modelRendererMap.containsKey(s)) ;else return;
     	String s0 = null;
@@ -1375,7 +1434,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     	try {
     		Object o = f.get(model);
     		if (o != null) ;else return;
-    		boolean b = ((ModelRenderer) o).showModel;
+    		boolean b = ((MMM_ModelRenderer) o).showModel;
     		Iterator<Entry<String, Field>> iterator = modelRendererMap.entrySet().iterator();
     		Entry<String, Field> entry;
     		while(iterator.hasNext()) {
@@ -1387,7 +1446,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     						&& !s0.equals(s)) {
     					indexOfAllSetVisibleList.add(s0);
     					//Modchu_Debug.mDebug("indexOfAllSetVisible add s0="+s0);
-    					Modchu_Config.setIndexOfAllSetVisibleMap(textureName, s, i, indexOfAllSetVisibleList);
+    					PFLM_Config.setIndexOfAllSetVisibleMap(textureName, s, i, indexOfAllSetVisibleList);
     				}
     			}
     		}
@@ -1400,20 +1459,20 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
      * indexOfで検索対象のパーツをまとめて指定booleanにセットするListへの追加
      */
     private void indexOfAllSetVisible(String s, int i, boolean b) {
-    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = Modchu_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
+    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
     	indexOfAllSetVisibleBooleanMap.put(s, b);
-    	Modchu_Config.setIndexOfAllSetVisibleBooleanMap(textureName, i, indexOfAllSetVisibleBooleanMap);
+    	PFLM_Config.setIndexOfAllSetVisibleBooleanMap(textureName, i, indexOfAllSetVisibleBooleanMap);
 /*
-    	HashMap<Integer, String> nemeMap = Modchu_Config.getConfigShowPartsNemeMap(s, i);
+    	HashMap<Integer, String> nemeMap = PFLM_Config.getConfigShowPartsNemeMap(s, i);
     	MultiModelBaseBiped model = (MultiModelBaseBiped) getModel(i);
-    	HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, textureName, i);
+    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
     	if (nemeMap != null) ;else return;
     	String s0 = null;
     	for(int i1 = 0; i1 < nemeMap.size(); i1++) {
     		s0 = nemeMap.get(i1);
     		if (s0.indexOf(s) > -1) {
     			try {
-    				model.setCapsValue(caps_visible, (ModelRenderer) modelRendererMap.get(s0).get(model), b);
+    				model.setCapsValue(caps_visible, (MMM_ModelRenderer) modelRendererMap.get(s0).get(model), b);
     			} catch (Exception e) {
     				e.printStackTrace();
     			}
@@ -1423,15 +1482,15 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     }
 
     private HashMap<String, Boolean> getDefaultShowPartsMap(int i) {
-    	return Modchu_Config.getDefaultShowPartsMap(textureName, i);
+    	return PFLM_Config.getDefaultShowPartsMap(textureName, i);
     }
 
     private boolean getDefaultShowPartsMapBoolean(String s, int i) {
-    	return Modchu_Config.getDefaultShowPartsMapBoolean(textureName, s, i);
+    	return PFLM_Config.getDefaultShowPartsMapBoolean(textureName, s, i);
     }
 
     private void putDefaultShowPartsMap(String s, int i, boolean b) {
-    	Modchu_Config.putDefaultShowPartsMap(textureName, s, i, b);
+    	PFLM_Config.putDefaultShowPartsMap(textureName, s, i, b);
     }
 
 	public int getCapsValueInt(int pIndex, Object ...pArg) {
@@ -1470,4 +1529,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		return getCapsValue(null, pIndex, pArg);
 	}
 *///151delete
+
+	@Override
+	public Object getCapsValue(MMM_IModelCaps entityCaps, int pIndex, Object... pArg) {
+		return null;
+	}
+
+	@Override
+	public boolean setCapsValue(MMM_IModelCaps entityCaps, int pIndex, Object... pArg) {
+		return false;
+	}
 }

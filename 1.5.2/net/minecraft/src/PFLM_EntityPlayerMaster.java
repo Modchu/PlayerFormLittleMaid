@@ -165,9 +165,9 @@ public class PFLM_EntityPlayerMaster {
 				&& mod_PFLM_PlayerFormLittleMaid.isModelSize
 				&& !mod_PFLM_PlayerFormLittleMaid.isMulti
 				&& !mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-			return (double) player.height * mod_PFLM_PlayerFormLittleMaid.getMountedYOffset();
+			return (float) player.height * mod_PFLM_PlayerFormLittleMaid.getMountedYOffset();
 		}
-		return (double) player.height * 0.75D;
+		return (float) player.height * 0.75F;
 	}
 
 	protected void resetHeight() {
