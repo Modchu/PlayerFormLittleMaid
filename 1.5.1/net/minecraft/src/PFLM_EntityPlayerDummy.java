@@ -2,11 +2,11 @@ package net.minecraft.src;
 
 public class PFLM_EntityPlayerDummy extends EntityLiving {
 
-	public String armorPrefix[] = new String[] {"", "", "", ""};
-	public Object textureModel[];
+	public String[] armorPrefix = new String[] {"", "", "", ""};
+	public Object[] textureModel;
 	public String textureName;
-	public String textureArmor0[];
-	public String textureArmor1[];
+	public String[] textureArmor0;
+	public String[] textureArmor1;
 	public String textureArmorName;
 	public boolean showArmor;
 	public boolean others;

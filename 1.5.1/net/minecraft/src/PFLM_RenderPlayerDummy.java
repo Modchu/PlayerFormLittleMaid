@@ -1,6 +1,9 @@
 package net.minecraft.src;
 
+import java.io.File;
 import java.lang.reflect.Method;
+
+import net.minecraft.client.Minecraft;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -8,28 +11,20 @@ import org.lwjgl.opengl.GL12;
 public class PFLM_RenderPlayerDummy extends RenderPlayer
 {
 	protected static MultiModelBaseBiped modelBasicOrig[];
-	public static MMM_ModelDuo modelMain;
-	public static MMM_ModelDuo modelFATT;
 	public static String[] armorFilenamePrefix;
 	private static final ItemStack[] armorItemStack = {new ItemStack(Item.helmetDiamond), new ItemStack(Item.plateDiamond), new ItemStack(Item.legsDiamond), new ItemStack(Item.bootsDiamond)};
 	private boolean checkGlEnableWrapper = true;
 	private boolean checkGlDisableWrapper = true;
+	public static PFLM_ModelData modelData;
 	public static Class ForgeHooksClient;
 
 	public PFLM_RenderPlayerDummy() {
 		super();
-		modelMain = new MMM_ModelDuo(this);
-		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
-		modelMain.textureInner = new String [4];
-		modelMain.textureOuter = new String [4];
-		modelFATT = new MMM_ModelDuo(this);
-		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
-		modelFATT.textureInner = new String [4];
-		modelFATT.textureOuter = new String [4];
 		modelBasicOrig = new MultiModel[3];
 		modelBasicOrig[0] = new MultiModel(0.0F);
 		modelBasicOrig[1] = new MultiModel(0.1F);
 		modelBasicOrig[2] = new MultiModel(0.5F);
+		modelData = new PFLM_ModelData(this);
 		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderPlayer.class, "field_77110_j", "armorFilenamePrefix");
 		if (mod_Modchu_ModchuLib.isForge) {
 			ForgeHooksClient = PFLM_RenderPlayer.ForgeHooksClient;
@@ -44,19 +39,19 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     	if (entity != null
     			&& entity.showArmor) ;else return byte0;
     	// アーマーの表示設定
-    	modelFATT.renderParts = i;
+    	modelData.modelFATT.renderParts = i;
     	ItemStack is = armorItemStack[i];
     	if (is != null && is.stackSize > 0) {
-    		modelFATT.showArmorParts(i);
+    		modelData.modelFATT.showArmorParts(i);
 //-@-b181
     		byte0 = (byte) (is.isItemEnchanted() ? 15 : 1);
 //@-@b181
     		armorTextureSetting(entity, is, i);
     		boolean flag1 = i == 1 ? true : false;
-    		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelMain.modelArmorInner);
+    		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.modelInner);
     		if (isBiped) {
-    			((MultiModelBaseBiped) modelFATT.modelArmorInner).setArmorBipedRightLegShowModel(flag1);
-    			((MultiModelBaseBiped) modelFATT.modelArmorInner).setArmorBipedLeftLegShowModel(flag1);
+    			((MultiModelBaseBiped) modelData.modelFATT.modelInner).setArmorBipedRightLegShowModel(modelData, flag1);
+    			((MultiModelBaseBiped) modelData.modelFATT.modelInner).setArmorBipedLeftLegShowModel(modelData, flag1);
     		}
     	}
     	return byte0;
@@ -67,10 +62,10 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     	int i2 = i;
     	String t = entity.textureArmorName;
     	//Modchu_Debug.mDebug("setArmorModel t="+t);
-    	boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelMain.modelArmorInner);
+    	boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.modelInner);
     	if (t != null) ;else t = isBiped ? "Biped" : "default";
-    	if (modelFATT.modelArmorOuter != null
-    			&& modelFATT.modelArmorInner != null) {
+    	if (modelData.modelFATT.modelOuter != null
+    			&& modelData.modelFATT.modelInner != null) {
     	} else {
     		modelArmorInit(entity, t);
     	}
@@ -90,20 +85,20 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     				if (i == 1) {
     					//Modchu_Debug.mDebug("i="+i+" t2="+t2+" t1="+t1);
     					for(int k = 0; k < 4; k++) {
-    						modelFATT.textureInner[i] = t2;
+    						modelData.modelFATT.textureInner[i] = t2;
     					}
     				}
-    				modelFATT.textureOuter[i] = t1;
+    				modelData.modelFATT.textureOuter[i] = t1;
     			} else {
-    				modelFATT.textureInner[i] = "/armor/" + a1 + "_" + 2 + ".png";
-    				modelFATT.textureOuter[i] = "/armor/" + a1 + "_" + 1 + ".png";
+    				modelData.modelFATT.textureInner[i] = "/armor/" + a1 + "_" + 2 + ".png";
+    				modelData.modelFATT.textureOuter[i] = "/armor/" + a1 + "_" + 1 + ".png";
     			}
     		}
     	} else {
-    		modelFATT.textureInner[i] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetArmorTextureName(t, 64, is);
-    		modelFATT.textureOuter[i] = mod_PFLM_PlayerFormLittleMaid.textureManagerGetArmorTextureName(t, 80, is);
-    		//Modchu_Debug.mDebug("modelFATT.textureOuter["+i+"]="+modelFATT.textureOuter[i]);
-    		//Modchu_Debug.mDebug("modelFATT.textureInner["+i+"]="+modelFATT.textureInner[i]);
+    		modelData.modelFATT.textureInner[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 64, is);
+    		modelData.modelFATT.textureOuter[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 80, is);
+    		//Modchu_Debug.mDebug("modelData.modelFATT.textureOuter["+i+"]="+modelData.modelFATT.textureOuter[i]);
+    		//Modchu_Debug.mDebug("modelData.modelFATT.textureInner["+i+"]="+modelData.modelFATT.textureInner[i]);
     	}
     }
 
@@ -112,13 +107,13 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	if (entity != null) ;else return -1;
     	String t = null;
-    	if (i < 4 && modelFATT.modelArmorOuter != null)
+    	if (i < 4 && modelData.modelFATT.modelOuter != null)
     	{
 //-@-b173
-    		if (modelFATT.textureOuter == null) return -1;
+    		if (modelData.modelFATT.textureOuter == null) return -1;
 //@-@b173
-    		// b173deleteif (modelFATT.textureOuter == null) return false;
-    		t = modelFATT.textureOuter[i];
+    		// b173deleteif (modelData.modelFATT.textureOuter == null) return false;
+    		t = modelData.modelFATT.textureOuter[i];
     		if (t == null)
     		{
 //-@-b181
@@ -126,20 +121,20 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 //@-@b181
     			//b181 deletereturn false;
     		} else {
-    			setRenderPassModel(modelFATT);
+    			setRenderPassModel(modelData.modelFATT);
 //-@-b181
     			return 1;
 //@-@b181
     			//b181 deletereturn true;
     		}
     	}
-    	if (i < 8 && modelFATT.modelArmorInner != null)
+    	if (i < 8 && modelData.modelFATT.modelInner != null)
     	{
 //-@-b173
-    		if (modelFATT.textureInner == null) return -1;
+    		if (modelData.modelFATT.textureInner == null) return -1;
 //@-@b173
-    		// b173deleteif (modelFATT.textureInner == null) return false;
-    		t = modelFATT.textureInner[i - 4];
+    		// b173deleteif (modelData.modelFATT.textureInner == null) return false;
+    		t = modelData.modelFATT.textureInner[i - 4];
     		if (t == null) {
     			//Modchu_Debug.Debug("Armor1 return -1");
 //-@-b181
@@ -147,7 +142,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 //@-@b181
     			//b181 deletereturn false;
     		} else {
-    			setRenderPassModel(modelFATT);
+    			setRenderPassModel(modelData.modelFATT);
 //-@-b181
     			return 1;
 //@-@b181
@@ -165,7 +160,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
 		float f1 = entity.modelScale;
 		if (f1 == 0.0F) {
-			f1 = ((MultiModelBaseBiped) modelMain.modelArmorInner).getModelScale();
+			f1 = ((MultiModelBaseBiped) modelData.modelMain.modelInner).getModelScale();
 		}
 		GL11.glScalef(f1, f1, f1);
 	}
@@ -232,7 +227,10 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     			}
     		}
 
-    		modelMain.modelArmorInner.setLivingAnimations(entityliving, f8, f7, f1);
+    		modelData.modelMain.setRender(this);
+    		modelData.owner = entityliving;
+    		modelData.modelMain.setEntityCaps(modelData);
+    		modelData.modelMain.setLivingAnimations(entityliving, f8, f7, f1);
     		renderModel(entityliving, f8, f7, f5, f3 - f2, f4, f6);
 
     		for (int i = 0; i < 4; i++)
@@ -377,7 +375,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     			if (entityliving.hurtTime > 0 || entityliving.deathTime > 0)
     			{
     				GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
-    				modelMain.modelArmorInner.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    				modelData.modelMain.modelInner.render(modelData, f8, f7, f5, f3 - f2, f4, f6, true);
 
     				for (int i1 = 0; i1 < 4; i1++)
     				{
@@ -396,7 +394,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     				float f14 = (float)(k & 0xff) / 255F;
     				float f15 = (float)(k >> 24 & 0xff) / 255F;
     				GL11.glColor4f(f10, f12, f14, f15);
-    				modelMain.modelArmorInner.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    				modelData.modelMain.modelInner.render(modelData, f8, f7, f5, f3 - f2, f4, f6, true);
 
     				for (int k1 = 0; k1 < 4; k1++)
     				{
@@ -553,14 +551,15 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 
 	public void doRenderPlayerFormLittleMaid(EntityLiving entity, double d,
 			double d1, double d2, float f, float f1) {
-		modelMain.setModelCaps(null);
+		modelData.owner = entity;
+		modelData.modelMain.setEntityCaps(modelData);
 		entity.skinUrl = null;
-		// modelFATT.modelArmorInner.isSneak = modelFATT.modelArmorOuter.isSneak = mainModel.isSneak = false;
-		modelFATT.modelArmorInner.isRiding = modelFATT.modelArmorOuter.isRiding = mainModel.isRiding = false;
-		modelFATT.modelArmorInner.onGround = modelFATT.modelArmorOuter.onGround = mainModel.onGround =
+		// modelData.modelFATT.modelInner.isSneak = modelData.modelFATT.modelOuter.isSneak = mainModel.isSneak = false;
+		modelData.modelFATT.modelInner.isRiding = modelData.modelFATT.modelOuter.isRiding = mainModel.isRiding = false;
+		modelData.modelFATT.modelInner.onGround = modelData.modelFATT.modelOuter.onGround = mainModel.onGround =
 				renderSwingProgress((EntityLiving) entity, f1);
 
-		modelFATT.modelArmorOuter.isSneak = modelFATT.modelArmorInner.isSneak = modelMain.modelArmorInner.isSneak = false;
+		modelData.modelFATT.modelOuter.isSneak = modelData.modelFATT.modelInner.isSneak = modelData.modelMain.modelInner.isSneak = false;
 		double d3 = d1 - (double) entity.yOffset;
 		if (entity.isSneaking()) {
 			d3 -= 0.125D;
@@ -578,77 +577,75 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 			}
 		}
 		doRenderLiving((EntityLiving) entity, d, d3, d2, f, f1);
-		// modelFATT.modelArmorOuter.aimedBow = modelFATT.modelArmorInner.aimedBow = mainModel.aimedBow = modelMain.modelArmorInner.aimedBow = false;
-		// modelFATT.modelArmorOuter.isSneak = modelFATT.modelArmorInner.isSneak = mainModel.isSneak = modelMain.modelArmorInner.isSneak = false;
-		// modelFATT.modelArmorOuter.heldItemRight = modelFATT.modelArmorInner.heldItemRight = mainModel.heldItemRight = modelMain.modelArmorInner.heldItemRight = 0;
 	}
 
     public void doRender(Entity entity, double d, double d1, double d2,
             float f, float f1) {
     	PFLM_EntityPlayerDummy entityDummy = ((PFLM_EntityPlayerDummy) entity);
     	if (entityDummy.textureName == null) entityDummy.textureName = "default";
+    	if (entityDummy.textureArmorName == null) entityDummy.textureArmorName = "default";
     	boolean flag = entityDummy.textureModel != null;
     	if (!flag) {
-    		entityDummy.texture = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(entityDummy.textureName, entityDummy.maidColor);
+    		entityDummy.texture = mod_Modchu_ModchuLib.textureManagerGetTexture(entityDummy.textureName, entityDummy.maidColor);
     		entityDummy.textureArmor0 = null;
     		entityDummy.textureArmor1 = null;
     	}
     	if (flag) {
-    		modelMain.modelArmorInner = (MultiModelBaseBiped)
+    		modelData.modelMain.modelInner = (MultiModelBaseBiped)
     				(entityDummy.textureModel[0] != null
     				&& !entityDummy.textureName.equalsIgnoreCase("default")
 					&& entityDummy.textureModel[0] instanceof MultiModelBaseBiped ?
     						entityDummy.textureModel[0] : modelBasicOrig[0]);
-    		modelFATT.modelArmorOuter = (MultiModelBaseBiped)
+    		modelData.modelFATT.modelOuter = (MultiModelBaseBiped)
     				(entityDummy.textureModel[1] != null
     				&& !entityDummy.textureArmorName.equalsIgnoreCase("default")
 					&& entityDummy.textureModel[1] instanceof MultiModelBaseBiped ?
     						entityDummy.textureModel[1] : modelBasicOrig[1]);
-    		modelFATT.modelArmorInner = (MultiModelBaseBiped)
+    		modelData.modelFATT.modelInner = (MultiModelBaseBiped)
     				(entityDummy.textureModel[2] != null
     				&& !entityDummy.textureArmorName.equalsIgnoreCase("default")
 					&& entityDummy.textureModel[2] instanceof MultiModelBaseBiped ?
     						entityDummy.textureModel[2] : modelBasicOrig[2]);
     	} else {
-    		modelMain.modelArmorInner = modelBasicOrig[0];
-    		modelFATT.modelArmorOuter = modelBasicOrig[1];
-    		modelFATT.modelArmorInner = modelBasicOrig[2];
+    		modelData.modelMain.modelInner = modelBasicOrig[0];
+    		modelData.modelFATT.modelOuter = modelBasicOrig[1];
+    		modelData.modelFATT.modelInner = modelBasicOrig[2];
     	}
-    	modelFATT.modelArmorOuter.isWait = modelFATT.modelArmorInner.isWait = modelMain.modelArmorInner.isWait;
+    	modelData.modelFATT.modelOuter.isWait = modelData.modelFATT.modelInner.isWait = modelData.modelMain.modelInner.isWait;
     	doRenderPlayerFormLittleMaid((EntityLiving) entityDummy, d, d1, d2, f, f1);
     }
 
 	private static void modelInit(Entity entity, String s) {
-		Object[] models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entity, s, false);
+		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entity, s, false);
 		//Modchu_Debug.mDebug("modelInit s="+s+" models[0] != null ? "+(models[0] != null));
-		modelMain.modelArmorInner = (MultiModelBaseBiped) (models[0] != null ? models[0] : new MultiModel(0.0F));
-		modelMain.modelArmorInner.setCapsValue(((MultiModelBaseBiped) modelMain.modelArmorInner).caps_armorType, 0);
+		modelData.modelMain.modelInner = models[0] != null ? (MultiModelBaseBiped) models[0] : new MultiModel(0.0F);
+		modelData.modelMain.modelInner.setCapsValue(((MultiModelBaseBiped) modelData.modelMain.modelInner).caps_armorType, 0);
 	}
 
 	private static void modelArmorInit(Entity entity, String s) {
-		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelMain.modelArmorInner);
+		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.modelInner);
 		if (isBiped
 				&& (s.equalsIgnoreCase("default")
 						| s.equalsIgnoreCase("erasearmor"))) s = "Biped";
-		Object[] models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(entity, s, false);
-		float[] f1 = mod_PFLM_PlayerFormLittleMaid.getArmorModelsSize(models[0]);
+		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entity, s, false);
+		float[] f1 = mod_Modchu_ModchuLib.getArmorModelsSize(models[0]);
 		//Modchu_Debug.mDebug("modelArmorInit s="+s+" models[1] != null ? "+(models[1] != null));
 		if (models != null
 				&& models[1] != null) ;else {
-					models = mod_PFLM_PlayerFormLittleMaid.modelNewInstance(isBiped ? "Biped" : null);
-					f1 = mod_PFLM_PlayerFormLittleMaid.getArmorModelsSize(models[0]);
+					models = mod_Modchu_ModchuLib.modelNewInstance(isBiped ? "Biped" : null);
+					f1 = mod_Modchu_ModchuLib.getArmorModelsSize(models[0]);
 				}
 		if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-			modelFATT.modelArmorInner = (MultiModelBaseBiped) models[1];
-			modelFATT.modelArmorOuter = (MultiModelBaseBiped) models[2];
+			modelData.modelFATT.modelInner = (MultiModelBaseBiped) models[1];
+			modelData.modelFATT.modelOuter = (MultiModelBaseBiped) models[2];
 		} else {
-			modelFATT.modelArmorInner = (MultiModelBaseBiped) (models[1] != null ?
-					models[1] : !isBiped ? new MultiModel(f1[0]) : new MultiModel_Biped(f1[0]));
-			modelFATT.modelArmorOuter = (MultiModelBaseBiped) (models[2] != null ?
-					models[2] : !isBiped ? new MultiModel(f1[1]) : new MultiModel_Biped(f1[1]));
+			modelData.modelFATT.modelInner = models[1] != null ?
+					(MultiModelBaseBiped) models[1] : !isBiped ? new MultiModel(f1[0]) : new MultiModel_Biped(f1[0]);
+			modelData.modelFATT.modelOuter = models[2] != null ?
+					(MultiModelBaseBiped) models[2] : !isBiped ? new MultiModel(f1[1]) : new MultiModel_Biped(f1[1]);
 		}
-		modelFATT.modelArmorInner.setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorInner).caps_armorType, 1);
-		modelFATT.modelArmorOuter.setCapsValue(((MultiModelBaseBiped) modelFATT.modelArmorOuter).caps_armorType, 2);
+		modelData.modelFATT.modelInner.setCapsValue(((MultiModelBaseBiped) modelData.modelFATT.modelInner).caps_armorType, 2);
+		modelData.modelFATT.modelOuter.setCapsValue(((MultiModelBaseBiped) modelData.modelFATT.modelOuter).caps_armorType, 3);
 	}
 
     protected void renderEquippedItems(EntityLiving entityliving, float f)
@@ -667,6 +664,6 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 /*//b181delete
         loadDownloadableImageTexture(entityliving.skinUrl, entityliving.getEntityTexture());
 *///b181delete
-        modelMain.modelArmorInner.render(entityliving, f, f1, f2, f3, f4, f5);
+        modelData.modelMain.modelInner.render(modelData, f, f1, f2, f3, f4, f5, true);
     }
 }
