@@ -327,11 +327,13 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			MMM_FileManager = Modchu_Reflect.loadClass(getClassName("Modchu_FileManager"));
 			MMM_TextureBox = Modchu_Reflect.loadClass(getClassName("Modchu_TextureBox"));
 		}
+/*
 		Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", new MMM_ModelMultiMMMBase[] {
 					new MultiModel(0.0F),
 					new MultiModel(0.1F),
 					new MultiModel(0.5F)
 			});
+*/
 		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"MultiModel", "MultiModel"});
 		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"playerformlittlemaid", "playerformlittlemaid"});
 		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{mod_Modchu_ModchuLib.modelClassName, "/mob/littleMaid/", mod_Modchu_ModchuLib.modelClassName+"_"});
@@ -1346,8 +1348,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	if (dummy.textureModel[0] instanceof MultiModelBaseBiped) ;else return;
     	PFLM_ModelData data = PFLM_RenderPlayerDummy.modelData;
     	((MultiModelBaseBiped) dummy.textureModel[0]).changeColor(data);
-    	((MultiModelBaseBiped) dummy.textureModel[1]).changeColor(data);
-    	((MultiModelBaseBiped) dummy.textureModel[2]).changeColor(data);
+    	if (dummy.textureModel[1] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) dummy.textureModel[1]).changeColor(data);
+    	if (dummy.textureModel[2] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) dummy.textureModel[2]).changeColor(data);
     }
 
     public void setPosition(double x, double y, double z) {

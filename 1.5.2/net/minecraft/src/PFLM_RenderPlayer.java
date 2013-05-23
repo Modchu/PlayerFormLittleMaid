@@ -82,10 +82,10 @@ public class PFLM_RenderPlayer extends RenderPlayer
 
     @Override
     protected int setArmorModel(EntityPlayer entityplayer, int i, float f) {
-    	return setArmorModel(null, entityplayer, i, f);
+    	return setArmorModel(null, entityplayer, i, f, 0);
     }
 
-    protected int setArmorModel(MultiModelBaseBiped model, EntityPlayer entityplayer, int i, float f) {
+    protected int setArmorModel(MultiModelBaseBiped model, EntityPlayer entityplayer, int i, float f, int i2) {
     	PFLM_ModelData modelData = getPlayerData(entityplayer);
     	/*b181//*/byte byte0 = -1;
     	//b181 deleteboolean byte0 = false;
@@ -99,11 +99,11 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	ItemStack is = entityplayer.inventory.armorItemInSlot(i);
     	if (is != null && is.stackSize > 0) {
     		if (model != null) {
-    			model.showArmorParts(modelData, i);
+    			model.showArmorParts(modelData, i, i2);
     		} else {
     			if (modelData.modelFATT.modelInner instanceof MultiModelBaseBiped) {
-    				((MultiModelBaseBiped) modelData.modelFATT.modelInner).showArmorParts(modelData, i);
-    				((MultiModelBaseBiped) modelData.modelFATT.modelOuter).showArmorParts(modelData, i);
+    				((MultiModelBaseBiped) modelData.modelFATT.modelInner).showArmorParts(modelData, i, 0);
+    				((MultiModelBaseBiped) modelData.modelFATT.modelOuter).showArmorParts(modelData, i, 1);
     			} else {
     				modelData.modelFATT.showArmorParts(i);
     			}
@@ -899,13 +899,14 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			&& byte0 > 0)
     			| entityplayer.isJumping
     			| entityplayer.sleeping
-    			| (Modchu_ModelCapsHelper.getCapsValueBoolean(modelData.modelMain.modelInner, modelData.caps_isSitting)
-    					&& (double) f1 > 0.20000000000000001D)
-    			| (Modchu_ModelCapsHelper.getCapsValueBoolean(modelData.modelMain.modelInner, modelData.caps_isSleeping)
-    					&& f1 > 0.0F)) {
+    			| ((Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isSitting)
+    					&& (double) f1 > 0.20000000000000001D))
+    			| ((Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isSleeping)
+    					&& f1 > 0.0F))) {
     		entityplayer.getDataWatcher().updateObject(16, Byte.valueOf((byte)0));
-    		modelData.modelMain.setCapsValue(modelData.caps_isSitting, false);
-    		modelData.modelMain.setCapsValue(modelData.caps_isSleeping, false);
+    		modelData.modelMain.setCapsValue(modelData.caps_isRiding, false);
+    		modelData.setCapsValue(modelData.caps_isSitting, false);
+    		modelData.setCapsValue(modelData.caps_isSleeping, false);
     	}
     }
 
@@ -1572,7 +1573,13 @@ public class PFLM_RenderPlayer extends RenderPlayer
 	private static void modelInit(EntityPlayer entityplayer, PFLM_ModelData modelData, String s) {
 		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entityplayer, s, true);
 		Modchu_Debug.mDebug("modelInit s="+s);
-		Modchu_Debug.mDebug("modelInit models[0] != null ? "+(models[0] != null));
+		if (models != null) Modchu_Debug.mDebug("modelInit models[0] != null ? "+(models[0] != null));
+		else {
+			Modchu_Debug.mDebug("modelInit models = null !!");
+			if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.textureName = "default";
+			modelData.setCapsValue(modelData.caps_textureName, "default");
+			models = mod_Modchu_ModchuLib.modelNewInstance(entityplayer, mod_PFLM_PlayerFormLittleMaid.textureName, true);
+		}
 		modelData.modelMain.modelInner = models != null && models[0] != null ? (MultiModelBaseBiped) models[0] : new MultiModel(0.0F);
 		modelData.modelMain.modelInner.setCapsValue(modelData.caps_armorType, 0);
 	}
@@ -1583,6 +1590,11 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				&& (s.equalsIgnoreCase("default")
 						| s.equalsIgnoreCase("erasearmor"))) s = "Biped";
 		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entityplayer, s, true);
+		if (models != null) ;else {
+			if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.textureArmorName = "default";
+			modelData.setCapsValue(modelData.caps_textureArmorName, "default");
+			models = mod_Modchu_ModchuLib.modelNewInstance(entityplayer, mod_PFLM_PlayerFormLittleMaid.textureArmorName, true);
+		}
 		float[] f1 = mod_Modchu_ModchuLib.getArmorModelsSize(models[0]);
 		Modchu_Debug.mDebug("modelArmorInit s="+s+" models[1] != null ? "+(models[1] != null));
 		if (models != null

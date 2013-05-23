@@ -584,6 +584,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg.length > 1
 			&& pArg[0] != null
 			&& pArg[1] != null) return getTexture((String) pArg[0], (Integer) pArg[1]);
+			break;
 		case caps_armorTexture:
 			if (pArg != null
 			&& pArg.length > 1
@@ -593,6 +594,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 						&& pArg[2] != null) return getArmorTexture((String) pArg[0], (Integer) pArg[1], (ItemStack) pArg[2]);
 				return getArmorTexture((String) pArg[0], (Integer) pArg[1]);
 			}
+			break;
 		case caps_isPlayer:
 			return getIsPlayer();
 		case caps_isWait:
@@ -677,10 +679,12 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) return getModel((Integer) pArg[0]);
+			break;
 		case caps_armorItemInSlot:
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) return getArmorItemInSlot((Integer) pArg[0]);
+			break;
 		case caps_textureName:
 			return getTextureName();
 		case caps_textureArmorName:
@@ -690,12 +694,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg.length > 1
 			&& pArg[0] != null
 			&& pArg[1] != null) return getDefaultShowPartsMapBoolean((String) pArg[0], (Integer) pArg[1]);
+			break;
 		case caps_showPartsRenemeMap:
 			return getShowPartsRenemeMap();
 		case caps_showPartsMap:
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) return getShowPartsMap((Integer) pArg[0]);
+			break;
 		case caps_showPartsMapBoolean:
 			if (pArg != null
 			&& pArg.length > 1
@@ -703,13 +709,23 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg[1] != null) {
 				return getShowPartsMapBoolean((String) pArg[0], (Integer) pArg[1]);
 			}
+			break;
 		case caps_modelRendererName:
 			if (pArg != null
 			&& pArg.length > 1
 			&& pArg[0] != null
 			&& pArg[1] != null) return getModelRendererName((MMM_ModelRenderer) pArg[0], (Integer) pArg[1]);
+			break;
 		case caps_Entity:
 				return owner;
+
+		//LMMê—pƒ‚ƒfƒ‹—p
+		case caps_Ground:
+			if (pArg != null
+			&& pArg.length > 1
+			&& pArg[0] != null
+			&& pArg[1] != null) return getGround((Integer) pArg[0], pArg[1]);
+			break;
 		}
 		if (model != null) ;else return modelMain.modelInner.getCapsValue(pIndex, pArg);
 		return null;
@@ -770,10 +786,10 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		}
 		if(partsSetFlag == 1) {
 			PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
-			multiModelBaseBiped.defaultPartsSettingBefore();
-			multiModelBaseBiped.defaultPartsSettingAfter();
+			multiModelBaseBiped.defaultPartsSettingBefore(this);
+			multiModelBaseBiped.defaultPartsSettingAfter(this);
 			partsSetFlag = 2;
-			multiModelBaseBiped.showModelSettingReflects();
+			multiModelBaseBiped.showModelSettingReflects(this);
 			showModelSettingReflects(Modchu_ModelCapsHelper.getCapsValueInt(multiModelBaseBiped, caps_armorType));
 		}
 	}
@@ -1223,6 +1239,16 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     	}
     	return 0.0F;
     }
+
+	private float getGround(int i, Object o) {
+		float f = 0.0F;
+		if (handedness == i) {
+			if (i == 1) return owner.getSwingProgress(1.0F);
+			if (o instanceof float[]) f = ((float[]) o)[i];
+			else if (o instanceof Float) f = (Float) o;
+		}
+		return f;
+	}
 
     private float getEntityIdFactor() {
     	return (float)owner.entityId * 70;

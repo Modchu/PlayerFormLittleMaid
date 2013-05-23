@@ -39,6 +39,7 @@ public class PFLM_GuiSlot extends GuiSlot {
 	private int scrollDownButtonID;
 	private int scrollBarInBoxY;
 	private int selectedDisplayCount;
+	private int tempMouseY;
 	private boolean mouseClick;
 
 	public PFLM_GuiSlot(Minecraft par1Minecraft, int par2, int par3, int par4, int par5, int par6) {
@@ -53,18 +54,18 @@ public class PFLM_GuiSlot extends GuiSlot {
 		popWorld = mc.theWorld;
 	}
 
-	public PFLM_GuiSlot(Minecraft par1Minecraft, PFLM_GuiSlotBase gui, int par3, int par6, int par7, int par8, int par9) {
-		super(par1Minecraft, gui.width, gui.height, 0, gui.height, par6);
-		init(par1Minecraft, gui, par3, par6, par7, par8, par9);
+	public PFLM_GuiSlot(Minecraft par1Minecraft, PFLM_GuiSlotBase gui, int par3, int par4, int par5, int par6, int par7) {
+		super(par1Minecraft, gui.width, gui.height, 0, gui.height, par4);
+		init(par1Minecraft, gui, par3, par4, par5, par6, par7);
 	}
 
-	public void init(Minecraft par1Minecraft, PFLM_GuiSlotBase gui, int par3, int par6, int par7, int par8, int par9) {
+	public void init(Minecraft par1Minecraft, PFLM_GuiSlotBase gui, int par3, int par4, int par5, int par6, int par7) {
 		width = gui.width;
 		height = gui.height;
 		showSelectionBoxWidth = par3;
-		slotPosX = par7;
-		slotPosY = par8;
-		guiNumber = par9;
+		slotPosX = par5;
+		slotPosY = par6;
+		guiNumber = par7;
 		parentScreen = gui;
 		selected = 0;
 		mc = par1Minecraft;
@@ -101,6 +102,8 @@ public class PFLM_GuiSlot extends GuiSlot {
 
 	public void clickDecision(int mouse_x, int mouse_y, float par3)
 	{
+		byte mouseMoveY = (byte) (tempMouseY > Mouse.getY() ? 1 : tempMouseY < Mouse.getY() ? -1 : 0);
+		tempMouseY = Mouse.getY();
 		mouseX = mouse_x;
 		mouseY = mouse_y;
 		int sizeY = bottom - (slotPosY > -1 ? slotPosY : -slotPosY);
@@ -112,11 +115,14 @@ public class PFLM_GuiSlot extends GuiSlot {
 		int scrollBarSizeX = getScrollBarSizeX();
 		int scrollBarInBoxSizeY = 0;
 		boolean isScrollBar = selectedDisplayCount < getContentHeight() / slotHeight;
-		int scrollBarDisplaySizeY = height - (top + bottom - height);
+		int scrollBarDisplaySizeY = bottom + top;
+		//if (guiNumber == 0) Modchu_Debug.mDebug("top="+top+" bottom="+bottom);
+		float f;
 		if (isScrollBar) {
-			float f = (float) sizeY / (float) selectedDisplayCount;
-			//Modchu_Debug.mDebug("slotSize="+slotSize+" selectedDisplayCount="+selectedDisplayCount+" f="+f);
-			scrollBarInBoxSizeY = (int) (scrollBarDisplaySizeY / f);
+			f = ((float) selectedDisplayCount / (float) slotSize) * 0.9F;
+			//if (guiNumber == 0) Modchu_Debug.mDebug("selectedDisplayCount="+selectedDisplayCount+" slotSize="+slotSize+" f="+f);
+			scrollBarInBoxSizeY = (int) (scrollBarDisplaySizeY * f);
+			//if (guiNumber == 0) Modchu_Debug.mDebug("scrollBarDisplaySizeY="+scrollBarDisplaySizeY+" scrollBarInBoxSizeY="+scrollBarInBoxSizeY);
 		}
 
 		if (Mouse.isButtonDown(0)
@@ -157,8 +163,14 @@ public class PFLM_GuiSlot extends GuiSlot {
 								&& mouse_y > scrollBarInBoxY + scrollBarInBoxSizeY)) scrollMultiplier = scrollBarSizeX;
 					}
 					//initialClickY = (float)mouse_y;
-					amountScrolled += scrollMultiplier;
-					scrollMultiplier = 0.0F;
+					if (mouse_y < scrollBarInBoxY
+							| mouse_y > scrollBarInBoxY + scrollBarInBoxSizeY) {
+						amountScrolled += mouseClick ? scrollMultiplier > 0 ? 1.0F : -1.0F : scrollMultiplier;
+					} else {
+						f = mouseMoveY == 1 ? -1.0F : mouseMoveY == -1 ? 1.0F : 0.0F;
+						amountScrolled -= f;
+						//if (guiNumber == 0) Modchu_Debug.mDebug("scrollBar click amountScrolled="+amountScrolled);
+					}
 					//Modchu_Debug.mDebug("scrollBar click scrollMultiplier="+scrollMultiplier+" amountScrolled="+amountScrolled);
 				}// else {
 					//scrollMultiplier = 1.0F;
@@ -197,6 +209,7 @@ public class PFLM_GuiSlot extends GuiSlot {
 				}
 			}
 			//initialClickY = -1.0F;
+			scrollMultiplier = 0.0F;
 			mouseClick = false;
 		}
 	}
@@ -206,7 +219,6 @@ public class PFLM_GuiSlot extends GuiSlot {
 	{
 		mouseX = mouse_x;
 		mouseY = mouse_y;
-		//drawBackground();
 		top = getTop();
 		bottom = getBottom();
 		int slotSize = getSize();
@@ -218,7 +230,7 @@ public class PFLM_GuiSlot extends GuiSlot {
 		int selected;
 		int showSelectionBoxSizeY = slotHeight - 4;
 		int showSelectionBoxPosTop;
-		int scrollBarDisplaySizeY = height - (top + bottom - height);
+		int scrollBarDisplaySizeY = bottom + top;
 		//Modchu_Debug.mDebug("scrollBarDisplaySizeY="+scrollBarDisplaySizeY);
 		if (scrollBarDisplaySizeY < 1) scrollBarDisplaySizeY = 1;
 		//int scrollBarSizeY = getContentHeight();
@@ -227,13 +239,14 @@ public class PFLM_GuiSlot extends GuiSlot {
 		selectedDisplayCount = sizeY / slotHeight;
 		int scrollBarInBoxSizeY = 0;
 		boolean isScrollBar = selectedDisplayCount < getContentHeight() / slotHeight;
-		//if (guiNumber == 0) Modchu_Debug.mDebug("top="+top+" bottom="+bottom);
 		//if (guiNumber == 0) Modchu_Debug.mDebug("scrollBarDisplaySizeY="+scrollBarDisplaySizeY+" slotHeight="+slotHeight);
 		//if (guiNumber == 0) Modchu_Debug.mDebug("selectedDisplayCount="+selectedDisplayCount+" getContentHeight() / slotHeight="+(getContentHeight() / slotHeight));
+		//if (guiNumber == 0) Modchu_Debug.mDebug("top="+top+" bottom="+bottom);
 		if (isScrollBar) {
-			float f = (float) sizeY / (float) selectedDisplayCount;
-			//Modchu_Debug.mDebug("slotSize="+slotSize+" selectedDisplayCount="+selectedDisplayCount+" f="+f);
-			scrollBarInBoxSizeY = (int) (scrollBarDisplaySizeY / f);
+			float f = ((float) selectedDisplayCount / (float) slotSize) * 0.9F;
+			//if (guiNumber == 0) Modchu_Debug.mDebug("selectedDisplayCount="+selectedDisplayCount+" slotSize="+slotSize+" f="+f);
+			scrollBarInBoxSizeY = (int) (scrollBarDisplaySizeY * f);
+			//if (guiNumber == 0) Modchu_Debug.mDebug("scrollBarDisplaySizeY="+scrollBarDisplaySizeY+" scrollBarInBoxSizeY="+scrollBarInBoxSizeY);
 		}
 
 		bindAmountScrolled();
@@ -308,24 +321,26 @@ public class PFLM_GuiSlot extends GuiSlot {
 		//GL11.glDisable(GL11.GL_ALPHA_TEST);
 		//GL11.glShadeModel(GL11.GL_SMOOTH);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		//int var19 = func_77209_d();
+		int var19 = func_77209_d();
 		//Modchu_Debug.mDebug("var19="+var19);
-		//if (var19 < 1) var19 = 1;
 		if (isScrollBar) {
 			if (scrollBarInBoxSizeY < 32) scrollBarInBoxSizeY = 32;
 			if (scrollBarInBoxSizeY > scrollBarDisplaySizeY) scrollBarInBoxSizeY = scrollBarDisplaySizeY;
 			//Modchu_Debug.mDebug("scrollBarDisplaySizeY="+scrollBarDisplaySizeY+" scrollBarInBoxSizeY="+scrollBarInBoxSizeY+" f="+f);
 
-			float f1 = amountScrolled / (float)(getSize());
-			if (f1 < 0.0F) f1 = 0.0F;
+			//float f1 = amountScrolled / (float)(getSize() - selectedDisplayCount);
+			//if (f1 < 0.0F) f1 = 0.0F;
 
-			scrollBarInBoxY = top + (int) (scrollBarDisplaySizeY * f1);
-			if (scrollBarInBoxY < top) scrollBarInBoxY = top;
+			int var13 = (bottom - top) * (bottom - top) / getContentHeight();
+			if (var13 < 32) var13 = 32;
+			if (var13 > bottom - top - 32) var13 = bottom - top - 32;
+			scrollBarInBoxY = (int)amountScrolled * (bottom - top - var13) / var19 + top;
+			//scrollBarInBoxY = (int) (top + ((height - top) * f1));
 			//if (guiNumber == 0) Modchu_Debug.mDebug("f1="+f1+" scrollBarInBoxY="+scrollBarInBoxY);
-			if (scrollBarInBoxY < top) scrollBarInBoxY = top;
-			if (scrollBarInBoxY + scrollBarInBoxSizeY > bottom) scrollBarInBoxY = bottom - scrollBarInBoxSizeY;
-			//Modchu_Debug.mDebug("scrollBarInBoxY="+scrollBarInBoxY);
-			//Modchu_Debug.mDebug("amountScrolled="+amountScrolled);
+			//if (scrollBarInBoxY < top) scrollBarInBoxY = top;
+			//if (scrollBarInBoxY + scrollBarInBoxSizeY > bottom) scrollBarInBoxY = bottom - scrollBarInBoxSizeY;
+			//if (guiNumber == 0) Modchu_Debug.mDebug("scrollBarInBoxY="+scrollBarInBoxY);
+			//if (guiNumber == 0) Modchu_Debug.mDebug("amountScrolled="+amountScrolled);
 
 			tessellator.startDrawingQuads();
 			tessellator.setColorRGBA_I(0, 255);

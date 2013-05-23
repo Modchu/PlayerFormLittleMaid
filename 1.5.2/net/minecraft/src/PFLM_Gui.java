@@ -86,7 +86,7 @@ public class PFLM_Gui extends GuiScreen {
 		if (textureName == null) textureName = "default";
 		if (textureModel == null) {
 			//Modchu_Debug.mDebug("PFLM_EntityPlayerDummy default");
-			textureModel = new MultiModelBaseBiped[3];
+			textureModel = new MMM_ModelMultiBase[3];
 		}
 		if (textureArmor0 == null) textureArmor0 = new String[4];
 		if (textureArmor1 == null) textureArmor1 = new String[4];
@@ -102,7 +102,7 @@ public class PFLM_Gui extends GuiScreen {
 		showPartsListSize = 0;
 		buttonList.add(new PFLM_GuiSmallButton(200, x, y + 100, 75, 20, "Save"));
 		buttonList.add(new PFLM_GuiSmallButton(13, x, y + 70, 75, 15, "ChangeMode"));
-		buttonList.add(new PFLM_GuiSmallButton(59, x + 75, y + 40, 75, 15, "CustomModel"));
+		if (!mod_Modchu_ModchuLib.isRelease) buttonList.add(new PFLM_GuiSmallButton(59, x + 75, y + 40, 75, 15, "CustomModel"));
 		buttonList.add(new PFLM_GuiSmallButton(58, x + 75, y + 55, 75, 15, "Handedness"));
 		buttonList.add(new PFLM_GuiSmallButton(57, x + 75, y + 70, 75, 15, "KeyControls"));
 		if (mod_PFLM_PlayerFormLittleMaid.changeMode != modeRandom) {
@@ -1024,7 +1024,13 @@ public class PFLM_Gui extends GuiScreen {
     		setColor = i;
     	}
     	Object ltb = mod_Modchu_ModchuLib.getTextureBox(textureName);
-    	if (ltb != null) textureModel[0] = mod_Modchu_ModchuLib.getTextureBoxModels(ltb)[0];
+    	if (ltb != null) {
+    		Object[] o = mod_Modchu_ModchuLib.getTextureBoxModels(ltb);
+    		if (o != null
+    				&& o[0] != null) {
+    			textureModel[0] = o[0];
+    		}
+    	}
     	setArmorTextureValue();
     }
 
