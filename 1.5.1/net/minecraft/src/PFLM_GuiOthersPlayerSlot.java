@@ -10,13 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 import net.minecraft.client.Minecraft;
-/*//FMLdelete
-import net.minecraft.client.gui.*;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.*;
-import net.minecraft.entity.*;
-import net.minecraft.world.*;
-*///FMLdelete
+
 public class PFLM_GuiOthersPlayerSlot extends GuiSlot {
 	protected Minecraft mc;
 	public PFLM_GuiOthersPlayerIndividualCustomizeSelect ownerGui;
@@ -135,7 +129,7 @@ public class PFLM_GuiOthersPlayerSlot extends GuiSlot {
 			boolean flag = false;
 			if(t[4] != null) {
 				if (Integer.valueOf(t[4]) == PFLM_GuiOthersPlayerIndividualCustomize.modeOthersSettingOffline) {
-					((PFLM_EntityPlayerDummy) entityliving).texture = mod_PFLM_PlayerFormLittleMaid.textureManagerGetTextureName(t[0], Integer.valueOf(t[2]));
+					((PFLM_EntityPlayerDummy) entityliving).texture = mod_Modchu_ModchuLib.textureManagerGetTexture(t[0], Integer.valueOf(t[2]));
 					((PFLM_EntityPlayerDummy) entityliving).maidColor = Integer.valueOf(t[2]);
 					((PFLM_EntityPlayerDummy) entityliving).textureModel = (Object[]) getTextureModel(t[0], t[1]);
 					((PFLM_EntityPlayerDummy) entityliving).textureName = t[0];
@@ -162,12 +156,12 @@ public class PFLM_GuiOthersPlayerSlot extends GuiSlot {
 
 	private Object[] getTextureModel(String s1, String s2) {
 		Object amodelPlayerFormLittleMaid = null;
-		Object ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
-		Object[] models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+		Object ltb = mod_Modchu_ModchuLib.getTextureBox(s1);
+		Object[] models = mod_Modchu_ModchuLib.getTextureBoxModels(ltb);
 		if (ltb == null) {
 			if (s1.indexOf("Biped") == -1) s1 = "default";
-			ltb = mod_PFLM_PlayerFormLittleMaid.getTextureBox(s1);
-			models = mod_PFLM_PlayerFormLittleMaid.getTextureBoxModels(ltb);
+			ltb = mod_Modchu_ModchuLib.getTextureBox(s1);
+			models = mod_Modchu_ModchuLib.getTextureBoxModels(ltb);
 		}
 		return models;
 	}
