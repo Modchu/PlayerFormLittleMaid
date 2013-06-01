@@ -953,6 +953,19 @@ public class PFLM_Gui extends GuiScreen {
     				//Modchu_Debug.mDebug("f texture="+texture);
     				//Modchu_Debug.mDebug("f textureArmorName="+textureArmorName);
     				setTextureValue();
+    				if (RenderManager.instance != null
+    						&& drawEntity != null) {
+    					Render render = RenderManager.instance.getEntityRenderObject(drawEntity);
+    					if (textureModel[0] != null
+    							&& textureModel[0] instanceof MMM_ModelMultiBase) ((MMM_ModelMultiBase) textureModel[0]).render = render;
+    					if (textureModel[1] != null
+    							&& textureModel[1] instanceof MMM_ModelMultiBase) ((MMM_ModelMultiBase) textureModel[1]).render = render;
+    					if (textureModel[2] != null
+    							&& textureModel[2] instanceof MMM_ModelMultiBase) ((MMM_ModelMultiBase) textureModel[2]).render = render;
+    				} else {
+    					if (RenderManager.instance != null) ;else Modchu_Debug.mDebug("RenderManager.instance == null !!");
+    					if (drawEntity != null) ;else Modchu_Debug.mDebug("drawEntity == null !!");
+    				}
     				drawEntitySetFlag = false;
     				Modchu_Debug.mDebug("textureName="+textureName);
     				Modchu_Debug.mDebug("texture="+texture);
@@ -1043,12 +1056,6 @@ public class PFLM_Gui extends GuiScreen {
 			}
 		}
 		Object ltb = mod_Modchu_ModchuLib.getTextureBox(textureArmorName);
-		if (ltb != null) {
-		} else {
-			//String s1 = mod_PFLM_PlayerFormLittleMaid.setArmorTexturePackege(textureArmorName, 0);
-			//if (s1 != null) setTextureArmorName(s1);
-		}
-		ltb = mod_Modchu_ModchuLib.getTextureBox(textureArmorName);
 		Object[] models = mod_Modchu_ModchuLib.getTextureBoxModels(ltb);
 		if (ltb != null
 				&& mod_Modchu_ModchuLib.getTextureBoxHasArmor(ltb)) {

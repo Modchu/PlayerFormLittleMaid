@@ -12,5 +12,6 @@ public interface PFLM_IGuiSlot {
 	public int getTop(int guiNumber);
 	public int getBottom(int guiNumber);
 	public void outOfRangeClick(int guiNumber, int mouse_x, int mouse_y, boolean flag);
+	public int getLimitSelectedDisplayCount(int guiNumber);
 
 }

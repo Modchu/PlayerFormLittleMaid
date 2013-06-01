@@ -32,13 +32,13 @@ public class PFLM_GuiSlot extends GuiSlot {
 	public int scrollBarY = 0;
 	public boolean oneClickLock;
 	public int noUseTopBottomSizeY = 0;
+	public int selectedDisplayCount;
 	private int selected;
 	private World popWorld;
 	private int showSelectionBoxWidth;
 	private int scrollUpButtonID;
 	private int scrollDownButtonID;
 	private int scrollBarInBoxY;
-	private int selectedDisplayCount;
 	private int tempMouseY;
 	private boolean mouseClick;
 
@@ -236,7 +236,7 @@ public class PFLM_GuiSlot extends GuiSlot {
 		//int scrollBarSizeY = getContentHeight();
 		//Modchu_Debug.mDebug("scrollBarSizeY="+scrollBarSizeY);
 
-		selectedDisplayCount = sizeY / slotHeight;
+		selectedDisplayCount = getLimitSelectedDisplayCount() > 0 ? getLimitSelectedDisplayCount() : sizeY / slotHeight;
 		int scrollBarInBoxSizeY = 0;
 		boolean isScrollBar = selectedDisplayCount < getContentHeight() / slotHeight;
 		//if (guiNumber == 0) Modchu_Debug.mDebug("scrollBarDisplaySizeY="+scrollBarDisplaySizeY+" slotHeight="+slotHeight);
@@ -398,6 +398,10 @@ public class PFLM_GuiSlot extends GuiSlot {
 
 	protected int getBottom() {
 		return parentScreen.getBottom(guiNumber);
+	}
+
+	protected int getLimitSelectedDisplayCount() {
+		return parentScreen.getLimitSelectedDisplayCount(guiNumber);
 	}
 
 	private void bindAmountScrolled() {

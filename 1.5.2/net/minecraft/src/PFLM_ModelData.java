@@ -52,7 +52,8 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private int skinMode = 0;
 	private int initFlag = 0;
 	private int runActionNumber = 0;
-    private int actionCount = 0;
+	private int actionReleaseNumber = 0;
+	private int actionCount = 0;
 	private int handedness = 0;
 	private int maidColor = 0;
 	private int partsSetFlag = 1;
@@ -261,6 +262,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg.length > 0
 			&& pArg[0] != null) {
 				setRunActionNumber((Integer) pArg[0]);
+				return true;
+			}
+			return false;
+		case caps_actionReleaseNumber:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) {
+				setActionReleaseNumber((Integer) pArg[0]);
 				return true;
 			}
 			return false;
@@ -623,6 +632,8 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			return getShortcutKeysAction();
 		case caps_runActionNumber:
 			return getRunActionNumber();
+		case caps_actionReleaseNumber:
+			return getActionReleaseNumber();
 		case caps_actionFlag:
 			return getActionFlag();
 		case caps_actionCount:
@@ -718,14 +729,6 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			break;
 		case caps_Entity:
 				return owner;
-
-		//LMMê—pƒ‚ƒfƒ‹—p
-		case caps_Ground:
-			if (pArg != null
-			&& pArg.length > 1
-			&& pArg[0] != null
-			&& pArg[1] != null) return getGround((Integer) pArg[0], pArg[1]);
-			break;
 		}
 		if (model != null) ;else return modelMain.modelInner.getCapsValue(pIndex, pArg);
 		return null;
@@ -1036,6 +1039,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		runActionNumber = i;
 	}
 
+	private int getActionReleaseNumber() {
+		return actionReleaseNumber;
+	}
+
+	private void setActionReleaseNumber(int i) {
+		actionReleaseNumber = i;
+	}
+
 	private boolean getActionFlag() {
 		return actionFlag;
 	}
@@ -1239,16 +1250,6 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     	}
     	return 0.0F;
     }
-
-	private float getGround(int i, Object o) {
-		float f = 0.0F;
-		if (handedness == i) {
-			if (i == 1) return owner.getSwingProgress(1.0F);
-			if (o instanceof float[]) f = ((float[]) o)[i];
-			else if (o instanceof Float) f = (Float) o;
-		}
-		return f;
-	}
 
     private float getEntityIdFactor() {
     	return (float)owner.entityId * 70;

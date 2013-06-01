@@ -331,11 +331,13 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[1] = null;
 			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[2] = null;
 		} else {
-			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel = new Object[3];
+			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel = new MMM_ModelMultiBase[3];
 		}
-		Object ltb = mod_Modchu_ModchuLib.getTextureBox(othersTextureName);
-		Object[] models = mod_Modchu_ModchuLib.getTextureBoxModels(ltb);
-		if (ltb != null) mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] = models[0];
+		Object[] o = mod_Modchu_ModchuLib.textureBoxModelsCheck(null, othersTextureName, false, true);
+		if (o != null
+				&& o[0] != null) {
+			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] = o[0];
+		}
 		setArmorTextureValue();
 	}
 
@@ -367,14 +369,14 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 				othersTextureArmorName = "default";
 			}
 		}
-		Object ltb = mod_Modchu_ModchuLib.getTextureBox(othersTextureArmorName);
-    	Object[] models = mod_Modchu_ModchuLib.getTextureBoxModels(ltb);
-		if (ltb != null) {
+		Object[] models = mod_Modchu_ModchuLib.textureBoxModelsCheck(null, othersTextureArmorName, false, false);
+		if (models != null) {
 			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[1] = models[1];
 			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[2] = models[2];
 		} else {
-			ltb = mod_Modchu_ModchuLib.getTextureBox("default");
-			if (ltb != null) {
+			mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName = mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName.indexOf("_Biped") == -1 ? "default" : "Biped";
+			models = mod_Modchu_ModchuLib.textureBoxModelsCheck(null, mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName, false, false);
+			if (models != null) {
 				mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[1] = models[1];
 				mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[2] = models[2];
 			}

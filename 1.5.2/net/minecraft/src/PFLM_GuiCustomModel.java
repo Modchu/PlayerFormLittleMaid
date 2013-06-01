@@ -302,34 +302,34 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			for (int i = 0; i < ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected] ;i++) {
 				button = (PFLM_GuiSmallButton) addButtonList.get(i);
 				button.xPosition = (int) showSelectionBoxLeft + 60;
-				button.yPosition = (int) showSelectionBoxTop + 53 + k;
+				button.yPosition = (int) showSelectionBoxTop + 63 + k;
 				inputStringBox[j].xPos = (int) showSelectionBoxLeft + 22;
-				inputStringBox[j].yPos = (int) showSelectionBoxTop + 35 + k;
+				inputStringBox[j].yPos = (int) showSelectionBoxTop + 45 + k;
 				inputStringBox[j + 1].xPos = (int) showSelectionBoxLeft + 90;
-				inputStringBox[j + 1].yPos = (int) showSelectionBoxTop + 35 + k;
+				inputStringBox[j + 1].yPos = (int) showSelectionBoxTop + 45 + k;
 				inputStringBox[j + 2].xPos = (int) showSelectionBoxLeft + 22;
-				inputStringBox[j + 2].yPos = (int) showSelectionBoxTop + 83 + k;
+				inputStringBox[j + 2].yPos = (int) showSelectionBoxTop + 93 + k;
 				inputStringBox[j + 3].xPos = (int) showSelectionBoxLeft + 22;
-				inputStringBox[j + 3].yPos = (int) showSelectionBoxTop + 98 + k;
+				inputStringBox[j + 3].yPos = (int) showSelectionBoxTop + 108 + k;
 				inputStringBox[j + 4].xPos = (int) showSelectionBoxLeft + 22;
-				inputStringBox[j + 4].yPos = (int) showSelectionBoxTop + 113 + k;
+				inputStringBox[j + 4].yPos = (int) showSelectionBoxTop + 123 + k;
 				inputStringBox[j + 5].xPos = (int) showSelectionBoxLeft + 90;
-				inputStringBox[j + 5].yPos = (int) showSelectionBoxTop + 83 + k;
+				inputStringBox[j + 5].yPos = (int) showSelectionBoxTop + 93 + k;
 				inputStringBox[j + 6].xPos = (int) showSelectionBoxLeft + 90;
-				inputStringBox[j + 6].yPos = (int) showSelectionBoxTop + 98 + k;
+				inputStringBox[j + 6].yPos = (int) showSelectionBoxTop + 108 + k;
 				inputStringBox[j + 7].xPos = (int) showSelectionBoxLeft + 90;
-				inputStringBox[j + 7].yPos = (int) showSelectionBoxTop + 113 + k;
+				inputStringBox[j + 7].yPos = (int) showSelectionBoxTop + 123 + k;
 				flag = i + 1 != ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected];
 				if (((MultiModelCustom) drawEntity.textureModel[0]).customModel.boxType[partsSlotSelected][i] != 2) {
 					inputStringBox[j + 8].xPos = (int) showSelectionBoxLeft + 22;
-					inputStringBox[j + 8].yPos = (int) showSelectionBoxTop + 140 + k;
+					inputStringBox[j + 8].yPos = (int) showSelectionBoxTop + 150 + k;
 					inputStringBox[j + 9].xPos = (int) showSelectionBoxLeft + 90;
-					inputStringBox[j + 9].yPos = (int) showSelectionBoxTop + 140 + k;
+					inputStringBox[j + 9].yPos = (int) showSelectionBoxTop + 150 + k;
 					j = j + 10;
 				} else {
 					j = j + 8;
 				}
-				if (flag) k += 125;
+				if (flag) k += 145;
 			}
 		} else {
 			k = -15;
@@ -357,16 +357,17 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		fontRenderer.drawString("TextureSize", (int) showSelectionBoxLeft + 5, (int) showSelectionBoxTop + 2, 0xffffff);
 		fontRenderer.drawString("Width", (int) showSelectionBoxLeft + 5, (int) showSelectionBoxTop + 17, 0xffffff);
 		fontRenderer.drawString("Height", (int) showSelectionBoxLeft + 68, (int) showSelectionBoxTop + 17, 0xffffff);
-		//TextureOffsetX Y
-		fontRenderer.drawString("TextureOffset", (int) showSelectionBoxLeft + 5, (int) showSelectionBoxTop + 35, 0xffffff);
-		fontRenderer.drawString("X", (int) showSelectionBoxLeft + 10, (int) showSelectionBoxTop + 47, 0xffffff);
-		fontRenderer.drawString("Y", (int) showSelectionBoxLeft + 80, (int) showSelectionBoxTop + 47, 0xffffff);
 		//Box Plate Ball
 		int k = 0;
 		for (int i1 = 0; i1 < ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected]; i1++) {
-			k = i1 * 105;
-			s = new StringBuilder().append(i1).append(" BoxType : ");
-			fontRenderer.drawString(s.toString(), (int) showSelectionBoxLeft + 5, (int) showSelectionBoxTop + 62 + k, 0xffffff);
+			k = i1 * 145;
+			s = new StringBuilder().append("Box Number ").append(i1);
+			fontRenderer.drawString(s.toString(), (int) showSelectionBoxLeft + 5, (int) showSelectionBoxTop + 35 + k, 0xffffff);
+			fontRenderer.drawString("TextureOffset", (int) showSelectionBoxLeft + 5, (int) showSelectionBoxTop + 45 + k, 0xffffff);
+			fontRenderer.drawString("X", (int) showSelectionBoxLeft + 10, (int) showSelectionBoxTop + 57 + k, 0xffffff);
+			fontRenderer.drawString("Y", (int) showSelectionBoxLeft + 80, (int) showSelectionBoxTop + 57 + k, 0xffffff);
+			s = new StringBuilder().append("BoxType : ");
+			fontRenderer.drawString(s.toString(), (int) showSelectionBoxLeft + 5, (int) showSelectionBoxTop + 72 + k, 0xffffff);
 			switch(((MultiModelCustom) drawEntity.textureModel[0]).customModel.boxType[partsSlotSelected][i1]) {
 			case 0:
 				s0 = "addBox";
@@ -378,19 +379,19 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 				s0 = "addBall";
 				break;
 			}
-			fontRenderer.drawString(s0, (int) showSelectionBoxLeft + 5, (int) showSelectionBoxTop + 72 + k, 0xffffff);
-			fontRenderer.drawString("point", (int) showSelectionBoxLeft + 22, (int) showSelectionBoxTop + 82 + k, 0xffffff);
-			fontRenderer.drawString("size", (int) showSelectionBoxLeft + 90, (int) showSelectionBoxTop + 82 + k, 0xffffff);
-			fontRenderer.drawString("X", (int) showSelectionBoxLeft + 9, (int) showSelectionBoxTop + 95 + k, 0xffffff);
-			fontRenderer.drawString("Y", (int) showSelectionBoxLeft + 9, (int) showSelectionBoxTop + 110 + k, 0xffffff);
-			fontRenderer.drawString("Z", (int) showSelectionBoxLeft + 9, (int) showSelectionBoxTop + 125 + k, 0xffffff);
-			fontRenderer.drawString("X", (int) showSelectionBoxLeft + 78, (int) showSelectionBoxTop + 95 + k, 0xffffff);
-			fontRenderer.drawString("Y", (int) showSelectionBoxLeft + 78, (int) showSelectionBoxTop + 110 + k, 0xffffff);
-			fontRenderer.drawString("Z", (int) showSelectionBoxLeft + 78, (int) showSelectionBoxTop + 125 + k, 0xffffff);
+			fontRenderer.drawString(s0, (int) showSelectionBoxLeft + 5, (int) showSelectionBoxTop + 82 + k, 0xffffff);
+			fontRenderer.drawString("point", (int) showSelectionBoxLeft + 22, (int) showSelectionBoxTop + 92 + k, 0xffffff);
+			fontRenderer.drawString("size", (int) showSelectionBoxLeft + 90, (int) showSelectionBoxTop + 92 + k, 0xffffff);
+			fontRenderer.drawString("X", (int) showSelectionBoxLeft + 9, (int) showSelectionBoxTop + 105 + k, 0xffffff);
+			fontRenderer.drawString("Y", (int) showSelectionBoxLeft + 9, (int) showSelectionBoxTop + 120 + k, 0xffffff);
+			fontRenderer.drawString("Z", (int) showSelectionBoxLeft + 9, (int) showSelectionBoxTop + 135 + k, 0xffffff);
+			fontRenderer.drawString("X", (int) showSelectionBoxLeft + 78, (int) showSelectionBoxTop + 105 + k, 0xffffff);
+			fontRenderer.drawString("Y", (int) showSelectionBoxLeft + 78, (int) showSelectionBoxTop + 120 + k, 0xffffff);
+			fontRenderer.drawString("Z", (int) showSelectionBoxLeft + 78, (int) showSelectionBoxTop + 135 + k, 0xffffff);
 
 			if (((MultiModelCustom) drawEntity.textureModel[0]).customModel.boxType[partsSlotSelected][i1] != 2) {
 				s = new StringBuilder().append("ScaleFactor  Correction");
-				fontRenderer.drawString(s.toString(), (int) showSelectionBoxLeft, (int) showSelectionBoxTop + 140 + k, 0xffffff);
+				fontRenderer.drawString(s.toString(), (int) showSelectionBoxLeft, (int) showSelectionBoxTop + 150 + k, 0xffffff);
 			}
 			k = k + 15;
 		}
@@ -429,7 +430,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		addButtonList.clear();
 		//TextureWidth TextureHeight
 		int inputStringBoxCount = 0;
-		inputStringBox = new PFLM_GuiTextField[11 + (((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumberMax * 8)];
+		inputStringBox = new PFLM_GuiTextField[11 + (((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumberMax * 10)];
 		inputStringBoxCount = 0;
 		inputStringBox[inputStringBoxCount] = newInputStringBox(0, 0, 32, 12);
 		inputStringBox[inputStringBoxCount].setText(""+((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsTextureWidth[partsSlotSelected]);
@@ -1123,7 +1124,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			int k = 0;
 			if (partsSlotSelected > -1
 					&& ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected] > 0)
-				k += ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected] * 105 - 105;
+				k += ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected] * 145 - 145;
 			if (guiNumber == 0
 					&& ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsName != null
 					&& i > -1) {
@@ -1158,9 +1159,10 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 				}
 			}
 			else if (guiNumber == 3) {
+				k += (((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected] + 1) * 50;
 				textureNameSlot.slotPosX = (int) getEditBoxX() + 50;
-				textureNameSlot.slotPosY = (int) -partsDetailSlot.amountScrolled * 15 + 610 + k;
-				textureNameSlot.scrollBarY = (int) -partsDetailSlot.amountScrolled * 15 + 560 + k;
+				textureNameSlot.slotPosY = (int) -partsDetailSlot.amountScrolled * 15 + 510 + k;
+				textureNameSlot.scrollBarY = (int) -partsDetailSlot.amountScrolled * 15 + 460 + k;
 				String s0 = null;
 				if (textureNameList != null
 						&& !textureNameList.isEmpty()
@@ -1208,5 +1210,15 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 	@Override
 	public int getSlotScrollBarSizeX(int guiNumber) {
 		return 6;
+	}
+
+	@Override
+	public int getLimitSelectedDisplayCount(int guiNumber) {
+		switch(guiNumber) {
+		case 2:
+		case 3:
+			return 10;
+		}
+		return -1;
 	}
 }

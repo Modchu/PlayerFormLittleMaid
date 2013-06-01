@@ -160,7 +160,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
 		float f1 = entity.modelScale;
 		if (f1 == 0.0F) {
-			f1 = ((MultiModelBaseBiped) modelData.modelMain.modelInner).getModelScale();
+			f1 = modelData.modelMain.modelInner instanceof MultiModelBaseBiped ? ((MultiModelBaseBiped) modelData.modelMain.modelInner).getModelScale() : 0.9375F;
 		}
 		GL11.glScalef(f1, f1, f1);
 	}
@@ -556,7 +556,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		entity.skinUrl = null;
 		// modelData.modelFATT.modelInner.isSneak = modelData.modelFATT.modelOuter.isSneak = mainModel.isSneak = false;
 		modelData.modelFATT.modelInner.isRiding = modelData.modelFATT.modelOuter.isRiding = mainModel.isRiding = false;
-		modelData.modelFATT.modelInner.onGround = modelData.modelFATT.modelOuter.onGround = mainModel.onGround =
+		modelData.modelFATT.modelInner.onGrounds[0] = modelData.modelFATT.modelOuter.onGrounds[0] = mainModel.onGround =
 				renderSwingProgress((EntityLiving) entity, f1);
 
 		modelData.modelFATT.modelOuter.isSneak = modelData.modelFATT.modelInner.isSneak = modelData.modelMain.modelInner.isSneak = false;
@@ -579,41 +579,41 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		doRenderLiving((EntityLiving) entity, d, d3, d2, f, f1);
 	}
 
-    public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1) {
-    	PFLM_EntityPlayerDummy entityDummy = ((PFLM_EntityPlayerDummy) entity);
-    	if (entityDummy.textureName == null) entityDummy.textureName = "default";
-    	if (entityDummy.textureArmorName == null) entityDummy.textureArmorName = "default";
-    	boolean flag = entityDummy.textureModel != null;
-    	if (!flag) {
-    		entityDummy.texture = mod_Modchu_ModchuLib.textureManagerGetTexture(entityDummy.textureName, entityDummy.maidColor);
-    		entityDummy.textureArmor0 = null;
-    		entityDummy.textureArmor1 = null;
-    	}
-    	if (flag) {
-    		modelData.modelMain.modelInner = (MultiModelBaseBiped)
-    				(entityDummy.textureModel[0] != null
-    				&& !entityDummy.textureName.equalsIgnoreCase("default")
-					&& entityDummy.textureModel[0] instanceof MultiModelBaseBiped ?
-    						entityDummy.textureModel[0] : modelBasicOrig[0]);
-    		modelData.modelFATT.modelOuter = (MultiModelBaseBiped)
-    				(entityDummy.textureModel[1] != null
-    				&& !entityDummy.textureArmorName.equalsIgnoreCase("default")
-					&& entityDummy.textureModel[1] instanceof MultiModelBaseBiped ?
-    						entityDummy.textureModel[1] : modelBasicOrig[1]);
-    		modelData.modelFATT.modelInner = (MultiModelBaseBiped)
-    				(entityDummy.textureModel[2] != null
-    				&& !entityDummy.textureArmorName.equalsIgnoreCase("default")
-					&& entityDummy.textureModel[2] instanceof MultiModelBaseBiped ?
-    						entityDummy.textureModel[2] : modelBasicOrig[2]);
-    	} else {
-    		modelData.modelMain.modelInner = modelBasicOrig[0];
-    		modelData.modelFATT.modelOuter = modelBasicOrig[1];
-    		modelData.modelFATT.modelInner = modelBasicOrig[2];
-    	}
-    	modelData.modelFATT.modelOuter.isWait = modelData.modelFATT.modelInner.isWait = modelData.modelMain.modelInner.isWait;
-    	doRenderPlayerFormLittleMaid((EntityLiving) entityDummy, d, d1, d2, f, f1);
-    }
+	public void doRender(Entity entity, double d, double d1, double d2,
+			float f, float f1) {
+		PFLM_EntityPlayerDummy entityDummy = ((PFLM_EntityPlayerDummy) entity);
+		if (entityDummy.textureName == null) entityDummy.textureName = "default";
+		if (entityDummy.textureArmorName == null) entityDummy.textureArmorName = "default";
+		boolean flag = entityDummy.textureModel != null;
+		if (!flag) {
+			entityDummy.texture = mod_Modchu_ModchuLib.textureManagerGetTexture(entityDummy.textureName, entityDummy.maidColor);
+			entityDummy.textureArmor0 = null;
+			entityDummy.textureArmor1 = null;
+		}
+		if (flag) {
+			modelData.modelMain.modelInner = (MMM_ModelMultiBase)
+					(entityDummy.textureModel[0] != null
+					&& !entityDummy.textureName.equalsIgnoreCase("default")
+					//&& entityDummy.textureModel[0] instanceof MultiModelBaseBiped
+					? entityDummy.textureModel[0] : modelBasicOrig[0]);
+			modelData.modelFATT.modelInner = (MMM_ModelMultiBase)
+					(entityDummy.textureModel[1] != null
+					&& !entityDummy.textureArmorName.equalsIgnoreCase("default")
+					//&& entityDummy.textureModel[1] instanceof MultiModelBaseBiped
+					? entityDummy.textureModel[1] : modelBasicOrig[1]);
+			modelData.modelFATT.modelOuter = (MMM_ModelMultiBase)
+					(entityDummy.textureModel[2] != null
+					&& !entityDummy.textureArmorName.equalsIgnoreCase("default")
+					//&& entityDummy.textureModel[2] instanceof MultiModelBaseBiped
+					? entityDummy.textureModel[2] : modelBasicOrig[2]);
+		} else {
+			modelData.modelMain.modelInner = modelBasicOrig[0];
+			modelData.modelFATT.modelInner = modelBasicOrig[1];
+			modelData.modelFATT.modelOuter = modelBasicOrig[2];
+		}
+		modelData.modelFATT.modelOuter.isWait = modelData.modelFATT.modelInner.isWait = modelData.modelMain.modelInner.isWait;
+		doRenderPlayerFormLittleMaid((EntityLiving) entityDummy, d, d1, d2, f, f1);
+	}
 
 	private static void modelInit(Entity entity, String s) {
 		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entity, s, false);

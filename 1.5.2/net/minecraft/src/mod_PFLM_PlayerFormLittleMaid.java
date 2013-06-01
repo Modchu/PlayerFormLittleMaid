@@ -289,7 +289,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.5.2-20";
+		return "1.5.2-20a";
 	}
 
 	static{
@@ -327,13 +327,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			MMM_FileManager = Modchu_Reflect.loadClass(getClassName("Modchu_FileManager"));
 			MMM_TextureBox = Modchu_Reflect.loadClass(getClassName("Modchu_TextureBox"));
 		}
-/*
-		Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", new MMM_ModelMultiMMMBase[] {
-					new MultiModel(0.0F),
-					new MultiModel(0.1F),
-					new MultiModel(0.5F)
-			});
-*/
 		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"MultiModel", "MultiModel"});
 		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"playerformlittlemaid", "playerformlittlemaid"});
 		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{mod_Modchu_ModchuLib.modelClassName, "/mob/littleMaid/", mod_Modchu_ModchuLib.modelClassName+"_"});
@@ -559,6 +552,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 						if (!getShortcutKeysAction()
 								| (getShortcutKeysAction()
 										&& getRunActionNumber() != i1)) {
+							setActionReleaseNumber(getRunActionNumber());
 							setRunActionNumber(i1);
 							setShortcutKeysAction(true);
 						}
@@ -1827,6 +1821,24 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	return -1;
     }
 
+    public static void setRunActionNumber(int i) {
+    	PFLM_ModelData modelData = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (modelData != null) modelData.setCapsValue(modelData.caps_runActionNumber, i);
+    	return;
+    }
+
+    public static int getActionReleaseNumber() {
+    	PFLM_ModelData modelData = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (modelData != null) return modelData.getCapsValueInt(modelData.caps_actionReleaseNumber);
+    	return -1;
+    }
+
+    public static void setActionReleaseNumber(int i) {
+    	PFLM_ModelData modelData = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
+    	if (modelData != null) modelData.setCapsValue(modelData.caps_actionReleaseNumber, i);
+    	return;
+    }
+
     public static Object getModel(int i) {
     	PFLM_ModelData modelData = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (modelData != null) return modelData.getCapsValue((MultiModelBaseBiped) null, modelData.caps_model, i);
@@ -1837,12 +1849,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	PFLM_ModelData modelData = PFLM_RenderPlayer.getPlayerData(entityPlayer);
     	if (modelData != null) return modelData.getCapsValue((MultiModelBaseBiped) null, modelData.caps_model, i);
     	return null;
-    }
-
-    public static void setRunActionNumber(int i) {
-    	PFLM_ModelData modelData = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
-    	if (modelData != null) modelData.setCapsValue(modelData.caps_runActionNumber, i);
-    	return;
     }
 
     public static void setShortcutKeysActionInitFlag(boolean b) {
