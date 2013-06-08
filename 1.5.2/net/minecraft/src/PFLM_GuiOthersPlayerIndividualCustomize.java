@@ -178,7 +178,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
         {
         	setPlayerLocalData();
         	mod_PFLM_PlayerFormLittleMaid.saveOthersPlayerParamater(true);
-        	PFLM_Config.clearCfgData();
+        	Modchu_Config.clearCfgData();
         	noSaveFlag = false;
         	mc.displayGuiScreen(parentScreen);
         	mod_PFLM_PlayerFormLittleMaid.clearPlayers();

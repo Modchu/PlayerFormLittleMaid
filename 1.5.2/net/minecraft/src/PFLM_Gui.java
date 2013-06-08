@@ -274,9 +274,9 @@ public class PFLM_Gui extends GuiScreen {
 		guiPartsNemeMap.clear();
 		defaultParts.clear();
 		Object model = mod_PFLM_PlayerFormLittleMaid.getModel(armorType);
-		HashMap<Integer, String> showPartsNemeMap = PFLM_Config.getConfigShowPartsNemeMap(mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
-		HashMap<String, String> showPartsReneme = PFLM_Config.getConfigShowPartsRenemeMap(model, mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
-		HashMap<Integer, String> showPartsHideMap = PFLM_Config.getConfigShowPartsHideMap(model, mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
+		HashMap<Integer, String> showPartsNemeMap = Modchu_Config.getConfigShowPartsNemeMap(mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
+		HashMap<String, String> showPartsReneme = Modchu_Config.getConfigShowPartsRenemeMap(model, mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
+		HashMap<Integer, String> showPartsHideMap = Modchu_Config.getConfigShowPartsHideMap(model, mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
 		//if (showPartsNemeMap != null) Modchu_Debug.mDebug("showPartsNemeMap.size()="+showPartsNemeMap.size());
 		//else Modchu_Debug.mDebug("showPartsNemeMap.size()=null !!");
 		//if (showPartsReneme != null) Modchu_Debug.mDebug("showPartsReneme.size()="+showPartsReneme.size());
@@ -298,7 +298,7 @@ public class PFLM_Gui extends GuiScreen {
 					&& parts.containsKey(s2)) {
 				b = parts.get(s2);
 			} else {
-				if (partsSetDefault) b = PFLM_Config.getDefaultShowPartsMapBoolean(mod_PFLM_PlayerFormLittleMaid.textureName, s2, armorType);
+				if (partsSetDefault) b = Modchu_Config.getDefaultShowPartsMapBoolean(mod_PFLM_PlayerFormLittleMaid.textureName, s2, armorType);
 				else b = true;
 			}
 			s = b ? "ON" : "OFF";
@@ -333,10 +333,10 @@ public class PFLM_Gui extends GuiScreen {
 		List<String> list = new ArrayList();
 		MMM_ModelRenderer modelRenderer = null;
 		Object model = mod_PFLM_PlayerFormLittleMaid.getModel(armorType);
-		HashMap<Integer, String> showPartsNemeMap = PFLM_Config.getConfigShowPartsNemeMap(mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
-		HashMap<String, Boolean> showPartsList = PFLM_Config.getConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType);
-		HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
-		HashMap<String, Boolean> defaultShowPartsMap = PFLM_Config.getDefaultShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
+		HashMap<Integer, String> showPartsNemeMap = Modchu_Config.getConfigShowPartsNemeMap(mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
+		HashMap<String, Boolean> showPartsList = Modchu_Config.getConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType);
+		HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
+		HashMap<String, Boolean> defaultShowPartsMap = Modchu_Config.getDefaultShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, armorType);
 		if (showPartsList != null) Modchu_Debug.mDebug("showPartsList.size()="+showPartsList.size());
 		else Modchu_Debug.mDebug("showPartsList.size()=null !!");
 		Modchu_Debug.mDebug("showPartsNemeMap.size()="+showPartsNemeMap.size());
@@ -377,7 +377,7 @@ public class PFLM_Gui extends GuiScreen {
 	public void updateScreen() {
 		if(partsSetFlag == 2) {
 			partsSetFlag = 3;
-			//if (!partsSetDefault) PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
+			//if (!partsSetDefault) Modchu_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
 			//Modchu_Debug.mDebug("updateScreen()");
 			if (!partsInitFlag) {
 				partsInitFlag = true;
@@ -705,7 +705,7 @@ public class PFLM_Gui extends GuiScreen {
     	if(guibutton.id == 99)
     	{
     		parts = new HashMap();
-    		PFLM_Config.setConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType, parts);
+    		Modchu_Config.setConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType, parts);
     		partsSetDefault = true;
     		modelChange();
     		return;
@@ -732,7 +732,7 @@ public class PFLM_Gui extends GuiScreen {
     				parts.put(s, false);
     			}
     		}
-    		PFLM_Config.setConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType, parts);
+    		Modchu_Config.setConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType, parts);
     		partsSaveFlag = true;
     		partsSetFlag = 1;
     		return;
@@ -740,11 +740,11 @@ public class PFLM_Gui extends GuiScreen {
     	//Save
     	if(guibutton.id == 200)
     	{
-    		PFLM_Config.clearCfgData();
-    		if (partsSaveFlag) PFLM_Config.setConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType, parts);
+    		Modchu_Config.clearCfgData();
+    		if (partsSaveFlag) Modchu_Config.setConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType, parts);
     		mod_PFLM_PlayerFormLittleMaid.saveParamater();
-    		PFLM_Config.loadConfig(mod_PFLM_PlayerFormLittleMaid.showModelList, mod_PFLM_PlayerFormLittleMaid.cfgfile);
-    		PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
+    		Modchu_Config.loadConfig(mod_PFLM_PlayerFormLittleMaid.showModelList, mod_PFLM_PlayerFormLittleMaid.cfgfile);
+    		Modchu_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
     		mod_PFLM_PlayerFormLittleMaid.clearPlayers();
     		noSaveFlag = false;
     		mc.displayGuiScreen(null);
@@ -1362,7 +1362,7 @@ public class PFLM_Gui extends GuiScreen {
 	}
 
 	public static HashMap<String, Boolean> getShowPartsMap() {
-		return !partsInitFlag ? PFLM_Config.getConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType)
+		return !partsInitFlag ? Modchu_Config.getConfigShowPartsMap(mod_PFLM_PlayerFormLittleMaid.textureName, mod_PFLM_PlayerFormLittleMaid.maidColor, armorType)
 				: partsSetDefault ? PFLM_Gui.defaultParts : PFLM_Gui.parts;
 	}
 }

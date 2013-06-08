@@ -749,7 +749,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private String getModelRendererName(MMM_ModelRenderer modelRenderer, int i) {
 		MMM_ModelRenderer modelRenderer2;
 		Object model = getModel(i);
-		HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+		HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, textureName, i);
 		Modchu_Debug.mDebug("getModelRendererName modelRendererMap != null ?"+(modelRendererMap != null));
 		Iterator<Entry<String, Field>> iterator = modelRendererMap.entrySet().iterator();
 		Entry<String, Field> entry;
@@ -800,7 +800,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			partsSetFlag = 1;
 		}
 		if(partsSetFlag == 1) {
-			PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
+			Modchu_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
 			multiModelBaseBiped.defaultPartsSettingBefore(this);
 			multiModelBaseBiped.defaultPartsSettingAfter(this);
 			partsSetFlag = 2;
@@ -896,11 +896,11 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	}
 
 	private HashMap<String, Boolean> getShowPartsMap(int i) {
-		return PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
+		return Modchu_Config.getConfigShowPartsMap(textureName, maidColor, i);
 	}
 
 	private int getShowPartsMapBoolean(String s, int i) {
-		return PFLM_Config.getConfigShowPartsMapBoolean(textureName, s, maidColor, i);
+		return Modchu_Config.getConfigShowPartsMapBoolean(textureName, s, maidColor, i);
 	}
 
 	private ItemStack getArmorItemInSlot(int i) {
@@ -1319,16 +1319,16 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
      */
     private void showModelSettingReflects(int i) {
     	//Modchu_Debug.mDebug("showModelSettingReflects i="+i);
-    	HashMap<String, Boolean> showPartsMap = PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
+    	HashMap<String, Boolean> showPartsMap = Modchu_Config.getConfigShowPartsMap(textureName, maidColor, i);
     	HashMap<String, Boolean> defaultShowPartsMap = getDefaultShowPartsMap(i);
     	Object model = getModel(i);
-    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+    	HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, textureName, i);
     	//Modchu_Debug.mDebug("showModelSettingReflects textureName="+textureName+" modelRendererMap != null ?"+(modelRendererMap != null));
     	if (modelRendererMap != null) ;else return;
     	if (defaultShowPartsMap != null) settingReflects(modelRendererMap, defaultShowPartsMap, null, null, i);
-    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
+    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = Modchu_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
     	if (showPartsMap != null
-    			&& !showPartsMap.isEmpty()) settingReflects(modelRendererMap, showPartsMap, PFLM_Config.getIndexOfAllSetVisibleMap(textureName, i), indexOfAllSetVisibleBooleanMap, i);
+    			&& !showPartsMap.isEmpty()) settingReflects(modelRendererMap, showPartsMap, Modchu_Config.getIndexOfAllSetVisibleMap(textureName, i), indexOfAllSetVisibleBooleanMap, i);
     }
 
     private void settingReflects(HashMap<String, Field> modelRendererMap, HashMap<String, Boolean> map,
@@ -1471,8 +1471,8 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
      */
     private void indexOfAllSetVisible(String s, int i) {
     	MultiModelBaseBiped model = (MultiModelBaseBiped) getModel(i);
-    	List<String> indexOfAllSetVisibleList = PFLM_Config.getIndexOfAllSetVisibleMap(textureName, s, i);
-    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+    	List<String> indexOfAllSetVisibleList = Modchu_Config.getIndexOfAllSetVisibleMap(textureName, s, i);
+    	HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, textureName, i);
     	if (modelRendererMap != null
     			&& modelRendererMap.containsKey(s)) ;else return;
     	String s0 = null;
@@ -1493,7 +1493,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     						&& !s0.equals(s)) {
     					indexOfAllSetVisibleList.add(s0);
     					//Modchu_Debug.mDebug("indexOfAllSetVisible add s0="+s0);
-    					PFLM_Config.setIndexOfAllSetVisibleMap(textureName, s, i, indexOfAllSetVisibleList);
+    					Modchu_Config.setIndexOfAllSetVisibleMap(textureName, s, i, indexOfAllSetVisibleList);
     				}
     			}
     		}
@@ -1506,13 +1506,13 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
      * indexOfで検索対象のパーツをまとめて指定booleanにセットするListへの追加
      */
     private void indexOfAllSetVisible(String s, int i, boolean b) {
-    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
+    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = Modchu_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
     	indexOfAllSetVisibleBooleanMap.put(s, b);
-    	PFLM_Config.setIndexOfAllSetVisibleBooleanMap(textureName, i, indexOfAllSetVisibleBooleanMap);
+    	Modchu_Config.setIndexOfAllSetVisibleBooleanMap(textureName, i, indexOfAllSetVisibleBooleanMap);
 /*
-    	HashMap<Integer, String> nemeMap = PFLM_Config.getConfigShowPartsNemeMap(s, i);
+    	HashMap<Integer, String> nemeMap = Modchu_Config.getConfigShowPartsNemeMap(s, i);
     	MultiModelBaseBiped model = (MultiModelBaseBiped) getModel(i);
-    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+    	HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, textureName, i);
     	if (nemeMap != null) ;else return;
     	String s0 = null;
     	for(int i1 = 0; i1 < nemeMap.size(); i1++) {
@@ -1529,15 +1529,15 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
     }
 
     private HashMap<String, Boolean> getDefaultShowPartsMap(int i) {
-    	return PFLM_Config.getDefaultShowPartsMap(textureName, i);
+    	return Modchu_Config.getDefaultShowPartsMap(textureName, i);
     }
 
     private boolean getDefaultShowPartsMapBoolean(String s, int i) {
-    	return PFLM_Config.getDefaultShowPartsMapBoolean(textureName, s, i);
+    	return Modchu_Config.getDefaultShowPartsMapBoolean(textureName, s, i);
     }
 
     private void putDefaultShowPartsMap(String s, int i, boolean b) {
-    	PFLM_Config.putDefaultShowPartsMap(textureName, s, i, b);
+    	Modchu_Config.putDefaultShowPartsMap(textureName, s, i, b);
     }
 
 	public int getCapsValueInt(int pIndex, Object ...pArg) {
