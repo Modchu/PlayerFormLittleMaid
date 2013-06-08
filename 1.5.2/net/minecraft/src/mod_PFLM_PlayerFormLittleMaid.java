@@ -289,7 +289,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.5.2-20a";
+		return "1.5.2-20c";
 	}
 
 	static{
@@ -329,8 +329,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		}
 		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"MultiModel", "MultiModel"});
 		Modchu_Reflect.invokeMethod(MMM_FileManager, "getModFile", new Class[]{String.class, String.class}, null, new Object[]{"playerformlittlemaid", "playerformlittlemaid"});
-		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{mod_Modchu_ModchuLib.modelClassName, "/mob/littleMaid/", mod_Modchu_ModchuLib.modelClassName+"_"});
-		Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"playerformlittlemaid", "/mob/littleMaid/", mod_Modchu_ModchuLib.modelClassName+"_"});
+		Object o = Modchu_Reflect.getFieldObject(MMM_TextureManager, "instance");
+		if (o != null) {
+			Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, o, new Object[]{mod_Modchu_ModchuLib.modelClassName, "/mob/littleMaid/", mod_Modchu_ModchuLib.modelClassName+"_"});
+			Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, o, new Object[]{"playerformlittlemaid", "/mob/littleMaid/", mod_Modchu_ModchuLib.modelClassName+"_"});
+		} else {
+			ModLoader.getLogger().warning("mod_PFLM_PlayerFormLittleMaid-you must check MMMLib revision.");
+			throw new RuntimeException("mod_PFLM_PlayerFormLittleMaid-The revision of MMMLib is old.");
+		}
 	}
 
 	public String getClassName(String s) {

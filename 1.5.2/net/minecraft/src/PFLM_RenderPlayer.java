@@ -145,6 +145,10 @@ public class PFLM_RenderPlayer extends RenderPlayer
     		if(item instanceof ItemArmor) {
     			itemarmor = (ItemArmor)item;
     			flag = itemarmor != null && is.stackSize > 0;
+    		} else {
+				modelData.modelFATT.textureInner[i] = null;
+				modelData.modelFATT.textureOuter[i] = null;
+    			return;
     		}
     		String a1 = itemarmor.renderIndex < armorFilename.length ? armorFilename[itemarmor.renderIndex] : armorFilename[armorFilename.length - 1];
     		if (flag) {
@@ -847,8 +851,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	}
     	if (modelData.getCapsValueBoolean(modelData.caps_isSitting))
     		d3 += Modchu_ModelCapsHelper.getCapsValueDouble(modelData.modelMain.modelInner, modelData.caps_sittingyOffset);
-    	if (modelData.getCapsValueBoolean(modelData.caps_isSleeping))
-    		d3 += Modchu_ModelCapsHelper.getCapsValueDouble(modelData.modelMain.modelInner, modelData.caps_sleepingyOffset);
 
     	if (!(mc.currentScreen instanceof PFLM_GuiOthersPlayer)
     			&& modelData.modelMain.modelInner != null) doRenderLivingPFLM(modelData, (EntityLiving) entityplayer, d, d3, d2, f, f1);
@@ -928,16 +930,13 @@ public class PFLM_RenderPlayer extends RenderPlayer
 
     private void sitSleepResetCheck(PFLM_ModelData modelData, EntityPlayer entityplayer) {
     	float f1 = entityplayer.moveForward * entityplayer.moveForward + entityplayer.moveStrafing * entityplayer.moveStrafing;
-    	byte byte0 = entityplayer.getDataWatcher().getWatchableObjectByte(16);
-    	if ((entityplayer.isRiding()
-    			&& byte0 > 0)
+    	if (entityplayer.isRiding()
     			| entityplayer.isJumping
     			| entityplayer.sleeping
     			| ((Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isSitting)
     					&& (double) f1 > 0.20000000000000001D))
     			| ((Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isSleeping)
     					&& f1 > 0.0F))) {
-    		entityplayer.getDataWatcher().updateObject(16, Byte.valueOf((byte)0));
     		modelData.modelMain.setCapsValue(modelData.caps_isRiding, false);
     		modelData.setCapsValue(modelData.caps_isSitting, false);
     		modelData.setCapsValue(modelData.caps_isSleeping, false);
@@ -1868,127 +1867,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 	}
 
     /**
-     * Sets a simple glTranslate on a LivingEntity.
-     */
-    @Override
-    protected void renderLivingAt(EntityLiving entityliving, double d, double d1, double d2)
-    {
-    	EntityPlayer entityplayer = (EntityPlayer)entityliving;
-    	byte byte0 = entityplayer.getDataWatcher().getWatchableObjectByte(16);
-    	PFLM_ModelData modelData = getPlayerData(entityplayer);
-    	if (modelData != null) ;else return;
-    	if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return;
-    	if (entityliving.isEntityAlive() && byte0 == 2)
-    	{
-    		/*b173//*/byte byte1 = entityplayer.getDataWatcher().getWatchableObjectByte(17);
-/*//b173delete
-            byte byte1 = 0;
-//-@-b166
-        	if (mod_PFLM_PlayerFormLittleMaid.isPlayerAPI) {
-        		if (entityliving instanceof PFLM_EntityPlayer) {
-        			byte1 = (byte)((PFLM_EntityPlayer) entityliving).getSleepMotion();
-        		}
-        	} else {
-//@-@b166
-        		if (entityliving instanceof PFLM_EntityPlayerSP) {
-        			byte1 = (byte)((PFLM_EntityPlayerSP) entityliving).getSleepMotion();
-        		}
-//-@-b166
-    		}
-//@-@b166
-// b173delete*/// b173delete
-    		float f = 0.0F;
-    		float f1 = 0.0F;
-
-    		switch (byte1)
-    		{
-    		case 0:
-    		case 4:
-    			f1 = 1.0F * (1.62F - modelData.modelMain.modelInner.getyOffset());
-    			break;
-
-    		case 2:
-    			f1 = -1F * (1.62F - modelData.modelMain.modelInner.getyOffset());
-    			break;
-
-    		case 1:
-    			f = -1F * (1.62F - modelData.modelMain.modelInner.getyOffset());
-    			break;
-
-    		case 3:
-    			f = 1.0F * (1.62F - modelData.modelMain.modelInner.getyOffset());
-    			break;
-    		}
-    		if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-    			d1 += 2.0D;
-    			f1 -= 0.0F;
-    		}
-    		super.renderLivingAt(entityliving, d + (double)f, d1 + 1.0D, d2 + (double)f1);
-    	}
-    	else
-    	{
-    		super.renderLivingAt(entityliving, d, d1, d2);
-    	}
-    }
-
-    @Override
-    protected void rotateCorpse(EntityLiving entityliving, float f, float f1, float f2)
-    {
-    	EntityPlayer entityplayer = (EntityPlayer)entityliving;
-    	byte byte0 = entityplayer.getDataWatcher().getWatchableObjectByte(16);
-
-    	if (entityplayer.isEntityAlive() && byte0 == 2)
-    	{
-    		/*b173//*/byte byte1 = entityplayer.getDataWatcher().getWatchableObjectByte(17);
-/*//b173delete
-            byte byte1 = 0;
-//-@-b166
-        	if (mod_PFLM_PlayerFormLittleMaid.isPlayerAPI) {
-        		if (entityplayer instanceof PFLM_EntityPlayer) {
-        			byte1 = (byte)((PFLM_EntityPlayer) entityplayer).getSleepMotion();
-        		}
-        	} else {
-//@-@b166
-        		if (entityplayer instanceof PFLM_EntityPlayerSP) {
-        			byte1 = (byte)((PFLM_EntityPlayerSP) entityplayer).getSleepMotion();
-        		}
-//-@-b166
-    		}
-//@-@b166
-// b173delete*/// b173delete
-    		int i = 0;
-
-    		switch (byte1)
-    		{
-    		case 0:
-    		case 4:
-    			i = 270;
-    			break;
-
-    		case 2:
-    			i = 90;
-    			break;
-
-    		case 1:
-    			i = 180;
-    			break;
-
-    		case 3:
-    			i = 0;
-    			break;
-    		}
-
-    		GL11.glRotatef(i, 0.0F, 1.0F, 0.0F);
-    		GL11.glRotatef(getDeathMaxRotation(entityplayer), 0.0F, 0.0F, 1.0F);
-    		GL11.glRotatef(270F, 0.0F, 1.0F, 0.0F);
-    	}
-    	else
-    	{
-    		super.rotateCorpse(entityliving, f, f1, f2);
-    	}
-    }
-
-    /**
      * Used to render a player's name above their head
      */
     @Override
@@ -2209,7 +2087,26 @@ public class PFLM_RenderPlayer extends RenderPlayer
 *///125delete
     		//Modchu_Reflect.invokeMethod(PFLM_RenderRenderSmart, "rotatePlayer", new Class[]{ EntityPlayer.class, float.class, float.class, float.class }, pflm_RenderRenderSmart, new Object[]{ var1, var2, var3, var4 });
     	}
-    	super.rotatePlayer(var1, var2, var3, var4);
+    	if (modelData.getCapsValueBoolean(modelData.caps_isSleeping)) {
+    		switch(modelData.getCapsValueInt(modelData.caps_rotate)) {
+    		case 0:
+        		GL11.glRotatef(270.0F, 0.0F, 1.0F, 0.0F);
+    			break;
+    		case 1:
+        		GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+    			break;
+    		case 2:
+        		GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+    			break;
+    		case 3:
+        		GL11.glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
+    			break;
+    		}
+    		GL11.glRotatef(getDeathMaxRotation(var1), 0.0F, 0.0F, 1.0F);
+    		GL11.glRotatef(270.0F, 0.0F, 1.0F, 0.0F);
+    	} else {
+    		super.rotatePlayer(var1, var2, var3, var4);
+    	}
     }
 
     public void renderPlayerAt(EntityPlayer var1, double var2, double var4, double var6)

@@ -45,6 +45,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private boolean mushroomKeyBindSetFlag = false;
 	private boolean mushroomLeft = false;
 	private boolean mushroomRight = false;
+	private boolean sleeping = false;
 	private float isWaitF = 0.0F;
 	private float modelScale = 0.0F;
     private float actionSpeed = 0.0F;
@@ -59,6 +60,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private int partsSetFlag = 1;
 	private int mushroomConfusionType = 0;
 	private int mushroomConfusionCount = 0;
+	private int rotate = 0;
 	private final int mushroomConfusionTypeMax = 4;
 	private List<String> showPartsHideList = new ArrayList();
 	private HashMap<String, String> showPartsRenemeMap = new HashMap();
@@ -168,6 +170,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg.length > 0
 			&& pArg[0] != null) {
 				setIsWaitTime((Integer) pArg[0]);
+				return true;
+			}
+			return false;
+		case caps_rotate:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) {
+				setRotate((Integer) pArg[0]);
 				return true;
 			}
 			return false;
@@ -588,6 +598,8 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			return getMaidColor();
 		case caps_localFlag:
 			return getLocalFlag();
+		case caps_rotate:
+			return getRotate();
 		case caps_texture:
 			if (pArg != null
 			&& pArg.length > 1
@@ -691,7 +703,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg.length > 0
 			&& pArg[0] != null) return getModel((Integer) pArg[0]);
 			break;
-		case caps_armorItemInSlot:
+		case caps_currentArmor:
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) return getArmorItemInSlot((Integer) pArg[0]);
@@ -972,23 +984,31 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private boolean getIsSleeping() {
 		if (!(owner instanceof EntityPlayer)) return false;
 		return ((EntityPlayer) owner).isPlayerSleeping()
-				| ((EntityPlayer) owner).getDataWatcher().getWatchableObjectByte(16) == 2;
+				| sleeping;
 	}
 
 	private void setIsSleeping(boolean b) {
 		if (!(owner instanceof EntityPlayer)) return;
+		sleeping = b;
 		float f1 = ((EntityPlayer) owner).moveForward * ((EntityPlayer) owner).moveForward + ((EntityPlayer) owner).moveStrafing * ((EntityPlayer) owner).moveStrafing;
 		if (((EntityPlayer) owner).isRiding() || !mc.inGameHasFocus || f1 > 0.0F || ((EntityPlayer) owner).isJumping) return;
-		//byte byte1 = ((EntityPlayer) owner).getDataWatcher().getWatchableObjectByte(16);
-		((EntityPlayer) owner).getDataWatcher().updateObject(16, Byte.valueOf((byte)(b ? 2 : 0)));
 		float f2;
 		for (f2 = ((EntityPlayer) owner).rotationYaw; f2 < 0.0F; f2 += 360F) { }
 		for (; f2 > 360F; f2 -= 360F) { }
 		int i = (int)((f2 + 45F) / 90F);
-		/*b173//*/((EntityPlayer) owner).getDataWatcher().updateObject(17, Byte.valueOf((byte)i));
+		setRotate(i);
+		//((EntityPlayer) owner).getDataWatcher().updateObject(17, Byte.valueOf((byte)i));
 /*//b173delete
 		setSleepMotion(i);
 *///b173delete
+	}
+
+	private int getRotate() {
+		return rotate;
+	}
+
+	private void setRotate(int i) {
+		rotate = i;
 	}
 
 	private boolean getIsPlayer() {

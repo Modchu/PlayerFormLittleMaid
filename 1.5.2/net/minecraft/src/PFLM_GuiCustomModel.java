@@ -1030,44 +1030,47 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			}
 			break;
 		case 1:
-/*
-			partsDetailSlotSelected = i;
-			if (!partsDetailSlotDrawStringInitFlag
-					&& partsDetailSlotSelected > -1
-					&& partsSlotSelected > -1) {
-				partsDetailSlotDrawStringInit();
-				isEdit = true;
-			}
-			if (partsSlotSelected == -1) isEdit = false;
-*/
 			break;
 		case 2:
 			if (addChildNameSlotSelected != i) {
+				String s = modelRendererNameList.get(addChildNameSlotSelected);
+				MMM_ModelRenderer modelRenderer = getModelRenderer(s, ((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModeltextureName, ((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModel, 0);
+				if (modelRenderer != null) {
+					if (modelRenderer.childModels != null) modelRenderer.childModels.remove(((MultiModelCustom) drawEntity.textureModel[0]).customModel.parts[partsSlotSelected]);
+				}
 				addChildNameSlotSelected = i;
-				String s = modelRendererNameList.get(partsSlotSelected);
-				HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModel, ((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModeltextureName, 0);
-				if (modelRendererMap != null
-						&& modelRendererMap.containsKey(s)) {
-					Field f = modelRendererMap.get(s);
-					try {
-						MMM_ModelRenderer modelRenderer = (MMM_ModelRenderer) f.get(((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModel);
-						if (modelRenderer != null) modelRenderer.addChild(((MultiModelCustom) drawEntity.textureModel[0]).customModel.parts[partsSlotSelected]);
-					} catch (Exception e) {
-					}
+				s = modelRendererNameList.get(addChildNameSlotSelected);
+				modelRenderer = getModelRenderer(s, ((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModeltextureName, ((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModel, 0);
+				if (modelRenderer != null) {
+					modelRenderer.addChild(((MultiModelCustom) drawEntity.textureModel[0]).customModel.parts[partsSlotSelected]);
 				}
 			}
 			break;
 		case 3:
 			if (textureNameSlotSelected != i) {
 				textureNameSlotSelected = i;
-				if (textureNameList != null
-						&& textureNameList.contains(i)) {
+				if (textureNameList != null) {
 					String s = textureNameList.get(i);
-					if (s != null) ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsTextureNameMap.put(i, s);
+					Modchu_Debug.mDebug("textureNameSlotSelected="+textureNameSlotSelected+" s="+s);
+					if (s != null) ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsTextureNameMap.put(partsSlotSelected, s);
 				}
 			}
 			break;
 		}
+	}
+
+	private MMM_ModelRenderer getModelRenderer(String s, String s2, MMM_ModelMultiBase model, int i) {
+		MMM_ModelRenderer modelRenderer = null;
+		HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, s2, 0);
+		if (modelRendererMap != null
+				&& modelRendererMap.containsKey(s)) {
+			Field f = modelRendererMap.get(s);
+			try {
+				modelRenderer = (MMM_ModelRenderer) f.get(((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModel);
+			} catch (Exception e) {
+			}
+		}
+		return modelRenderer;
 	}
 
 	@Override
