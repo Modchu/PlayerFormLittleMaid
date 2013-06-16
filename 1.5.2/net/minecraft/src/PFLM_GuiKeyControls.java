@@ -192,7 +192,7 @@ public class PFLM_GuiKeyControls extends
     	if(guibutton.id == 200)
     	{
     		mod_PFLM_PlayerFormLittleMaid.saveShortcutKeysPlayerParamater();
-    		Modchu_Config.clearCfgData();
+    		PFLM_Config.clearCfgData();
     		noSaveFlag = false;
     		mc.displayGuiScreen(null);
     		mod_PFLM_PlayerFormLittleMaid.clearPlayers();

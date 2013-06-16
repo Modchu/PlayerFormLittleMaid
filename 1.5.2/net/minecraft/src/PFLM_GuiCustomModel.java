@@ -451,7 +451,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		//addChildName
 		addChildNameSlot = new PFLM_GuiSlot(mc, this, 100, 15, (int) showSelectionBoxLeft + 10, (int) showSelectionBoxTop + 5, 2);
 		if (((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModeltextureName != null) {
-			HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModel, ((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModeltextureName, 0);
+			HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModel, ((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModeltextureName, 0);
 			String s;
 			String addChildName = ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partAddChildName[partsSlotSelected];
 			if (modelRendererMap != null
@@ -1061,7 +1061,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 
 	private MMM_ModelRenderer getModelRenderer(String s, String s2, MMM_ModelMultiBase model, int i) {
 		MMM_ModelRenderer modelRenderer = null;
-		HashMap<String, Field> modelRendererMap = Modchu_Config.getConfigModelRendererMap(model, s2, 0);
+		HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, s2, 0);
 		if (modelRendererMap != null
 				&& modelRendererMap.containsKey(s)) {
 			Field f = modelRendererMap.get(s);

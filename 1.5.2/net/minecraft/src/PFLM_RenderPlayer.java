@@ -523,13 +523,16 @@ public class PFLM_RenderPlayer extends RenderPlayer
     				modelData.modelMain.setEntityCaps(modelData);
     				renderPassModel.setLivingAnimations(entityliving, f8, f7, f1);
 //-@-132
+    				((MMM_ModelBaseDuo) renderPassModel).setArmorRendering(true);
     				if (mod_Modchu_ModchuLib.useInvisibilityArmor) {
     					if (!entityliving.isInvisible()) {
 //@-@132
     						renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
 //-@-132
     					}
-    				} else renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    				} else {
+    					renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    				}
 //@-@132
     				if (mod_PFLM_PlayerFormLittleMaid.transparency != 1.0F) GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 //-@-b181
@@ -2042,17 +2045,18 @@ public class PFLM_RenderPlayer extends RenderPlayer
 //-@-132
     	if (par1EntityLiving.isInvisible()
     			&& mod_Modchu_ModchuLib.useInvisibilityBody) {
-    		modelData.modelMain.isRendering = false;
+    		modelData.modelMain.setArmorRendering(false);
     	} else {
 //@-@132
     		if (renderManager != null) {
     			loadDownloadableImageTexture(par1EntityLiving.skinUrl, par1EntityLiving.getTexture());
-    			modelData.modelMain.isRendering = true;
+    			modelData.modelMain.setArmorRendering(true);
     		}
 //-@-132
     	}
 //@-@132
-    	modelData.modelMain.modelInner.render(modelData, par2, par3, par4, par5, par6, par7, true);
+    	//Modchu_Debug.mDebug("renderModel modelData.modelMain.isRendering="+modelData.modelMain.isRendering);
+    	modelData.modelMain.modelInner.render(modelData, par2, par3, par4, par5, par6, par7, modelData.modelMain.isRendering);
     }
 
     public float getActionSpeed() {

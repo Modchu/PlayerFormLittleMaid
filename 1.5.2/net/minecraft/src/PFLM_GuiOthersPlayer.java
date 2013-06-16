@@ -186,7 +186,7 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 		if(guibutton.id == 200)
 		{
 			mod_PFLM_PlayerFormLittleMaid.saveOthersPlayerParamater(false);
-			Modchu_Config.clearCfgData();
+			PFLM_Config.clearCfgData();
 			mod_PFLM_PlayerFormLittleMaid.clearPlayers();
 			noSaveFlag = false;
 			mc.displayGuiScreen(null);

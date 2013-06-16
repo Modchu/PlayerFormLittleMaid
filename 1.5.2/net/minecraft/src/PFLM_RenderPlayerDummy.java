@@ -664,6 +664,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 /*//b181delete
         loadDownloadableImageTexture(entityliving.skinUrl, entityliving.getEntityTexture());
 *///b181delete
-        modelData.modelMain.modelInner.render(modelData, f, f1, f2, f3, f4, f5, true);
+    	modelData.modelMain.setArmorRendering(true);
+    	modelData.modelMain.modelInner.render(modelData, f, f1, f2, f3, f4, f5, true);
     }
 }
