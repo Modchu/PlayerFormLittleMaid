@@ -863,7 +863,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			Modchu_Debug.mDebug("drawEntity.textureModel != null");
 		} else {
 			Modchu_Debug.mDebug("drawEntity.textureModel == null textureName="+textureName);
-			drawEntity.textureModel = mod_Modchu_ModchuLib.textureBoxModelsCheck(null, textureName, true, true);
+			drawEntity.textureModel = mod_Modchu_ModchuLib.modelNewInstance(null, textureName, true, true);
 		}
 
 		//setArmorTextureValue();
@@ -901,12 +901,12 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			}
 		}
 		Modchu_Debug.mDebug("textureArmorName="+textureArmorName);
-		MultiModelCustom[] models = (MultiModelCustom[]) mod_Modchu_ModchuLib.textureBoxModelsCheck(null, textureArmorName, true, true);
+		MultiModelCustom[] models = (MultiModelCustom[]) mod_Modchu_ModchuLib.modelNewInstance(null, textureArmorName, true, true);
 		if (models != null) {
 			if (models[1] != null) drawEntity.textureModel[1] = models[1];
 			if (models[2] != null) drawEntity.textureModel[2] = models[2];
 		} else {
-			models = (MultiModelCustom[]) mod_Modchu_ModchuLib.textureBoxModelsCheck(null, "default_Custom1");
+			models = (MultiModelCustom[]) mod_Modchu_ModchuLib.modelNewInstance(null, "default_Custom1", true, true);
 			if (models != null) {
 				if (models[1] != null) drawEntity.textureModel[1] = models[1];
 				if (models[2] != null) drawEntity.textureModel[2] = models[2];

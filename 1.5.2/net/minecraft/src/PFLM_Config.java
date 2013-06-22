@@ -284,7 +284,7 @@ public class PFLM_Config extends Modchu_Config {
 								continue;
 							}
 							Modchu_Debug.mDebug("loadShowModelList textureName="+textureName);
-							Object[] textureModel = textureBoxModelsCheck(null, textureName);
+							Object[] textureModel = modelNewInstance(null, textureName);
 							if (textureModel != null
 									&& textureModel[0] != null) {
 								if (multiModelCustom != null) ;else multiModelCustom = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MultiModelCustom"));
@@ -736,18 +736,17 @@ public class PFLM_Config extends Modchu_Config {
 			//Modchu_Debug.mDebug("getConfigShowPartsNemeMap containsKey ok. configShowPartsNemeMap.get(s1)="+configShowPartsNemeMap.get(s1));
 			return configShowPartsNemeMap.get(s1);
 		}
-		Object[] textureModel = mod_Modchu_ModchuLib.textureBoxModelsCheck(null, s);
+		Object[] textureModel = mod_Modchu_ModchuLib.modelNewInstance(null, s, true, false);
 		if (textureModel != null) {
 			int i1 = 0;
 			switch(i) {
 			case 0:
-			case 1:
 				i1 = 0;
 				break;
-			case 2:
+			case 1:
 				i1 = 1;
 				break;
-			case 3:
+			case 2:
 				i1 = 2;
 				break;
 			}

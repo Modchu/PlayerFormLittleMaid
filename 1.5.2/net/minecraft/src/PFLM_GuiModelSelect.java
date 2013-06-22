@@ -194,7 +194,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 			}
 			entityPlayerFormLittleMaidDummy.texture = mod_Modchu_ModchuLib.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor);
 			Object ltb = mod_Modchu_ModchuLib.getTextureBox(entityPlayerFormLittleMaidDummy.textureName);
-			entityPlayerFormLittleMaidDummy.textureModel = (Object[]) mod_Modchu_ModchuLib.textureBoxModelsCheck(ltb, entityPlayerFormLittleMaidDummy.textureName);
+			entityPlayerFormLittleMaidDummy.textureModel = (Object[]) mod_Modchu_ModchuLib.modelNewInstance(null, entityPlayerFormLittleMaidDummy.textureName, false, true);
 			entityPlayerFormLittleMaidDummy.textureArmorName = modelSelectMode % 2 == 0 ? "" : mod_Modchu_ModchuLib.getTextureBoxFileName(ltb);
 			mod_PFLM_PlayerFormLittleMaid.changeColor(entityPlayerFormLittleMaidDummy);
 			StringBuilder s = (new StringBuilder()).append("TextureName : ");
@@ -255,7 +255,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 		if (entityPlayerFormLittleMaidDummy.textureName != null
 				&& ltb != null) ;else return;
 		entityPlayerFormLittleMaidDummy.texture = mod_Modchu_ModchuLib.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor);
-		entityPlayerFormLittleMaidDummy.textureModel = (Object[]) mod_Modchu_ModchuLib.textureBoxModelsCheck(ltb, entityPlayerFormLittleMaidDummy.textureName);
+		entityPlayerFormLittleMaidDummy.textureModel = (Object[]) mod_Modchu_ModchuLib.modelNewInstance(null, entityPlayerFormLittleMaidDummy.textureName, false, true);
 		if (!dummySettingInit) {
 			for(int i2 = 0; i2 < entityPlayerFormLittleMaidDummy.textureModel.length; i2++) {
 				if (entityPlayerFormLittleMaidDummy.textureModel[i2] != null

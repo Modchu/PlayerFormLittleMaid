@@ -11,13 +11,11 @@ import java.util.Map.Entry;
 
 import net.minecraft.client.Minecraft;
 
-public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
+public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps {
 
-	public MMM_ModelBaseDuo modelMain;
+	public MMM_ModelBaseSolo modelMain;
 	public MMM_ModelBaseDuo modelFATT;
-	public EntityLiving owner;
 	private Minecraft mc = Minecraft.getMinecraft();
-	private static Map<String, Integer> caps;
 	private String textureName = null;
 	private String modelArmorName = null;
 	private boolean localFlag = false;
@@ -48,13 +46,15 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private boolean sleeping = false;
 	private float isWaitF = 0.0F;
 	private float modelScale = 0.0F;
-    private float actionSpeed = 0.0F;
+	private float actionSpeed = 0.0F;
+	private float tempLimbSwing = 0.0F;
 	private int isWaitTime = 0;
 	private int skinMode = 0;
 	private int initFlag = 0;
 	private int runActionNumber = 0;
 	private int actionReleaseNumber = 0;
 	private int actionCount = 0;
+	private int actionTime = 0;
 	private int handedness = 0;
 	private int maidColor = 0;
 	private int partsSetFlag = 1;
@@ -77,20 +77,15 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 *///b173delete
 
 	public PFLM_ModelData(RenderLiving renderLiving) {
-		modelMain = new MMM_ModelBaseDuo(renderLiving);
+		super(null);
+		modelMain = new MMM_ModelBaseSolo(renderLiving);
 		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
-		modelMain.textureInner = new String [4];
-		modelMain.textureOuter = new String [4];
+		modelMain.textures = new String [3];
 		modelFATT = new MMM_ModelBaseDuo(renderLiving);
 		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
 		modelFATT.textureInner = new String [4];
 		modelFATT.textureOuter = new String [4];
 		modelMain.capsLink = modelFATT;
-	}
-
-	@Override
-	public Map<String, Integer> getModelCaps() {
-		return caps;
 	}
 
 	@Override
@@ -122,6 +117,16 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg.length > 0
 			&& pArg[0] != null) {
 				setIsInventory((Boolean) pArg[0]);
+				return true;
+			}
+			return false;
+		case caps_isRendering:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) {
+				if (pArg.length > 1) {
+					setIsRendering((Integer) pArg[0], (Boolean) pArg[1]);
+				} else setIsRendering((Boolean) pArg[0]);
 				return true;
 			}
 			return false;
@@ -249,8 +254,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) {
-				if (modelMain.modelInner instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelInner).actionInit(this, (Integer) pArg[0]);
-				if (modelMain.modelOuter instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelOuter).actionInit(this, (Integer) pArg[0]);
+				if (modelMain.model instanceof  MultiModelAction) ((MultiModelAction) modelMain.model).actionInit(this, (Integer) pArg[0]);
 				if (modelFATT.modelInner instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelInner).actionInit(this, (Integer) pArg[0]);;
 				if (modelFATT.modelOuter instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelOuter).actionInit(this, (Integer) pArg[0]);
 				return true;
@@ -260,8 +264,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) {
-				if (modelMain.modelInner instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelInner).actionRelease(this, (Integer) pArg[0]);
-				if (modelMain.modelOuter instanceof  MultiModelAction) ((MultiModelAction) modelMain.modelOuter).actionRelease(this, (Integer) pArg[0]);
+				if (modelMain.model instanceof  MultiModelAction) ((MultiModelAction) modelMain.model).actionRelease(this, (Integer) pArg[0]);
 				if (modelFATT.modelInner instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelInner).actionRelease(this, (Integer) pArg[0]);;
 				if (modelFATT.modelOuter instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelOuter).actionRelease(this, (Integer) pArg[0]);
 				return true;
@@ -291,6 +294,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 				return true;
 			}
 			return false;
+		case caps_actionTime:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) {
+				setActionTime((Integer) pArg[0]);
+				return true;
+			}
+			return false;
 		case caps_actionFlag:
 			if (pArg != null
 			&& pArg.length > 0
@@ -304,6 +315,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg.length > 0
 			&& pArg[0] != null) {
 				setActionSpeed((Float) pArg[0]);
+				return true;
+			}
+			return false;
+		case caps_tempLimbSwing:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) {
+				setTempLimbSwing((Float) pArg[0]);
 				return true;
 			}
 			return false;
@@ -433,8 +452,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg.length > 0
 			&& pArg[0] != null) {
 				Modchu_Debug.mDebug("caps_changeColor modelFATT.modelInner instanceof  MultiModelBaseBiped ? "+(modelFATT.modelInner instanceof  MultiModelBaseBiped));
-				if (modelMain.modelInner instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelMain.modelInner).changeColor(this);
-				if (modelMain.modelOuter instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelMain.modelOuter).changeColor(this);
+				if (modelMain.model instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelMain.model).changeColor(this);
 				if (modelFATT.modelInner instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelInner).changeColor(this);
 				if (modelFATT.modelOuter instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelOuter).changeColor(this);
 				return true;
@@ -563,7 +581,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			}
 			return false;
 		}
-		return false;
+		return super.setCapsValue(pIndex, (Object[]) pArg);
 	}
 
 	@Override
@@ -650,10 +668,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			return getActionFlag();
 		case caps_actionCount:
 			return getActionCount();
+		case caps_actionTime:
+			return getActionTime();
 		case caps_actionSpeed:
 			return getActionSpeed();
 		case caps_actionReverse:
 			return getActionReverse();
+		case caps_tempLimbSwing:
+			return getTempLimbSwing();
 		case caps_changeModelFlag:
 			return getChangeModelFlag();
 		case caps_partsSetFlag:
@@ -744,11 +766,15 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 			&& pArg[0] != null
 			&& pArg[1] != null) return getModelRendererName((MMM_ModelRenderer) pArg[0], (Integer) pArg[1]);
 			break;
-		case caps_Entity:
-				return owner;
 		}
-		if (model != null) ;else return modelMain.modelInner.getCapsValue(pIndex, pArg);
-		return null;
+		Object o = null;
+		if (model != null) {
+			o = model.getCapsValue(pIndex, (Object[]) pArg);
+		} else {
+			o = modelMain.model.getCapsValue(pIndex, (Object[]) pArg);
+		}
+		if (o != null) return o;
+		return super.getCapsValue(pIndex, (Object[]) pArg);
 	}
 
 	private String getModelRendererName(MMM_ModelRenderer modelRenderer, int i) {
@@ -841,12 +867,10 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private Object getModel(int i) {
 		switch(i) {
 		case 0:
-			return modelMain.modelInner;
+			return modelMain.model;
 		case 1:
-			return modelMain.modelOuter;
-		case 2:
 			return modelFATT.modelInner;
-		case 3:
+		case 2:
 			return modelFATT.modelOuter;
 		}
 		return null;
@@ -916,7 +940,7 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	private ItemStack getHeadMount() {
 		if (!(owner instanceof EntityPlayer)) return null;
 		ItemStack itemStack = ((EntityPlayer) owner).inventory.getStackInSlot(9);
-		int addSupport = ((MultiModelBaseBiped) modelMain.modelInner).addSupportChecks(itemStack);
+		int addSupport = ((MultiModelBaseBiped) modelMain.model).addSupportChecks(itemStack);
 		return addSupport != 3
 				&& addSupport != 4 ? itemStack : null;
 	}
@@ -979,36 +1003,59 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	}
 
 	private boolean getIsSitting() {
+		if (!isPlayer) {
+			Object o = getPlayerState(owner.entityId, (byte)1);
+			if (o != null) return (Boolean) o;
+		}
 		return isSitting;
 	}
 
 	private void setIsSitting(boolean b) {
-		isSitting = b;
+		if (isSitting != b) {
+			isSitting = b;
+			addSendList(1);
+		}
 	}
 
 	private boolean getIsSleeping() {
 		if (!(owner instanceof EntityPlayer)) return false;
+		if (!isPlayer) {
+			Object o = getPlayerState(owner.entityId, (byte)2);
+			if (o != null
+					&& o instanceof Object[]) {
+				Object[] o1 = (Object[]) o;
+				return (Boolean) o1[0];
+			}
+		}
 		return ((EntityPlayer) owner).isPlayerSleeping()
 				| sleeping;
 	}
 
 	private void setIsSleeping(boolean b) {
-		if (!(owner instanceof EntityPlayer)) return;
-		sleeping = b;
-		float f1 = ((EntityPlayer) owner).moveForward * ((EntityPlayer) owner).moveForward + ((EntityPlayer) owner).moveStrafing * ((EntityPlayer) owner).moveStrafing;
-		if (((EntityPlayer) owner).isRiding() || !mc.inGameHasFocus || f1 > 0.0F || ((EntityPlayer) owner).isJumping) return;
-		float f2;
-		for (f2 = ((EntityPlayer) owner).rotationYaw; f2 < 0.0F; f2 += 360F) { }
-		for (; f2 > 360F; f2 -= 360F) { }
-		int i = (int)((f2 + 45F) / 90F);
-		setRotate(i);
-		//((EntityPlayer) owner).getDataWatcher().updateObject(17, Byte.valueOf((byte)i));
-/*//b173delete
-		setSleepMotion(i);
-*///b173delete
+		if (!(owner instanceof EntityPlayer)) {
+			Modchu_Debug.Debug("setIsSleeping !(owner instanceof EntityPlayer)");
+			return;
+		}
+		if (sleeping != b) {
+			sleeping = b;
+			float f2;
+			for (f2 = ((EntityPlayer) owner).rotationYaw; f2 < 0.0F; f2 += 360F) { }
+			for (; f2 > 360F; f2 -= 360F) { }
+			int i = (int)((f2 + 45F) / 90F);
+			setRotate(i);
+			addSendList(2);
+		}
 	}
 
 	private int getRotate() {
+		if (!isPlayer) {
+			Object o = getPlayerState(owner.entityId, (byte)2);
+			if (o != null
+					&& o instanceof Object[]) {
+				Object[] o1 = (Object[]) o;
+				return Integer.valueOf(""+o1[1]);
+			}
+		}
 		return rotate;
 	}
 
@@ -1049,14 +1096,33 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	}
 
 	private boolean getShortcutKeysAction() {
+		if (!isPlayer) {
+			Object o = getPlayerState(owner.entityId, (byte)3);
+			if (o != null
+					&& o instanceof Object[]) {
+				Object[] o1 = (Object[]) o;
+				return (Boolean) o1[0];
+			}
+		}
 		return shortcutKeysAction;
 	}
 
 	private void setShortcutKeysAction(boolean b) {
-		shortcutKeysAction = b;
+		if (shortcutKeysAction != b) {
+			shortcutKeysAction = b;
+			addSendList(3);
+		}
 	}
 
 	private int getRunActionNumber() {
+		if (!isPlayer) {
+			Object o = getPlayerState(owner.entityId, (byte)3);
+			if (o != null
+					&& o instanceof Object[]) {
+				Object[] o1 = (Object[]) o;
+				return Integer.valueOf(""+o1[1]);
+			}
+		}
 		return runActionNumber;
 	}
 
@@ -1088,6 +1154,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 		actionCount = i;
 	}
 
+	private int getActionTime() {
+		return actionTime;
+	}
+
+	private void setActionTime(int i) {
+		actionTime = i;
+	}
+
 	private float getActionSpeed() {
 		return actionSpeed;
 	}
@@ -1102,6 +1176,14 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 
 	private void setActionReverse(boolean b) {
 		actionReverse = b;
+	}
+
+	private float getTempLimbSwing() {
+		return tempLimbSwing;
+	}
+
+	private void setTempLimbSwing(float f) {
+		tempLimbSwing = f;
 	}
 
 	private boolean getMushroomConfusionLeft() {
@@ -1259,13 +1341,28 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 	public boolean getArmorRendering(int i) {
 		switch(i) {
 		case 0:
-		case 1:
 			return modelMain != null ? modelMain.isRendering : false;
+		case 1:
 		case 2:
-		case 3:
 			return modelFATT != null ? modelFATT.isRendering : false;
 		}
 		return false;
+	}
+
+	public void setIsRendering(boolean b) {
+		setIsRendering(0, b);
+	}
+
+	public void setIsRendering(int i, boolean b) {
+		switch(i) {
+		case 0:
+			modelMain.isRendering = b;
+			return;
+		case 1:
+		case 2:
+			modelFATT.isRendering = b;
+			return;
+		}
 	}
 
     private boolean getIsLookSuger() {
@@ -1559,6 +1656,17 @@ public class PFLM_ModelData implements MMM_IModelCaps, Modchu_IModelCaps {
 
     private void putDefaultShowPartsMap(String s, int i, boolean b) {
     	PFLM_Config.putDefaultShowPartsMap(textureName, s, i, b);
+    }
+
+    public void addSendList(int i) {
+    	if (mod_Modchu_ModchuLib.isPFLMF) ;else return;
+    	LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject(mod_Modchu_ModchuLib.mod_PFLMF, "sendList");
+    	if (sendList != null) sendList.add(new Object[]{ i, this, owner });
+    }
+
+    private Object getPlayerState(int entityId, byte by) {
+    	if (mod_Modchu_ModchuLib.isPFLMF) ;else return null;
+    	return Modchu_Reflect.invokeMethod(mod_Modchu_ModchuLib.mod_PFLMF, "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
     }
 
 	public int getCapsValueInt(int pIndex, Object ...pArg) {

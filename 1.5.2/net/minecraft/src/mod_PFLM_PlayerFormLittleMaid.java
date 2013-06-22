@@ -289,7 +289,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.5.2-20f";
+		return "1.5.2-21";
 	}
 
 	static{
@@ -1562,7 +1562,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
     public static float getModelScale(Entity entity) {
     	if (entity != null) ;else entity = mc.thePlayer;
-    	Object textureModel = PFLM_RenderPlayer.getPlayerData((EntityPlayer) entity).modelMain.textureInner;
+    	Object textureModel = PFLM_RenderPlayer.getPlayerData((EntityPlayer) entity).modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getModelScale();
     	return 0.9375F;
@@ -1579,7 +1579,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //@-@125
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getWidth();
     	return f;
@@ -1596,7 +1596,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //@-@125
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getHeight();
     	return f;
@@ -1613,7 +1613,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //@-@125
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getyOffset();
     	return f;
@@ -1630,7 +1630,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //@-@125
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingWidth();
     	return f;
@@ -1647,7 +1647,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //@-@125
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingHeight();
     	return f;
@@ -1664,7 +1664,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //@-@125
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return f;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingyOffset();
     	return f;
@@ -1681,7 +1681,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 //@-@125
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return d;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getMountedYOffset();
     	return d;
@@ -1690,7 +1690,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static boolean getIsRiding() {
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return false;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).isRiding;
     	return false;
@@ -1699,7 +1699,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static float getPhysical_Hammer() {
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return Physical_Hammer;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).Physical_Hammer((MMM_IModelCaps) data);
     	return Physical_Hammer;
@@ -1708,7 +1708,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static float ridingViewCorrection() {
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return 0.0F;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).ridingViewCorrection();
     	return 0.0F;
@@ -1718,7 +1718,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	if (mc.thePlayer != null) ;else return false;
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return false;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return BipedClass.isInstance(textureModel);
     	return false;
@@ -1727,7 +1727,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     public static float getOnGround() {
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return 0.0F;
-    	Object textureModel = data.modelMain.modelInner;
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
     			&& textureModel instanceof MultiModelBaseBiped) return (Float) ((MultiModelBaseBiped) textureModel).getCapsValue(((MultiModelBaseBiped) textureModel).caps_onGround, (MMM_IModelCaps) data);
     	return 0.0F;
@@ -2024,7 +2024,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(mc.thePlayer);
     	if (data != null) ;else return;
     	Object[] textureModel = {
-    			data.modelMain.modelInner,
+    			data.modelMain.model,
     			data.modelFATT.modelInner,
     			data.modelFATT.modelOuter
     	};
@@ -2689,19 +2689,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			mod_Modchu_ModchuLib.skirtFloats = false;
 			mod_Modchu_ModchuLib.modelClassName = "MultiModelSmart";
 			BipedClass = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MultiModelSmart_Biped"));
-			Object[] o1 = mod_Modchu_ModchuLib.modelNewInstance((String) null);
-/*
-			if (o1 != null
-					&& o1[0] != null
-					&& o1[1] != null
-					&& o1[2] != null) Modchu_Debug.mDebug("MultiModelSmart o1 != null");
-			else Modchu_Debug.mDebug("MultiModelSmart o1 == null !!");
-*/
-			MMM_ModelMultiMMMBase[] o = new MMM_ModelMultiMMMBase[3];
-			o[0] = (MMM_ModelMultiMMMBase) o1[0];
-			o[1] = (MMM_ModelMultiMMMBase) o1[1];
-			o[2] = (MMM_ModelMultiMMMBase) o1[2];
-			Modchu_Reflect.setFieldObject(MMM_TextureManager, "defaultModel", o);
 			Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{mod_Modchu_ModchuLib.modelClassName, "/mob/littleMaid/", mod_Modchu_ModchuLib.modelClassName+"_"});
 			Modchu_Reflect.invokeMethod(MMM_TextureManager, "addSearch", new Class[]{String.class, String.class, String.class}, null, new Object[]{"playerformlittlemaid", "/mob/littleMaid/", mod_Modchu_ModchuLib.modelClassName+"_"});
 		} else {

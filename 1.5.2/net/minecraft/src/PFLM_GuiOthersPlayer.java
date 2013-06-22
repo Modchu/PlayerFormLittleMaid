@@ -353,7 +353,7 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 		} else {
 			mod_PFLM_PlayerFormLittleMaid.othersTextureModel = new MMM_ModelMultiBase[3];
 		}
-		Object[] o = mod_Modchu_ModchuLib.textureBoxModelsCheck(null, mod_PFLM_PlayerFormLittleMaid.othersTextureName, false, true);
+		Object[] o = mod_Modchu_ModchuLib.modelNewInstance(null, mod_PFLM_PlayerFormLittleMaid.othersTextureName, false, true);
 		if (o != null
 				&& o[0] != null) {
 			mod_PFLM_PlayerFormLittleMaid.othersTextureModel[0] = o[0];
@@ -392,13 +392,13 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 				mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName = "default";
 			}
 		}
-		Object[] models = mod_Modchu_ModchuLib.textureBoxModelsCheck(null, mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName, false, false);
+		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(null, mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName, false, false);
 		if (models != null) {
 			mod_PFLM_PlayerFormLittleMaid.othersTextureModel[1] = models[1];
 			mod_PFLM_PlayerFormLittleMaid.othersTextureModel[2] = models[2];
 		} else {
 			mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName = mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName.indexOf("_Biped") == -1 ? "default" : "Biped";
-			models = mod_Modchu_ModchuLib.textureBoxModelsCheck(null, mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName, false, false);
+			models = mod_Modchu_ModchuLib.modelNewInstance(null, mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName, false, false);
 			if (models != null) {
 				mod_PFLM_PlayerFormLittleMaid.othersTextureModel[1] = models[1];
 				mod_PFLM_PlayerFormLittleMaid.othersTextureModel[2] = models[2];
