@@ -1080,7 +1080,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	}
 
 	private void setIsSitting(boolean b) {
-		Modchu_Debug.mDebug("setIsSitting b="+b);
+		//Modchu_Debug.mDebug("setIsSitting b="+b);
 		if (isSitting != b) {
 			isSitting = b;
 			addSendList(1);

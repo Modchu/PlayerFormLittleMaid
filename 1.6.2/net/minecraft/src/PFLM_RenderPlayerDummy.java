@@ -35,8 +35,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	/*b181//*/byte byte0 = -1;
     	//b181 deleteboolean byte0 = false;
-    	if (entity != null
-    			&& entity.showArmor) ;else return byte0;
+    	if (entity != null) ;else return byte0;
     	// アーマーの表示設定
     	modelData.modelFATT.renderParts = i;
     	ItemStack is = armorItemStack[i];
@@ -56,7 +55,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     	return byte0;
     }
 
-    private void armorTextureSetting(EntityLiving entityliving, ItemStack is, int i) {
+    private void armorTextureSetting(EntityLivingBase entityliving, ItemStack is, int i) {
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	int i2 = i;
     	String t = entity.textureArmorName;
@@ -76,11 +75,17 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     			itemarmor = (ItemArmor)item;
     			flag = itemarmor != null && is.stackSize > 0;
     		}
-    		String a1 = itemarmor.renderIndex < armorFilenamePrefix.length ? armorFilenamePrefix[itemarmor.renderIndex] : armorFilenamePrefix[armorFilenamePrefix.length - 1];
     		if (flag) {
     			if (mod_Modchu_ModchuLib.isForge) {
+    				String a1 = itemarmor.renderIndex < armorFilenamePrefix.length ? armorFilenamePrefix[itemarmor.renderIndex] : armorFilenamePrefix[armorFilenamePrefix.length - 1];
+/*//147delete
     				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
     				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });
+*///147delete
+//-@-147
+    				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, null, new Object[]{ entityliving, is, "/armor/" + a1 + "_" + 2 + ".png", i, 1, null });
+    				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, null, new Object[]{ entityliving, is, "/armor/" + a1 + "_" + 1 + ".png", i, 1, null });
+//@-@147
     				if (i == 1) {
     					//Modchu_Debug.mDebug("i="+i+" t2="+t2+" t1="+t1);
     					for(int k = 0; k < 4; k++) {
@@ -89,8 +94,8 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     				}
     				modelData.modelFATT.textureOuter[i] = new ResourceLocation(t1);
     			} else {
-    				modelData.modelFATT.textureInner[i] = new ResourceLocation("/armor/" + a1 + "_" + 2 + ".png");
-    				modelData.modelFATT.textureOuter[i] = new ResourceLocation("/armor/" + a1 + "_" + 1 + ".png");
+    				modelData.modelFATT.textureInner[i] = RenderBiped.func_110857_a(itemarmor, 2);
+    				modelData.modelFATT.textureOuter[i] = RenderBiped.func_110857_a(itemarmor, 1);
     			}
     		}
     	} else {
@@ -261,6 +266,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     					GL11.glColor4f(1, 1, 1, mod_PFLM_PlayerFormLittleMaid.transparency);
     				}
+    				modelData.modelFATT.isRendering = ((PFLM_EntityPlayerDummy) entityliving).showArmor;
     				renderPassModel.setLivingAnimations(entityliving, f8, f7, f1);
     				renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
 //-@-b181
@@ -591,6 +597,9 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) new ResourceLocation[3]);
 		}
 		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(entityDummy.textureName, entityDummy.maidColor));
+		if (mod_Modchu_ModchuLib.textureManagerGetTexture(entityDummy.textureName, entityDummy.maidColor) != null) ;else {
+			Modchu_Debug.Debug("PFLM_RenderPlayerDummy doRender texture null !! entityDummy.textureName="+entityDummy.textureName);
+		}
 		if (!flag) {
 			entityDummy.textureArmor0 = null;
 			entityDummy.textureArmor1 = null;
@@ -659,12 +668,20 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		modelData.modelFATT.modelInner.setCapsValue(((MultiModelBaseBiped) modelData.modelFATT.modelInner).caps_armorType, 2);
 		modelData.modelFATT.modelOuter.setCapsValue(((MultiModelBaseBiped) modelData.modelFATT.modelOuter).caps_armorType, 3);
 //-@-152
+		s = mod_Modchu_ModchuLib.textureNameCheck(s);
+		modelTextureReset(entity, modelData, s);
+//@-@152
+	}
+
+	private static void modelTextureReset(Entity entity, PFLM_ModelData modelData) {
+		modelTextureReset(entity, modelData, (String) modelData.getCapsValue(modelData.caps_textureName));
+	}
+
+	private static void modelTextureReset(Entity entity, PFLM_ModelData modelData, String s) {
 		if (modelData.getCapsValue(modelData.caps_ResourceLocation) != null) ;else {
 			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) new ResourceLocation[3]);
 		}
-		modelData.setCapsValue(modelData.caps_ResourceLocation, 1, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
-		modelData.setCapsValue(modelData.caps_ResourceLocation, 2, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
-//@-@152
+		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
 	}
 
     @Override

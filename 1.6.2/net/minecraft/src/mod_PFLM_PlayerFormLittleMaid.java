@@ -295,13 +295,15 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.6.2-21a";
+		return "1.6.2-21b";
 	}
 
 	static{
+		File file = Minecraft.getMinecraft().mcDataDir;
 		String s = System.getenv("modchu");
-		if (s != null
-				&& s.equals("on")) {
+		if ((s != null
+				&& s.equals("on"))
+				| file.getAbsolutePath().indexOf("jars") != -1) {
 			isRelease = false;
 		}
 	}
@@ -465,19 +467,19 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 					&& !Keyboard.isKeyDown(54)
 					&& !keySitLock) {
 				float f = ((EntityPlayer)(entityplayersp)).moveForward * ((EntityPlayer)(entityplayersp)).moveForward + ((EntityPlayer)(entityplayersp)).moveStrafing * ((EntityPlayer)(entityplayersp)).moveStrafing;
-				Modchu_Debug.mDebug("-----key.Sit s");
+				//Modchu_Debug.mDebug("-----key.Sit s");
 				//Modchu_Debug.mDebug("key.Sit entityplayersp.isRiding()="+entityplayersp.isRiding());
 				if (mc.inGameHasFocus && (double)f < 0.20000000000000001D && !((EntityPlayer)(entityplayersp)).isJumping) {
 					boolean b = getIsSitting();
-					Modchu_Debug.mDebug("key.Sit setIsSitting getIsSitting()="+getIsSitting());
+					//Modchu_Debug.mDebug("key.Sit setIsSitting getIsSitting()="+getIsSitting());
 					setIsSitting(!b);
-					Modchu_Debug.mDebug("key.Sit setIsSitting !b="+!b);
+					//Modchu_Debug.mDebug("key.Sit setIsSitting !b="+!b);
 					setIsSleeping(false);
 					keySitLock = true;
 				}
-				Modchu_Debug.mDebug("key.Sit getIsSitting()="+getIsSitting());
+				//Modchu_Debug.mDebug("key.Sit getIsSitting()="+getIsSitting());
 				//Modchu_Debug.mDebug("key.Sit entityplayersp.isRiding()="+entityplayersp.isRiding());
-				Modchu_Debug.mDebug("-----key.Sit e");
+				//Modchu_Debug.mDebug("-----key.Sit e");
 			}
 			return;
 		} else if (keybinding.keyDescription.equals("key.LieDown")) {
@@ -682,7 +684,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				&& !Mouse.getEventButtonState()) {
 			if (!isReleasekey) isReleasekey = true;
 			if (keySitLock) {
-				Modchu_Debug.mDebug("keySitLock‰ðœ");
+				//Modchu_Debug.mDebug("keySitLock‰ðœ");
 				keySitLock = false;
 			}
 		} else if (isReleasekey) isReleasekey = false;
@@ -2282,7 +2284,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 				"kimono_pl_Shion", "Sword_NM", "Ar_NM", "x16_QB", "Hituji",
 				"Udonge_usagi", "neta_chu", "ColorVariation_chu", "NetaPetit_Petit", "CV_DressYukari",
 				"e12color_Elsa3", "b14color_Beverly5", "e14color_Elsa4", "e14under_Elsa4", "b15color_Beverly6",
-				"b15under_Beverly6", "default_Custom1"
+				"b15under_Beverly6", "default_Custom1", "e15color_Elsa5", "e15under_Elsa5", "b16color_Chloe2",
+				"b16under_Chloe2", "b16color_Beverly7", "b16under_Beverly7", "jamBAND.Kana_SA", "jamBAND.Kanon_SA",
+				"jamBAND.Maki_SA", "jamBAND.Rizumu_SA", "HiFM_Squirrel", "HiFM_Sheep", "HiFM_Rabbit",
+				"HiFM_Fox", "HiFM_Dog", "HiFM_Cat", "HiFM_Bear"
 		};
 		PFLM_Config.writerModelList(s, textureListfile, textureList);
 	}

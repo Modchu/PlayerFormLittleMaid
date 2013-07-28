@@ -76,8 +76,8 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		int y = height / 2;
 		buttonList.add(new PFLM_GuiSmallButton(200, width - 160, 10, 60, 15, "Save"));
 		buttonList.add(new PFLM_GuiSmallButton(201, width - 100, 10, 60, 15, "Return"));
-		buttonList.add(new PFLM_GuiSmallButton(205, width - 160, 25, 60, 15, "DeleteBox"));
-		buttonList.add(new PFLM_GuiSmallButton(204, width - 100, 25, 60, 15, "AddBox"));
+		buttonList.add(new PFLM_GuiSmallButton(205, width - 100, 35, 60, 15, "DeleteBox"));
+		buttonList.add(new PFLM_GuiSmallButton(204, width - 160, 35, 60, 15, "AddBox"));
 		buttonList.add(new PFLM_GuiSmallButton(202, 10, 10, 60, 15, "AddParts"));
 		buttonList.add(new PFLM_GuiSmallButton(203, 70, 10, 60, 15, "Delete"));
 		if (partsSlot != null) {

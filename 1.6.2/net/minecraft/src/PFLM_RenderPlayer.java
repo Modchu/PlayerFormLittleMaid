@@ -126,7 +126,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	return byte0;
    }
 
-    private void armorTextureSetting(EntityPlayer entityplayer, PFLM_ModelData modelData, ItemStack is, int i) {
+    private void armorTextureSetting(AbstractClientPlayer entityplayer, PFLM_ModelData modelData, ItemStack is, int i) {
     	int i2 = i;
     	String t = (String) modelData.getCapsValue(modelData.caps_textureArmorName);
     	//Modchu_Debug.mDebug("setArmorModel t="+t);
@@ -149,17 +149,17 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				modelData.modelFATT.textureOuter[i] = null;
     			return;
     		}
-    		String a1 = itemarmor.renderIndex < armorFilename.length ? armorFilename[itemarmor.renderIndex] : armorFilename[armorFilename.length - 1];
     		if (flag) {
 //-@-125
     			if (mod_Modchu_ModchuLib.isForge) {
+    	    		String a1 = itemarmor.renderIndex < armorFilename.length ? armorFilename[itemarmor.renderIndex] : armorFilename[armorFilename.length - 1];
 /*//147delete
     				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
     				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });
 *///147delete
 //-@-147
-    				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class }, null, new Object[]{ entityplayer, is, "/armor/" + a1 + "_" + 2 + ".png", i, 1 });
-    				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class }, null, new Object[]{ entityplayer, is, "/armor/" + a1 + "_" + 1 + ".png", i, 1 });
+    				String t2 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, null, new Object[]{ entityplayer, is, "/armor/" + a1 + "_" + 2 + ".png", i, 1, null });
+    				String t1 = (String) Modchu_Reflect.invokeMethod(ForgeHooksClient, "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, null, new Object[]{ entityplayer, is, "/armor/" + a1 + "_" + 1 + ".png", i, 1, null });
 //@-@147
     				if (i == 1) {
     					//Modchu_Debug.mDebug("i="+i+" t2="+t2+" t1="+t1);
@@ -781,7 +781,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	if (modelData != null) ;else return;
     	if (textureResetFlag) {
     		textureResetFlag = false;
-    		modelTextureReset(modelData);
+    		modelTextureReset(entityplayer, modelData);
     		modelTextureArmorReset(modelData);
     	}
     	doRenderSetting(entityplayer, modelData);
@@ -947,7 +947,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     			| ((Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isSleeping)
     					&& (f1 > 0.0F
     							| f2 != 0.0F)))) {
-    		Modchu_Debug.mDebug("Sitting Ž©“®OFF");
+    		//Modchu_Debug.mDebug("Sitting Ž©“®OFF");
     		modelData.modelMain.setCapsValue(modelData.caps_isRiding, false);
     		modelData.setCapsValue(modelData.caps_isSitting, false);
     		modelData.setCapsValue(modelData.caps_isSleeping, false);
@@ -1275,9 +1275,13 @@ public class PFLM_RenderPlayer extends RenderPlayer
 				if (modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_PlayerOnline) {
 					skinUrl = entityplayer.func_110300_d(mc.thePlayer.username);
 							//(new StringBuilder()).append("http://skins.minecraft.net/MinecraftSkins/").append(mc.thePlayer.username).append(".png").toString();
+				} else {
+					skinUrl = entityplayer.func_110300_d(entityplayer.username);
 				}
+				//Modchu_Debug.Debug("OnlineMode skinUrl="+skinUrl);
 				URL url = new URL(skinUrl);
 				bufferedimage = ImageIO.read(url);
+				//Modchu_Debug.Debug("OnlineMode bufferedimage != null ?"+(bufferedimage != null));
 				String n = modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_PlayerOnline ? mc.thePlayer.username : entityplayer.username;
 				if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)
 						&& !n.startsWith("Player")
@@ -1328,8 +1332,6 @@ public class PFLM_RenderPlayer extends RenderPlayer
 			} else {
 				//Modchu_Debug.mDebug("er offline only set.");
 				modelData.setCapsValue(modelData.caps_skinMode, skinMode_offline);
-				if (mod_PFLM_PlayerFormLittleMaid.textureName.equals("_Biped")) mod_PFLM_PlayerFormLittleMaid.textureName = "default";
-				if (mod_PFLM_PlayerFormLittleMaid.textureArmorName.equals("_Biped")) mod_PFLM_PlayerFormLittleMaid.textureArmorName = "default";
 				modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.textureName);
 				modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
 			}
@@ -1342,7 +1344,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		return checkSkin(entityplayer, bufferedimage, modelData);
 	}
 
-	private static void modelInit(EntityPlayer entityplayer, PFLM_ModelData modelData, String s) {
+	private static void modelInit(AbstractClientPlayer entityplayer, PFLM_ModelData modelData, String s) {
 		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entityplayer, s, false, true);
 		Modchu_Debug.mDebug("modelInit s="+s);
 		if (models != null
@@ -1360,12 +1362,12 @@ public class PFLM_RenderPlayer extends RenderPlayer
 		modelData.modelMain.model.setCapsValue(modelData.caps_armorType, 0);
 //-@-152
 		s = mod_Modchu_ModchuLib.textureNameCheck(s);
-		modelTextureReset(modelData, s);
+		modelTextureReset(entityplayer, modelData, s);
 //@-@152
 		Modchu_Debug.mDebug("modelInit color="+modelData.getCapsValueInt(modelData.caps_maidColor));
 	}
 
-	private static void modelArmorInit(EntityPlayer entityplayer, PFLM_ModelData modelData, String s) {
+	private static void modelArmorInit(AbstractClientPlayer entityplayer, PFLM_ModelData modelData, String s) {
 		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.model);
 		if (isBiped
 				&& (s.equalsIgnoreCase("default")
@@ -1399,15 +1401,23 @@ public class PFLM_RenderPlayer extends RenderPlayer
 //@-@152
 	}
 
-	private static void modelTextureReset(PFLM_ModelData modelData) {
-		modelTextureReset(modelData, (String) modelData.getCapsValue(modelData.caps_textureName));
+	private static void modelTextureReset(AbstractClientPlayer entityplayer, PFLM_ModelData modelData) {
+		modelTextureReset(entityplayer, modelData, (String) modelData.getCapsValue(modelData.caps_textureName));
 	}
 
-	private static void modelTextureReset(PFLM_ModelData modelData, String s) {
+	private static void modelTextureReset(AbstractClientPlayer entityplayer, PFLM_ModelData modelData, String s) {
 		if (modelData.getCapsValue(modelData.caps_ResourceLocation) != null) ;else {
 			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) new ResourceLocation[3]);
 		}
-		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
+		if ((modelData.getCapsValueBoolean(modelData.caps_isPlayer)
+				&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOnline)
+				| !modelData.getCapsValueBoolean(modelData.caps_isPlayer)
+				&& modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_online) {
+			entityplayer.func_110304_a(entityplayer.func_110306_p(), entityplayer.username);
+			modelData.setCapsValue(modelData.caps_ResourceLocation, 0, entityplayer.func_110306_p());
+		} else {
+			modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
+		}
 	}
 
 	private static void modelTextureArmorReset(PFLM_ModelData modelData) {
@@ -1435,15 +1445,17 @@ public class PFLM_RenderPlayer extends RenderPlayer
 	}
 
 	private static PFLM_ModelData checkSkin(
-			EntityPlayer entityplayer, BufferedImage bufferedimage
+			AbstractClientPlayer entityplayer, BufferedImage bufferedimage
 			,PFLM_ModelData modelData)
 	{
 		modelData.setCapsValue(modelData.caps_isPlayer, entityplayer.username == mc.thePlayer.username);
 		if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)
 				&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOffline
 				| modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_offline) {
-			//if (modelData.modelMain.model != null) modelData.modelMain.model = null;
-			//if (modelData.modelFATT.modelOuter != null) modelData.modelFATT.modelOuter = null;
+			if (mod_PFLM_PlayerFormLittleMaid.textureName.equals("_Biped")) {
+				mod_PFLM_PlayerFormLittleMaid.textureName =
+						mod_PFLM_PlayerFormLittleMaid.textureArmorName = "default";
+			}
 			modelData.setCapsValue(modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.maidColor);
 			modelInit(entityplayer, modelData, mod_PFLM_PlayerFormLittleMaid.textureName);
 			modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.textureName);
@@ -1757,7 +1769,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	return f;
     }
 
-    private static void skinMode_PlayerOfflineSetting(EntityPlayer entityplayer, PFLM_ModelData modelData) {
+    private static void skinMode_PlayerOfflineSetting(AbstractClientPlayer entityplayer, PFLM_ModelData modelData) {
     	if (mod_PFLM_PlayerFormLittleMaid.textureName == null
     			| mod_PFLM_PlayerFormLittleMaid.textureName.isEmpty()) mod_PFLM_PlayerFormLittleMaid.textureName = "_Biped";
     	if (mod_PFLM_PlayerFormLittleMaid.textureArmorName == null
@@ -1772,7 +1784,7 @@ public class PFLM_RenderPlayer extends RenderPlayer
     	modelArmorInit(entityplayer, modelData, s1);
     }
 
-    private static void skinMode_RandomSetting(EntityPlayer entityplayer, PFLM_ModelData modelData) {
+    private static void skinMode_RandomSetting(AbstractClientPlayer entityplayer, PFLM_ModelData modelData) {
     	String s3 = null;
     	ResourceLocation s4 = null;
     	for(int i1 = 0; s4 == null && i1 < 50; i1++) {

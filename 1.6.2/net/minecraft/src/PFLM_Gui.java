@@ -531,11 +531,13 @@ public class PFLM_Gui extends GuiScreen {
     	if(guibutton.id == 16)
     	{
     		setColor++;
+    		colorReverse = false;
     	}
     	//guiMultiPngSaveButton setColor-
     	if(guibutton.id == 17)
     	{
     		setColor--;
+    		colorReverse = true;
     	}
     	if(guibutton.id == 16
     			| guibutton.id == 17)
@@ -969,9 +971,9 @@ public class PFLM_Gui extends GuiScreen {
     			fontRenderer.drawString(textureArmorName, 10, guiTop + 130, 0xffffff);
     			if (drawEntity == null) drawEntity = new PFLM_EntityPlayerDummy(popWorld);
     			// 152delete((EntityLiving) drawEntity).texture = texture;
-    			PFLM_RenderPlayerDummy.modelData.setCapsValue(PFLM_RenderPlayerDummy.modelData.caps_ResourceLocation, 0, texture);
     			((PFLM_EntityPlayerDummy) drawEntity).textureModel = textureModel;
     			((PFLM_EntityPlayerDummy) drawEntity).textureName = textureName;
+    			((PFLM_EntityPlayerDummy) drawEntity).maidColor = setColor;
     			((PFLM_EntityPlayerDummy) drawEntity).textureArmorName = textureArmorName;
     			((PFLM_EntityPlayerDummy) drawEntity).textureArmor0 = textureArmor0;
     			((PFLM_EntityPlayerDummy) drawEntity).textureArmor1 = textureArmor1;
@@ -1017,7 +1019,7 @@ public class PFLM_Gui extends GuiScreen {
     	if (texture == null) {
     		int n = 0;
     		for (; n < 16 && texture == null; n = n + 1) {
-    			i++;
+    			i = colorReverse ? i - 1 : i + 1;
     			i = i & 0xf;
     			texture = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, i);
     		}
