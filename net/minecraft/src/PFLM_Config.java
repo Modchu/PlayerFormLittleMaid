@@ -13,8 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.minecraft.client.Minecraft;
-
 public class PFLM_Config extends Modchu_Config {
 
 	public static HashMap<String, HashMap> configPartsMap = new HashMap();
@@ -831,7 +829,7 @@ public class PFLM_Config extends Modchu_Config {
 				| (getConfigShowPartsRenemeMapFlagString != null
 				&& !getConfigShowPartsRenemeMapFlagString.equals(s))) {
 			if (model instanceof MultiModelBaseBiped) {
-				PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(Minecraft.getMinecraft().thePlayer);
+				PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_renderPlayer.getPlayerData(Minecraft.getMinecraft().thePlayer);
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
 				renemeMap = (HashMap<String, String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsRenemeMap);
 				if (renemeMap != null) {
@@ -888,7 +886,7 @@ public class PFLM_Config extends Modchu_Config {
 			Modchu_Debug.mDebug("getConfigShowPartsHideMap flag’Ê‰ß.");
 			if (model instanceof MultiModelBaseBiped) {
 				Modchu_Debug.mDebug("getConfigShowPartsHideMap MultiModelBaseBiped ok.");
-				PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(Minecraft.getMinecraft().thePlayer);
+				PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_renderPlayer.getPlayerData(Minecraft.getMinecraft().thePlayer);
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
 				List<String> hideList = null;
 				if (data != null) hideList = (List<String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsHideList);
