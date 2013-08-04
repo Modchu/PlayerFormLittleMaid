@@ -9,7 +9,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 	public static int othersMaidColor;
 	public static float othersModelScale;
 	public static String othersTextureName;
-	public static ResourceLocation othersTexture;
+	public static Object othersTexture;
 	public static String othersTextureArmorName;
 	public static int changeMode;
 	public static int othersHandednessMode;
@@ -352,7 +352,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			othersTextureName = "default";
 		}
 		int i = getMaidColor();
-		ResourceLocation t = othersTexture;
+		Object t = othersTexture;
 		othersTexture = mod_Modchu_ModchuLib.textureManagerGetTexture(othersTextureName, i);
 		int n = 0;
 		for (; n < 16 && othersTexture == null; n = n + 1) {

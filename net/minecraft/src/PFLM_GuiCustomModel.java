@@ -47,7 +47,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 	private static boolean isEdit;
 	private static boolean partsDetailSlotDrawStringInitFlag;
 	private static boolean editBoxInitFlag;
-	private static ResourceLocation texture;
+	private static Object texture;
 	private static String textureName;
 	private static String textureArmorName;
 
@@ -872,7 +872,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			textureName = "default_Custom1";
 		}
 		int i = getMaidColor();
-		ResourceLocation t = texture;
+		Object t = texture;
 		texture = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, i);
 		int n = 0;
 		for (; n < 16 && texture == null; n = n + 1) {

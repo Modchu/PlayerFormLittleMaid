@@ -372,7 +372,7 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 			mod_PFLM_PlayerFormLittleMaid.othersTextureName = "default";
 		}
 		int i = getMaidColor();
-		ResourceLocation t = mod_PFLM_PlayerFormLittleMaid.othersTexture;
+		Object t = mod_PFLM_PlayerFormLittleMaid.othersTexture;
 		mod_PFLM_PlayerFormLittleMaid.othersTexture = mod_Modchu_ModchuLib.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.othersTextureName, i);
 		int n = 0;
 		for (; n < 16 && mod_PFLM_PlayerFormLittleMaid.othersTexture == null; n = n + 1) {

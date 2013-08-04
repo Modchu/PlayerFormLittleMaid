@@ -60,7 +60,7 @@ public class PFLM_Gui extends GuiScreen {
 	public static Object textureModel[];
 	public static String textureArmor0[];
 	public static String textureArmor1[];
-	public static ResourceLocation texture;
+	public static Object texture;
 	public static String textureName;
 	public static String textureArmorName;
 	public static final int modeOffline = 0;
@@ -140,7 +140,7 @@ public class PFLM_Gui extends GuiScreen {
 							er = true;
 						}
 						if (er) {
-							ResourceLocation t = null;
+							Object t = null;
 							if (mod_PFLM_PlayerFormLittleMaid.changeMode == modeOnline) {
 								if (mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.isRelease()) {
 									mod_PFLM_PlayerFormLittleMaid.textureName = "_Biped";
@@ -174,7 +174,7 @@ public class PFLM_Gui extends GuiScreen {
 									}
 									try
 									{
-										bufferedimage1 = ImageIO.read(Minecraft.class.getResource(t.func_110624_b()));
+										bufferedimage1 = ImageIO.read(Minecraft.class.getResource((String) Modchu_Reflect.invokeMethod("ResourceLocation", "func_110624_b", t)));
 									}
 									catch (Exception e2)
 									{
@@ -1245,7 +1245,7 @@ public class PFLM_Gui extends GuiScreen {
     		if (rightBottomSet) setY = 30;
     		image.setRGB(setX,setY,rgb);
 
-    		ResourceLocation resourceLocation = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, c);
+    		Object resourceLocation = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, c);
     		String s = "output.png";
 /*
     		if (resourceLocation == null
@@ -1277,14 +1277,14 @@ public class PFLM_Gui extends GuiScreen {
     	}
     }
 
-    private BufferedImage readTextureImage(ResourceLocation resourceLocation) throws IOException
+    private BufferedImage readTextureImage(Object o) throws IOException
     {
     	//Modchu_Debug.mDebug("readTextureImage assets/minecraft/" + resourceLocation.func_110624_b());
     	//Modchu_Debug.mDebug("readTextureImage assets/minecraft/" + resourceLocation.func_110623_a());
     	BufferedImage image = null;
     	InputStream var2 = null;
     	try {
-    		Resource var3 = Minecraft.getMinecraft().func_110442_L().func_110536_a(resourceLocation);
+    		Resource var3 = (Resource) Modchu_Reflect.invokeMethod("ResourceManager", "func_110536_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, mc.func_110442_L(), new Object[]{ o });
     		var2 = var3.func_110527_b();
     		image = ImageIO.read(var2);
     	} finally {

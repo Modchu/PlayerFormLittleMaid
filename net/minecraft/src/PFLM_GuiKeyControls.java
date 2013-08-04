@@ -485,7 +485,7 @@ public class PFLM_GuiKeyControls extends
 			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select] = "default";
 		}
 		int i = getMaidColor();
-		ResourceLocation t = mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select];
+		Object t = mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select];
 		mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], i);
 		for (int n = 0; n < mod_PFLM_PlayerFormLittleMaid.maxShortcutKeys && mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] == null; n = n + 1) {
 			if (PFLM_Gui.colorReverse) {

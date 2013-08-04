@@ -86,10 +86,10 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static Object gotcha;
 	public static String textureArmor0[] = new String[4];
 	public static String textureArmor1[] = new String[4];
-	public static ResourceLocation texture = null;
+	public static Object texture = null;
 	public static String textureName = "default";
 	public static String textureArmorName = "default";
-	public static ResourceLocation othersTexture = null;
+	public static Object othersTexture = null;
 	public static String othersTextureName = "default";
 	public static String othersTextureArmorName = "default";
 	public static int othersMaidColor = 0;
@@ -106,7 +106,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static String shortcutKeysTextureArmor0[] = new String[4];
 	public static String shortcutKeysTextureArmor1[] = new String[4];
 	public static float shortcutKeysModelScale[] = new float[maxShortcutKeys];
-	public static ResourceLocation shortcutKeysTexture[] = new ResourceLocation[maxShortcutKeys];
+	public static Object shortcutKeysTexture[];
 	public static String shortcutKeysTextureName[] = new String[maxShortcutKeys];
 	public static String shortcutKeysTextureArmorName[] = new String[maxShortcutKeys];
 	public static int shortcutKeysMaidColor[] = new int[maxShortcutKeys];
@@ -284,7 +284,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.6.2-22";
+		return "1.6.2-22a";
 	}
 
 	static{
@@ -334,6 +334,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 			ModLoader.getLogger().warning("mod_PFLM_PlayerFormLittleMaid-you must check MMMLib revision.");
 			throw new RuntimeException("mod_PFLM_PlayerFormLittleMaid-The revision of MMMLib is old.");
 		}
+		shortcutKeysTexture = getPFLMVersion() > 159 ? Modchu_Reflect.newInstanceArray("ResourceLocation", maxShortcutKeys) : new String[maxShortcutKeys];
 	}
 
 	public String getClassName(String s) {
@@ -1514,7 +1515,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
     	}
     }
 
-    public static void setTexture(ResourceLocation t) {
+    public static void setTexture(Object t) {
 		EntityPlayer thePlayer = getThePlayer();
     	if (thePlayer != null
     			&& thePlayer.worldObj != null
@@ -1994,7 +1995,7 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		if (textureName != null) ;else return;
 		if (changeMode == PFLM_Gui.modeOnline) return;
 		int i = getMaidColor();
-		ResourceLocation t = texture;
+		Object t = texture;
 		texture = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, i);
 		for (int n = 0; n < 16 && texture == null; n = n + 1) {
 			if (PFLM_Gui.colorReverse) {

@@ -62,7 +62,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private List<String> showPartsHideList = new ArrayList();
 	private HashMap<String, String> showPartsRenemeMap = new HashMap();
 //-@-152
-	private ResourceLocation[] resourceLocations;
+	private Object[] resourceLocations;
 //@-@152
 /*//b173delete
 	private boolean keyBindForwardPressed;
@@ -76,15 +76,15 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private boolean mushroomConfusionFlag = false;
 *///b173delete
 
-	public PFLM_ModelData(RendererLivingEntity renderLiving) {
+	public PFLM_ModelData(Render render) {
 		super(null);
 		modelMain = new MMM_ModelBaseSolo(null);
 		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
-		modelMain.textures = new ResourceLocation[3];
+		Modchu_Reflect.setFieldObject("MMM_ModelBaseSolo", "textures", modelMain, Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
 		modelFATT = new MMM_ModelBaseDuo(null);
 		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
-		modelFATT.textureInner = new ResourceLocation[4];
-		modelFATT.textureOuter = new ResourceLocation[4];
+		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
+		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		modelMain.capsLink = modelFATT;
 	}
 
@@ -117,8 +117,8 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			&& pArg.length > 0
 			&& pArg[0] != null) {
 				if (pArg.length > 1) {
-					setResourceLocation((Integer) pArg[0], (ResourceLocation) pArg[1]);
-				} else setResourceLocation((ResourceLocation[]) pArg[0]);
+					setResourceLocation((Integer) pArg[0], (Object) pArg[1]);
+				} else setResourceLocation((Object[]) pArg[0]);
 				return true;
 			}
 			return false;
@@ -837,20 +837,20 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	}
 
 	//-@-152
-	private ResourceLocation getResourceLocation() {
+	private Object getResourceLocation() {
 		return getResourceLocation(0);
 	}
 
-	private ResourceLocation getResourceLocation(int i) {
+	private Object getResourceLocation(int i) {
 		return resourceLocations != null ? resourceLocations[i] : null;
 	}
 
-	private void setResourceLocation(ResourceLocation[] resourceLocation) {
+	private void setResourceLocation(Object[] resourceLocation) {
 		resourceLocations = resourceLocation;
 	}
 
-	private void setResourceLocation(int i, ResourceLocation resourceLocation) {
-		if (resourceLocations != null) resourceLocations[i] = resourceLocation;
+	private void setResourceLocation(int i, Object pArg) {
+		if (resourceLocations != null) resourceLocations[i] = pArg;
 	}
 //-@-152
 	private String getModelRendererName(MMM_ModelRenderer modelRenderer, int i) {
@@ -1505,16 +1505,16 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     	maidColor = i;
     }
 
-    private ResourceLocation getTexture(String s, int i) {
+    private Object getTexture(String s, int i) {
     	return mod_Modchu_ModchuLib.textureManagerGetTexture(s, i);
     }
 
 
-    private ResourceLocation getArmorTexture(String s, int i) {
+    private Object getArmorTexture(String s, int i) {
     	return mod_Modchu_ModchuLib.textureManagerGetArmorTexture(s, i, new ItemStack(Item.helmetDiamond));
     }
 
-    private ResourceLocation getArmorTexture(String s, int i, ItemStack itemStack) {
+    private Object getArmorTexture(String s, int i, ItemStack itemStack) {
     	return mod_Modchu_ModchuLib.textureManagerGetArmorTexture(s, i, itemStack);
     }
 

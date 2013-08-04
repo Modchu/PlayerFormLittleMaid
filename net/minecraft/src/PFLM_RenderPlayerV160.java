@@ -145,7 +145,7 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     @Override
     protected void renderModel(EntityLivingBase par1EntityLiving, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-    	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.renderModel(par1EntityLiving, par2, par3, par4, par5, par6, par7);
+    	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.renderModel((Entity) par1EntityLiving, par2, par3, par4, par5, par6, par7);
     }
 
     public float getActionSpeed(PFLM_ModelData modelData) {
@@ -155,12 +155,12 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
 
     @Override
     protected ResourceLocation func_110775_a(Entity entity) {
-    	if (pflm_RenderPlayerMaster != null) return pflm_RenderPlayerMaster.func_110775_a(entity);
+    	if (pflm_RenderPlayerMaster != null) return (ResourceLocation) pflm_RenderPlayerMaster.getResourceLocation(entity);
     	return null;
     }
 
     protected ResourceLocation func_110775_a(Entity entity, int i) {
-    	if (pflm_RenderPlayerMaster != null) return pflm_RenderPlayerMaster.func_110775_a(entity, i);
+    	if (pflm_RenderPlayerMaster != null) return (ResourceLocation) pflm_RenderPlayerMaster.getResourceLocation(entity, i);
     	return null;
    }
 

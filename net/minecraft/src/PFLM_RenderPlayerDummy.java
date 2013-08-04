@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL12;
 public class PFLM_RenderPlayerDummy extends RenderPlayer
 {
 	protected static MultiModelBaseBiped modelBasicOrig[];
-	public static String[] armorFilenamePrefix;
+	public static String[] armorFilename;
 	private static final ItemStack[] armorItemStack = {new ItemStack(Item.helmetDiamond), new ItemStack(Item.plateDiamond), new ItemStack(Item.legsDiamond), new ItemStack(Item.bootsDiamond)};
 	private boolean checkGlEnableWrapper = true;
 	private boolean checkGlDisableWrapper = true;
@@ -22,7 +22,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		modelBasicOrig[1] = new MultiModel(0.1F);
 		modelBasicOrig[2] = new MultiModel(0.5F);
 		modelData = new PFLM_ModelData(this);
-		armorFilenamePrefix = (String[]) Modchu_Reflect.getFieldObject(RenderBiped.class, "field_82424_k", "bipedArmorFilenamePrefix");
+		armorFilename = (String[]) Modchu_Reflect.getFieldObject(RenderBiped.class, "field_82424_k", "bipedArmorFilenamePrefix");
 		renderManager = super.renderManager;
 	}
 
@@ -54,7 +54,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     private void armorTextureSetting(EntityLivingBase entityliving, ItemStack is, int i) {
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	int i2 = i;
-    	String t = entity.textureArmorName;
+    	String t = (String) modelData.getCapsValue(modelData.caps_textureArmorName);
     	//Modchu_Debug.mDebug("setArmorModel t="+t);
     	boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.model);
     	if (t != null) ;else t = isBiped ? "Biped" : "default";
@@ -63,6 +63,8 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     	} else {
     		modelArmorInit(entity, t);
     	}
+    	Object[] t3;
+    	Object[] t4;
     	if (isBiped) {
     		ItemArmor itemarmor = null;
     		boolean flag = false;
@@ -70,36 +72,55 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     		if(item instanceof ItemArmor) {
     			itemarmor = (ItemArmor)item;
     			flag = itemarmor != null && is.stackSize > 0;
+    		} else {
+				modelData.modelFATT.textureInner[i] = null;
+				modelData.modelFATT.textureOuter[i] = null;
+    			return;
     		}
     		if (flag) {
-    			if (mod_Modchu_ModchuLib.isForge) {
-    				String a1 = itemarmor.renderIndex < armorFilenamePrefix.length ? armorFilenamePrefix[itemarmor.renderIndex] : armorFilenamePrefix[armorFilenamePrefix.length - 1];
-/*//147delete
-    				String t2 = (String) Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
-    				String t1 = (String) Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ ItemStack.class, String.class }, null, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });
-*///147delete
-//-@-147
-    				String t2 = (String) Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, null, new Object[]{ entityliving, is, "/armor/" + a1 + "_" + 2 + ".png", i, 1, null });
-    				String t1 = (String) Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, null, new Object[]{ entityliving, is, "/armor/" + a1 + "_" + 1 + ".png", i, 1, null });
-//@-@147
-    				if (i == 1) {
-    					//Modchu_Debug.mDebug("i="+i+" t2="+t2+" t1="+t1);
-    					for(int k = 0; k < 4; k++) {
-    						modelData.modelFATT.textureInner[i] = new ResourceLocation(t2);
-    					}
+    			if (mod_Modchu_ModchuLib.isForge
+    					&& mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() > 129) {
+    				String a1 = itemarmor.renderIndex < armorFilename.length ? armorFilename[itemarmor.renderIndex] : armorFilename[armorFilename.length - 1];
+    				Object t1;
+    				Object t2;
+    				if (mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() < 150) {
+    					t2 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ ItemStack.class, String.class }, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
+    					t1 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ ItemStack.class, String.class }, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });
+    				} else if (mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() < 160) {
+    					t2 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, new Object[]{ entity, is, "/armor/" + a1 + "_" + 2 + ".png", i, 2, null });
+    					t1 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, new Object[]{ entity, is, "/armor/" + a1 + "_" + 1 + ".png", i, 1, null });
+    				} else {
+    					t1 = Modchu_Reflect.invokeMethod(RenderBiped.class, "getArmorResource", new Class[]{ Entity.class, ItemStack.class, int.class, String.class }, new Object[]{ entity, is, 1, null });
+    					t2 = Modchu_Reflect.invokeMethod(RenderBiped.class, "getArmorResource", new Class[]{ Entity.class, ItemStack.class, int.class, String.class }, new Object[]{ entity, is, 2, null });
     				}
-    				modelData.modelFATT.textureOuter[i] = new ResourceLocation(t1);
+    				if (i == 1) {
+    					t3 = modelData.modelFATT.textureInner;
+    					t3[i] = t2;
+    					Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
+    				}
+    				t4 = modelData.modelFATT.textureOuter;
+    				t4[i] = t1;
+    				Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
+    				//Modchu_Debug.mDebug("i="+i+" t2="+t2+" t1="+t1);
     			} else {
-    				modelData.modelFATT.textureInner[i] = RenderBiped.func_110857_a(itemarmor, 2);
-    				modelData.modelFATT.textureOuter[i] = RenderBiped.func_110857_a(itemarmor, 1);
+    				t3 = modelData.modelFATT.textureInner;
+    				t3[i] = Modchu_Reflect.invokeMethod(RenderBiped.class, "func_110857_a", new Class[]{ ItemArmor.class, int.class }, new Object[]{ itemarmor, 2 });
+    				Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
+    				t4 = modelData.modelFATT.textureOuter;
+    				t4[i] = Modchu_Reflect.invokeMethod(RenderBiped.class, "func_110857_a", new Class[]{ ItemArmor.class, int.class }, new Object[]{ itemarmor, 1 });
+    				Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
     			}
     		}
     	} else {
-    		modelData.modelFATT.textureInner[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 64, is);
-    		modelData.modelFATT.textureOuter[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 80, is);
-    		//Modchu_Debug.mDebug("modelData.modelFATT.textureOuter["+i+"]="+modelData.modelFATT.textureOuter[i]);
-    		//Modchu_Debug.mDebug("modelData.modelFATT.textureInner["+i+"]="+modelData.modelFATT.textureInner[i]);
+    		t3 = modelData.modelFATT.textureInner;
+    		t3[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 64, is);
+    		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
+    		t4 = modelData.modelFATT.textureOuter;
+    		t4[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 80, is);
+    		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
     	}
+    	//Modchu_Debug.mlDebug("modelData.modelFATT.textureOuter["+i+"]="+modelData.modelFATT.textureOuter[i]);
+    	//Modchu_Debug.mlDebug("modelData.modelFATT.textureInner["+i+"]="+modelData.modelFATT.textureInner[i]);
     }
 
     @Override
@@ -107,7 +128,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     {
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	if (entity != null) ;else return -1;
-    	ResourceLocation t = null;
+    	Object t = null;
     	if (i < 4 && modelData.modelFATT.modelOuter != null)
     	{
 //-@-b173
