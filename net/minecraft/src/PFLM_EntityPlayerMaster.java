@@ -25,16 +25,16 @@ public class PFLM_EntityPlayerMaster {
 
 	public void init() {
 		Modchu_Reflect.setFieldObject(base != null ? base.getClass() : player.getClass(), "initFlag", base != null ? base : player, true);
-		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm) {
-			if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving
-					| !mod_PFLM_PlayerFormLittleMaid.isModelSize) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isPlayerForm) {
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving
+					| !mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize) {
 				setSize(0.6F, 1.8F);
 				resetHeight();
 			} else {
-				if (mod_PFLM_PlayerFormLittleMaid.isModelSize
-						&& !mod_PFLM_PlayerFormLittleMaid.isMulti) {
-					setSize(mod_PFLM_PlayerFormLittleMaid.getWidth(),
-							mod_PFLM_PlayerFormLittleMaid.getHeight());
+				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize
+						&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isMulti) {
+					setSize(mod_PFLM_PlayerFormLittleMaid.pflm_main.getWidth(),
+							mod_PFLM_PlayerFormLittleMaid.pflm_main.getHeight());
 				} else {
 					setSize(0.6F, 1.8F);
 				}
@@ -44,10 +44,10 @@ public class PFLM_EntityPlayerMaster {
 	}
 
 	public void wakeUpPlayer(boolean flag, boolean flag1, boolean flag2) {
-		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm
-				&& mod_PFLM_PlayerFormLittleMaid.isModelSize
-				&& !mod_PFLM_PlayerFormLittleMaid.isMulti
-				&& !mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isPlayerForm
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isMulti
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) {
 			if (!flag && flag1 && flag2) {
 				preparePlayerToSpawn();
 			} else {
@@ -60,7 +60,7 @@ public class PFLM_EntityPlayerMaster {
 	public void preparePlayerToSpawn() {
 		resetHeight();
 		setSize(0.6F, 1.8F);
-		player.setEntityHealth(player.func_110138_aP());
+		player.setEntityHealth(getMaxHealth(player));
 		player.deathTime = 0;
 	}
 
@@ -81,10 +81,10 @@ public class PFLM_EntityPlayerMaster {
 	}
 
 	public void onLivingUpdate() {
-		if (mod_PFLM_PlayerFormLittleMaid.isMulti) return;
-		if (mod_PFLM_PlayerFormLittleMaid.Physical_BurningPlayer > 0) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isMulti) return;
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.Physical_BurningPlayer > 0) {
 			if (player.worldObj.isDaytime()
-					&& player.func_110143_aJ() > 0) {
+					&& getHealth(player) > 0) {
 				float f = player.getBrightness(1.0F);
 				if (f > 0.5F
 						&& player.worldObj.canBlockSeeTheSky(
@@ -92,26 +92,37 @@ public class PFLM_EntityPlayerMaster {
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ))
 								&& player.rand.nextFloat() * 30F < (f - 0.4F) * 2.0F) {
-					player.setFire(mod_PFLM_PlayerFormLittleMaid.Physical_BurningPlayer);
+					player.setFire(mod_PFLM_PlayerFormLittleMaid.pflm_main.Physical_BurningPlayer);
 					//damageEntity(DamageSource.inFire, 1);
 					//attackEntityFrom(this, DamageSource.inFire, 1);
 				}
 			}
 		}
-		if (mod_PFLM_PlayerFormLittleMaid.Physical_MeltingPlayer > 0 && player.isWet()) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.Physical_MeltingPlayer > 0 && player.isWet()) {
 			player.attackEntityFrom(DamageSource.drown,
-					mod_PFLM_PlayerFormLittleMaid.Physical_MeltingPlayer);
+					mod_PFLM_PlayerFormLittleMaid.pflm_main.Physical_MeltingPlayer);
 		}
-		if (Minecraft.getMinecraft().currentScreen == null
+		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+		if (currentScreen == null
 				&& locationPositionCorrectionY != 0.0F) {
 			setPositionCorrection(0.0D, locationPositionCorrectionY, 0.0D);
 			locationPositionCorrectionY = 0.0F;
 		}
 	}
 
+	private int getMaxHealth(EntityPlayer entityPlayer) {
+		return mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? (Integer) Modchu_Reflect.invokeMethod("EntityLivingBase", "func_110138_aP", player) :
+			(Integer) Modchu_Reflect.invokeMethod(EntityPlayer.class, "getMaxHealth", player);
+	}
+
+	private int getHealth(EntityPlayer entityPlayer) {
+		return mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? (Integer) Modchu_Reflect.invokeMethod("EntityLivingBase", "func_110143_aJ", entityPlayer) :
+			(Integer) Modchu_Reflect.getFieldObject(EntityPlayer.class, "health", entityPlayer);
+	}
+
 	public void moveEntityWithHeading(float f, float f1) {
 		if (!player.worldObj.isRemote && player.isInWater()) {
-			float f2 = mod_PFLM_PlayerFormLittleMaid.getPhysical_Hammer();
+			float f2 = mod_PFLM_PlayerFormLittleMaid.pflm_main.getPhysical_Hammer();
 			f *= f2;
 			f1 *= f2;
 			if (player.motionY > 0.0F) {
@@ -124,11 +135,11 @@ public class PFLM_EntityPlayerMaster {
 	}
 
 	public String getHurtSound() {
-		return mod_PFLM_PlayerFormLittleMaid.Physical_HurtSound;
+		return mod_PFLM_PlayerFormLittleMaid.pflm_main.Physical_HurtSound;
 	}
 //-@-b181
 	public EnumCreatureAttribute getCreatureAttribute() {
-		if (mod_PFLM_PlayerFormLittleMaid.Physical_Undead && !player.worldObj.isRemote) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.Physical_Undead && !player.worldObj.isRemote) {
 			return EnumCreatureAttribute.UNDEAD;
 		} else {
 			return (EnumCreatureAttribute) Modchu_Reflect.invokeMethod(base != null ? base.getClass() : player.getClass(), "supergetCreatureAttribute", base != null ? base : player);
@@ -137,16 +148,16 @@ public class PFLM_EntityPlayerMaster {
 //@-@b181
 
 	protected void setSize(float f, float f1) {
-		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm
-				&& mod_PFLM_PlayerFormLittleMaid.isModelSize
-				&& !mod_PFLM_PlayerFormLittleMaid.isSmartMoving
-				&& !mod_PFLM_PlayerFormLittleMaid.isMulti) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isPlayerForm
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isMulti) {
 			if (player.isRiding()) {
-				f = mod_PFLM_PlayerFormLittleMaid.getRidingWidth();
-				f1 = mod_PFLM_PlayerFormLittleMaid.getRidingHeight();
+				f = mod_PFLM_PlayerFormLittleMaid.pflm_main.getRidingWidth();
+				f1 = mod_PFLM_PlayerFormLittleMaid.pflm_main.getRidingHeight();
 			} else {
-				f = mod_PFLM_PlayerFormLittleMaid.getWidth();
-				f1 = mod_PFLM_PlayerFormLittleMaid.getHeight();
+				f = mod_PFLM_PlayerFormLittleMaid.pflm_main.getWidth();
+				f1 = mod_PFLM_PlayerFormLittleMaid.pflm_main.getHeight();
 			}
 			if (oldWidth != f) oldWidth = f;
 			if (oldHeight != f1) {
@@ -160,21 +171,21 @@ public class PFLM_EntityPlayerMaster {
 
 	public double getMountedYOffset() {
 		// Modchu_Debug.mDebug("getMountedYOffset");
-		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm
-				&& mod_PFLM_PlayerFormLittleMaid.isModelSize
-				&& !mod_PFLM_PlayerFormLittleMaid.isMulti
-				&& !mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-			return (float) player.height * mod_PFLM_PlayerFormLittleMaid.getMountedYOffset();
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isPlayerForm
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isMulti
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) {
+			return (float) player.height * mod_PFLM_PlayerFormLittleMaid.pflm_main.getMountedYOffset();
 		}
 		return (float) player.height * 0.75F;
 	}
 
 	protected void resetHeight() {
-		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm
-				&& mod_PFLM_PlayerFormLittleMaid.isModelSize
-				&& !mod_PFLM_PlayerFormLittleMaid.isMulti
-				&& !mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
-			player.yOffset = mod_PFLM_PlayerFormLittleMaid.getyOffset();
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isPlayerForm
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isMulti
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) {
+			player.yOffset = mod_PFLM_PlayerFormLittleMaid.pflm_main.getyOffset();
 			//PFLM_PlayerBaseServer.yOffsetResetFlag = true;
 			return;
 		}
@@ -182,12 +193,12 @@ public class PFLM_EntityPlayerMaster {
 	}
 
 	public double getYOffset() {
-		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm
-				&& mod_PFLM_PlayerFormLittleMaid.isModelSize
-				&& !mod_PFLM_PlayerFormLittleMaid.isMulti
-				&& !mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isPlayerForm
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isMulti
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) {
 			if (player.isRiding() && !player.worldObj.isRemote) {
-				float f = mod_PFLM_PlayerFormLittleMaid.getRidingyOffset();
+				float f = mod_PFLM_PlayerFormLittleMaid.pflm_main.getRidingyOffset();
 				// Modchu_Debug.mDebug("getYOffset isRiding() f="+f);
 				return (double) (f);
 			}
@@ -196,8 +207,8 @@ public class PFLM_EntityPlayerMaster {
 	}
 
 	public boolean pushOutOfBlocks(double d, double d1, double d2) {
-		if (mod_PFLM_PlayerFormLittleMaid.isPlayerForm
-				&& mod_PFLM_PlayerFormLittleMaid.isModelSize) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isPlayerForm
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize) {
 			int i = MathHelper.floor_double(d);
 			int j = MathHelper.floor_double(d1);
 			int k = MathHelper.floor_double(d2);
@@ -304,7 +315,7 @@ public class PFLM_EntityPlayerMaster {
 *///125delete
 //-@-125~b181
     	copyInventory(entityplayer.inventory);
-        player.setEntityHealth(entityplayer.func_110143_aJ());
+        player.setEntityHealth(getHealth(player));
         player.foodStats = entityplayer.getFoodStats();
 //@-@125~b181
 //-@-b173
@@ -351,7 +362,7 @@ public class PFLM_EntityPlayerMaster {
         player.superupdateRidden();
         player.prevCameraYaw = player.cameraYaw;
         player.cameraYaw = 0.0F;
-    	if (mod_PFLM_PlayerFormLittleMaid.isModelSize) {
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize) {
             player.addMountedMovementStat(player.posX - d, player.posY - d1 - 1.0D, player.posZ - d2);
     	} else {
     		player.addMountedMovementStat(player.posX - d, player.posY - d1, player.posZ - d2);

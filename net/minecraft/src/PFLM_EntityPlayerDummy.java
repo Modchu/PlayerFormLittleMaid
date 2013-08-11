@@ -11,7 +11,7 @@ public class PFLM_EntityPlayerDummy extends EntityLiving {
 	public boolean showArmor;
 	public boolean others;
 	public float modelScale;
-	public int maidColor;
+	//public int maidColor;
 
 	public PFLM_EntityPlayerDummy(World world) {
 		super(world);

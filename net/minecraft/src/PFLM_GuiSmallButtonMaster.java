@@ -2,16 +2,16 @@ package net.minecraft.src;
 
 import org.lwjgl.input.Mouse;
 
-public class PFLM_GuiSmallButton extends GuiSmallButton {
+public class PFLM_GuiSmallButtonMaster extends GuiSmallButton {
 
 	public boolean buttonClick = false;
 
-	public PFLM_GuiSmallButton(int i, int x, int j, int k,
+	public PFLM_GuiSmallButtonMaster(int i, int x, int j, int k,
 			int l, String s) {
 		super(i, x, j, k, l, s);
 	}
 
-	public boolean mousePressed(Minecraft par1Minecraft, int par2, int par3)
+	public boolean mousePressed(Object par1Minecraft, int par2, int par3)
     {
     	if (buttonClick) {
     		buttonClick = false;
@@ -20,9 +20,8 @@ public class PFLM_GuiSmallButton extends GuiSmallButton {
     	return false;
     }
 
-    public void drawButton(Minecraft par1Minecraft, int par2, int par3)
+    public void drawButton(Object par1Minecraft, int par2, int par3)
     {
-    	super.drawButton(par1Minecraft, par2, par3);
     	if (!buttonClick
     			&& Mouse.isButtonDown(0)) buttonClick = true;
     }

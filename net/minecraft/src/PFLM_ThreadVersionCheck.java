@@ -16,7 +16,7 @@ public class PFLM_ThreadVersionCheck extends Thread
         HttpURLConnection var1 = null;
         try
         {
-        	String s = mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.minecraftVersion;
+        	String s = mod_PFLM_PlayerFormLittleMaid.pflm_main.minecraftVersion;
         	if (s != null) {
             	URL var2 = new URL((new StringBuilder()).append("https://dl.dropbox.com/u/105864172/PlayerFormLittleMaid").append(s).append(".txt").toString());
                 var1 = (HttpURLConnection)var2.openConnection();
@@ -31,8 +31,8 @@ public class PFLM_ThreadVersionCheck extends Thread
                     if (var5.length < 1) return;
                     String var6 = var5[0];
                     Modchu_Debug.Debug("PlayerFormLittleMaid Version found: " + var6);
-                    if (mod_PFLM_PlayerFormLittleMaid.checkRelease(var6)) {
-                    	mod_PFLM_PlayerFormLittleMaid.setNewRelease(var6);
+                    if (mod_PFLM_PlayerFormLittleMaid.pflm_main.checkRelease(var6)) {
+                    	mod_PFLM_PlayerFormLittleMaid.pflm_main.setNewRelease(var6);
                         return;
                     }
                 } finally {

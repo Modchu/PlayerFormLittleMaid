@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 import javax.imageio.ImageIO;
 
@@ -31,36 +32,44 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 	private static int select;
 	private static boolean changeColorFlag = false;
 	private boolean dummySettingInit;
+	private EntityPlayer thePlayer;
 
 	public PFLM_GuiModelSelect(GuiScreen par1GuiScreen, World world, int i, String s) {
 		this(par1GuiScreen, world, i);
 		playerName = s;
+		thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 	}
 
 	public PFLM_GuiModelSelect(GuiScreen par1GuiScreen, World world, int i, int j) {
 		this(par1GuiScreen, world, i);
 		select = j;
+		thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 	}
 
 	public PFLM_GuiModelSelect(GuiScreen par1GuiScreen, World world, int i) {
+		thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 		popWorld = world;
 		parentScreen = par1GuiScreen;
 		modelSelectMode = i;
-		modelColor = modelSelectMode == 0 ? mod_PFLM_PlayerFormLittleMaid.maidColor :
-			modelSelectMode == 2 ? mod_PFLM_PlayerFormLittleMaid.othersMaidColor :
+		modelColor = modelSelectMode == 0 ? mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor :
+			modelSelectMode == 2 ? mod_PFLM_PlayerFormLittleMaid.pflm_main.othersMaidColor :
 				modelSelectMode == 4 ? PFLM_GuiOthersPlayerIndividualCustomize.othersMaidColor :
-					mod_PFLM_PlayerFormLittleMaid.maidColor;
-		if (mc == null) mc = Minecraft.getMinecraft();
-		if (mc.gameSettings.thirdPersonView > 0) mc.gameSettings.thirdPersonView = 0;
+					mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor;
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize) {
+			GameSettings gameSettings = (GameSettings) Modchu_Reflect.getFieldObject("Minecraft", "field_71474_y", "gameSettings", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+			if (gameSettings.thirdPersonView > 0) Modchu_Reflect.setFieldObject(GameSettings.class, "field_74320_O", "thirdPersonView", Modchu_Reflect.getFieldObject("Minecraft", "field_71474_y", "gameSettings", mod_Modchu_ModchuLib.modchu_Main.getMinecraft()), (Object) 0);
+		}
 		entityPlayerFormLittleMaidDummy = new PFLM_EntityPlayerDummy(popWorld);
 		entityPlayerFormLittleMaidDummy.textureArmor0 = new String[] {"","",""};
 		entityPlayerFormLittleMaidDummy.textureArmor1 = new String[] {"","",""};
 		entityPlayerFormLittleMaidDummy.modelScale = 0.0F;
 		entityPlayerFormLittleMaidDummy.showArmor = modelSelectMode % 2 == 0 ? false : true;
 		entityPlayerFormLittleMaidDummy.others = false;
-		entityPlayerFormLittleMaidDummy.setPosition(mc.thePlayer.posX , mc.thePlayer.posY, mc.thePlayer.posZ);
+		entityPlayerFormLittleMaidDummy.setPosition(thePlayer.posX , thePlayer.posY, thePlayer.posZ);
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, modelColor);
 		try {
-			bufferedimage = ImageIO.read((Minecraft.class).getResource("/particles.png"));
+			bufferedimage = ImageIO.read((File) Modchu_Reflect.invokeMethod(Class.class, "getResource", new Class[]{ String.class }, Modchu_Reflect.loadClass("Minecraft"), new Object[]{ "/particles.png" }));
+			//bufferedimage = ImageIO.read((Minecraft.class).getResource("/particles.png"));
 			int sx = bufferedimage.getWidth() / 128;
 			int sy = bufferedimage.getHeight() / 128;
 			bufferedimage = bufferedimage.getSubimage(0, 32 * sy, 8 * sx, 8 * sy);
@@ -73,13 +82,13 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 	@Override
 	public void initGui() {
 		buttonList.clear();
-		buttonList.add(new PFLM_GuiSmallButton(0, 80, 185, 15, 15, "<"));
-		buttonList.add(new PFLM_GuiSmallButton(1, 100, 185, 15, 15, ">"));
-		buttonList.add(new PFLM_GuiSmallButton(2, 145, 180, 15, 15, "<"));
-		buttonList.add(new PFLM_GuiSmallButton(3, 160, 180, 15, 15, ">"));
-		buttonList.add(new PFLM_GuiSmallButton(100, 155, 205, 75, 20, "select"));
-		buttonList.add(new PFLM_GuiSmallButton(101, 240, 205, 75, 20, "return"));
-		buttonList.add(new PFLM_GuiSmallButton(999, 0, 0, 0, 0, ""));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 0, 80, 185, 15, 15, "<" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 1, 100, 185, 15, 15, ">" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 2, 145, 180, 15, 15, "<" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 3, 160, 180, 15, 15, ">" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 100, 155, 205, 75, 20, "select" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 101, 240, 205, 75, 20, "return" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 999, 0, 0, 0, 0, "" }));
 	}
 
 	@Override
@@ -110,8 +119,8 @@ public class PFLM_GuiModelSelect extends GuiScreen {
     	if(guibutton.id == 1)
     	{
     		int i = (selectBoxX * selectBoxY) + offsetSlot;
-    		if (i < mod_Modchu_ModchuLib.getTextureManagerTexturesSize()) {
-    			if (mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][i] != -1) offsetSlot += selectBoxX * selectBoxY;
+    		if (i < mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTexturesSize()) {
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][i] != -1) offsetSlot += selectBoxX * selectBoxY;
     		}
     		selectSlot = -1;
     		dummySettingInit = false;
@@ -141,20 +150,21 @@ public class PFLM_GuiModelSelect extends GuiScreen {
     	if(guibutton.id == 100)
     	{
     		if (selectSlot > -1
-    				&& mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot] != -1) {
+    				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot] != -1) {
     			selected();
     		}
     	}
     	//return
     	if(guibutton.id == 101)
     	{
-    		mc.displayGuiScreen(parentScreen);
+    		Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ parentScreen });
+    		//mc.displayGuiScreen(parentScreen);
     	}
     }
 
     private void maxPageCheack() {
-    	if(offsetSlot / (selectBoxX * selectBoxY) > (mod_PFLM_PlayerFormLittleMaid.maxTexturesNamber[modelColor] - 1) / (selectBoxX * selectBoxY)) {
-    		offsetSlot = (mod_PFLM_PlayerFormLittleMaid.maxTexturesNamber[modelColor] - 1) / (selectBoxX * selectBoxY) * (selectBoxX * selectBoxY);
+    	if(offsetSlot / (selectBoxX * selectBoxY) > (mod_PFLM_PlayerFormLittleMaid.pflm_main.maxTexturesNamber[modelColor] - 1) / (selectBoxX * selectBoxY)) {
+    		offsetSlot = (mod_PFLM_PlayerFormLittleMaid.pflm_main.maxTexturesNamber[modelColor] - 1) / (selectBoxX * selectBoxY) * (selectBoxX * selectBoxY);
     	}
 	}
 
@@ -176,28 +186,34 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 		dummySettingInit = true;
 		if (bufferedimage != null
 				&& selectSlot > -1
-				&& mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot] != -1) {
-			TextureUtil.func_110987_a(0, bufferedimage);
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot] != -1) {
+			if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
+				Modchu_Reflect.invokeMethod("TextureUtil", "func_110987_a", new Class[]{ int.class, BufferedImage.class }, new Object[]{ 0, bufferedimage });
+				//TextureUtil.func_110987_a(0, bufferedimage);
+			} else {
+				Object renderEngine = Modchu_Reflect.getFieldObject("Minecraft", "field_72770_i", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+				Modchu_Reflect.invokeMethod("RenderEngine", "func_78351_a", "setupTexture", new Class[]{ BufferedImage.class, int.class }, renderEngine, new Object[]{ bufferedimage, 0 });
+				//mc.renderEngine.setupTexture(bufferedimage, 0);
+			}
 			renderTexture((selectSlot - offsetSlot) % selectBoxX * 25 + modelListx, (selectSlot - offsetSlot) / selectBoxX * 55 + modelListy - 50, 8, 8);
 		}
 		StringBuilder s5 = (new StringBuilder()).append("Page : ").append(offsetSlot / (selectBoxX * selectBoxY));
-		s5.append(" / ").append((mod_PFLM_PlayerFormLittleMaid.maxTexturesNamber[entityPlayerFormLittleMaidDummy.maidColor] - 1) / (selectBoxX * selectBoxY));
+		s5.append(" / ").append((mod_PFLM_PlayerFormLittleMaid.pflm_main.maxTexturesNamber[modelColor] - 1) / (selectBoxX * selectBoxY));
 		fontRenderer.drawString(s5.toString(), 55, 170, 0xffffff);
 		StringBuilder s2 = (new StringBuilder()).append("MaidColor : ");
-		s2 = s2.append(entityPlayerFormLittleMaidDummy.maidColor);
+		s2 = s2.append(modelColor);
 		fontRenderer.drawString(s2.toString(), 130, 170, 0xffffff);
 		if (selectSlot > -1) {
-			entityPlayerFormLittleMaidDummy.maidColor = modelColor;
-			entityPlayerFormLittleMaidDummy.textureName = mod_Modchu_ModchuLib.getPackege(entityPlayerFormLittleMaidDummy.maidColor, mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot]);
+			entityPlayerFormLittleMaidDummy.textureName = mod_Modchu_ModchuLib.modchu_Main.getPackege(modelColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot]);
 			if (entityPlayerFormLittleMaidDummy.textureName == null) {
 				return;
 			}
-			// 152deleteentityPlayerFormLittleMaidDummy.texture = mod_Modchu_ModchuLib.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor);
-			PFLM_RenderPlayerDummy.modelData.setCapsValue(PFLM_RenderPlayerDummy.modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor));
-			Object ltb = mod_Modchu_ModchuLib.getTextureBox(entityPlayerFormLittleMaidDummy.textureName);
-			entityPlayerFormLittleMaidDummy.textureModel = (Object[]) mod_Modchu_ModchuLib.modelNewInstance(null, entityPlayerFormLittleMaidDummy.textureName, false, true);
-			entityPlayerFormLittleMaidDummy.textureArmorName = modelSelectMode % 2 == 0 ? "" : mod_Modchu_ModchuLib.getTextureBoxFileName(ltb);
-			mod_PFLM_PlayerFormLittleMaid.changeColor(entityPlayerFormLittleMaidDummy);
+			//entityPlayerFormLittleMaidDummy.texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, modelColor);
+			PFLM_RenderPlayerDummyMaster.setResourceLocation(entityPlayerFormLittleMaidDummy, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, modelColor));
+			Object ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureBox(entityPlayerFormLittleMaidDummy.textureName);
+			entityPlayerFormLittleMaidDummy.textureModel = (Object[]) mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, entityPlayerFormLittleMaidDummy.textureName, false, true);
+			entityPlayerFormLittleMaidDummy.textureArmorName = modelSelectMode % 2 == 0 ? "" : mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.changeColor(entityPlayerFormLittleMaidDummy);
 			StringBuilder s = (new StringBuilder()).append("TextureName : ");
 			s = s.append(entityPlayerFormLittleMaidDummy.textureName);
 			fontRenderer.drawString(s.toString(), 220, 170, 0xffffff);
@@ -214,9 +230,10 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 			GL11.glRotatef(180F, 0F, 0.0F, 0.0F);
 			float f5 = (float)(width / 2 + 100) - xSize_lo;
 			float f6 = (float)((height / 2 + 40) - 10) - ySize_lo;
-			GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
+			else GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			RenderHelper.enableStandardItemLighting();
-			GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef((float)Math.atan(f5 / 40F) * 30F, 0.0F, 1.0F, 0.0F);
 			entityPlayerFormLittleMaidDummy.renderYawOffset = (float)Math.atan(f5 / 40F) * 10F;
 			entityPlayerFormLittleMaidDummy.rotationYaw = -(float)Math.atan(f5 / 40F) * 20F;
@@ -238,30 +255,31 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 	private void drawModel(int i, int j , float f, int modelNamber) {
 		float f5 = (float)i - xSize_lo;
 		float f6 = (float)(j - 50) - ySize_lo;
-		entityPlayerFormLittleMaidDummy.maidColor = modelColor;
-		if (modelNamber >= mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor].length) return;
-		int i1 = mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][modelNamber];
+		if (modelNamber >= mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor].length) return;
+		int i1 = mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][modelNamber];
 		if (i1 < 0
-				| i1 >= mod_Modchu_ModchuLib.getTextureManagerTexturesSize()) return;
-		Object ltb = mod_Modchu_ModchuLib.getTextureBox(i1);
+				| i1 >= mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTexturesSize()) return;
+		Object ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureBox(i1);
 		String packgeName = null;
-		if (ltb != null) packgeName = mod_Modchu_ModchuLib.getTextureBoxFileName(ltb);
+		if (ltb != null) packgeName = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb);
 		if (packgeName != null) ;else {
 			packgeName = entityPlayerFormLittleMaidDummy.textureName != null
 					&& entityPlayerFormLittleMaidDummy.textureName.indexOf("Biped") > -1 ? "Biped" : "default";
-			ltb = mod_Modchu_ModchuLib.getTextureBox(packgeName);
-			if (ltb != null) packgeName = mod_Modchu_ModchuLib.getTextureBoxFileName(ltb);
+			ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureBox(packgeName);
+			if (ltb != null) packgeName = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb);
 		}
 		entityPlayerFormLittleMaidDummy.textureName = packgeName;
 		if (entityPlayerFormLittleMaidDummy.textureName != null
 				&& ltb != null) ;else return;
-		// 152deleteentityPlayerFormLittleMaidDummy.texture = mod_Modchu_ModchuLib.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor);
-		PFLM_RenderPlayerDummy.modelData.setCapsValue(PFLM_RenderPlayerDummy.modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, entityPlayerFormLittleMaidDummy.maidColor));
-		entityPlayerFormLittleMaidDummy.textureModel = (Object[]) mod_Modchu_ModchuLib.modelNewInstance(null, entityPlayerFormLittleMaidDummy.textureName, false, true);
+		//entityPlayerFormLittleMaidDummy.texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, modelColor);
+		PFLM_RenderPlayerDummyMaster.setResourceLocation(entityPlayerFormLittleMaidDummy, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, modelColor));
+		//Modchu_Debug.mDebug("texture="+mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(entityPlayerFormLittleMaidDummy.textureName, modelColor));
+		entityPlayerFormLittleMaidDummy.textureModel = (Object[]) mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, entityPlayerFormLittleMaidDummy.textureName, false, true);
 		if (!dummySettingInit) {
+			PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, modelColor);
 			for(int i2 = 0; i2 < entityPlayerFormLittleMaidDummy.textureModel.length; i2++) {
 				if (entityPlayerFormLittleMaidDummy.textureModel[i2] != null
-						&& entityPlayerFormLittleMaidDummy.textureModel[i2] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) entityPlayerFormLittleMaidDummy.textureModel[i2]).changeColor(PFLM_RenderPlayerDummy.modelData);
+						&& entityPlayerFormLittleMaidDummy.textureModel[i2] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) entityPlayerFormLittleMaidDummy.textureModel[i2]).changeColor(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData);
 			}
 		}
 		entityPlayerFormLittleMaidDummy.textureArmorName = modelSelectMode % 2 == 0 ? "" : packgeName;
@@ -278,7 +296,8 @@ public class PFLM_GuiModelSelect extends GuiScreen {
     	GL11.glTranslatef(x, y, 50F);
     	//entity.setWorld(popWorld);
     	GL11.glScalef(f, f, f);
-    	GL11.glRotatef(180F, 0.0F, 0.0F, 0.0F);
+    	GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+    	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
     	//RenderHelper.enableStandardItemLighting();
     	Render var10 = RenderManager.instance.getEntityRenderObject(entity);
     	if (var10 != null) var10.doRender(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
@@ -294,8 +313,9 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 	{
 		super.mouseClicked(x, y, i);
 		boolean doubleClick = false;
-		if (Minecraft.getSystemTime() - lastClicked < 250L) doubleClick = true;
-		lastClicked = Minecraft.getSystemTime();
+		Long l1 = (Long) Modchu_Reflect.invokeMethod("Minecraft", "func_71386_F", "getSystemTime", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+		if (l1 - lastClicked < 250L) doubleClick = true;
+		lastClicked = l1;
 		pointX = (x - 21) / 24;
 		pointY = (y - 10) / 50;
 		//Modchu_Debug.dDebug("x="+x);
@@ -305,14 +325,14 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 		if(pointX >= 0 && pointX < selectBoxX && pointY >= 0 && pointY < selectBoxY)
 		{
 			int i1 = offsetSlot + pointX + (pointY * selectBoxX);
-			if (i1 < mod_Modchu_ModchuLib.getTextureManagerTexturesSize()) {
-				if (mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][i1] != -1) selectSlot = i1;
+			if (i1 < mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTexturesSize()) {
+				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][i1] != -1) selectSlot = i1;
 			}
 		}
 		if (doubleClick
 				&& selectSlot > -1
-				&& mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot] != -1) {
-			//Modchu_Debug.mDebug("selectSlot="+selectSlot+" mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot]="+mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot]);
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot] != -1) {
+			//Modchu_Debug.mDebug("selectSlot="+selectSlot+" mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot]="+mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot]);
 			selected();
 		}
 	}
@@ -322,42 +342,43 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 		switch (modelSelectMode) {
 		case 0:
 		case 1:
-			mod_PFLM_PlayerFormLittleMaid.textureName = mod_Modchu_ModchuLib.getPackege(entityPlayerFormLittleMaidDummy.maidColor, mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot]);
-			mod_PFLM_PlayerFormLittleMaid.textureArmorName = null;
-			mod_PFLM_PlayerFormLittleMaid.setArmorTextureValue();
-			mod_PFLM_PlayerFormLittleMaid.maidColor = entityPlayerFormLittleMaidDummy.maidColor;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName = mod_Modchu_ModchuLib.modchu_Main.getPackege(modelColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot]);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName = null;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.setArmorTextureValue();
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor = modelColor;
 			gui = parentScreen;
 			((PFLM_Gui) gui).modelChange();
 			break;
 		case 2:
 		case 3:
-			mod_PFLM_PlayerFormLittleMaid.othersTextureName = mod_Modchu_ModchuLib.getPackege(entityPlayerFormLittleMaidDummy.maidColor, mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot]);
-			mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName = null;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName = mod_Modchu_ModchuLib.modchu_Main.getPackege(modelColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot]);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName = null;
 			gui = parentScreen;
 			((PFLM_GuiOthersPlayer) gui).setArmorTextureValue();
-			mod_PFLM_PlayerFormLittleMaid.othersMaidColor = entityPlayerFormLittleMaidDummy.maidColor;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersMaidColor = modelColor;
 			((PFLM_GuiOthersPlayer) gui).modelChange();
 			break;
 		case 4:
 		case 5:
-			PFLM_GuiOthersPlayerIndividualCustomize.othersTextureName = mod_Modchu_ModchuLib.getPackege(entityPlayerFormLittleMaidDummy.maidColor, mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot]);
+			PFLM_GuiOthersPlayerIndividualCustomize.othersTextureName = mod_Modchu_ModchuLib.modchu_Main.getPackege(modelColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot]);
 			PFLM_GuiOthersPlayerIndividualCustomize.othersTextureArmorName = null;
 			gui = parentScreen;
 			((PFLM_GuiOthersPlayer) gui).setArmorTextureValue();
-			PFLM_GuiOthersPlayerIndividualCustomize.othersMaidColor = entityPlayerFormLittleMaidDummy.maidColor;
+			PFLM_GuiOthersPlayerIndividualCustomize.othersMaidColor = modelColor;
 			((PFLM_GuiOthersPlayer) gui).modelChange();
 			break;
 		case 6:
 		case 7:
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select] = mod_Modchu_ModchuLib.getPackege(entityPlayerFormLittleMaidDummy.maidColor, mod_PFLM_PlayerFormLittleMaid.texturesNamber[entityPlayerFormLittleMaidDummy.maidColor][selectSlot]);
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select] = null;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] = mod_Modchu_ModchuLib.modchu_Main.getPackege(modelColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamber[modelColor][selectSlot]);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select] = null;
 			gui = parentScreen;
 			((PFLM_GuiKeyControls) gui).setArmorTextureValue();
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysMaidColor[select] = entityPlayerFormLittleMaidDummy.maidColor;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select] = modelColor;
 			((PFLM_GuiKeyControls) gui).modelChange();
 			break;
 		}
-		mc.displayGuiScreen((GuiScreen) gui);
+		Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ (GuiScreen) gui });
+		//mc.displayGuiScreen((GuiScreen) gui);
 	}
 
 	private void renderTexture(int x, int y, int width, int height)
@@ -415,7 +436,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 
     public boolean doesGuiPauseGame()
     {
-        return !mod_PFLM_PlayerFormLittleMaid.isMulti;
+        return !mod_PFLM_PlayerFormLittleMaid.pflm_main.isMulti;
     }
 
     public void onGuiClosed()

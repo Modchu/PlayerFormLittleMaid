@@ -34,58 +34,58 @@ public class PFLM_GuiKeyControls extends
 		buttonList.clear();
 		int x = width / 2 + 55;
 		int y = height / 2 - 85;
-		buttonList.add(new PFLM_GuiSmallButton(403, x + 75, y + 10, 75, 15, "Use Change"));
-		buttonList.add(new PFLM_GuiSmallButton(200, x, y + 115, 75, 20, "Save"));
-		buttonList.add(new PFLM_GuiSmallButton(201, x + 75, y + 115, 75, 20, "Return"));
-		buttonList.add(new PFLM_GuiSmallButton(407, x + 75, y - 6, 20, 15, "-10"));
-		buttonList.add(new PFLM_GuiSmallButton(401, x + 95, y - 6, 15, 15, "-"));
-		buttonList.add(new PFLM_GuiSmallButton(402, x + 110, y - 6, 15, 15, "+"));
-		buttonList.add(new PFLM_GuiSmallButton(408, x + 125, y - 6, 20, 15, "+10"));
-		if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysUse[select]) {
-			buttonList.add(new PFLM_GuiSmallButton(404, x + 75, y + 70, 75, 15, "Use ModelsKey"));
-			buttonList.add(new PFLM_GuiSmallButton(405, x + 75, y + 85, 75, 15, "Use CtrlKey"));
-			buttonList.add(new PFLM_GuiSmallButton(406, x + 75, y + 100, 75, 15, "Use ShiftKey"));
-			buttonList.add(new PFLM_GuiSmallButton(400, x + 75, y + 25, 75, 15, "ChangeMode"));
-			if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
-					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModel
-					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndColor
-					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
-				buttonList.add(new PFLM_GuiSmallButton(56, x - 10, y + 10, 85, 15, "ModelListSelect"));
-				buttonList.add(new PFLM_GuiSmallButton(50, x + 40, y + 25, 15, 15, "<"));
-				buttonList.add(new PFLM_GuiSmallButton(51, x + 55, y + 25, 15, 15, ">"));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 403, x + 75, y + 10, 75, 15, "Use Change" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 200, x, y + 115, 75, 20, "Save" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 201, x + 75, y + 115, 75, 20, "Return" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 407, x + 75, y - 6, 20, 15, "-10" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 401, x + 95, y - 6, 15, 15, "-" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 402, x + 110, y - 6, 15, 15, "+" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 408, x + 125, y - 6, 20, 15, "+10" }));
+		if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysUse[select]) {
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 404, x + 75, y + 70, 75, 15, "Use ModelsKey" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 405, x + 75, y + 85, 75, 15, "Use CtrlKey" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 406, x + 75, y + 100, 75, 15, "Use ShiftKey" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 400, x + 75, y + 25, 75, 15, "ChangeMode" }));
+			if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModel
+					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndColor
+					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 56, x - 10, y + 10, 85, 15, "ModelListSelect" }));
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 50, x + 40, y + 25, 15, 15, "<" }));
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 51, x + 55, y + 25, 15, 15, ">" }));
 			}
-			if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
-					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetColor
-					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndColor
-	    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
-				buttonList.add(new PFLM_GuiSmallButton(52, x + 40, y + 40, 15, 15, "-"));
-				buttonList.add(new PFLM_GuiSmallButton(53, x + 55, y + 40, 15, 15, "+"));
+			if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetColor
+					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndColor
+	    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 52, x + 40, y + 40, 15, 15, "-" }));
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 53, x + 55, y + 40, 15, 15, "+" }));
 			}
-			if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
-					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetArmor
-	    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetColorAndArmor
-					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
-				buttonList.add(new PFLM_GuiSmallButton(54, x + 40, y + 55, 15, 15, "<"));
-				buttonList.add(new PFLM_GuiSmallButton(55, x + 55, y + 55, 15, 15, ">"));
-				buttonList.add(new PFLM_GuiSmallButton(20, x, y + 70, 75, 15, "showArmor"));
+			if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetArmor
+	    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetColorAndArmor
+					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 54, x + 40, y + 55, 15, 15, "<" }));
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 55, x + 55, y + 55, 15, 15, ">" }));
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 20, x, y + 70, 75, 15, "showArmor" }));
 			}
-			if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
-					| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeModelScale) {
+			if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeModelScale) {
 				if(modelScaleButton) {
-					buttonList.add(new PFLM_GuiSmallButton(3, width / 2 - 140, height / 2 + 20, 50, 20, "Default"));
-					buttonList.add(new PFLM_GuiSmallButton(4, width / 2 - 90, height / 2 + 20, 30, 20, "UP"));
-					buttonList.add(new PFLM_GuiSmallButton(5, width / 2 - 170, height / 2 + 20, 30, 20, "Down"));
-					buttonList.add(new PFLM_GuiSmallButton(6, x + 75, y + 40, 75, 15, "Close"));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 3, width / 2 - 140, height / 2 + 20, 50, 20, "Default" }));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 4, width / 2 - 90, height / 2 + 20, 30, 20, "UP" }));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 5, width / 2 - 170, height / 2 + 20, 30, 20, "Down" }));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 6, x + 75, y + 40, 75, 15, "Close" }));
 				} else {
-					buttonList.add(new PFLM_GuiSmallButton(7, x + 75, y + 40, 75, 15, "ScaleChange"));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 7, x + 75, y + 40, 75, 15, "ScaleChange" }));
 				}
 			}
-			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] >= modeAction
-					&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] <= modeActionLast) {
-				buttonList.add(new PFLM_GuiSmallButton(409, x + 50, y + 165, 15, 15, "+"));
-				buttonList.add(new PFLM_GuiSmallButton(410, x + 35, y + 165, 15, 15, "-"));
-				buttonList.add(new PFLM_GuiSmallButton(411, x + 65, y + 165, 20, 15, "+10"));
-				buttonList.add(new PFLM_GuiSmallButton(412, x + 15, y + 165, 20, 15, "-10"));
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] >= modeAction
+					&& mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] <= modeActionLast) {
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 409, x + 50, y + 165, 15, 15, "+" }));
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 410, x + 35, y + 165, 15, 15, "-" }));
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 411, x + 65, y + 165, 20, 15, "+10" }));
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 412, x + 15, y + 165, 20, 15, "-10" }));
 			}
 		}
 		setTextureValue();
@@ -102,18 +102,18 @@ public class PFLM_GuiKeyControls extends
     	//isModelSize Default
     	if(guibutton.id == 3)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[0]).getModelScale();
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel[0]).getModelScale();
     	}
     	//isModelSize UP
     	if(guibutton.id == 4)
     	{
     		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
-    			mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] += mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] <= 9.5 ? 0.5F : 0;
+    			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] += mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] <= 9.5 ? 0.5F : 0;
     		} else {
     			if (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157)) {
-    				mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] += mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] <= 9.99 ? 0.01F : 0;
+    				mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] += mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] <= 9.99 ? 0.01F : 0;
     			} else {
-    				mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] += mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] <= 9.9 ? 0.1F : 0;
+    				mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] += mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] <= 9.9 ? 0.1F : 0;
     			}
     		}
     	}
@@ -121,12 +121,12 @@ public class PFLM_GuiKeyControls extends
     	if(guibutton.id == 5)
     	{
     		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
-    			mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] -= mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] > 0.5 ? 0.5F : 0;
+    			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] -= mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] > 0.5 ? 0.5F : 0;
     		} else {
     			if (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157)) {
-    				mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] -= mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] > 0.01 ? 0.01F : 0;
+    				mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] -= mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] > 0.01 ? 0.01F : 0;
     			} else {
-    				mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] -= mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] > 0.1 ? 0.1F : 0;
+    				mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] -= mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] > 0.1 ? 0.1F : 0;
     			}
     		}
     	}
@@ -158,20 +158,20 @@ public class PFLM_GuiKeyControls extends
     	}
     	//ColorChange
     	if(guibutton.id == 52) {
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysMaidColor[select]--;
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select]--;
     		colorReverse = true;
     	}
     	if(guibutton.id == 53) {
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysMaidColor[select]++;
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select]++;
     		colorReverse = false;
     	}
     	if(guibutton.id == 52
     			| guibutton.id == 53)
     	{
-    		setMaidColor(mod_PFLM_PlayerFormLittleMaid.shortcutKeysMaidColor[select]);
+    		setMaidColor(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select]);
     		setColorTextureValue();
     		noSaveFlag = true;
-    		mod_PFLM_PlayerFormLittleMaid.setResetFlag(true);
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.setResetFlag(true);
     	}
     	//ArmorChange
     	if(guibutton.id == 54) setPrevTexturePackege(1);
@@ -184,80 +184,83 @@ public class PFLM_GuiKeyControls extends
     	}
     	//ModelListSelect
     	if(guibutton.id == 56) {
-    		mc.displayGuiScreen(new PFLM_GuiModelSelect(this, popWorld, 6, select));
+    		Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ new PFLM_GuiModelSelect(this, popWorld, 6, select) });
+    		//mc.displayGuiScreen(new PFLM_GuiModelSelect(this, popWorld, 6, select));
     	}
     	//Save
     	if(guibutton.id == 200)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.saveShortcutKeysPlayerParamater();
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.saveShortcutKeysPlayerParamater();
     		PFLM_Config.clearCfgData();
     		noSaveFlag = false;
-    		mc.displayGuiScreen(null);
-    		mod_PFLM_PlayerFormLittleMaid.clearPlayers();
+    		Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ null });
+    		//mc.displayGuiScreen(null);
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
     	}
     	//Return
     	if(guibutton.id == 201)
     	{
-    		mc.displayGuiScreen(parentScreen);
+    		Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ parentScreen });
+    		//mc.displayGuiScreen(parentScreen);
     	}
     	//ChangeMode
     	if(guibutton.id == 400)
     	{
     		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
-    			mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]--;
-    			if ((mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeAction
-    					&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] <= modeActionLast + 1)
+    			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select]--;
+    			if ((mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] > modeAction
+    					&& mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] <= modeActionLast + 1)
     					//TODO modeを増やしたときに問題ないかチェックする
     					//&& changeModeMax == modeActionLast + 1
-    					) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
-    			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < 0) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = changeModeMax - 1;
+    					) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = modeAction;
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] < 0) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = changeModeMax - 1;
     		} else {
-    			mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]++;
-    			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeAction
-    					&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] <= modeActionLast) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeActionLast + 1;
+    			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select]++;
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] > modeAction
+    					&& mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] <= modeActionLast) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = modeActionLast + 1;
     		}
-    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] >= changeModeMax) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = 0;
-    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < 0) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = changeModeMax;
-    		//Modchu_Debug.mDebug("mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]="+mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]);
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] >= changeModeMax) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = 0;
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] < 0) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = changeModeMax;
+    		//Modchu_Debug.mDebug("mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select]="+mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select]);
     		initGui();
     	}
     	//select--
     	if(guibutton.id == 401)
     	{
-    		select = select > 0 ? --select : mod_PFLM_PlayerFormLittleMaid.maxShortcutKeys - 1;
+    		select = select > 0 ? --select : mod_PFLM_PlayerFormLittleMaid.pflm_main.maxShortcutKeys - 1;
     		initGui();
     	}
     	//select++
     	if(guibutton.id == 402)
     	{
-    		select = select < mod_PFLM_PlayerFormLittleMaid.maxShortcutKeys - 1 ? ++select : 0;
+    		select = select < mod_PFLM_PlayerFormLittleMaid.pflm_main.maxShortcutKeys - 1 ? ++select : 0;
     		initGui();
     	}
     	//use Change
     	if(guibutton.id == 403)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysUse[select] = !mod_PFLM_PlayerFormLittleMaid.shortcutKeysUse[select];
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysUse[select] = !mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysUse[select];
     		mod_PFLM_PlayerFormLittleMaid.shortcutKeysinit();
     		initGui();
     	}
     	//use ModelsKey
     	if(guibutton.id == 404)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysPFLMModelsUse[select] = !mod_PFLM_PlayerFormLittleMaid.shortcutKeysPFLMModelsUse[select];
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysPFLMModelsUse[select] = !mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysPFLMModelsUse[select];
     		mod_PFLM_PlayerFormLittleMaid.shortcutKeysinit();
     		initGui();
     	}
     	//use Ctrl
     	if(guibutton.id == 405)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysCtrlUse[select] = !mod_PFLM_PlayerFormLittleMaid.shortcutKeysCtrlUse[select];
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysCtrlUse[select] = !mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysCtrlUse[select];
     		mod_PFLM_PlayerFormLittleMaid.shortcutKeysinit();
     		initGui();
     	}
     	//use Shift
     	if(guibutton.id == 406)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysShiftUse[select] = !mod_PFLM_PlayerFormLittleMaid.shortcutKeysShiftUse[select];
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysShiftUse[select] = !mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysShiftUse[select];
     		mod_PFLM_PlayerFormLittleMaid.shortcutKeysinit();
     		initGui();
     	}
@@ -270,35 +273,35 @@ public class PFLM_GuiKeyControls extends
     	//select+10
     	if(guibutton.id == 408)
     	{
-    		select = select < mod_PFLM_PlayerFormLittleMaid.maxShortcutKeys - 10 ? select + 10 : mod_PFLM_PlayerFormLittleMaid.maxShortcutKeys - 1;
+    		select = select < mod_PFLM_PlayerFormLittleMaid.pflm_main.maxShortcutKeys - 10 ? select + 10 : mod_PFLM_PlayerFormLittleMaid.pflm_main.maxShortcutKeys - 1;
     		initGui();
     	}
     	//Action++
     	if(guibutton.id == 409)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]++;
-    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeActionLast) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select]++;
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] > modeActionLast) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = modeAction;
     		initGui();
     	}
     	//Action--
     	if(guibutton.id == 410)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]--;
-    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < modeAction) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeActionLast;
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select]--;
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] < modeAction) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = modeActionLast;
     		initGui();
     	}
     	//Action+10
     	if(guibutton.id == 411)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] + 10;
-    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] > modeActionLast) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeActionLast;
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] + 10;
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] > modeActionLast) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = modeActionLast;
     		initGui();
     	}
     	//Action-10
     	if(guibutton.id == 412)
     	{
-    		mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] - 10;
-    		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < modeAction) mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = modeAction;
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] - 10;
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] < modeAction) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = modeAction;
     		initGui();
     	}
     }
@@ -307,14 +310,14 @@ public class PFLM_GuiKeyControls extends
     	shortcutKey = "";
     	String s = "key.ModelChange"+select;
     	shortcutKey = getKeyDisplayString(s);
-    	if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysPFLMModelsUse[select]) {
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysPFLMModelsUse[select]) {
     		s = "key.PFLM Models Key";
     		shortcutKey = new StringBuilder().append(getKeyDisplayString(s)).append(" + ").append(shortcutKey).toString();
     	}
-    	if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysCtrlUse[select]) {
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysCtrlUse[select]) {
     		shortcutKey = new StringBuilder().append(GameSettings.getKeyDisplayString(29)).append(" or ").append(GameSettings.getKeyDisplayString(157)).append(" + ").append(shortcutKey).toString();
     	}
-    	if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysShiftUse[select]) {
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysShiftUse[select]) {
     		shortcutKey = new StringBuilder().append(GameSettings.getKeyDisplayString(42)).append(" or ").append(GameSettings.getKeyDisplayString(54)).append(" + ").append(shortcutKey).toString();
     	}
     }
@@ -344,49 +347,49 @@ public class PFLM_GuiKeyControls extends
     	fontRenderer.drawString("KeyControlsSetting", width / 2 - 50, height / 2 - 110, 0xffffff);
     	fontRenderer.drawString((new StringBuilder()).append("ShortcutKey = ").append(shortcutKey).toString(), width / 2 - 150, height / 2 - 100, 0xffffff);
     	fontRenderer.drawString("SettingNumber", width / 2 + 40, height / 2 - 88, 0xffffff);
-    	String use = mod_PFLM_PlayerFormLittleMaid.shortcutKeysUse[select] ? "use" : "unused";
+    	String use = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysUse[select] ? "use" : "unused";
     	StringBuilder s10 = (new StringBuilder()).append("shortcutKey : ");
     	s10 = s10.append(use);
     	fontRenderer.drawString(s10.toString(), guiLeft, guiTop + 150, 0xffffff);
     	fontRenderer.drawString(""+select, width / 2 + 115, height / 2 - 88, 0xffffff);
-    	if (!mod_PFLM_PlayerFormLittleMaid.shortcutKeysUse[select]) return;
+    	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysUse[select]) return;
     	StringBuilder s = (new StringBuilder()).append("TextureName : ");
     	StringBuilder s1 = (new StringBuilder()).append("ArmorName : ");
     	StringBuilder s2 = (new StringBuilder()).append("MaidColor : ");
     	StringBuilder s9 = (new StringBuilder()).append("changeMode : ");
-    	s9 = s9.append(getChangeModeString(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select]));
+    	s9 = s9.append(getChangeModeString(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select]));
     	fontRenderer.drawString(s9.toString(), guiLeft, guiTop + 130, 0xffffff);
-    	if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModel
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndColor
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
-    		s = s.append(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select]);
+    	if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModel
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndColor
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
+    		s = s.append(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select]);
     		fontRenderer.drawString(s.toString(), guiLeft, guiTop + 100, 0xffffff);
         	fontRenderer.drawString("Model", width / 2 + 60, height / 2 - 56, 0xffffff);
     	}
-    	if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetColor
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndColor
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
-    		s2 = s2.append(mod_PFLM_PlayerFormLittleMaid.shortcutKeysMaidColor[select]);
+    	if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetColor
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndColor
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
+    		s2 = s2.append(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select]);
     		fontRenderer.drawString(s2.toString(), guiLeft, guiTop + 110, 0xffffff);
     		fontRenderer.drawString("Color", width / 2 + 60, height / 2 - 41, 0xffffff);
     	}
-    	if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetModelAndArmor
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetArmor
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
-    		s1 = s1.append(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select]);
+    	if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndArmor
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetArmor
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
+    		s1 = s1.append(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select]);
     		fontRenderer.drawString(s1.toString(), guiLeft, guiTop + 120, 0xffffff);
     		StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
     		s8 = s8.append(showArmor);
     		fontRenderer.drawString(s8.toString(), guiLeft, guiTop + 140, 0xffffff);
     		fontRenderer.drawString("Armor", width / 2 + 60, height / 2 - 27, 0xffffff);
     	}
-    	if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeOthersSettingOffline
-    			| mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] == modeModelScale) {
+    	if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeModelScale) {
     		if(modelScaleButton) {
-    			String s6 = "ModelScale : "+mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select];
+    			String s6 = "ModelScale : "+mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select];
     			s6 = (new StringBuilder()).append(s6).toString();
     			fontRenderer.drawString(s6, guiLeft - 120, guiTop + 90, 0xffffff);
     			String s7 = "ModelScaleChange";
@@ -394,21 +397,22 @@ public class PFLM_GuiKeyControls extends
     			fontRenderer.drawString(s7, guiLeft - 120, guiTop + 55, 0xffffff);
     		}
     	}
-    	if(mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] != modePlayerOnline
-    			&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] != modePlayerOffline
-    			&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] != modeRandom
-    			&& mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] < modeActionRelease) {
+    	if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] != modePlayerOnline
+    			&& mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] != modePlayerOffline
+    			&& mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] != modeRandom
+    			&& mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] < modeActionRelease) {
     		if (drawEntity == null) drawEntity = new PFLM_EntityPlayerDummy(popWorld);
     		setTextureValue();
-    		// 152delete((EntityLiving) drawEntity).texture = mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select];
-			PFLM_RenderPlayerDummy.modelData.setCapsValue(PFLM_RenderPlayerDummy.modelData.caps_ResourceLocation, 0, mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select]);
-    		((PFLM_EntityPlayerDummy) drawEntity).textureModel = mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel;
-    		((PFLM_EntityPlayerDummy) drawEntity).maidColor = mod_PFLM_PlayerFormLittleMaid.shortcutKeysMaidColor[select];
-    		((PFLM_EntityPlayerDummy) drawEntity).textureName = mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select];
-    		((PFLM_EntityPlayerDummy) drawEntity).textureArmorName = mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select];
-    		((PFLM_EntityPlayerDummy) drawEntity).textureArmor0 = mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmor0;
-    		((PFLM_EntityPlayerDummy) drawEntity).textureArmor1 = mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmor1;
-    		((PFLM_EntityPlayerDummy) drawEntity).modelScale = mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select];
+    		// 152delete((EntityLiving) drawEntity).texture = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select];
+    		mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData.setCapsValue(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData.caps_ResourceLocation, 0, mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select]);
+    		((PFLM_EntityPlayerDummy) drawEntity).textureModel = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel;
+    		//((PFLM_EntityPlayerDummy) drawEntity).maidColor = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select];
+    		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select]);
+    		((PFLM_EntityPlayerDummy) drawEntity).textureName = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select];
+    		((PFLM_EntityPlayerDummy) drawEntity).textureArmorName = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select];
+    		((PFLM_EntityPlayerDummy) drawEntity).textureArmor0 = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmor0;
+    		((PFLM_EntityPlayerDummy) drawEntity).textureArmor1 = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmor1;
+    		((PFLM_EntityPlayerDummy) drawEntity).modelScale = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select];
     		((PFLM_EntityPlayerDummy) drawEntity).showArmor = showArmor;
     		//Modchu_Debug.mDebug("textureName="+shortcutKeysTextureName);
     		//Modchu_Debug.mDebug("texture="+shortcutKeysTexture);
@@ -449,45 +453,45 @@ public class PFLM_GuiKeyControls extends
     }
 
 	public void setTextureValue() {
-		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select] == null) {
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select] = "default";
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] == null) {
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] = "default";
 		}
 		int i = getMaidColor();
 
-		mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], i);
-		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] == null) {
+		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select], i);
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] == null) {
 			int n = 0;
-			for (; n < mod_PFLM_PlayerFormLittleMaid.maxShortcutKeys && mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] == null; n = n + 1) {
+			for (; n < mod_PFLM_PlayerFormLittleMaid.pflm_main.maxShortcutKeys && mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] == null; n = n + 1) {
 				i++;
 				i = i & 0xf;
 				setMaidColor(i);
-				mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], i);
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select], i);
 			}
-			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] == null) {
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] == null) {
 				setNextTexturePackege(0);
-				mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], i);
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select], i);
 			}
 		}
-		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel != null) {
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[0] = null;
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[1] = null;
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[2] = null;
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel != null) {
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel[0] = null;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel[1] = null;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel[2] = null;
 		} else {
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel = new Object[3];
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel = new Object[3];
 		}
-		Object ltb = mod_Modchu_ModchuLib.getTextureBox(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select]);
-		if (ltb != null) mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[0] = mod_Modchu_ModchuLib.getTextureBoxModels(ltb)[0];
+		Object ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureBox(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select]);
+		if (ltb != null) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel[0] = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxModels(ltb)[0];
 		setArmorTextureValue();
 	}
 
 	public void setColorTextureValue() {
-		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select] == null) {
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select] = "default";
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] == null) {
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] = "default";
 		}
 		int i = getMaidColor();
-		Object t = mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select];
-		mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], i);
-		for (int n = 0; n < mod_PFLM_PlayerFormLittleMaid.maxShortcutKeys && mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] == null; n = n + 1) {
+		Object t = mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select];
+		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select], i);
+		for (int n = 0; n < mod_PFLM_PlayerFormLittleMaid.pflm_main.maxShortcutKeys && mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] == null; n = n + 1) {
 			if (PFLM_Gui.colorReverse) {
 				i--;
 			} else {
@@ -495,79 +499,79 @@ public class PFLM_GuiKeyControls extends
 			}
 			i = i & 0xf;
 			setMaidColor(i);
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], i);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select], i);
 		}
-		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] == null) mod_PFLM_PlayerFormLittleMaid.shortcutKeysTexture[select] = t;
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] == null) mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTexture[select] = t;
 	}
 
 	public void setArmorTextureValue() {
-		if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select] == null) {
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select]));
-			if (mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select] == null) {
-				mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select] = "default";
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select] == null) {
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select]));
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select] == null) {
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select] = "default";
 			}
 		}
-		Object ltb = mod_Modchu_ModchuLib.getTextureBox(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select]);
-		Object[] models = mod_Modchu_ModchuLib.getTextureBoxModels(ltb);
+		Object ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureBox(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select]);
+		Object[] models = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxModels(ltb);
 		if (ltb != null) {
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[1] = models[1];
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[2] = models[2];
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel[1] = models[1];
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel[2] = models[2];
 		} else {
-			ltb = mod_Modchu_ModchuLib.getTextureBox("default");
+			ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureBox("default");
 			if (ltb != null) {
-				mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[1] = models[1];
-				mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureModel[2] = models[2];
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel[1] = models[1];
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureModel[2] = models[2];
 			}
 		}
 	}
 
 	public static void setNextTexturePackege(int i) {
 		if (i == 0) {
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select] =
-					mod_Modchu_ModchuLib.textureManagerGetNextPackege(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select]));
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] =
+					mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select], getMaidColor());
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select]));
 		}
 		if (i == 1) {
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select] = mod_Modchu_ModchuLib.textureManagerGetNextArmorPackege(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select]);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextArmorPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select]);
 		}
 	}
 
 	public static void setPrevTexturePackege(int i) {
 		if (i == 0) {
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select] =
-					mod_Modchu_ModchuLib.textureManagerGetPrevPackege(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select], getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select]));
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] =
+					mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select], getMaidColor());
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select]));
 		}
 		if (i == 1) {
-			mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select] = mod_Modchu_ModchuLib.textureManagerGetPrevArmorPackege(mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select]);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevArmorPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select]);
 		}
 	}
 
     public static int getMaidColor()
     {
-    	return mod_PFLM_PlayerFormLittleMaid.shortcutKeysMaidColor[select];
+    	return mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select];
     }
 
     public static void setMaidColor(int i)
     {
-    	mod_PFLM_PlayerFormLittleMaid.shortcutKeysMaidColor[select] = i & 0xf;
+    	mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select] = i & 0xf;
     }
 
     public static void setTextureName(String s) {
-    	mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureName[select] = s;
+    	mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] = s;
     }
 
     public static void setTextureArmorName(String s) {
-    	mod_PFLM_PlayerFormLittleMaid.shortcutKeysTextureArmorName[select] = s;
+    	mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select] = s;
     }
 
     public static void setModelScale(float f)
     {
-    	mod_PFLM_PlayerFormLittleMaid.shortcutKeysModelScale[select] = f;
+    	mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] = f;
     }
 
 	public static void setChangeMode(int i) {
-		mod_PFLM_PlayerFormLittleMaid.shortcutKeysChangeMode[select] = i;
+		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = i;
 	}
 
 	public static String getChangeModeString(int i) {

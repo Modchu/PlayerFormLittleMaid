@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-public class PFLM_RenderPlayerDummy extends RenderPlayer
+public class PFLM_RenderPlayerDummyMaster extends RenderPlayer
 {
 	protected static MultiModelBaseBiped modelBasicOrig[];
 	public static String[] armorFilename;
@@ -13,9 +13,8 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 	private boolean checkGlEnableWrapper = true;
 	private boolean checkGlDisableWrapper = true;
 	public static PFLM_ModelData modelData;
-	public static RenderManager renderManager;
 
-	public PFLM_RenderPlayerDummy() {
+	public PFLM_RenderPlayerDummyMaster() {
 		super();
 		modelBasicOrig = new MultiModel[3];
 		modelBasicOrig[0] = new MultiModel(0.0F);
@@ -23,11 +22,11 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		modelBasicOrig[2] = new MultiModel(0.5F);
 		modelData = new PFLM_ModelData(this);
 		armorFilename = (String[]) Modchu_Reflect.getFieldObject(RenderBiped.class, "field_82424_k", "bipedArmorFilenamePrefix");
-		renderManager = super.renderManager;
 	}
 
-    protected int setArmorModel(EntityLivingBase entityliving, int i, float f)
+    protected int setArmorModel(Entity entityliving, int i, float f)
     {
+    	//Modchu_Debug.mDebug("setArmorModel "+modelData.getCapsValue(modelData.caps_ResourceLocation, 0));
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	/*b181//*/byte byte0 = -1;
     	//b181 deleteboolean byte0 = false;
@@ -42,7 +41,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 //@-@b181
     		armorTextureSetting(entity, is, i);
     		boolean flag1 = i == 1 ? true : false;
-    		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.model);
+    		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model);
     		if (isBiped) {
     			((MultiModelBaseBiped) modelData.modelFATT.modelInner).setArmorBipedRightLegShowModel(modelData, flag1);
     			((MultiModelBaseBiped) modelData.modelFATT.modelInner).setArmorBipedLeftLegShowModel(modelData, flag1);
@@ -51,12 +50,13 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     	return byte0;
     }
 
-    private void armorTextureSetting(EntityLivingBase entityliving, ItemStack is, int i) {
+    private void armorTextureSetting(Entity entityliving, ItemStack is, int i) {
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	int i2 = i;
     	String t = (String) modelData.getCapsValue(modelData.caps_textureArmorName);
+    	if (t != null) ;else t = entity.textureArmorName;
     	//Modchu_Debug.mDebug("setArmorModel t="+t);
-    	boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.model);
+    	boolean isBiped = mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model);
     	if (t != null) ;else t = isBiped ? "Biped" : "default";
     	if (modelData.modelFATT.modelOuter != null
     			&& modelData.modelFATT.modelInner != null) {
@@ -78,15 +78,15 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     			return;
     		}
     		if (flag) {
-    			if (mod_Modchu_ModchuLib.isForge
-    					&& mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() > 129) {
+    			if (mod_Modchu_ModchuLib.modchu_Main.isForge
+    					&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 129) {
     				String a1 = itemarmor.renderIndex < armorFilename.length ? armorFilename[itemarmor.renderIndex] : armorFilename[armorFilename.length - 1];
     				Object t1;
     				Object t2;
-    				if (mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() < 150) {
+    				if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 150) {
     					t2 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ ItemStack.class, String.class }, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
     					t1 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ ItemStack.class, String.class }, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });
-    				} else if (mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() < 160) {
+    				} else if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 160) {
     					t2 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, new Object[]{ entity, is, "/armor/" + a1 + "_" + 2 + ".png", i, 2, null });
     					t1 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, new Object[]{ entity, is, "/armor/" + a1 + "_" + 1 + ".png", i, 1, null });
     				} else {
@@ -113,73 +113,26 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     		}
     	} else {
     		t3 = modelData.modelFATT.textureInner;
-    		t3[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 64, is);
+    		t3[i] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 64, is);
     		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
     		t4 = modelData.modelFATT.textureOuter;
-    		t4[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 80, is);
+    		t4[i] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 80, is);
     		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
     	}
     	//Modchu_Debug.mlDebug("modelData.modelFATT.textureOuter["+i+"]="+modelData.modelFATT.textureOuter[i]);
     	//Modchu_Debug.mlDebug("modelData.modelFATT.textureInner["+i+"]="+modelData.modelFATT.textureInner[i]);
     }
 
-    @Override
-    protected int shouldRenderPass(EntityLivingBase entityliving, int i, float f)
+    protected int shouldRenderPass(Entity entityliving, int i, float f)
     {
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
-    	if (entity != null) ;else return -1;
-    	Object t = null;
-    	if (i < 4 && modelData.modelFATT.modelOuter != null)
-    	{
-//-@-b173
-    		if (modelData.modelFATT.textureOuter == null) return -1;
-//@-@b173
-    		// b173deleteif (modelData.modelFATT.textureOuter == null) return false;
-    		t = modelData.modelFATT.textureOuter[i];
-    		if (t == null)
-    		{
-//-@-b181
-    			return -1;
-//@-@b181
-    			//b181 deletereturn false;
-    		} else {
-    			setRenderPassModel(modelData.modelFATT);
-//-@-b181
-    			return 1;
-//@-@b181
-    			//b181 deletereturn true;
-    		}
-    	}
-    	if (i < 8 && modelData.modelFATT.modelInner != null)
-    	{
-//-@-b173
-    		if (modelData.modelFATT.textureInner == null) return -1;
-//@-@b173
-    		// b173deleteif (modelData.modelFATT.textureInner == null) return false;
-    		t = modelData.modelFATT.textureInner[i - 4];
-    		if (t == null) {
-    			//Modchu_Debug.Debug("Armor1 return -1");
-//-@-b181
-    			return -1;
-//@-@b181
-    			//b181 deletereturn false;
-    		} else {
-    			setRenderPassModel(modelData.modelFATT);
-//-@-b181
-    			return 1;
-//@-@b181
-    			//b181 deletereturn true;
-    		}
-    	} else {
-//-@-b181
-			return -1;
-//@-@b181
-			//b181 deletereturn false;
-    	}
-	}
+    	modelData.modelFATT.isRendering = true;
+    	setRenderPassModel(modelData.modelFATT);
+    	//Modchu_Debug.mDebug("PFLM_RenderPlayerDummyMaster shouldRenderPass entity.showArmor="+entity.showArmor);
+    	return entity.showArmor ? 1 : -1;
+    }
 
-    @Override
-	protected void preRenderCallback(EntityLivingBase entityliving, float f) {
+	protected void preRenderCallback(Entity entityliving, float f) {
 		PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
 		float f1 = entity.modelScale;
 		if (f1 == 0.0F) {
@@ -188,53 +141,70 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		GL11.glScalef(f1, f1, f1);
 	}
 
-    public void doRenderLiving(EntityLivingBase entityliving, double d, double d1, double d2,
+    public void oldDoRenderLivingPFLM(Entity entityliving, double d, double d1, double d2,
             float f, float f1) {
     	GL11.glPushMatrix();
-    	if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+
+    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
     		shadersGlDisableWrapper(GL11.GL_CULL_FACE);
     	} else {
     		GL11.glDisable(GL11.GL_CULL_FACE);
     	}
-
+    	int PFLMVersion = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion();
+    	Class EntityLivingBase = Modchu_Reflect.loadClass("EntityLivingBase");
+    	Class Minecraft = Modchu_Reflect.loadClass("Minecraft");
     	try
     	{
-    		float f2 = entityliving.prevRenderYawOffset + (entityliving.renderYawOffset - entityliving.prevRenderYawOffset) * f1;
-    		float f3 = entityliving.prevRotationYaw + (entityliving.rotationYaw - entityliving.prevRotationYaw) * f1;
-    		float f4 = entityliving.prevRotationPitch + (entityliving.rotationPitch - entityliving.prevRotationPitch) * f1;
+    		float f2;
+    		float f3;
+    		float f4;
+    		float prevRenderYawOffset = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70760_ar", "prevRenderYawOffset", entityliving);
+    		float renderYawOffset = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70761_aq", "renderYawOffset", entityliving);
+    		float prevRotationYawHead = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70758_at", "prevRotationYawHead", entityliving);
+    		float rotationYawHead = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70759_as", "rotationYawHead", entityliving);
+    		float prevLimbYaw = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70722_aY", "prevLimbYaw", entityliving);
+    		float limbYaw = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70721_aZ", "limbYaw", entityliving);
+    		float limbSwing = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70754_ba", "limbSwing", entityliving);
+    		f2 = prevRenderYawOffset + (renderYawOffset - prevRenderYawOffset) * f1;
+    		f3 = entityliving.prevRotationYaw + (entityliving.rotationYaw - entityliving.prevRotationYaw) * f1;
+    		f4 = entityliving.prevRotationPitch + (entityliving.rotationPitch - entityliving.prevRotationPitch) * f1;
+    		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
     		//renderLivingAt(entityliving, d, d1, d2);
-    		float f5 = handleRotationFloat(entityliving, f1);
-    		//rotateCorpse(entityliving, f5, f2, f1);
+    		float f5 = handleRotationFloat((Entity) entityliving, f1);
+    		//rotateCorpse((EntityPlayer) entityliving, f5, f2, f1);
     		float f6 = 0.0625F;
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    			//Shaders.glEnableWrapper(GL12.GL_RESCALE_NORMAL);
     			shadersGlEnableWrapper(GL12.GL_RESCALE_NORMAL);
     		} else {
     			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
     		}
     		GL11.glScalef(-1F, -1F, 1.0F);
-    		preRenderCallback(entityliving, f1);
+    		preRenderCallback((Entity) entityliving, f1);
     		GL11.glTranslatef(0.0F, -24F * f6 - 0.0078125F, 0.0F);
-    		float f7 = entityliving.prevLimbYaw + (entityliving.limbYaw - entityliving.prevLimbYaw) * f1;
-    		float f8 = entityliving.limbSwing - entityliving.limbYaw * (1.0F - f1);
-//-@-b181
-    		if (entityliving.isChild())
+    		float f7 = prevLimbYaw + (limbYaw - prevLimbYaw) * f1;
+    		float f8 = limbSwing - limbYaw * (1.0F - f1);
+    		if (PFLMVersion > 89
+    				&& (Boolean) Modchu_Reflect.invokeMethod(EntityLivingBase, "func_70631_g_", "isChild", entityliving))
     		{
     			f8 *= 3F;
     		}
-//@-@b181
     		if (f7 > 1.0F)
     		{
     			f7 = 1.0F;
     		}
 
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    			//Shaders.glEnableWrapper(GL11.GL_ALPHA_TEST);
     			shadersGlEnableWrapper(GL11.GL_ALPHA_TEST);
     		} else {
     			GL11.glEnable(GL11.GL_ALPHA_TEST);
     		}
-    		if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend)
     		{
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    				//Shaders.glEnableWrapper(GL11.GL_BLEND);
     				shadersGlEnableWrapper(GL11.GL_BLEND);
     			} else {
     				GL11.glEnable(GL11.GL_BLEND);
@@ -243,58 +213,76 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     		}
     		else
     		{
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    				//Shaders.glDisableWrapper(k1);
     				shadersGlDisableWrapper(GL11.GL_BLEND);
     			} else {
     				GL11.glDisable(GL11.GL_BLEND);
     			}
     		}
 
-    		modelData.modelMain.setRender(this);
-    		modelData.owner = (EntityLiving) entityliving;
     		modelData.modelMain.setEntityCaps(modelData);
-    		modelData.modelMain.setLivingAnimations(entityliving, f8, f7, f1);
-    		renderModel(entityliving, f8, f7, f5, f3 - f2, f4, f6);
-
+    		modelData.modelMain.setRender(this);
+    		modelData.setCapsValue(modelData.caps_Entity, entityliving);
+    		Modchu_Reflect.invokeMethod(modelData.modelMain.getClass(), "func_78086_a", "setLivingAnimations", new Class[]{ EntityLivingBase, float.class, float.class, float.class }, modelData.modelMain, new Object[]{ entityliving, f8, f7, f1 });
+    		Modchu_Reflect.invokeMethod(getClass(), "renderModel", new Class[]{ Entity.class, float.class, float.class, float.class, float.class, float.class, float.class }, this, new Object[]{ entityliving, f8, f7, f5, f3 - f2, f4, f6 });
+    		//renderModel(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    		float f9 = 1.0F;
+    		if (PFLMVersion < 80) {
+    			if (currentScreen == null | currentScreen instanceof GuiIngameMenu) f9 = (Float) Modchu_Reflect.invokeMethod(Entity.class, "func_382_a", "getEntityBrightness", new Class[]{ float.class }, entityliving, new Object[]{ f1 });
+    		}
+    		modelData.modelFATT.showAllParts();
     		for (int i = 0; i < 4; i++)
     		{
-    			int j = setArmorModel(entityliving, i, f);
+    			int j = setArmorModel((Entity) entityliving, i, f);
 
-    			//b181deleteif (!j)
-    			/*b181//*/if (j <= 0)
+    			if (j <= 0)
     			{
     				continue;
     			}
 
     			for (int l = 0; l < 5; l += 4)
     			{
-    				if (shouldRenderPass(entityliving, i + l, f1) < 0)
+    				if (shouldRenderPass((Entity) entityliving, i + l, f1) < 0)
     				{
     					continue;
     				}
 
-    				if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
+    				float f10 = 1.0F;
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend)
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    					if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    						//Shaders.glEnableWrapper(GL11.GL_BLEND);
     						shadersGlEnableWrapper(GL11.GL_BLEND);
     					} else {
     						GL11.glEnable(GL11.GL_BLEND);
     					}
     					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-    					GL11.glColor4f(1, 1, 1, mod_PFLM_PlayerFormLittleMaid.transparency);
     				}
-    				modelData.modelFATT.isRendering = ((PFLM_EntityPlayerDummy) entityliving).showArmor;
-    				renderPassModel.setLivingAnimations(entityliving, f8, f7, f1);
-    				renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
-//-@-b181
-    				if (j != 15)
-    				{
+    				f10 = mod_PFLM_PlayerFormLittleMaid.pflm_main.transparency;
+    				GL11.glColor4f(f9, f9, f9, f10);
+    				modelData.modelMain.setEntityCaps(modelData);
+    				Modchu_Reflect.invokeMethod(renderPassModel.getClass(), "setLivingAnimations", new Class[]{ EntityLivingBase, float.class, float.class, float.class }, renderPassModel, new Object[]{ entityliving, f8, f7, f1});
+    				//renderPassModel.setLivingAnimations(entityliving, f8, f7, f1);
+    				((MMM_ModelBaseDuo) renderPassModel).setArmorRendering(true);
+    				if ((PFLMVersion > 129
+    						&& !mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor)
+    						| (mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor
+    								&& !entityliving.isInvisible())
+    								| PFLMVersion < 130) {
+    					renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    				}
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.transparency != 1.0F) GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+    				if (PFLMVersion < 90
+    						| j != 15) {
     					continue;
     				}
 
     				float f11 = (float)entityliving.ticksExisted + f1;
-    				func_110776_a(new ResourceLocation("%blur%/misc/glint.png"));
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    				if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod(Render.class, "func_110776_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, this, Modchu_Reflect.newInstance("ResourceLocation", new Class[]{ String.class }, new Object[]{ "%blur%/misc/glint.png" }));
+    				else Modchu_Reflect.invokeMethod(Render.class, "loadTexture", new Class[]{ String.class }, this, new Object[]{ "%blur%/misc/glint.png" });
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
     					//Shaders.glEnableWrapper(GL11.GL_BLEND);
     					shadersGlEnableWrapper(GL11.GL_BLEND);
     				} else {
@@ -305,9 +293,8 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     				GL11.glDepthFunc(GL11.GL_EQUAL);
     				GL11.glDepthMask(false);
 
-    				for (int j1 = 0; j1 < 2; j1++)
-    				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    				for (int j1 = 0; j1 < 2; j1++) {
+    					if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
     						//Shaders.glDisableWrapper(GL11.GL_LIGHTING);
     						shadersGlDisableWrapper(GL11.GL_LIGHTING);
     					} else {
@@ -324,7 +311,15 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     					GL11.glRotatef(30F - (float)j1 * 60F, 0.0F, 0.0F, 1.0F);
     					GL11.glTranslatef(0.0F, f17, 0.0F);
     					GL11.glMatrixMode(GL11.GL_MODELVIEW);
-    					renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+
+    					if ((PFLMVersion > 129
+    							&& !mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor)
+    							| (PFLMVersion > 129
+    									&& mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor
+    									&& !entityliving.isInvisible())
+    									| PFLMVersion < 130) {
+    						renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    					}
     				}
 
     				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -332,16 +327,17 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     				GL11.glDepthMask(true);
     				GL11.glLoadIdentity();
     				GL11.glMatrixMode(GL11.GL_MODELVIEW);
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    					//Shaders.glEnableWrapper(GL11.GL_LIGHTING);
     					shadersGlEnableWrapper(GL11.GL_LIGHTING);
     				} else {
     					GL11.glEnable(GL11.GL_LIGHTING);
     				}
 
-    				if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend
-    						&& entityliving instanceof EntityPlayer)
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend)
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    					if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    						//Shaders.glEnableWrapper(GL11.GL_BLEND);
     						shadersGlEnableWrapper(GL11.GL_BLEND);
     					} else {
     						GL11.glEnable(GL11.GL_BLEND);
@@ -350,7 +346,8 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     				}
     				else
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    					if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    						//Shaders.glDisableWrapper(GL11.GL_BLEND);
     						shadersGlDisableWrapper(GL11.GL_BLEND);
     					} else {
     						GL11.glDisable(GL11.GL_BLEND);
@@ -358,94 +355,129 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     				}
 
     				GL11.glDepthFunc(GL11.GL_LEQUAL);
-//@-@b181
     			}
 
     			GL11.glEnable(GL11.GL_ALPHA_TEST);
     		}
 
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    			//Shaders.glDisableWrapper(GL11.GL_BLEND);
     			shadersGlDisableWrapper(GL11.GL_BLEND);
+    			//Shaders.glEnableWrapper(GL11.GL_ALPHA_TEST);
     			shadersGlEnableWrapper(GL11.GL_ALPHA_TEST);
     		} else {
     			GL11.glDisable(GL11.GL_BLEND);
     			GL11.glEnable(GL11.GL_ALPHA_TEST);
     		}
-    		renderEquippedItems(entityliving, f1);
-    		float f9 = entityliving.getBrightness(f1);
-    		int k = getColorMultiplier(entityliving, f9, f1);
-    		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
-    			shadersGlDisableWrapper(GL11.GL_TEXTURE_2D);
-    		} else {
-    			GL11.glDisable(GL11.GL_TEXTURE_2D);
+    		if (PFLMVersion < 80) GL11.glColor4f(f9, f9, f9, 1.0F);
+    		modelData.modelMain.setEntityCaps(modelData);
+/*
+    		if (PFLMVersion > 129
+    				&& entityliving.isInvisible()
+    				| PFLMVersion < 130) {
+*/
+    			modelData.modelMain.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
+    			modelData.modelFATT.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
+/*
     		}
-    		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-
-    		if ((k >> 24 & 0xff) > 0 || entityliving.hurtTime > 0 || entityliving.deathTime > 0)
-    		{
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+*/
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
+    				&& (Boolean) Modchu_Reflect.getFieldObject("Shaders", "useEntityHurtFlash")) {
+    			Modchu_Reflect.invokeMethod("Shaders", "setEntityHurtFlash", new Class[]{ int.class, int.class }, new Object[]{ 0, 0 });
+    		}
+    		//renderEquippedItems(entityliving, f1);
+    		boolean hurtFlag = mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
+    				&& !(Boolean) Modchu_Reflect.getFieldObject("Shaders", "useEntityHurtFlash")
+    				? true : false;
+    		if (!hurtFlag) {
+    			f9 = entityliving.getBrightness(f1);
+    			int k = getColorMultiplier(entityliving, f9, f1);
+    			OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    				//Shaders.glDisableWrapper(GL11.GL_TEXTURE_2D);
     				shadersGlDisableWrapper(GL11.GL_TEXTURE_2D);
-    				shadersGlDisableWrapper(GL11.GL_ALPHA_TEST);
-    				shadersGlEnableWrapper(GL11.GL_BLEND);
     			} else {
     				GL11.glDisable(GL11.GL_TEXTURE_2D);
-    				GL11.glDisable(GL11.GL_ALPHA_TEST);
-    				GL11.glEnable(GL11.GL_BLEND);
     			}
-    			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-    			GL11.glDepthFunc(GL11.GL_EQUAL);
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) Modchu_Reflect.invokeMethod("Shaders", "disableLightmap");
+    			OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 
-    			if (entityliving.hurtTime > 0 || entityliving.deathTime > 0)
+    			int hurtTime = (Integer) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70737_aN", "hurtTime", entityliving);
+    			int deathTime = (Integer) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70725_aQ", "deathTime", entityliving);
+    			if ((k >> 24 & 0xff) > 0 || hurtTime > 0 || deathTime > 0)
     			{
-    				GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
-    				modelData.modelMain.model.render(modelData, f8, f7, f5, f3 - f2, f4, f6, true);
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) Modchu_Reflect.invokeMethod("Shaders", "beginLivingDamage");
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    					//Shaders.glDisableWrapper(GL11.GL_TEXTURE_2D);
+    					shadersGlDisableWrapper(GL11.GL_TEXTURE_2D);
+    					//Shaders.glDisableWrapper(GL11.GL_ALPHA_TEST);
+    					shadersGlDisableWrapper(GL11.GL_ALPHA_TEST);
+    					//Shaders.glEnableWrapper(GL11.GL_BLEND);
+    					shadersGlEnableWrapper(GL11.GL_BLEND);
+    				} else {
+    					GL11.glDisable(GL11.GL_TEXTURE_2D);
+    					GL11.glDisable(GL11.GL_ALPHA_TEST);
+    					GL11.glEnable(GL11.GL_BLEND);
+    				}
+    				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    				GL11.glDepthFunc(GL11.GL_EQUAL);
 
-    				for (int i1 = 0; i1 < 4; i1++)
+    				if (hurtTime > 0 || deathTime > 0)
     				{
-    					if (inheritRenderPass(entityliving, i1, f1) >= 0)
+    					GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
+    					modelData.modelMain.model.render(modelData, f8, f7, f5, f3 - f2, f4, f6, true);
+
+    					for (int i1 = 0; i1 < 4; i1++)
     					{
-    						GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
-    						renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    						if (inheritRenderPass(entityliving, i1, f1) >= 0)
+    						{
+    							GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
+    							renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    						}
     					}
     				}
-    			}
 
-    			if ((k >> 24 & 0xff) > 0)
-    			{
-    				float f10 = (float)(k >> 16 & 0xff) / 255F;
-    				float f12 = (float)(k >> 8 & 0xff) / 255F;
-    				float f14 = (float)(k & 0xff) / 255F;
-    				float f15 = (float)(k >> 24 & 0xff) / 255F;
-    				GL11.glColor4f(f10, f12, f14, f15);
-    				modelData.modelMain.model.render(modelData, f8, f7, f5, f3 - f2, f4, f6, true);
-
-    				for (int k1 = 0; k1 < 4; k1++)
+    				if ((k >> 24 & 0xff) > 0)
     				{
-    					if (inheritRenderPass(entityliving, k1, f1) >= 0)
+    					float f10 = (float)(k >> 16 & 0xff) / 255F;
+    					float f12 = (float)(k >> 8 & 0xff) / 255F;
+    					float f14 = (float)(k & 0xff) / 255F;
+    					float f15 = (float)(k >> 24 & 0xff) / 255F;
+    					GL11.glColor4f(f10, f12, f14, f15);
+    					modelData.modelMain.model.render(modelData, f8, f7, f5, f3 - f2, f4, f6, true);
+
+    					for (int k1 = 0; k1 < 4; k1++)
     					{
-    						GL11.glColor4f(f10, f12, f14, f15);
-    						renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    						if (inheritRenderPass(entityliving, k1, f1) >= 0)
+    						{
+    							GL11.glColor4f(f10, f12, f14, f15);
+    							renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+    						}
     					}
     				}
+
+    				GL11.glDepthFunc(GL11.GL_LEQUAL);
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    					//Shaders.glDisableWrapper(GL11.GL_BLEND);
+    					shadersGlDisableWrapper(GL11.GL_BLEND);
+    					//Shaders.glEnableWrapper(GL11.GL_ALPHA_TEST);
+    					shadersGlEnableWrapper(GL11.GL_ALPHA_TEST);
+    					//Shaders.glEnableWrapper(GL11.GL_TEXTURE_2D);
+    					shadersGlEnableWrapper(GL11.GL_TEXTURE_2D);
+    				} else {
+    					GL11.glDisable(GL11.GL_BLEND);
+    					GL11.glEnable(GL11.GL_ALPHA_TEST);
+    					GL11.glEnable(GL11.GL_TEXTURE_2D);
+    				}
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) Modchu_Reflect.invokeMethod("Shaders", "endLivingDamage");
     			}
 
-    			GL11.glDepthFunc(GL11.GL_LEQUAL);
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
-    				shadersGlDisableWrapper(GL11.GL_BLEND);
-    				shadersGlEnableWrapper(GL11.GL_ALPHA_TEST);
-    				shadersGlEnableWrapper(GL11.GL_TEXTURE_2D);
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    				//Shaders.glDisableWrapper(GL12.GL_RESCALE_NORMAL);
+    				shadersGlDisableWrapper(GL12.GL_RESCALE_NORMAL);
     			} else {
-    				GL11.glDisable(GL11.GL_BLEND);
-    				GL11.glEnable(GL11.GL_ALPHA_TEST);
-    				GL11.glEnable(GL11.GL_TEXTURE_2D);
+    				GL11.glDisable(GL12.GL_RESCALE_NORMAL);
     			}
-    		}
-
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
-    			shadersGlDisableWrapper(GL12.GL_RESCALE_NORMAL);
-    		} else {
-    			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
     		}
     	}
     	catch (Exception exception)
@@ -454,19 +486,37 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
     	}
 
     	OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-    	if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    		//Shaders.glEnableWrapper(GL11.GL_TEXTURE_2D);
     		shadersGlEnableWrapper(GL11.GL_TEXTURE_2D);
     	} else {
     		GL11.glEnable(GL11.GL_TEXTURE_2D);
     	}
     	OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-    	if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
+    		//Shaders.glEnableWrapper(GL11.GL_CULL_FACE);
     		shadersGlEnableWrapper(GL11.GL_CULL_FACE);
     	} else {
     		GL11.glEnable(GL11.GL_CULL_FACE);
     	}
     	GL11.glPopMatrix();
+    	//Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_77033_b", "passSpecialRender", new Class[]{ EntityLivingBase, double.class, double.class, double.class }, this, new Object[]{ entityliving, d, d1, d2});
     	//passSpecialRender(entityliving, d, d1, d2);
+    }
+
+    protected float handleRotationFloat(Entity par1EntityLiving, float par2)
+    {
+        return (float)par1EntityLiving.ticksExisted + par2;
+    }
+
+    protected int getColorMultiplier(Entity par1EntityLiving, float par2, float par3)
+    {
+        return 0;
+    }
+
+    protected int inheritRenderPass(Entity par1EntityLiving, int par2, float par3)
+    {
+        return shouldRenderPass(par1EntityLiving, par2, par3);
     }
 
     public void shadersGlDisableWrapper(int i) {
@@ -591,7 +641,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 
 		if (entity.isRiding()) {
 			d3 += 0.15D;
-			if (mod_PFLM_PlayerFormLittleMaid.isModelSize) {
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize) {
 				d3 -= 0.53D;
 			}
 		}
@@ -600,7 +650,6 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 				d3 -= 0.1D;
 			}
 		}
-		doRenderLiving((EntityLiving) entity, d, d3, d2, f, f1);
 	}
 
     @Override
@@ -611,11 +660,13 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		if (entityDummy.textureArmorName == null) entityDummy.textureArmorName = "default";
 		boolean flag = entityDummy.textureModel != null;
 		if (modelData.getCapsValue(modelData.caps_ResourceLocation) != null) ;else {
-			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) new ResourceLocation[3]);
+			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
 		}
-		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(entityDummy.textureName, entityDummy.maidColor));
-		if (mod_Modchu_ModchuLib.textureManagerGetTexture(entityDummy.textureName, entityDummy.maidColor) != null) ;else {
-			Modchu_Debug.Debug("PFLM_RenderPlayerDummy doRender texture null !! entityDummy.textureName="+entityDummy.textureName);
+		Object resourceLocation = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(entityDummy.textureName, modelData.getCapsValueInt(modelData.caps_maidColor));
+		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, resourceLocation);
+		if (resourceLocation != null) ;else {
+			Modchu_Debug.Debug("PFLM_RenderPlayerDummy doRender texture null !! entityDummy.textureName="+entityDummy.textureName+" color="+modelData.getCapsValueInt(modelData.caps_maidColor));
+			return;
 		}
 		if (!flag) {
 			entityDummy.textureArmor0 = null;
@@ -647,33 +698,33 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 	}
 
 	private static void modelInit(Entity entity, String s) {
-		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entity, s, true, true);
+		Object[] models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(entity, s, true, true);
 		//Modchu_Debug.mDebug("modelInit s="+s+" models[0] != null ? "+(models[0] != null));
 		modelData.modelMain.model = models[0] != null ? (MultiModelBaseBiped) models[0] : new MultiModel(0.0F);
 		modelData.modelMain.model.setCapsValue(((MultiModelBaseBiped) modelData.modelMain.model).caps_armorType, 0);
 //-@-152
-		s = mod_Modchu_ModchuLib.textureNameCheck(s);
+		s = mod_Modchu_ModchuLib.modchu_Main.textureNameCheck(s);
 		if (modelData.getCapsValue(modelData.caps_ResourceLocation) != null) ;else {
-			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) new ResourceLocation[3]);
+			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
 		}
-		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
+		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
 //@-@152
 	}
 
 	private static void modelArmorInit(Entity entity, String s) {
-		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.model);
+		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model);
 		if (isBiped
 				&& (s.equalsIgnoreCase("default")
 						| s.equalsIgnoreCase("erasearmor"))) s = "Biped";
-		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entity, s, false, true);
-		float[] f1 = mod_Modchu_ModchuLib.getArmorModelsSize(models[0]);
+		Object[] models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(entity, s, false, true);
+		float[] f1 = mod_Modchu_ModchuLib.modchu_Main.getArmorModelsSize(models[0]);
 		//Modchu_Debug.mDebug("modelArmorInit s="+s+" models[1] != null ? "+(models[1] != null));
 		if (models != null
 				&& models[1] != null) ;else {
-					models = mod_Modchu_ModchuLib.modelNewInstance(isBiped ? "Biped" : null, false);
-					f1 = mod_Modchu_ModchuLib.getArmorModelsSize(models[0]);
+					models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(isBiped ? "Biped" : null, false);
+					f1 = mod_Modchu_ModchuLib.modchu_Main.getArmorModelsSize(models[0]);
 				}
-		if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) {
 			modelData.modelFATT.modelInner = (MultiModelBaseBiped) models[1];
 			modelData.modelFATT.modelOuter = (MultiModelBaseBiped) models[2];
 		} else {
@@ -685,7 +736,7 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 		modelData.modelFATT.modelInner.setCapsValue(((MultiModelBaseBiped) modelData.modelFATT.modelInner).caps_armorType, 2);
 		modelData.modelFATT.modelOuter.setCapsValue(((MultiModelBaseBiped) modelData.modelFATT.modelOuter).caps_armorType, 3);
 //-@-152
-		s = mod_Modchu_ModchuLib.textureNameCheck(s);
+		s = mod_Modchu_ModchuLib.modchu_Main.textureNameCheck(s);
 		modelTextureReset(entity, modelData, s);
 //@-@152
 	}
@@ -696,59 +747,51 @@ public class PFLM_RenderPlayerDummy extends RenderPlayer
 
 	private static void modelTextureReset(Entity entity, PFLM_ModelData modelData, String s) {
 		if (modelData.getCapsValue(modelData.caps_ResourceLocation) != null) ;else {
-			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) new ResourceLocation[3]);
+			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
 		}
-		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
+		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
 	}
 
-    @Override
-    protected void renderEquippedItems(EntityLivingBase entityliving, float f)
+    protected void renderModel(Entity entityliving, float par2, float par3, float par4, float par5, float par6, float par7)
     {
+    	if (RenderManager.instance != null) setRenderManager(RenderManager.instance);
+    	//else Modchu_Debug.mDebug("renderModel RenderManager.instance null!!");
+    	//Modchu_Debug.mDebug("getResourceLocation(entityliving)="+((ResourceLocation) getResourceLocation(entityliving)).func_110623_a());
+    	//if (((ResourceLocation) getResourceLocation(entityliving)).func_110623_a() != null)
+    	Modchu_Reflect.invokeMethod(Render.class, "func_110776_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, this, new Object[]{ getResourceLocation(entityliving) });
+    	//func_110776_a((ResourceLocation) getResourceLocation(entityliving));
+    	int version = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion();
+    	if ((version > 129
+    			&& !mod_Modchu_ModchuLib.modchu_Main.useInvisibilityBody)
+    			| (version > 129
+    					&& mod_Modchu_ModchuLib.modchu_Main.useInvisibilityBody
+    					&& !entityliving.isInvisible())
+    					| version < 130) {
+    		modelData.modelMain.setArmorRendering(true);
+    	} else {
+    		modelData.modelMain.setArmorRendering(false);
+    	}
+    	modelData.modelMain.model.render(modelData, par2, par3, par4, par5, par6, par7, modelData.modelMain.isRendering);
+    	//Modchu_Debug.mDebug("renderModel modelData.modelMain.isRendering="+modelData.modelMain.isRendering);
     }
 
-    protected void renderSpecials(EntityPlayer entityplayer, float f)
-    {
+    public Object getResourceLocation(Entity entity) {
+    	return modelData.getCapsValue(modelData.caps_ResourceLocation, 0);
     }
 
-    @Override
-    protected void renderModel(EntityLivingBase entityliving, float f, float f1, float f2, float f3, float f4, float f5)
-    {
-    	//Modchu_Debug.mDebug("PFLM_RenderPlayerDummy renderModel "+func_110775_a(entityliving).func_110623_a());
-    	if (func_110775_a(entityliving) != null
-    			&& func_110775_a(entityliving).func_110623_a() != null
-    			&& func_110775_a(entityliving).func_110624_b() != null) func_110777_b(entityliving);
-//-@-b181
-    	// 152deleteloadDownloadableImageTexture(entityliving.skinUrl, entityliving.getTexture());
-//@-@b181
-/*//b181delete
-        loadDownloadableImageTexture(entityliving.skinUrl, entityliving.getEntityTexture());
-*///b181delete
-    	modelData.modelMain.setArmorRendering(true);
-    	modelData.modelMain.model.render(modelData, f, f1, f2, f3, f4, f5, true);
+    public Object getResourceLocation(Entity entity, int i) {
+    	return modelData.getCapsValue(modelData.caps_ResourceLocation, i);
     }
 
-    public static RenderManager getRenderManager() {
-    	return renderManager;
-    }
-
-    @Override
-    protected ResourceLocation func_110775_a(Entity entity) {
-    	return (ResourceLocation) modelData.getCapsValue(modelData.caps_ResourceLocation, 0);
-    }
-
-    protected ResourceLocation func_110775_a(Entity entity, int i) {
-    	return (ResourceLocation) modelData.getCapsValue(modelData.caps_ResourceLocation, i);
-    }
-
-    protected static void setResourceLocation(Entity entity, ResourceLocation[] resourceLocation) {
+    public static void setResourceLocation(Entity entity, Object[] resourceLocation) {
     	modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) resourceLocation);
     }
 
-    protected static void setResourceLocation(Entity entity, ResourceLocation resourceLocation) {
+    public static void setResourceLocation(Entity entity, Object resourceLocation) {
     	modelData.setCapsValue(modelData.caps_ResourceLocation, 0, resourceLocation);
     }
 
-    protected static void setResourceLocation(Entity entity, int i, ResourceLocation resourceLocation) {
+    public static void setResourceLocation(Entity entity, int i, Object resourceLocation) {
     	modelData.setCapsValue(modelData.caps_ResourceLocation, i, resourceLocation);
     }
 }

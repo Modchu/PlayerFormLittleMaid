@@ -1,23 +1,15 @@
 package net.minecraft.src;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+public class PFLM_EntityPlayerSP2V160 extends EntityPlayerSP2 {
 
-import org.lwjgl.input.Keyboard;
-
-import net.minecraft.client.Minecraft;
-
-public class PFLM_EntityPlayerSP2 extends EntityPlayerSP2 {
-
-	public static PFLM_EntityPlayerSP pflm_entityplayersp;
+	public static PFLM_EntityPlayerSPV160 pflm_entityplayersp;
 /*//b173delete
 	public static int sleepMotion = 0;
 *///b173delete
 
-    public PFLM_EntityPlayerSP2(Minecraft par1Minecraft, World par2World, Session par3Session, int var4) {
+    public PFLM_EntityPlayerSP2V160(Minecraft par1Minecraft, World par2World, Session par3Session, int var4) {
 		super(par1Minecraft, par2World, par3Session, var4);
-		pflm_entityplayersp = new PFLM_EntityPlayerSP(par1Minecraft, par2World, par3Session, null);
+		pflm_entityplayersp = new PFLM_EntityPlayerSPV160(par1Minecraft, par2World, par3Session, null);
 	}
 
 	public void wakeUpPlayer(boolean flag, boolean flag1, boolean flag2) {
@@ -79,11 +71,11 @@ public class PFLM_EntityPlayerSP2 extends EntityPlayerSP2 {
 			float par7, float par8) {
 		pflm_entityplayersp.setLocationAndAngles(par1, par3, par5, par7, par8);
 	}
-
+/*//152delete
     public void setPlayerTexture(String s) {
     	pflm_entityplayersp.setPlayerTexture(s);
     }
-
+*///152delete
     public void copyPlayer(EntityPlayer entityplayer) {
     	pflm_entityplayersp.copyPlayer(entityplayer);
     }

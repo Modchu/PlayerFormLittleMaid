@@ -18,7 +18,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 	protected float Size_lo;
 	protected World popWorld;
 	protected PFLM_EntityPlayerDummy drawEntity = null;
-	private final File cfgdir = new File(Minecraft.getMinecraft().mcDataDir, "/config/CustomModel/");
+	private final File cfgdir = new File(mod_Modchu_ModchuLib.modchu_Main.getMinecraftDir(), "/config/CustomModel/");
 	public GuiScreen parentScreen;
 	private PFLM_GuiSlot partsSlot;
 	private PFLM_GuiSlot partsDetailSlot;
@@ -74,12 +74,12 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		buttonList.addAll(addButtonList);
 		int x = width / 2;
 		int y = height / 2;
-		buttonList.add(new PFLM_GuiSmallButton(200, width - 160, 10, 60, 15, "Save"));
-		buttonList.add(new PFLM_GuiSmallButton(201, width - 100, 10, 60, 15, "Return"));
-		buttonList.add(new PFLM_GuiSmallButton(205, width - 100, 35, 60, 15, "DeleteBox"));
-		buttonList.add(new PFLM_GuiSmallButton(204, width - 160, 35, 60, 15, "AddBox"));
-		buttonList.add(new PFLM_GuiSmallButton(202, 10, 10, 60, 15, "AddParts"));
-		buttonList.add(new PFLM_GuiSmallButton(203, 70, 10, 60, 15, "Delete"));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 200, width - 160, 10, 60, 15, "Save" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 201, width - 100, 10, 60, 15, "Return" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 205, width - 100, 35, 60, 15, "DeleteBox" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 204, width - 160, 35, 60, 15, "AddBox" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 202, 10, 10, 60, 15, "AddParts" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 203, 70, 10, 60, 15, "Delete" }));
 		if (partsSlot != null) {
 			partsSlot.init(mc, this, 100, 15, 30, 30, 0);
 		} else partsSlot = new PFLM_GuiSlot(mc, this, 100, 15, 30, 30, 0);
@@ -103,12 +103,14 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		if(guibutton.id == 200) {
 			File file = new File(cfgdir, (new StringBuilder()).append("CustomModel_").append(customNumber).append(".cfg").toString());
 			((MultiModelCustom) drawEntity.textureModel[0]).customModel.save(file);
-			mc.displayGuiScreen(null);
+			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ null });
+			//mc.displayGuiScreen(null);
 			return;
 		}
 		//Return
 		if(guibutton.id == 201) {
-			mc.displayGuiScreen(new PFLM_Gui(popWorld));
+			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ new PFLM_Gui(popWorld) });
+			//mc.displayGuiScreen(new PFLM_Gui(popWorld));
 			return;
 		}
 		//addParts
@@ -223,8 +225,8 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		if (!drawEntityInitFlag) {
 			setTextureValue();
 			// 152delete((EntityLiving) drawEntity).texture = texture;
-			PFLM_RenderPlayerDummy.modelData.setCapsValue(PFLM_RenderPlayerDummy.modelData.caps_ResourceLocation, 0, texture);
-			drawEntity.maidColor = maidColor;
+			mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData.setCapsValue(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData.caps_ResourceLocation, 0, texture);
+			PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, maidColor);
 			drawEntity.textureName = textureName;
 			drawEntity.textureArmorName = textureArmorName;
 			drawEntity.modelScale = modelScale;
@@ -241,25 +243,20 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		GL11.glTranslatef(l + 51 , i1 + 155, 50F);
 		float f1 = 50F;
 		GL11.glScalef(-f1, f1, f1);
-		GL11.glRotatef(180F, 180F, 0.0F, 1.0F);
-		float f2 = mc.thePlayer.renderYawOffset;
-		float f3 = mc.thePlayer.rotationYaw;
-		float f4 = mc.thePlayer.rotationPitch;
+		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		float f5 = (float)l - (float)xSize_lo;
 		float f6 = (float)i1 - (float)ySize_lo;
 		//GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
+		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
 		//GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-(float)Math.atan(f5 / 40F) * 90F, 0.0F, 1.0F, 0.0F);
-		((EntityLiving) drawEntity).renderYawOffset = (float)Math.atan(f5 / 40F) * 20F;
+		((EntityLiving) drawEntity).renderYawOffset = (float)Math.atan(f5 / 40F) * 40F;
 		((EntityLiving) drawEntity).rotationYaw = (float)Math.atan(f5 / 40F) * 40F;
 		((EntityLiving) drawEntity).rotationPitch = -(float)Math.atan(f6 / 40F) * 20F;
 		GL11.glTranslatef(0.0F, mc.thePlayer.yOffset, 0.0F);
 		RenderManager.instance.playerViewY = 180F;
 		RenderManager.instance.renderEntityWithPosYaw(drawEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-		mc.thePlayer.renderYawOffset = f2;
-		mc.thePlayer.rotationYaw = f3;
-		mc.thePlayer.rotationPitch = f4;
 		RenderHelper.disableStandardItemLighting();
 		GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
 		GL11.glDisable(2903 /*GL_COLOR_MATERIAL*/);
@@ -295,10 +292,10 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		int j = 9;
 		int k = 0;
 		boolean flag = false;
-		PFLM_GuiSmallButton button;
+		GuiButton button;
 		if (((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected] > 0) {
 			for (int i = 0; i < ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected] ;i++) {
-				button = (PFLM_GuiSmallButton) addButtonList.get(i);
+				button = (GuiButton) addButtonList.get(i);
 				button.xPosition = (int) showSelectionBoxLeft + 60;
 				button.yPosition = (int) showSelectionBoxTop + 63 + k;
 				inputStringBox[j].xPos = (int) showSelectionBoxLeft + 22;
@@ -491,7 +488,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		inputStringBoxCount++;
 		//Box Plate Ball
 		for (int i = 0; i < ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxNumber[partsSlotSelected] ;i++) {
-			addButtonList.add(new PFLM_GuiSmallButton(1000 + i, 0, 0, 60, 13, "change"));
+			addButtonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 1000 + i, 0, 0, 60, 13, "change" }));
 			//partsTextureOffsetX Y
 			inputStringBox[inputStringBoxCount] = newInputStringBox(0, 0, 32, 12);
 			inputStringBox[inputStringBoxCount].setText(""+((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsTextureOffsetX[partsSlotSelected][i]);
@@ -528,13 +525,13 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		}
 		//textureName
 		textureNameSlot = new PFLM_GuiSlot(mc, this, 100, 15, (int) showSelectionBoxLeft + 10, (int) showSelectionBoxTop + 5, 3);
-		List textures = mod_Modchu_ModchuLib.getTextureManagerTextures();
+		List textures = mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTextures();
 		Object ltb = null;
 		String s = null;
 		String s1 = ((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsTextureNameMap.get(partsSlotSelected);
 		for (int i1 = 0; i1 < textures.size(); i1++) {
 			ltb = textures.get(i1);
-			s = mod_Modchu_ModchuLib.getTextureBoxFileName(ltb);
+			s = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb);
 			textureNameList.add(s);
 			if (s.equals(s1)) textureNameSlotSelected = i1;
 		}
@@ -546,21 +543,21 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		boolean b = false;
 		switch(i) {
 		case 0:
-			if (mod_Modchu_ModchuLib.integerCheckInt(s) > 0) {
+			if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) > 0) {
 				int i2 = inputStringBoxIntegerCheck(i, s, 0);
 				((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsTextureWidth[partsSlotSelected] = i2;
 				b = true;
 			}
 			break;
 		case 1:
-			if (mod_Modchu_ModchuLib.integerCheckInt(s) > 0) {
+			if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) > 0) {
 				int i2 = inputStringBoxIntegerCheck(i, s, 0);
 				((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsTextureHeight[partsSlotSelected] = i2;
 				b = true;
 			}
 			break;
 		case 2:
-			if (mod_Modchu_ModchuLib.floatCheck(s)) {
+			if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 				float f = Float.valueOf(s);
 				f = inputStringBoxFloatMinCheck(i, f);
 				f = inputStringBoxFloatMaxCheck(i, f);
@@ -569,7 +566,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			}
 			break;
 		case 3:
-			if (mod_Modchu_ModchuLib.floatCheck(s)) {
+			if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 				float f = Float.valueOf(s);
 				f = inputStringBoxFloatMinCheck(i, f);
 				f = inputStringBoxFloatMaxCheck(i, f);
@@ -578,7 +575,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			}
 			break;
 		case 4:
-			if (mod_Modchu_ModchuLib.floatCheck(s)) {
+			if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 				float f = Float.valueOf(s);
 				f = inputStringBoxFloatMinCheck(i, f);
 				f = inputStringBoxFloatMaxCheck(i, f);
@@ -587,18 +584,18 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			}
 			break;
 		case 5:
-			if (mod_Modchu_ModchuLib.integerCheckInt(s) > 0) {
+			if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) > 0) {
 				int i2 = Integer.valueOf(s);
 				i2 = inputStringBoxIntegerMinCheck(i, i2);
 				if (i2 >= ((MultiModelCustom) drawEntity.textureModel[0]).customModel.maxTypeMode) i2 = ((MultiModelCustom) drawEntity.textureModel[0]).customModel.maxTypeMode - 1;
 				s = ""+i2;
-				if (mod_Modchu_ModchuLib.byteCheck(s))
+				if (mod_Modchu_ModchuLib.modchu_Main.byteCheck(s))
 					((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsType[partsSlotSelected] = Byte.valueOf(s);
 				b = true;
 			}
 			break;
 		case 6:
-			if (mod_Modchu_ModchuLib.integerCheckInt(s) > 0) {
+			if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) > 0) {
 				int i2 = Integer.valueOf(s);
 				i2 = i2 & 0xf;
 				s = ""+i2;
@@ -607,7 +604,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			}
 			break;
 		case 7:
-			if (mod_Modchu_ModchuLib.floatCheck(s)) {
+			if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 				float f = Float.valueOf(s);
 				//f = inputStringBoxFloatMinCheck(i, f);
 				f = inputStringBoxFloatMaxCheck(i, f);
@@ -616,7 +613,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			}
 			break;
 		case 8:
-			if (mod_Modchu_ModchuLib.floatCheck(s)) {
+			if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 				float f = Float.valueOf(s);
 				//f = inputStringBoxFloatMinCheck(i, f);
 				f = inputStringBoxFloatMaxCheck(i, f);
@@ -631,21 +628,21 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			j = j % 10;
 			switch(j) {
 			case 0:
-				if (mod_Modchu_ModchuLib.integerCheckInt(s) > 0) {
+				if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) > 0) {
 					int i2 = inputStringBoxIntegerCheck(i, s, 1);
 					((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsTextureOffsetX[partsSlotSelected][i1] = i2;
 					b = true;
 				}
 				break;
 			case 1:
-				if (mod_Modchu_ModchuLib.integerCheckInt(s) > 0) {
+				if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) > 0) {
 					int i2 = inputStringBoxIntegerCheck(i, s, 1);
 					((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsTextureOffsetY[partsSlotSelected][i1] = i2;
 					b = true;
 				}
 				break;
 			case 2:
-				if (mod_Modchu_ModchuLib.floatCheck(s)) {
+				if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 					float f = Float.valueOf(s);
 					f = inputStringBoxFloatMinCheck(i, f);
 					f = inputStringBoxFloatMaxCheck(i, f);
@@ -654,7 +651,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 				}
 				break;
 			case 3:
-				if (mod_Modchu_ModchuLib.floatCheck(s)) {
+				if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 					float f = Float.valueOf(s);
 					f = inputStringBoxFloatMinCheck(i, f);
 					f = inputStringBoxFloatMaxCheck(i, f);
@@ -663,7 +660,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 				}
 				break;
 			case 4:
-				if (mod_Modchu_ModchuLib.floatCheck(s)) {
+				if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 					float f = Float.valueOf(s);
 					f = inputStringBoxFloatMinCheck(i, f);
 					f = inputStringBoxFloatMaxCheck(i, f);
@@ -672,28 +669,28 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 				}
 				break;
 			case 5:
-				if (mod_Modchu_ModchuLib.integerCheckInt(s) > 0) {
+				if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) > 0) {
 					int i2 = inputStringBoxIntegerCheck(i, s, 0);
 					((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxX[partsSlotSelected][i1] = i2;
 					b = true;
 				}
 				break;
 			case 6:
-				if (mod_Modchu_ModchuLib.integerCheckInt(s) > 0) {
+				if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) > 0) {
 					int i2 = inputStringBoxIntegerCheck(i, s, 0);
 					((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxY[partsSlotSelected][i1] = i2;
 					b = true;
 				}
 				break;
 			case 7:
-				if (mod_Modchu_ModchuLib.integerCheckInt(s) > 0) {
+				if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) > 0) {
 					int i2 = inputStringBoxIntegerCheck(i, s, 0);
 					((MultiModelCustom) drawEntity.textureModel[0]).customModel.partsBoxZ[partsSlotSelected][i1] = i2;
 					b = true;
 				}
 				break;
 			case 8:
-				if (mod_Modchu_ModchuLib.floatCheck(s)) {
+				if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 					float f = Float.valueOf(s);
 					//f = inputStringBoxFloatMinCheck(i, f);
 					f = inputStringBoxFloatMaxCheck(i, f);
@@ -702,7 +699,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 				}
 				break;
 			case 9:
-				if (mod_Modchu_ModchuLib.floatCheck(s)) {
+				if (mod_Modchu_ModchuLib.modchu_Main.floatCheck(s)) {
 					float f = Float.valueOf(s);
 					//f = inputStringBoxFloatMinCheck(i, f);
 					f = inputStringBoxFloatMaxCheck(i, f);
@@ -718,7 +715,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 
 	private int inputStringBoxIntegerCheck(int i, String s, int j) {
 		int i2;
-		if (mod_Modchu_ModchuLib.integerCheckInt(s) == 2) {
+		if (mod_Modchu_ModchuLib.modchu_Main.integerCheckInt(s) == 2) {
 			long l = Long.valueOf(s);
 			i2 = l < 0 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 			inputStringBox[i].setText(""+i2);
@@ -842,18 +839,18 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		}
 		int i = getMaidColor();
 
-		texture = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, i);
+		texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
 		if (texture == null) {
 			int n = 0;
 			for (; n < 16 && texture == null; n = n + 1) {
 				i++;
 				i = i & 0xf;
 				setMaidColor(i);
-				texture = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, i);
+				texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
 			}
 			if (texture == null) {
 				setNextTexturePackege(0);
-				texture = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, i);
+				texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
 			}
 		}
 
@@ -861,7 +858,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			Modchu_Debug.mDebug("drawEntity.textureModel != null");
 		} else {
 			Modchu_Debug.mDebug("drawEntity.textureModel == null textureName="+textureName);
-			drawEntity.textureModel = mod_Modchu_ModchuLib.modelNewInstance(null, textureName, true, true);
+			drawEntity.textureModel = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, textureName, true, true);
 		}
 
 		//setArmorTextureValue();
@@ -873,7 +870,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		}
 		int i = getMaidColor();
 		Object t = texture;
-		texture = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, i);
+		texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
 		int n = 0;
 		for (; n < 16 && texture == null; n = n + 1) {
 			if (PFLM_Gui.colorReverse) {
@@ -883,7 +880,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			}
 			i = i & 0xf;
 			setMaidColor(i);
-			texture = mod_Modchu_ModchuLib.textureManagerGetTexture(textureName, i);
+			texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
 		}
 		if (texture == null) {
 			texture = t;
@@ -893,18 +890,18 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 
 	public void setArmorTextureValue() {
 		if (textureArmorName == null) {
-			textureArmorName = mod_PFLM_PlayerFormLittleMaid.getArmorName(textureName);
+			textureArmorName = mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(textureName);
 			if (textureArmorName == null) {
 				textureArmorName = "default_Custom1";
 			}
 		}
 		Modchu_Debug.mDebug("textureArmorName="+textureArmorName);
-		MultiModelCustom[] models = (MultiModelCustom[]) mod_Modchu_ModchuLib.modelNewInstance(null, textureArmorName, true, true);
+		MultiModelCustom[] models = (MultiModelCustom[]) mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, textureArmorName, true, true);
 		if (models != null) {
 			if (models[1] != null) drawEntity.textureModel[1] = models[1];
 			if (models[2] != null) drawEntity.textureModel[2] = models[2];
 		} else {
-			models = (MultiModelCustom[]) mod_Modchu_ModchuLib.modelNewInstance(null, "default_Custom1", true, true);
+			models = (MultiModelCustom[]) mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, "default_Custom1", true, true);
 			if (models != null) {
 				if (models[1] != null) drawEntity.textureModel[1] = models[1];
 				if (models[2] != null) drawEntity.textureModel[2] = models[2];
@@ -914,12 +911,12 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 
 	public static void setNextTexturePackege(int i) {
 		if (i == 0) {
-			textureName = mod_Modchu_ModchuLib.textureManagerGetNextPackege(textureName,
+			textureName = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(textureName,
 							getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(textureName));
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(textureName));
 		}
 		if (i == 1) {
-			textureArmorName = mod_Modchu_ModchuLib.textureManagerGetNextArmorPackege(textureArmorName);
+			textureArmorName = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextArmorPackege(textureArmorName);
 			Modchu_Debug.mDebug("setNextTexturePackege(int) textureArmorName="+textureArmorName);
 		}
 	}
@@ -927,11 +924,11 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 	public static void setPrevTexturePackege(int i) {
 		if (i == 0) {
 			textureName =
-					mod_Modchu_ModchuLib.textureManagerGetPrevPackege(textureName, getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(textureName));
+					mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevPackege(textureName, getMaidColor());
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(textureName));
 		}
 		if (i == 1) {
-			textureArmorName = mod_Modchu_ModchuLib.textureManagerGetPrevArmorPackege(textureArmorName);
+			textureArmorName = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevArmorPackege(textureArmorName);
 		}
 	}
 

@@ -7,13 +7,10 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
-/*//152delete
-import net.minecraft.client.Minecraft;
-*///152delete
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+//import net.minecraft.client.Minecraft;
 
 public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderPlayer
 {
@@ -21,6 +18,7 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
 
 	public PFLM_RenderPlayerV160() {
 		pflm_RenderPlayerMaster = new PFLM_RenderPlayerMaster();
+		pflm_RenderPlayerMaster.renderManager = renderManager;
 	}
 
     @Override
@@ -40,13 +38,13 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     	int i1 = setArmorModel((AbstractClientPlayer) entityliving, i, f);
     	PFLM_ModelData modelData = getPlayerData((EntityPlayer) entityliving);
     	setRenderPassModel(modelData.modelFATT);
-    	int PFLMVersion = mod_PFLM_PlayerFormLittleMaid.getPFLMVersion();
-    	if ((PFLMVersion > 129
-    			&& !mod_Modchu_ModchuLib.useInvisibilityArmor)
-    			| (PFLMVersion > 129
-    					&& mod_Modchu_ModchuLib.useInvisibilityArmor
+    	int version = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion();
+    	if ((version > 129
+    			&& !mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor)
+    			| (version > 129
+    					&& mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor
     					&& !entityliving.isInvisible())
-    					| PFLMVersion < 130) {
+    					| version < 130) {
     		((MMM_ModelBaseDuo) renderPassModel).setArmorRendering(true);
     	} else ((MMM_ModelBaseDuo) renderPassModel).setArmorRendering(false);
     	return i1;
@@ -70,7 +68,10 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     	setRenderPassModel(modelData.modelFATT);
     	d1 = pflm_RenderPlayerMaster.doRenderSettingY((EntityPlayer) entity, modelData, d1);
     	//Modchu_Debug.mDebug("doRender renderYawOffset="+((EntityPlayer) entity).renderYawOffset);
-    	if (!mod_PFLM_PlayerFormLittleMaid.oldRender) super.func_130000_a((EntityLivingBase) entity, d, d1, d2, f, f1);
+    	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
+    		Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
+    		//super.func_130000_a((EntityLivingBase) entity, d, d1, d2, f, f1);
+    	}
     	else pflm_RenderPlayerMaster.oldDoRenderLivingPFLM(modelData, entity, d, d1, d2, f, f1);
     	modelData.modelMain.setCapsValue(modelData.caps_aimedBow, false);
     }
@@ -120,9 +121,11 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     	return null;
     }
 
+    @Override
     public void renderLivingLabel(EntityLivingBase entityplayer, String par2Str, double d, double d1, double d2, int i)
     {
-    	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.renderLivingLabel(entityplayer, par2Str, d, d1, d2, i);
+    	if (pflm_RenderPlayerMaster != null) d1 = pflm_RenderPlayerMaster.renderLivingLabel((Entity) entityplayer, par2Str, d, d1, d2, i);
+    	super.renderLivingLabel(entityplayer, par2Str, d, d1, d2, i);
     }
 
     protected void renderName(EntityPlayer entityplayer, double d, double d1, double d2)

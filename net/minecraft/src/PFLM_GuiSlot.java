@@ -5,7 +5,13 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-public class PFLM_GuiSlot extends GuiSlot {
+public class PFLM_GuiSlot {
+
+    protected int top;
+    protected int bottom;
+    protected int slotHeight;
+    protected int mouseX;
+    protected int mouseY;
 
 	private float initialClickY = -2.0F;
 	public float amountScrolled;
@@ -20,7 +26,6 @@ public class PFLM_GuiSlot extends GuiSlot {
 	private boolean showSelectionBox = true;
 	private boolean field_77243_s;
 
-	protected Minecraft mc;
 	public PFLM_GuiSlotBase parentScreen;
 	public List parentScreenList;
 	public int guiNumber = 0;
@@ -39,24 +44,18 @@ public class PFLM_GuiSlot extends GuiSlot {
 	private int tempMouseY;
 	private boolean mouseClick;
 
-	public PFLM_GuiSlot(Minecraft par1Minecraft, int par2, int par3, int par4, int par5, int par6) {
-		//‚±‚Ì‰Šú‰»‚Í–¢Žg—p
-		super(par1Minecraft, par2, par3, par4, par5, par6);
-		width = par2;
-		height = par3;
-		parentScreen = null;
-		parentScreenList = null;
-		selected = 0;
-		mc = par1Minecraft;
-		popWorld = mc.theWorld;
-	}
-
-	public PFLM_GuiSlot(Minecraft par1Minecraft, PFLM_GuiSlotBase gui, int par3, int par4, int par5, int par6, int par7) {
-		super(par1Minecraft, gui.width, gui.height, 0, gui.height, par4);
+	public PFLM_GuiSlot(Object par1Minecraft, PFLM_GuiSlotBase gui, int par3, int par4, int par5, int par6, int par7) {
 		init(par1Minecraft, gui, par3, par4, par5, par6, par7);
 	}
 
-	public void init(Minecraft par1Minecraft, PFLM_GuiSlotBase gui, int par3, int par4, int par5, int par6, int par7) {
+	public void init(Object par1Minecraft, PFLM_GuiSlotBase gui, int par3, int par4, int par5, int par6, int par7) {
+		width = gui.width;
+		height = gui.height;
+		top = 0;
+		bottom = par3;
+		slotHeight = par4;
+		left = 0;
+		right = par3;
 		width = gui.width;
 		height = gui.height;
 		showSelectionBoxWidth = par3;
@@ -65,21 +64,17 @@ public class PFLM_GuiSlot extends GuiSlot {
 		guiNumber = par7;
 		parentScreen = gui;
 		selected = 0;
-		mc = par1Minecraft;
-		popWorld = mc.theWorld;
+		popWorld = mod_Modchu_ModchuLib.modchu_Main.getTheWorld();
 	}
 
-	@Override
 	protected int getSize() {
 		return parentScreen.getGuiSlotSize(guiNumber);
 	}
 
-	@Override
 	protected int getContentHeight() {
 		return parentScreen.getGuiSlotContentHeight(guiNumber);
 	}
 
-	@Override
 	protected void elementClicked(int i, boolean flag) {
 		parentScreen.guiSlotElementClicked(guiNumber, i, flag);
 	}
@@ -88,12 +83,10 @@ public class PFLM_GuiSlot extends GuiSlot {
 		parentScreen.outOfRangeClick(guiNumber, mouse_x, mouse_y, flag);
 	}
 
-	@Override
 	protected boolean isSelected(int i) {
 		return parentScreen.guiSlotIsSelected(guiNumber, i);
 	}
 
-	@Override
 	protected void drawBackground() {
 	}
 
@@ -135,13 +128,14 @@ public class PFLM_GuiSlot extends GuiSlot {
 					//if (guiNumber == 0) Modchu_Debug.mDebug("Mouse.isButtonDown amountScrolled="+amountScrolled);
 					//Modchu_Debug.mDebug("clickY="+clickY+" mouse_y="+mouse_y);
 
+					Long l1 = (Long) Modchu_Reflect.invokeMethod("Minecraft", "func_71386_F", "getSystemTime", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
 					if (mouse_x >= showSelectionBoxLeft && mouse_x <= showSelectionBoxRight && selected >= 0 && clickY >= 0 && selected < slotSize) {
-						boolean var12 = selected == selectedElement && Minecraft.getSystemTime() - lastClicked < 250L;
+						boolean var12 = selected == selectedElement && l1 - lastClicked < 250L;
 						elementClicked(selected, var12);
 						selectedElement = selected;
-						lastClicked = Minecraft.getSystemTime();
+						lastClicked = l1;
 					} else if (mouse_x >= showSelectionBoxLeft && mouse_x <= showSelectionBoxRight && clickY < 0) {
-						outOfRangeClick(mouse_x, mouse_y, Minecraft.getSystemTime() - lastClicked < 250L);
+						outOfRangeClick(mouse_x, mouse_y, l1 - lastClicked < 250L);
 						var7 = false;
 					}
 				}// else {
@@ -190,7 +184,8 @@ public class PFLM_GuiSlot extends GuiSlot {
 					&& ((mouse_x >= scrollBarX && mouse_x <= scrollBarX + scrollBarSizeX)
 					| (mouse_x >= showSelectionBoxLeft && mouse_x <= showSelectionBoxRight))
 					&& (mouse_y >= slotPosY && mouse_y <= slotPosY + sizeY)) {
-				while (!mc.gameSettings.touchscreen && Mouse.next()) {
+				GameSettings gameSettings = (GameSettings) Modchu_Reflect.getFieldObject("Minecraft", "field_71474_y", "gameSettings", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+				while (!gameSettings.touchscreen && Mouse.next()) {
 					int var16 = Mouse.getEventDWheel();
 					if (var16 != 0) {
 						if (var16 > 0) {
@@ -211,7 +206,6 @@ public class PFLM_GuiSlot extends GuiSlot {
 		}
 	}
 
-	@Override
 	public void drawScreen(int mouse_x, int mouse_y, float par3)
 	{
 		mouseX = mouse_x;
@@ -364,7 +358,6 @@ public class PFLM_GuiSlot extends GuiSlot {
 			tessellator.addVertexWithUV((double)scrollBarX, dTop, 0.0D, 0.0D, 0.0D);
 			tessellator.draw();
 		}
-		func_77215_b(mouse_x, mouse_y);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		//GL11.glShadeModel(GL11.GL_FLAT);
 		//GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -372,7 +365,6 @@ public class PFLM_GuiSlot extends GuiSlot {
 		//GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
 	}
 
-	@Override
 	protected void drawSlot(int i, int j, int k, int l, Tessellator tessellator) {
 	}
 
@@ -380,7 +372,6 @@ public class PFLM_GuiSlot extends GuiSlot {
 		parentScreen.guiSlotDrawSlot(guiNumber, i, posX, slotPosY, k, l, tessellator);
 	}
 
-	@Override
 	protected int getScrollBarX() {
 		return parentScreen.getSlotScrollBarX(guiNumber);
 	}
@@ -422,7 +413,6 @@ public class PFLM_GuiSlot extends GuiSlot {
 		return i;
 	}
 
-	@Override
 	public void registerScrollButtons(int par2, int par3) {
 		scrollUpButtonID = par2;
 		scrollDownButtonID = par3;
@@ -431,19 +421,26 @@ public class PFLM_GuiSlot extends GuiSlot {
 	public void actionPerformed(int i) {
 	}
 
-    private void overlayBackground(int par1, int par2, int par3, int par4)
-    {
-        Tessellator var5 = Tessellator.instance;
-        this.mc.func_110434_K().func_110577_a(Gui.field_110325_k);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        float var6 = 32.0F;
-        var5.startDrawingQuads();
-        var5.setColorRGBA_I(4210752, par4);
-        var5.addVertexWithUV(0.0D, (double)par2, 0.0D, 0.0D, (double)((float)par2 / var6));
-        var5.addVertexWithUV((double)this.width, (double)par2, 0.0D, (double)((float)this.width / var6), (double)((float)par2 / var6));
-        var5.setColorRGBA_I(4210752, par3);
-        var5.addVertexWithUV((double)this.width, (double)par1, 0.0D, (double)((float)this.width / var6), (double)((float)par1 / var6));
-        var5.addVertexWithUV(0.0D, (double)par1, 0.0D, 0.0D, (double)((float)par1 / var6));
-        var5.draw();
-    }
+	private void overlayBackground(int par1, int par2, int par3, int par4)
+	{
+		Tessellator var5 = Tessellator.instance;
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
+			Object var4 = Modchu_Reflect.invokeMethod("Minecraft", "func_110434_K", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+			Modchu_Reflect.invokeMethod("TextureManager", "func_110577_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, var4, new Object[]{ Modchu_Reflect.getFieldObject(Gui.class, "field_110325_k") });
+			//mc.func_110434_K().func_110577_a(Gui.field_110325_k);
+		} else {
+			Modchu_Reflect.invokeMethod("RenderEngine", "bindTexture", new Class[]{ String.class }, Modchu_Reflect.getFieldObject("Minecraft", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft()), new Object[]{ "/gui/background.png" });
+			//mc.renderEngine.bindTexture("/gui/background.png");
+		}
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		float var6 = 32.0F;
+		var5.startDrawingQuads();
+		var5.setColorRGBA_I(4210752, par4);
+		var5.addVertexWithUV(0.0D, (double)par2, 0.0D, 0.0D, (double)((float)par2 / var6));
+		var5.addVertexWithUV((double)width, (double)par2, 0.0D, (double)((float)width / var6), (double)((float)par2 / var6));
+		var5.setColorRGBA_I(4210752, par3);
+		var5.addVertexWithUV((double)width, (double)par1, 0.0D, (double)((float)width / var6), (double)((float)par1 / var6));
+		var5.addVertexWithUV(0.0D, (double)par1, 0.0D, 0.0D, (double)((float)par1 / var6));
+		var5.draw();
+	}
 }

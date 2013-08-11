@@ -12,7 +12,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 
 	public MMM_ModelBaseSolo modelMain;
 	public MMM_ModelBaseDuo modelFATT;
-	private Minecraft mc = Minecraft.getMinecraft();
 	private String textureName = null;
 	private String modelArmorName = null;
 	private boolean localFlag = false;
@@ -79,10 +78,10 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	public PFLM_ModelData(Render render) {
 		super(null);
 		modelMain = new MMM_ModelBaseSolo(null);
-		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
+		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend;
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseSolo", "textures", modelMain, Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
 		modelFATT = new MMM_ModelBaseDuo(null);
-		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
+		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend;
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		modelMain.capsLink = modelFATT;
@@ -611,7 +610,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	}
 
 	private void setEntity(Entity entity) {
-		owner = (EntityLivingBase) entity;
+		Modchu_Reflect.setFieldObject("MMM_EntityCaps", "owner", this, entity);
 	}
 
 	private boolean getIsRiding() {
@@ -651,6 +650,8 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	@Override
 	public Object getCapsValue(MultiModelBaseBiped model, int pIndex, Object ...pArg) {
 		switch (pIndex) {
+		case caps_health:
+			return getHealth();
 		case caps_isRiding:
 			return getIsRiding();
 		case caps_ResourceLocation:
@@ -897,7 +898,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		if (model != null) ;else return;
 		//setCapsValue(caps_isRiding, getIsSitting());
 		//model.setCapsValue(caps_isRiding, getIsSitting());
-		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter m getIsSitting()="+mod_PFLM_PlayerFormLittleMaid.getIsSitting());
+		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter m getIsSitting()="+mod_PFLM_PlayerFormLittleMaid.pflm_main.getIsSitting());
 		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter getIsSitting()="+getIsSitting());
 		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter caps_isRiding="+model.getCapsValue(caps_isRiding));
 		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter PFLM_Gui.partsSetFlag="+PFLM_Gui.partsSetFlag);
@@ -910,7 +911,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			partsSetFlag = 1;
 		}
 		if(partsSetFlag == 1) {
-			PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
+			PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.pflm_main.showModelList);
 			multiModelBaseBiped.defaultPartsSettingBefore(this);
 			multiModelBaseBiped.defaultPartsSettingAfter(this);
 			partsSetFlag = 2;
@@ -1042,6 +1043,12 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private ItemStack getCurrentEquippedItem() {
 		if (!(owner instanceof EntityPlayer)) return null;
 		return ((EntityPlayer) owner).inventory.getCurrentItem();
+	}
+
+	private int getHealth() {
+		if (!(owner instanceof EntityPlayer)) return -1;
+		return mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? (Integer) Modchu_Reflect.invokeMethod("EntityLivingBase", "func_110143_aJ", owner) :
+			(Integer) Modchu_Reflect.getFieldObject("EntityLiving", "field_70260_b", "health", owner);
 	}
 
 	private boolean isPlanter() {
@@ -1485,20 +1492,24 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     }
 
     private int getMaidColor() {
+		return maidColor;
+/*
+		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
     	if (owner instanceof EntityPlayer) {
-    		if (mc.currentScreen != null
-    				&& mc.currentScreen instanceof PFLM_Gui) {
-    			return mod_PFLM_PlayerFormLittleMaid.maidColor;
+    		if (currentScreen != null
+    				&& currentScreen instanceof PFLM_Gui) {
+    			return mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor;
     		}
     		return maidColor;
     	} else {
-    		if (mc.currentScreen != null) ;else return 0;
-    		if (mc.currentScreen instanceof PFLM_Gui) return PFLM_Gui.setColor;
-    		if (mc.currentScreen instanceof PFLM_GuiModelSelect) return ((PFLM_GuiModelSelect) mc.currentScreen).modelColor;
-    		if (mc.currentScreen instanceof PFLM_GuiOthersPlayerIndividualCustomize) return PFLM_GuiOthersPlayerIndividualCustomize.othersMaidColor;
-    		if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return mod_PFLM_PlayerFormLittleMaid.othersMaidColor;
+    		if (currentScreen != null) ;else return 0;
+    		if (currentScreen instanceof PFLM_Gui) return PFLM_Gui.setColor;
+    		if (currentScreen instanceof PFLM_GuiModelSelect) return ((PFLM_GuiModelSelect) currentScreen).modelColor;
+    		if (currentScreen instanceof PFLM_GuiOthersPlayerIndividualCustomize) return PFLM_GuiOthersPlayerIndividualCustomize.othersMaidColor;
+    		if (currentScreen instanceof PFLM_GuiOthersPlayer) return mod_PFLM_PlayerFormLittleMaid.pflm_main.othersMaidColor;
     	}
     	return 0;
+*/
     }
 
     private void setMaidColor(int i) {
@@ -1506,16 +1517,16 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     }
 
     private Object getTexture(String s, int i) {
-    	return mod_Modchu_ModchuLib.textureManagerGetTexture(s, i);
+    	return mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s, i);
     }
 
 
     private Object getArmorTexture(String s, int i) {
-    	return mod_Modchu_ModchuLib.textureManagerGetArmorTexture(s, i, new ItemStack(Item.helmetDiamond));
+    	return mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(s, i, new ItemStack(Item.helmetDiamond));
     }
 
     private Object getArmorTexture(String s, int i, ItemStack itemStack) {
-    	return mod_Modchu_ModchuLib.textureManagerGetArmorTexture(s, i, itemStack);
+    	return mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(s, i, itemStack);
     }
 
     /**
@@ -1559,8 +1570,8 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     				modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
     				if (modelRenderer != null) {
     					((MultiModelBaseBiped) model).setCapsValue(caps_visible, modelRenderer, b, true);
-    					if (mod_Modchu_ModchuLib.ngPlayerModelList != null
-    							&& !mod_Modchu_ModchuLib.ngPlayerModelList.contains(textureName)) mod_Modchu_ModchuLib.ngPlayerModelList.add(textureName);
+    					if (mod_Modchu_ModchuLib.modchu_Main.ngPlayerModelList != null
+    							&& !mod_Modchu_ModchuLib.modchu_Main.ngPlayerModelList.contains(textureName)) mod_Modchu_ModchuLib.modchu_Main.ngPlayerModelList.add(textureName);
     				}
     			} catch (Exception e) {
     				//e.printStackTrace();
@@ -1745,14 +1756,14 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     }
 
     public void addSendList(int i) {
-    	if (mod_Modchu_ModchuLib.isPFLMF) ;else return;
-    	LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject(mod_Modchu_ModchuLib.mod_PFLMF, "sendList");
+    	if (mod_Modchu_ModchuLib.modchu_Main.isPFLMF) ;else return;
+    	LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject(mod_Modchu_ModchuLib.modchu_Main.mod_PFLMF, "sendList");
     	if (sendList != null) sendList.add(new Object[]{ i, this, owner });
     }
 
     private Object getPlayerState(int entityId, byte by) {
-    	if (mod_Modchu_ModchuLib.isPFLMF) ;else return null;
-    	return Modchu_Reflect.invokeMethod(mod_Modchu_ModchuLib.mod_PFLMF, "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
+    	if (mod_Modchu_ModchuLib.modchu_Main.isPFLMF) ;else return null;
+    	return Modchu_Reflect.invokeMethod(mod_Modchu_ModchuLib.modchu_Main.mod_PFLMF, "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
     }
 
 	public int getCapsValueInt(int pIndex, Object ...pArg) {

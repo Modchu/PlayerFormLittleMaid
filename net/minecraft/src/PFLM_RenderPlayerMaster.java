@@ -20,7 +20,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 	public static HashMap<Entity, PFLM_ModelData> playerData = new HashMap();
 	public static String[] armorFilename;
 	private static final ItemStack[] dummyArmorItemStack = {new ItemStack(Item.helmetDiamond), new ItemStack(Item.plateDiamond), new ItemStack(Item.legsDiamond), new ItemStack(Item.bootsDiamond)};
-	private static Object mc = mod_PFLM_PlayerFormLittleMaid.getMinecraft();
+	private static Object mc = mod_Modchu_ModchuLib.modchu_Main.getMinecraft();
 	public static boolean resetFlag = false;
 	public static boolean textureResetFlag = false;
 	public static boolean initResetFlag = false;
@@ -51,14 +51,14 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		armorFilename = 	(String[]) Modchu_Reflect.getFieldObject(RenderBiped.class, "field_82424_k", "bipedArmorFilenamePrefix");
 		sizeMultiplier = Modchu_Reflect.getMethod(Entity.class, "getSizeMultiplier", -1);
 		isSizeMultiplier = sizeMultiplier != null;
-		if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) {
 			//Modchu_Debug.mDebug("PFLM_RenderPlayerMaster() isSmartMoving");
 			pflm_RenderPlayerSmart = Modchu_Reflect.newInstance("PFLM_RenderPlayerSmart", new Class[]{ PFLM_RenderPlayerMaster.class }, new Object[]{ this });
 //-@-125
 			pflm_RenderRenderSmart = Modchu_Reflect.newInstance("PFLM_RenderRenderSmart", new Class[]{ PFLM_RenderPlayerMaster.class }, new Object[]{ this });
 //@-@125
 		}
-		if (mod_PFLM_PlayerFormLittleMaid.isShaders) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
 			if (Modchu_Reflect.getMethod("Shaders", "setEntityHurtFlash", new Class[]{ int.class, int.class }) != null
 					&& Modchu_Reflect.getFieldObject("Shaders", "useEntityHurtFlash") != null) {
 				shadersHurtFlashFlag = true;
@@ -100,7 +100,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 //@-@b181
     		armorTextureSetting(entityplayer, modelData, is, i);
     		boolean flag1 = i == 1 ? true : false;
-    		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.model);
+    		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model);
     		if (isBiped) {
     			if (model != null) {
     				model.setArmorBipedRightLegShowModel(modelData, flag1);
@@ -118,7 +118,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	int i2 = i;
     	String t = (String) modelData.getCapsValue(modelData.caps_textureArmorName);
     	//Modchu_Debug.mDebug("setArmorModel t="+t);
-    	boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.model);
+    	boolean isBiped = mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model);
     	if (t != null) ;else t = isBiped ? "Biped" : "default";
     	if (modelData.modelFATT.modelOuter != null
     			&& modelData.modelFATT.modelInner != null) {
@@ -140,15 +140,15 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			return;
     		}
     		if (flag) {
-    			if (mod_Modchu_ModchuLib.isForge
-    					&& mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() > 129) {
+    			if (mod_Modchu_ModchuLib.modchu_Main.isForge
+    					&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 129) {
     				String a1 = itemarmor.renderIndex < armorFilename.length ? armorFilename[itemarmor.renderIndex] : armorFilename[armorFilename.length - 1];
     				Object t1;
     				Object t2;
-    				if (mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() < 150) {
+    				if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 150) {
     					t2 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ ItemStack.class, String.class }, new Object[]{ is, "/armor/" + a1 + "_" + 2 + ".png" });
     					t1 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ ItemStack.class, String.class }, new Object[]{ is, "/armor/" + a1 + "_" + 1 + ".png" });
-    				} else if (mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() < 160) {
+    				} else if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 160) {
     					t2 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, new Object[]{ entityplayer, is, "/armor/" + a1 + "_" + 2 + ".png", i, 2, null });
     					t1 = Modchu_Reflect.invokeMethod("net.minecraftforge.client.ForgeHooksClient", "getArmorTexture", new Class[]{ Entity.class, ItemStack.class, String.class, int.class, int.class, String.class }, new Object[]{ entityplayer, is, "/armor/" + a1 + "_" + 1 + ".png", i, 1, null });
     				} else {
@@ -175,10 +175,10 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     		}
     	} else {
     		t3 = modelData.modelFATT.textureInner;
-    		t3[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 64, is);
+    		t3[i] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 64, is);
     		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
     		t4 = modelData.modelFATT.textureOuter;
-    		t4[i] = mod_Modchu_ModchuLib.textureManagerGetArmorTexture(t, 80, is);
+    		t4[i] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 80, is);
     		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
     	}
     	//Modchu_Debug.mlDebug("modelData.modelFATT.textureOuter["+i+"]="+modelData.modelFATT.textureOuter[i]);
@@ -248,7 +248,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     		GL11.glScalef(f2, f2, f2);
     		return;
     	}
-    	if (!mod_PFLM_PlayerFormLittleMaid.useScaleChange) {
+    	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.useScaleChange) {
     		super.preRenderCallback(entityliving, f);
     		return;
     	}
@@ -395,14 +395,14 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	GL11.glPushMatrix();
 
     	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-    	if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     			&& !shadersHurtFlashFlag) {
     		//Shaders.glDisableWrapper(k1);
     		shadersGlDisableWrapper(GL11.GL_CULL_FACE);
     	} else {
     		GL11.glDisable(GL11.GL_CULL_FACE);
     	}
-    	int PFLMVersion = mod_PFLM_PlayerFormLittleMaid.getPFLMVersion();
+    	int version = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion();
     	Class EntityLivingBase = Modchu_Reflect.loadClass("EntityLivingBase");
     	Class Minecraft = Modchu_Reflect.loadClass("Minecraft");
     	try
@@ -418,7 +418,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     		float limbYaw = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70721_aZ", "limbYaw", entityliving);
     		float limbSwing = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70754_ba", "limbSwing", entityliving);
     		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mc);
-    		if (PFLMVersion < 140
+    		if (version < 140
     				| (currentScreen != null
     				&& (currentScreen instanceof PFLM_Gui
     				| currentScreen instanceof PFLM_GuiOthersPlayer
@@ -436,7 +436,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     		float f5 = handleRotationFloat((Entity) entityliving, f1);
     		rotateCorpse((EntityPlayer) entityliving, f5, f2, f1);
     		float f6 = 0.0625F;
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
         			&& !shadersHurtFlashFlag) {
     			//Shaders.glEnableWrapper(GL12.GL_RESCALE_NORMAL);
     			shadersGlEnableWrapper(GL12.GL_RESCALE_NORMAL);
@@ -448,7 +448,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     		GL11.glTranslatef(0.0F, -24F * f6 - 0.0078125F, 0.0F);
     		float f7 = prevLimbYaw + (limbYaw - prevLimbYaw) * f1;
     		float f8 = limbSwing - limbYaw * (1.0F - f1);
-    		if (PFLMVersion > 89
+    		if (version > 89
     				&& (Boolean) Modchu_Reflect.invokeMethod(EntityLivingBase, "func_70631_g_", "isChild", entityliving))
     		{
     			f8 *= 3F;
@@ -458,16 +458,16 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			f7 = 1.0F;
     		}
 
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
         			&& !shadersHurtFlashFlag) {
     			//Shaders.glEnableWrapper(GL11.GL_ALPHA_TEST);
     			shadersGlEnableWrapper(GL11.GL_ALPHA_TEST);
     		} else {
     			GL11.glEnable(GL11.GL_ALPHA_TEST);
     		}
-    		if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend)
     		{
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     	    			&& !shadersHurtFlashFlag) {
     				//Shaders.glEnableWrapper(GL11.GL_BLEND);
     				shadersGlEnableWrapper(GL11.GL_BLEND);
@@ -478,7 +478,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     		}
     		else
     		{
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     	    			&& !shadersHurtFlashFlag) {
     				//Shaders.glDisableWrapper(k1);
     				shadersGlDisableWrapper(GL11.GL_BLEND);
@@ -494,7 +494,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     		Modchu_Reflect.invokeMethod(getClass(), "renderModel", new Class[]{ Entity.class, float.class, float.class, float.class, float.class, float.class, float.class }, this, new Object[]{ entityliving, f8, f7, f5, f3 - f2, f4, f6 });
     		//renderModel(entityliving, f8, f7, f5, f3 - f2, f4, f6);
     		float f9 = 1.0F;
-    		if (PFLMVersion < 80) {
+    		if (version < 80) {
     			if (currentScreen == null | currentScreen instanceof GuiIngameMenu) f9 = (Float) Modchu_Reflect.invokeMethod(Entity.class, "func_382_a", "getEntityBrightness", new Class[]{ float.class }, entityliving, new Object[]{ f1 });
     		}
     		modelData.modelFATT.showAllParts();
@@ -515,9 +515,9 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     				}
 
     				float f10 = 1.0F;
-    				if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend)
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    					if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     			    			&& !shadersHurtFlashFlag) {
     						//Shaders.glEnableWrapper(GL11.GL_BLEND);
     						shadersGlEnableWrapper(GL11.GL_BLEND);
@@ -526,30 +526,30 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     					}
     					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     				}
-    				f10 = mod_PFLM_PlayerFormLittleMaid.transparency;
+    				f10 = mod_PFLM_PlayerFormLittleMaid.pflm_main.transparency;
     				GL11.glColor4f(f9, f9, f9, f10);
     				modelData.modelMain.setEntityCaps(modelData);
     				Modchu_Reflect.invokeMethod(renderPassModel.getClass(), "setLivingAnimations", new Class[]{ EntityLivingBase, float.class, float.class, float.class }, renderPassModel, new Object[]{ entityliving, f8, f7, f1});
     				//renderPassModel.setLivingAnimations(entityliving, f8, f7, f1);
     				((MMM_ModelBaseDuo) renderPassModel).setArmorRendering(true);
-    				if ((PFLMVersion > 129
-    						&& !mod_Modchu_ModchuLib.useInvisibilityArmor)
-    						| (mod_Modchu_ModchuLib.useInvisibilityArmor
+    				if ((version > 129
+    						&& !mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor)
+    						| (mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor
     								&& !entityliving.isInvisible())
-    								| PFLMVersion < 130) {
+    								| version < 130) {
     					renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
     				}
-    				if (mod_PFLM_PlayerFormLittleMaid.transparency != 1.0F) GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.transparency != 1.0F) GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-    				if (PFLMVersion < 90
+    				if (version < 90
     						| j != 15) {
     					continue;
     				}
 
     				float f11 = (float)entityliving.ticksExisted + f1;
-    				if (mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() > 159) Modchu_Reflect.invokeMethod(Render.class, "func_110776_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, this, Modchu_Reflect.newInstance("ResourceLocation", new Class[]{ String.class }, new Object[]{ "%blur%/misc/glint.png" }));
+    				if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod(Render.class, "func_110776_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, this, Modchu_Reflect.newInstance("ResourceLocation", new Class[]{ String.class }, new Object[]{ "%blur%/misc/glint.png" }));
     				else Modchu_Reflect.invokeMethod(Render.class, "loadTexture", new Class[]{ String.class }, this, new Object[]{ "%blur%/misc/glint.png" });
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     						&& !shadersHurtFlashFlag) {
     					//Shaders.glEnableWrapper(GL11.GL_BLEND);
     					shadersGlEnableWrapper(GL11.GL_BLEND);
@@ -562,7 +562,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     				GL11.glDepthMask(false);
 
     				for (int j1 = 0; j1 < 2; j1++) {
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    					if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     			    			&& !shadersHurtFlashFlag) {
     						//Shaders.glDisableWrapper(GL11.GL_LIGHTING);
     						shadersGlDisableWrapper(GL11.GL_LIGHTING);
@@ -581,12 +581,12 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     					GL11.glTranslatef(0.0F, f17, 0.0F);
     					GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
-    					if ((PFLMVersion > 129
-    							&& !mod_Modchu_ModchuLib.useInvisibilityArmor)
-    							| (PFLMVersion > 129
-    									&& mod_Modchu_ModchuLib.useInvisibilityArmor
+    					if ((version > 129
+    							&& !mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor)
+    							| (version > 129
+    									&& mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor
     									&& !entityliving.isInvisible())
-    									| PFLMVersion < 130) {
+    									| version < 130) {
     						renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
     					}
     				}
@@ -596,7 +596,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     				GL11.glDepthMask(true);
     				GL11.glLoadIdentity();
     				GL11.glMatrixMode(GL11.GL_MODELVIEW);
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     		    			&& !shadersHurtFlashFlag) {
     					//Shaders.glEnableWrapper(GL11.GL_LIGHTING);
     					shadersGlEnableWrapper(GL11.GL_LIGHTING);
@@ -604,9 +604,9 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     					GL11.glEnable(GL11.GL_LIGHTING);
     				}
 
-    				if (mod_PFLM_PlayerFormLittleMaid.AlphaBlend)
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend)
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    					if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     			    			&& !shadersHurtFlashFlag) {
     						//Shaders.glEnableWrapper(GL11.GL_BLEND);
     						shadersGlEnableWrapper(GL11.GL_BLEND);
@@ -617,7 +617,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     				}
     				else
     				{
-    					if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    					if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     			    			&& !shadersHurtFlashFlag) {
     						//Shaders.glDisableWrapper(GL11.GL_BLEND);
     						shadersGlDisableWrapper(GL11.GL_BLEND);
@@ -632,7 +632,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			GL11.glEnable(GL11.GL_ALPHA_TEST);
     		}
 
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
         			&& !shadersHurtFlashFlag) {
     			//Shaders.glDisableWrapper(GL11.GL_BLEND);
     			shadersGlDisableWrapper(GL11.GL_BLEND);
@@ -642,25 +642,25 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			GL11.glDisable(GL11.GL_BLEND);
     			GL11.glEnable(GL11.GL_ALPHA_TEST);
     		}
-    		if (PFLMVersion < 80) GL11.glColor4f(f9, f9, f9, 1.0F);
+    		if (version < 80) GL11.glColor4f(f9, f9, f9, 1.0F);
     		modelData.modelMain.setEntityCaps(modelData);
 /*
-    		if (PFLMVersion > 129
+    		if (version > 129
     				&& entityliving.isInvisible()
-    				| PFLMVersion < 130) {
+    				| version < 130) {
 */
     			modelData.modelMain.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
     			modelData.modelFATT.setRotationAngles(f8, f7, f5, f3 - f2, f4, f6, entityliving);
 /*
     		}
 */
-    		if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     				&& shadersHurtFlashFlag
     				&& (Boolean) Modchu_Reflect.getFieldObject("Shaders", "useEntityHurtFlash")) {
     			Modchu_Reflect.invokeMethod("Shaders", "setEntityHurtFlash", new Class[]{ int.class, int.class }, new Object[]{ 0, 0 });
     		}
     		renderEquippedItems(entityliving, f1);
-    		boolean hurtFlag = mod_PFLM_PlayerFormLittleMaid.isShaders
+    		boolean hurtFlag = mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     				&& shadersHurtFlashFlag
     				&& !(Boolean) Modchu_Reflect.getFieldObject("Shaders", "useEntityHurtFlash")
     				? true : false;
@@ -668,14 +668,14 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			f9 = entityliving.getBrightness(f1);
     			int k = getColorMultiplier(entityliving, f9, f1);
     			OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     					&& !shadersHurtFlashFlag) {
     				//Shaders.glDisableWrapper(GL11.GL_TEXTURE_2D);
     				shadersGlDisableWrapper(GL11.GL_TEXTURE_2D);
     			} else {
     				GL11.glDisable(GL11.GL_TEXTURE_2D);
     			}
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     					&& shadersHurtFlashFlag) Modchu_Reflect.invokeMethod("Shaders", "disableLightmap");
     			OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 
@@ -683,9 +683,9 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			int deathTime = (Integer) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70725_aQ", "deathTime", entityliving);
     			if ((k >> 24 & 0xff) > 0 || hurtTime > 0 || deathTime > 0)
     			{
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     						&& shadersHurtFlashFlag) Modchu_Reflect.invokeMethod("Shaders", "beginLivingDamage");
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     						&& !shadersHurtFlashFlag) {
     					//Shaders.glDisableWrapper(GL11.GL_TEXTURE_2D);
     					shadersGlDisableWrapper(GL11.GL_TEXTURE_2D);
@@ -736,7 +736,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     				}
 
     				GL11.glDepthFunc(GL11.GL_LEQUAL);
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     						&& !shadersHurtFlashFlag) {
     					//Shaders.glDisableWrapper(GL11.GL_BLEND);
     					shadersGlDisableWrapper(GL11.GL_BLEND);
@@ -749,11 +749,11 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     					GL11.glEnable(GL11.GL_ALPHA_TEST);
     					GL11.glEnable(GL11.GL_TEXTURE_2D);
     				}
-    				if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     						&& shadersHurtFlashFlag) Modchu_Reflect.invokeMethod("Shaders", "endLivingDamage");
     			}
 
-    			if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     					&& !shadersHurtFlashFlag) {
     				//Shaders.glDisableWrapper(GL12.GL_RESCALE_NORMAL);
     				shadersGlDisableWrapper(GL12.GL_RESCALE_NORMAL);
@@ -768,7 +768,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	}
 
     	OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-    	if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     			&& !shadersHurtFlashFlag) {
     		//Shaders.glEnableWrapper(GL11.GL_TEXTURE_2D);
     		shadersGlEnableWrapper(GL11.GL_TEXTURE_2D);
@@ -776,7 +776,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     		GL11.glEnable(GL11.GL_TEXTURE_2D);
     	}
     	OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-    	if (mod_PFLM_PlayerFormLittleMaid.isShaders
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders
     			&& !shadersHurtFlashFlag) {
     		//Shaders.glEnableWrapper(GL11.GL_CULL_FACE);
     		shadersGlEnableWrapper(GL11.GL_CULL_FACE);
@@ -798,7 +798,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	}
     	doRenderSetting(entityplayer, modelData);
     	sitSleepResetCheck(modelData, entityplayer);
-    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) {
     		Modchu_Reflect.invokeMethod("PFLM_RenderPlayerSmart", "renderPlayer", new Class[]{ EntityPlayer.class, double.class , double.class, double.class, float.class, float.class, PFLM_ModelData.class }, pflm_RenderPlayerSmart, new Object[]{ entityplayer, d, d1, d2, f, f1, modelData });
 //-@-125
     		Modchu_Reflect.invokeMethod("PFLM_RenderRenderSmart", "renderPlayer", new Class[]{ EntityPlayer.class, double.class , double.class, double.class, float.class, float.class, PFLM_ModelData.class }, pflm_RenderRenderSmart, new Object[]{ entityplayer, d, d1, d2, f, f1, modelData });
@@ -809,7 +809,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	modelData.modelMain.setEntityCaps(modelData);
     	waitModeSetting(modelData, f8);
     	if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
-    		modelData.modelMain.setCapsValue(modelData.caps_isWait, mod_PFLM_PlayerFormLittleMaid.isWait);
+    		modelData.modelMain.setCapsValue(modelData.caps_isWait, mod_PFLM_PlayerFormLittleMaid.pflm_main.isWait);
     	} else {
     		modelData.modelMain.setCapsValue(modelData.caps_isWait, modelData.getCapsValue(modelData.caps_isWait));
     	}
@@ -859,7 +859,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     public double doRenderSettingY(EntityPlayer entityplayer,
     		PFLM_ModelData modelData, double d1) {
 /*
-    	if (mod_PFLM_PlayerFormLittleMaid.isModelSize
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize
 //-@-125
     			&& (Boolean) Modchu_Reflect.invokeMethod("Minecraft", "isSingleplayer", mc)
 //@-@125
@@ -870,16 +870,16 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	}
     	else
 */
-    	if (mod_PFLM_PlayerFormLittleMaid.oldRender) d1 = d1 - (double)entityplayer.yOffset;
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) d1 = d1 - (double)entityplayer.yOffset;
     	if (entityplayer.isSneaking() && !(entityplayer instanceof EntityPlayerSP)) d1 -= 0.125D;
-    	//if (mod_PFLM_PlayerFormLittleMaid.isModelSize) d1 += 0.45D;
+    	//if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize) d1 += 0.45D;
 
     	if (entityplayer.isRiding()) modelData.setCapsValue(modelData.caps_isRiding, true);
     	else modelData.setCapsValue(modelData.caps_isRiding, modelData.getCapsValueBoolean(modelData.caps_isSitting));
     	//Modchu_Debug.mDebug("entityplayer.isRiding()="+modelData.getCapsValueBoolean(modelData.caps_isRiding));
     	if (modelData.getCapsValueBoolean(modelData.caps_isRiding)) {
-    		d1 += mod_PFLM_PlayerFormLittleMaid.oldRender ? 0.25D : 0.30D;
-    		if (mod_PFLM_PlayerFormLittleMaid.isModelSize && mod_PFLM_PlayerFormLittleMaid.changeMode != PFLM_Gui.modeOnline)  d1 -= 0.43D;
+    		d1 += mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender ? 0.25D : 0.30D;
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize && mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode != PFLM_Gui.modeOnline)  d1 -= 0.43D;
     	}
     	if (entityplayer.isSneaking()) {
     		if (modelData.getCapsValueBoolean(modelData.caps_isRiding)) {
@@ -887,7 +887,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     		}
     	}
     	if (modelData.getCapsValueBoolean(modelData.caps_isSitting)) {
-    		if (!mod_PFLM_PlayerFormLittleMaid.oldRender) d1 += -0.3D;
+    		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) d1 += -0.3D;
     		d1 += Modchu_ModelCapsHelper.getCapsValueDouble(modelData.modelMain.model, modelData.caps_sittingyOffset);
     	}
     	return d1;
@@ -895,16 +895,16 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 
 	private void doRenderSetting(EntityPlayer entityplayer, PFLM_ModelData modelData) {
     	modelData.modelMain.setEntityCaps(modelData);
-    	EntityPlayer thePlayer = mod_PFLM_PlayerFormLittleMaid.getThePlayer();
+    	EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
     	if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
-    		if (mod_PFLM_PlayerFormLittleMaid.mushroomConfusion) mod_PFLM_PlayerFormLittleMaid.mushroomConfusion(entityplayer, modelData);
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.mushroomConfusion) mod_PFLM_PlayerFormLittleMaid.pflm_main.mushroomConfusion(entityplayer, modelData);
     	}
     	if (modelData.getCapsValueBoolean(modelData.caps_changeModelFlag)) {
-    		if (mod_PFLM_PlayerFormLittleMaid.isOlddays) modelData.modelMain.setCapsValue(modelData.caps_oldwalking, (Boolean) Modchu_Reflect.getFieldObject(ModelBiped.class, "oldwalking", modelData.modelMain.model));
+    		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isOlddays) modelData.modelMain.setCapsValue(modelData.caps_oldwalking, (Boolean) Modchu_Reflect.getFieldObject(ModelBiped.class, "oldwalking", modelData.modelMain.model));
     		modelData.setCapsValue(modelData.caps_partsSetInit, false);
     		modelData.setCapsValue(modelData.caps_partsSetFlag, 1);
     		modelData.modelMain.setCapsValue(modelData.caps_changeModel, modelData);
-    		mod_PFLM_PlayerFormLittleMaid.changeModel(entityplayer);
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.changeModel(entityplayer);
     		modelData.setCapsValue(modelData.caps_changeModelFlag, false);
     	}
     	setHandedness(entityplayer, modelData.getCapsValueInt(modelData.caps_dominantArm));
@@ -999,15 +999,15 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	modelData.modelMain.setRender(this);
     	modelData.modelMain.renderItems(entityplayer, this);
     	if (entityplayer.username.equals("deadmau5")) {
-    		int PFLMVersion = mod_PFLM_PlayerFormLittleMaid.getPFLMVersion();
+    		int version = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion();
     		Class EntityLivingBase = Modchu_Reflect.loadClass("EntityLivingBase");
     		Class AbstractClientPlayer = Modchu_Reflect.loadClass("AbstractClientPlayer");
-    		if (PFLMVersion > 159
+    		if (version > 159
     				&& (Boolean) Modchu_Reflect.invokeMethod(ThreadDownloadImageData.class, "func_110557_a", Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110309_l", entityplayer))
     				//&& ((AbstractClientPlayer) entityplayer).func_110309_l().func_110557_a())
-    				| (PFLMVersion < 160
+    				| (version < 160
     						&& (Boolean) Modchu_Reflect.invokeMethod(Render.class, "func_76984_a", "loadDownloadableImageTexture", new Class[]{ String.class, String.class }, this, new Object[]{ (String) Modchu_Reflect.getFieldObject(Entity.class, "field_20047_bv", "skinUrl", entityplayer), (String)null }))) {
-    			if (PFLMVersion > 159) Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110776_a", this);
+    			if (version > 159) Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110776_a", this);
     			// (((AbstractClientPlayer) entityplayer).func_110306_p());
     			float prevRenderYawOffset = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70760_ar", "prevRenderYawOffset", entityplayer);
     			float renderYawOffset = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70761_aq", "renderYawOffset", entityplayer);
@@ -1029,16 +1029,16 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			}
     		}
     		if (renderManager != null
-    				&& (PFLMVersion > 159
+    				&& (version > 159
     						&& (Boolean) Modchu_Reflect.invokeMethod("ThreadDownloadImageData", "func_110557_a", Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110310_o", entityplayer))
     				//&& ((AbstractClientPlayer) entityplayer).func_110310_o().func_110557_a()
-    				| (PFLMVersion < 160
+    				| (version < 160
     						&& (String) Modchu_Reflect.getFieldObject(Entity.class, "field_622_aY", "cloakUrl", entityplayer) != null
     						&& (Boolean) Modchu_Reflect.invokeMethod(Render.class, "func_76984_a", "loadDownloadableImageTexture", new Class[]{ String.class, String.class }, this, new Object[]{ (String) Modchu_Reflect.getFieldObject(Entity.class, "field_622_aY", "cloakUrl", entityplayer), (String)null })))
-    				&& ((PFLMVersion > 129
+    				&& ((version > 129
     						&& !(Boolean) Modchu_Reflect.invokeMethod(Entity.class, "func_82150_aj", "isInvisible", entityplayer)
     						&& !(Boolean) Modchu_Reflect.invokeMethod(EntityPlayer.class, "func_82241_s", "getHideCape", entityplayer)
-    						| PFLMVersion < 130))) {
+    						| version < 130))) {
     			GL11.glPushMatrix();
     			GL11.glTranslatef(0.0F, 0.0F, 0.125F);
     			double d = (entityplayer.field_71091_bM + (entityplayer.field_71094_bP - entityplayer.field_71091_bM) * (double)f) - (entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double)f);
@@ -1087,7 +1087,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 
     public void renderFirstPersonArm(EntityPlayer entityplayer, int i) {
     	//olddays導入時に2以外のint付きで呼ばれる。
-    	EntityPlayer thePlayer = mod_PFLM_PlayerFormLittleMaid.getThePlayer();
+    	EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
     	Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mc);
     	if(currentScreen instanceof GuiSelectWorld) return;
     	PFLM_ModelData modelData = getPlayerData(entityplayer);
@@ -1114,13 +1114,13 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			&& modelData.getCapsValue(modelData.caps_ResourceLocation) != null
     			&& getRenderManager() != null
     			&& getRenderManager().renderEngine != null) {
-    		if (mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() > 159) Modchu_Reflect.invokeMethod(Render.class, "func_110776_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, this, new Object[]{ modelData.getCapsValue(modelData.caps_ResourceLocation) });
+    		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod(Render.class, "func_110776_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, this, new Object[]{ modelData.getCapsValue(modelData.caps_ResourceLocation) });
     		else Modchu_Reflect.invokeMethod(Render.class, "loadTexture", new Class[]{ String.class }, this, new Object[]{ modelData.modelMain.textures[0] });
     		//Modchu_Debug.Debug("modelData.modelMain.model != null ? ="+(modelData.modelMain.model != null));
     		modelData.modelMain.model.renderFirstPersonHand(modelData);
     		//renderFirstPersonArmorRender(modelData, entityplayer, 0.0D, 0.0D, 0.0D, 0.0F, 0.0625F);
     	} else if (modelData.modelMain.model != null
-    			&& mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.model)) {
+    			&& mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model)) {
     		modelData.modelMain.model.renderFirstPersonHand(modelData);
     	}
     	modelData.modelMain.setCapsValue(modelData.caps_firstPerson, false);
@@ -1149,7 +1149,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			| resetFlag) {
     		if (resetFlag) {
     			resetFlag = false;
-    			mod_PFLM_PlayerFormLittleMaid.clearPlayers();
+    			mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
     			modelData = null;
     		}
     		modelData = loadPlayerData(entityplayer, modelData);
@@ -1168,16 +1168,16 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 	{
 		if (entityplayer != null) ;else return null;
 		if (modelData != null) ;else modelData = new PFLM_ModelData(RenderManager.instance.getEntityRenderObject(entityplayer));
-		EntityPlayer thePlayer = mod_PFLM_PlayerFormLittleMaid.getThePlayer();
+		EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 		if (thePlayer != null) ;else return null;
 		Modchu_Reflect.setFieldObject(MMM_EntityCaps.class, "owner", modelData, entityplayer);
 		modelData.setCapsValue(modelData.caps_isPlayer, entityplayer.username == thePlayer.username);
 //if (!modelData.getCapsValueBoolean(modelData.caps_isPlayer)) Modchu_Debug.mDebug("@@@@@isPlayer false!!");
 		BufferedImage bufferedimage = null;
-		// 125deleteif (!mod_PFLM_PlayerFormLittleMaid.gotchaNullCheck()) return null;
+		// 125deleteif (!mod_PFLM_PlayerFormLittleMaid.pflm_main.gotchaNullCheck()) return null;
 
 		if (!modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
-			String t[] = (String[]) mod_PFLM_PlayerFormLittleMaid.playerLocalData.get(entityplayer.username);
+			String t[] = (String[]) mod_PFLM_PlayerFormLittleMaid.pflm_main.playerLocalData.get(entityplayer.username);
 			PFLM_ModelData modelData2;
 			if (t != null) {
 				switch (Integer.valueOf(t[4])) {
@@ -1186,22 +1186,22 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					modelData.setCapsValue(modelData.caps_dominantArm, playerHandednessSetting());
 					modelData.setCapsValue(modelData.caps_modelScale, PFLM_Gui.modelScale);
 					modelData2 = getPlayerData(thePlayer);
-					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.textureName);
-					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
+					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
+					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
 					if (modelData2 != null) modelData.setCapsValue(modelData.caps_maidColor, modelData2.getCapsValueInt(modelData.caps_maidColor));
 					break;
 				case PFLM_GuiOthersPlayerIndividualCustomize.modeOthersSettingOffline:
 					modelData.setCapsValue(modelData.caps_skinMode, skinMode_OthersIndividualSettingOffline);
 					String s2 = t[0];
 					modelData.setCapsValue(modelData.caps_maidColor, Integer.valueOf(t[2]));
-					modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(s2, modelData.getCapsValueInt(modelData.caps_maidColor)));
+					modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s2, modelData.getCapsValueInt(modelData.caps_maidColor)));
 					modelInit(entityplayer, modelData, s2);
 					s2 = t[1];
 					modelData.setCapsValue(modelData.caps_textureName, s2);
 					modelData.setCapsValue(modelData.caps_textureArmorName, t[1]);
 					modelArmorInit(entityplayer, modelData, s2);
-					modelData.setCapsValue(modelData.caps_dominantArm, mod_Modchu_ModchuLib.integerCheck(t[5]) ? othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5])) : 0);
-					modelData.setCapsValue(modelData.caps_modelScale, mod_Modchu_ModchuLib.integerCheck(t[3]) ? Float.valueOf(t[3]) : 0.0F);
+					modelData.setCapsValue(modelData.caps_dominantArm, mod_Modchu_ModchuLib.modchu_Main.integerCheck(t[5]) ? othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5])) : 0);
+					modelData.setCapsValue(modelData.caps_modelScale, mod_Modchu_ModchuLib.modchu_Main.integerCheck(t[3]) ? Float.valueOf(t[3]) : 0.0F);
 					break;
 				case PFLM_GuiOthersPlayerIndividualCustomize.modePlayerOffline:
 					modelData.setCapsValue(modelData.caps_skinMode, skinMode_PlayerOffline);
@@ -1209,8 +1209,8 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					modelData.setCapsValue(modelData.caps_dominantArm, playerHandednessSetting());
 					modelData.setCapsValue(modelData.caps_modelScale, PFLM_Gui.modelScale);
 					modelData2 = getPlayerData(thePlayer);
-					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.textureName);
-					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
+					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
+					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
 					if (modelData2 != null) modelData.setCapsValue(modelData.caps_maidColor, modelData2.getCapsValueInt(modelData.caps_maidColor));
 					break;
 				case PFLM_GuiOthersPlayerIndividualCustomize.modePlayerOnline:
@@ -1218,15 +1218,15 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					modelData.setCapsValue(modelData.caps_dominantArm, playerHandednessSetting());
 					modelData.setCapsValue(modelData.caps_modelScale, PFLM_Gui.modelScale);
 					modelData2 = getPlayerData(thePlayer);
-					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.textureName);
-					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
+					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
+					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
 					if (modelData2 != null) modelData.setCapsValue(modelData.caps_maidColor, modelData2.getCapsValueInt(modelData.caps_maidColor));
 					break;
 				case PFLM_GuiOthersPlayerIndividualCustomize.modeRandom:
 					modelData.setCapsValue(modelData.caps_skinMode, skinMode_Random);
 					skinMode_RandomSetting(entityplayer, modelData);
-					modelData.setCapsValue(modelData.caps_dominantArm, mod_Modchu_ModchuLib.integerCheck(t[5]) ? othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5])) : 0);
-					modelData.setCapsValue(modelData.caps_modelScale, mod_Modchu_ModchuLib.integerCheck(t[3]) ? Float.valueOf(t[3]) : 0.0F);
+					modelData.setCapsValue(modelData.caps_dominantArm, mod_Modchu_ModchuLib.modchu_Main.integerCheck(t[5]) ? othersPlayerIndividualHandednessSetting(Integer.valueOf(t[5])) : 0);
+					modelData.setCapsValue(modelData.caps_modelScale, mod_Modchu_ModchuLib.modchu_Main.integerCheck(t[3]) ? Float.valueOf(t[3]) : 0.0F);
 					break;
 				}
 				if (modelData.getCapsValueInt(modelData.caps_skinMode) != skinMode_PlayerOnline
@@ -1243,21 +1243,21 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					modelData.setCapsValue(modelData.caps_dominantArm, playerHandednessSetting());
 					modelData.setCapsValue(modelData.caps_modelScale, PFLM_Gui.modelScale);
 					modelData2 = getPlayerData(thePlayer);
-					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.textureName);
-					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
+					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
+					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
 					if (modelData2 != null) modelData.setCapsValue(modelData.caps_maidColor, modelData2.getCapsValueInt(modelData.caps_maidColor));
 					break;
 				case PFLM_GuiOthersPlayer.modeOthersSettingOffline:
 					modelData.setCapsValue(modelData.caps_skinMode, skinMode_OthersSettingOffline);
-					String s = mod_PFLM_PlayerFormLittleMaid.othersTextureName;
-					modelData.setCapsValue(modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.othersMaidColor);
+					String s = mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName;
+					modelData.setCapsValue(modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.othersMaidColor);
 					modelInit(entityplayer, modelData, s);
-					s = mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName;
-					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.othersTextureName);
-					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName);
+					s = mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName;
+					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName);
+					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName);
 					modelArmorInit(entityplayer, modelData, s);
 					modelData.setCapsValue(modelData.caps_dominantArm, othersPlayerHandednessSetting());
-					modelData.setCapsValue(modelData.caps_modelScale, mod_PFLM_PlayerFormLittleMaid.othersModelScale);
+					modelData.setCapsValue(modelData.caps_modelScale, mod_PFLM_PlayerFormLittleMaid.pflm_main.othersModelScale);
 					Modchu_Debug.mDebug("modelData handedness="+modelData.getCapsValueInt(modelData.caps_dominantArm));
 					break;
 				case PFLM_GuiOthersPlayer.modePlayerOffline:
@@ -1265,8 +1265,8 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					skinMode_PlayerOfflineSetting(entityplayer, modelData);
 					modelData.setCapsValue(modelData.caps_dominantArm, playerHandednessSetting());
 					modelData.setCapsValue(modelData.caps_modelScale, PFLM_Gui.modelScale);
-					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.textureName);
-					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
+					modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
+					modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
 					break;
 				case PFLM_GuiOthersPlayer.modePlayerOnline:
 					modelData.setCapsValue(modelData.caps_skinMode, skinMode_PlayerOnline);
@@ -1281,7 +1281,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					modelData.setCapsValue(modelData.caps_skinMode, skinMode_Random);
 					skinMode_RandomSetting(entityplayer, modelData);
 					modelData.setCapsValue(modelData.caps_dominantArm, othersPlayerHandednessSetting());
-					modelData.setCapsValue(modelData.caps_modelScale, mod_PFLM_PlayerFormLittleMaid.othersModelScale);
+					modelData.setCapsValue(modelData.caps_modelScale, mod_PFLM_PlayerFormLittleMaid.pflm_main.othersModelScale);
 					break;
 				}
 				if (modelData.getCapsValueInt(modelData.caps_skinMode) != skinMode_PlayerOnline
@@ -1295,7 +1295,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		} else {
 			modelData.setCapsValue(modelData.caps_dominantArm, playerHandednessSetting());
 			modelData.addSendList(0);
-			if (mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeRandom) {
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode == PFLM_Gui.modeRandom) {
 				modelData.setCapsValue(modelData.caps_skinMode, skinMode_Random);
 				skinMode_RandomSetting(entityplayer, modelData);
 				modelData.setCapsValue(modelData.caps_initFlag, 2);
@@ -1306,12 +1306,12 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		Class AbstractClientPlayer = Modchu_Reflect.loadClass("AbstractClientPlayer");
 		try {
 			if ((modelData.getCapsValueBoolean(modelData.caps_isPlayer)
-					&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOnline)
+					&& mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode == PFLM_Gui.modeOnline)
 					| (!modelData.getCapsValueBoolean(modelData.caps_isPlayer)
 					&& modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_online)) {
 				Modchu_Debug.Debug((new StringBuilder()).append("new model read username = ").append(entityplayer.username).toString());
 				String skinUrl = modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_PlayerOnline ? thePlayer.username : entityplayer.username;
-				skinUrl = mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() > 159 ? (String) Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110300_d", new Class[]{ String.class }, entityplayer, new Object[]{ skinUrl })
+				skinUrl = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? (String) Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110300_d", new Class[]{ String.class }, entityplayer, new Object[]{ skinUrl })
 						: (new StringBuilder()).append("http://skins.minecraft.net/MinecraftSkins/").append(skinUrl).append(".png").toString();
 						//((AbstractClientPlayer) entityplayer).func_110300_d(thePlayer.username);
 				//Modchu_Debug.mlDebug("OnlineMode skinUrl="+skinUrl);
@@ -1336,7 +1336,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 			}
 		} catch (IOException ioexception) {
 			String url = modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_PlayerOnline ? thePlayer.username : entityplayer.username;
-			url = mod_PFLM_PlayerFormLittleMaid.getPFLMVersion() > 159 ? (String) Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110300_d", new Class[]{ String.class }, entityplayer, new Object[]{ url })
+			url = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? (String) Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110300_d", new Class[]{ String.class }, entityplayer, new Object[]{ url })
 					: (new StringBuilder()).append("http://skins.minecraft.net/MinecraftSkins/").append(url).append(".png").toString();
 			StringBuilder s1 = (new StringBuilder()).append("Failed to read a player texture from a URL for ");
 			if (url != null) {
@@ -1351,8 +1351,8 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		modelData.setCapsValue(modelData.caps_initFlag, 2);
 		if (er) {
 			//Modchu_Debug.mDebug("er entityplayer.skinUrl = "+entityplayer.skinUrl);
-			if (mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOnline
-					&& mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.isRelease()
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode == PFLM_Gui.modeOnline
+					&& mod_PFLM_PlayerFormLittleMaid.pflm_main.isRelease()
 					| !modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
 				//Modchu_Debug.Debug("er /mob/char.png ");
 				modelData.setCapsValue(modelData.caps_skinMode, skinMode_char);
@@ -1365,8 +1365,8 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 			} else {
 				//Modchu_Debug.mDebug("er offline only set.");
 				modelData.setCapsValue(modelData.caps_skinMode, skinMode_offline);
-				modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.textureName);
-				modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
+				modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
+				modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
 			}
 
 			bufferedimage = null;
@@ -1378,7 +1378,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 	}
 
 	private static void modelInit(EntityPlayer entityplayer, PFLM_ModelData modelData, String s) {
-		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entityplayer, s, false, true);
+		Object[] models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(entityplayer, s, false, true);
 		Modchu_Debug.mDebug("modelInit s="+s);
 		if (models != null
 				&& models[0] instanceof MultiModelBaseBiped) Modchu_Debug.mDebug("modelInit models[0] != null ? "+(models[0] != null));
@@ -1387,38 +1387,38 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					&& models[0] instanceof MultiModelBaseBiped) Modchu_Debug.mDebug("modelInit models = null !!");
 			else Modchu_Debug.mDebug("modelInit !MultiModelBaseBiped");
 			if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)
-					&& mod_PFLM_PlayerFormLittleMaid.textureName.indexOf("_") > -1) mod_PFLM_PlayerFormLittleMaid.textureName = "default";
+					&& mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName.indexOf("_") > -1) mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName = "default";
 			if (((String) modelData.getCapsValue(modelData.caps_textureName)).indexOf("_") > -1) modelData.setCapsValue(modelData.caps_textureName, "default");
-			models = mod_Modchu_ModchuLib.modelNewInstance(entityplayer, ((String) modelData.getCapsValue(modelData.caps_textureName)), false, true);
+			models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(entityplayer, ((String) modelData.getCapsValue(modelData.caps_textureName)), false, true);
 		}
 		modelData.modelMain.model = models != null && models[0] != null ? (MMM_ModelMultiBase) models[0] : new MultiModel(0.0F);
 		modelData.modelMain.model.setCapsValue(modelData.caps_armorType, 0);
 //-@-152
-		s = mod_Modchu_ModchuLib.textureNameCheck(s);
+		s = mod_Modchu_ModchuLib.modchu_Main.textureNameCheck(s);
 		modelTextureReset(entityplayer, modelData, s);
 //@-@152
 		Modchu_Debug.mDebug("modelInit color="+modelData.getCapsValueInt(modelData.caps_maidColor));
 	}
 
 	private static void modelArmorInit(EntityPlayer entityplayer, PFLM_ModelData modelData, String s) {
-		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.BipedClass.isInstance(modelData.modelMain.model);
+		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model);
 		if (isBiped
 				&& (s.equalsIgnoreCase("default")
 						| s.equalsIgnoreCase("erasearmor"))) s = "Biped";
-		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(entityplayer, s, false, true);
+		Object[] models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(entityplayer, s, false, true);
 		if (models != null) ;else {
-			if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.textureArmorName = "default";
+			if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName = "default";
 			modelData.setCapsValue(modelData.caps_textureArmorName, "default");
-			models = mod_Modchu_ModchuLib.modelNewInstance(entityplayer, mod_PFLM_PlayerFormLittleMaid.textureArmorName, true, true);
+			models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(entityplayer, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName, true, true);
 		}
-		float[] f1 = mod_Modchu_ModchuLib.getArmorModelsSize(models[0]);
+		float[] f1 = mod_Modchu_ModchuLib.modchu_Main.getArmorModelsSize(models[0]);
 		Modchu_Debug.mDebug("modelArmorInit s="+s+" models[1] != null ? "+(models[1] != null));
 		if (models != null
 				&& models[1] != null) ;else {
-					models = mod_Modchu_ModchuLib.modelNewInstance(isBiped ? "Biped" : null, false);
-					f1 = mod_Modchu_ModchuLib.getArmorModelsSize(models[0]);
+					models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(isBiped ? "Biped" : null, false);
+					f1 = mod_Modchu_ModchuLib.modchu_Main.getArmorModelsSize(models[0]);
 				}
-		if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) {
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) {
 			modelData.modelFATT.modelInner = (MMM_ModelMultiBase) models[1];
 			modelData.modelFATT.modelOuter = (MMM_ModelMultiBase) models[2];
 		} else {
@@ -1444,7 +1444,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		}
 		Class AbstractClientPlayer = Modchu_Reflect.loadClass("AbstractClientPlayer");
 		if ((modelData.getCapsValueBoolean(modelData.caps_isPlayer)
-				&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOnline)
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode == PFLM_Gui.modeOnline)
 				| !modelData.getCapsValueBoolean(modelData.caps_isPlayer)
 				&& modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_online) {
 			Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110304_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation"), String.class }, entityplayer, new Object[]{ Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110306_p", entityplayer) , entityplayer.username });
@@ -1456,7 +1456,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 			//Modchu_Debug.mDebug("modelTextureReset d != null ?"+(d != null));
 			//Modchu_Debug.mDebug("modelTextureReset d="+d.func_110623_a());
 			//Modchu_Debug.mDebug("modelTextureReset d="+d.func_110624_b());
-			modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
+			modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
 		}
 	}
 
@@ -1468,16 +1468,16 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		if (modelData.getCapsValue(modelData.caps_ResourceLocation) != null) ;else {
 			modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
 		}
-		modelData.setCapsValue(modelData.caps_ResourceLocation, 1, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
-		modelData.setCapsValue(modelData.caps_ResourceLocation, 2, mod_Modchu_ModchuLib.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
+		modelData.setCapsValue(modelData.caps_ResourceLocation, 1, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
+		modelData.setCapsValue(modelData.caps_ResourceLocation, 2, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s, modelData.getCapsValueInt(modelData.caps_maidColor)));
 	}
 
 	private static int playerHandednessSetting() {
-		return mod_PFLM_PlayerFormLittleMaid.handednessMode == -1 ? rnd.nextInt(2) : mod_PFLM_PlayerFormLittleMaid.handednessMode;
+		return mod_PFLM_PlayerFormLittleMaid.pflm_main.handednessMode == -1 ? rnd.nextInt(2) : mod_PFLM_PlayerFormLittleMaid.pflm_main.handednessMode;
 	}
 
 	private static int othersPlayerHandednessSetting() {
-		return mod_PFLM_PlayerFormLittleMaid.othersHandednessMode == -1 ? rnd.nextInt(2) : mod_PFLM_PlayerFormLittleMaid.othersHandednessMode;
+		return mod_PFLM_PlayerFormLittleMaid.pflm_main.othersHandednessMode == -1 ? rnd.nextInt(2) : mod_PFLM_PlayerFormLittleMaid.pflm_main.othersHandednessMode;
 	}
 
 	private static int othersPlayerIndividualHandednessSetting(int i) {
@@ -1488,20 +1488,20 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 			EntityPlayer entityplayer, BufferedImage bufferedimage
 			,PFLM_ModelData modelData)
 	{
-		EntityPlayer thePlayer = mod_PFLM_PlayerFormLittleMaid.getThePlayer();
+		EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 		modelData.setCapsValue(modelData.caps_isPlayer, entityplayer.username == thePlayer.username);
 		if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)
-				&& mod_PFLM_PlayerFormLittleMaid.changeMode == PFLM_Gui.modeOffline
+				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode == PFLM_Gui.modeOffline
 				| modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_offline) {
-			if (mod_PFLM_PlayerFormLittleMaid.textureName.equals("_Biped")) {
-				mod_PFLM_PlayerFormLittleMaid.textureName =
-						mod_PFLM_PlayerFormLittleMaid.textureArmorName = "default";
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName.equals("_Biped")) {
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName =
+						mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName = "default";
 			}
-			modelData.setCapsValue(modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.maidColor);
-			modelInit(entityplayer, modelData, mod_PFLM_PlayerFormLittleMaid.textureName);
-			modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.textureName);
-			modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
-			modelArmorInit(entityplayer, modelData, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
+			modelData.setCapsValue(modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor);
+			modelInit(entityplayer, modelData, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
+			modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
+			modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
+			modelArmorInit(entityplayer, modelData, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
 			modelData.setCapsValue(modelData.caps_skinMode, skinMode_offline);
 			return modelData;
 		}
@@ -1527,7 +1527,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 
 		if (returnflag) {
 			if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
-				mod_PFLM_PlayerFormLittleMaid.textureName = "_Biped";
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName = "_Biped";
 				modelData.setCapsValue(modelData.caps_textureName, "_Biped");
 				modelData.setCapsValue(modelData.caps_textureArmorName, "_Biped");
 			}
@@ -1538,9 +1538,9 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		}
 		if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
 			//Modchu_Debug.mDebug("modelData.isPlayer set textureName="+textureName);
-			mod_PFLM_PlayerFormLittleMaid.textureName = textureName;
-			mod_PFLM_PlayerFormLittleMaid.maidColor = maidcolor;
-			mod_PFLM_PlayerFormLittleMaid.textureArmorName = (String) modelData.getCapsValue(modelData.caps_textureArmorName);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName = textureName;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor = maidcolor;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName = (String) modelData.getCapsValue(modelData.caps_textureArmorName);
 		}
 		modelData.setCapsValue(modelData.caps_textureName, textureName);
 		modelData.setCapsValue(modelData.caps_maidColor, maidcolor);
@@ -1569,7 +1569,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		modelData.setCapsValue(modelData.caps_modelScale, modelScale);
 		Modchu_Debug.Debug((new StringBuilder()).append("localflag modelScale = ").append(modelScale).toString());
 		if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
-			mod_PFLM_PlayerFormLittleMaid.handednessMode = handedness;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.handednessMode = handedness;
 			PFLM_Gui.modelScale = modelScale;
 		}
 		return modelData;
@@ -1656,15 +1656,15 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 			break;
 		} while (true);
 		if (!(Boolean) object[5]) {
-			if (g < mod_PFLM_PlayerFormLittleMaid.textureList.size()) {
-				object[2] = mod_PFLM_PlayerFormLittleMaid.textureList.get(g);
+			if (g < mod_PFLM_PlayerFormLittleMaid.pflm_main.textureList.size()) {
+				object[2] = mod_PFLM_PlayerFormLittleMaid.pflm_main.textureList.get(g);
 				Modchu_Debug.mDebug("object[2]="+object[2]);
 			}
 			object[3] = r;
-			if (b < mod_PFLM_PlayerFormLittleMaid.textureList.size()) {
-				object[4] = mod_PFLM_PlayerFormLittleMaid.textureList.get(b);
-				object[1] = mod_Modchu_ModchuLib.textureManagerGetTexture(
-						mod_PFLM_PlayerFormLittleMaid.textureList.get(b), r);
+			if (b < mod_PFLM_PlayerFormLittleMaid.pflm_main.textureList.size()) {
+				object[4] = mod_PFLM_PlayerFormLittleMaid.pflm_main.textureList.get(b);
+				object[1] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(
+						mod_PFLM_PlayerFormLittleMaid.pflm_main.textureList.get(b), r);
 			}
 		}
 		checkX = 62;
@@ -1689,20 +1689,16 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		return i1;
 	}
 
-    /**
-     * Used to render a player's name above their head
-     */
-    @Override
-    public void renderLivingLabel(EntityLivingBase entityplayer, String par2Str, double d, double d1, double d2, int i)
+    public double renderLivingLabel(Entity entityplayer, String par2Str, double d, double d1, double d2, int i)
     {
 //-@-125
-    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) Modchu_Reflect.invokeMethod("PFLM_RenderPlayerSmart", "renderName", new Class[]{ EntityPlayer.class, double.class, double.class, double.class }, pflm_RenderPlayerSmart, new Object[]{ entityplayer, d, d1, d2 });
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) Modchu_Reflect.invokeMethod("PFLM_RenderPlayerSmart", "renderName", new Class[]{ EntityPlayer.class, double.class, double.class, double.class }, pflm_RenderPlayerSmart, new Object[]{ entityplayer, d, d1, d2 });
 //@-@125
-    	if(mod_PFLM_PlayerFormLittleMaid.isRenderName
+    	if(mod_PFLM_PlayerFormLittleMaid.pflm_main.isRenderName
     			&& renderManager != null
     			&& renderManager.renderEngine != null) {
     		PFLM_ModelData modelData = getPlayerData((EntityPlayer) entityplayer);
-    		if (modelData == null) return;
+    		if (modelData == null) return d1;
     		double d3 = 0.0D;
     		double d4 = 0.0D;
     		double d5 = 0.0D;
@@ -1714,8 +1710,9 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			d4 = -height * d5;
     			if (f1 > 0.9375F) d4 -= 0.4D * d5;
     		}
-    		super.renderLivingLabel(entityplayer, par2Str, d, (d1 - 1.8D) + height + d3 + d4, d2, i);
+    		return (d1 - 1.8D) + height + d3 + d4;
     	}
+    	return d1;
     }
 
     public static void clearPlayers() {
@@ -1734,14 +1731,14 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	float[] onGrounds = (float[]) o;
     	int i1 = Modchu_ModelCapsHelper.getCapsValueInt(modelData, modelData.caps_dominantArm);
     	if (!Modchu_ModelCapsHelper.getCapsValueBoolean(modelData.modelMain.model, modelData.caps_firstPerson)) {
-    		if(mod_PFLM_PlayerFormLittleMaid.waitTime == 0
+    		if(mod_PFLM_PlayerFormLittleMaid.pflm_main.waitTime == 0
     				&& Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isPlayer)) {
-    			if(mod_PFLM_PlayerFormLittleMaid.isWait) {
+    			if(mod_PFLM_PlayerFormLittleMaid.pflm_main.isWait) {
     				if (((f != modelData.getCapsValueFloat(modelData.caps_isWaitF) && modelData.getCapsValueBoolean(modelData.caps_isWaitFSetFlag))
     						| onGrounds[i1] > 0)
     						| (modelData.getCapsValueBoolean(modelData.caps_isWait) && modelData.modelMain.model.isSneak)) {
     					modelData.setCapsValue(modelData.caps_isWait, false);
-    					mod_PFLM_PlayerFormLittleMaid.isWait = false;
+    					mod_PFLM_PlayerFormLittleMaid.pflm_main.isWait = false;
     					modelData.setCapsValue(modelData.caps_isWaitTime, 0);
     					modelData.setCapsValue(modelData.caps_isWaitF, copyf(f));
     					modelData.setCapsValue(modelData.caps_isWaitFSetFlag, true);
@@ -1751,7 +1748,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     							| (modelData.getCapsValueBoolean(modelData.caps_isWait) && modelData.modelMain.model.isSneak)) {
     						//Modchu_Debug.mDebug("f != isWaitF");
     						modelData.setCapsValue(modelData.caps_isWait, false);
-    						mod_PFLM_PlayerFormLittleMaid.isWait = false;
+    						mod_PFLM_PlayerFormLittleMaid.pflm_main.isWait = false;
     						modelData.setCapsValue(modelData.caps_isWaitTime, 0);
     						modelData.setCapsValue(modelData.caps_isWaitF, copyf(f));
     					}
@@ -1762,7 +1759,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     				}
     			}
     		} else {
-    			int i = Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isPlayer) ? mod_PFLM_PlayerFormLittleMaid.waitTime : mod_PFLM_PlayerFormLittleMaid.othersPlayerWaitTime;
+    			int i = Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isPlayer) ? mod_PFLM_PlayerFormLittleMaid.pflm_main.waitTime : mod_PFLM_PlayerFormLittleMaid.pflm_main.othersPlayerWaitTime;
     			if (!modelData.getCapsValueBoolean(modelData.caps_isWait)
     					&& !modelData.modelMain.model.isSneak
     					&& i > 0) {
@@ -1770,7 +1767,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     				if(modelData.getCapsValueInt(modelData.caps_isWaitTime) > i) {
     					//Modchu_Debug.Debug("isWaitTime > i");
     					modelData.setCapsValue(modelData.caps_isWait, true);
-    					if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.isWait = true;
+    					if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.pflm_main.isWait = true;
     					modelData.setCapsValue(modelData.caps_isWaitTime, 0);
     					modelData.setCapsValue(modelData.caps_isWaitF, copyf(f));
     				}
@@ -1780,7 +1777,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     					| (modelData.getCapsValueBoolean(modelData.caps_isWait) && modelData.modelMain.model.isSneak)) {
     				//Modchu_Debug.Debug("f != isWaitF");
     				modelData.setCapsValue(modelData.caps_isWait, false);
-    				if (Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.isWait = false;
+    				if (Modchu_ModelCapsHelper.getCapsValueBoolean(modelData, modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.pflm_main.isWait = false;
     				modelData.setCapsValue(modelData.caps_isWaitTime, 0);
     				modelData.setCapsValue(modelData.caps_isWaitF, copyf(f));
     			}
@@ -1790,12 +1787,12 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     			if (modelData.getCapsValueBoolean(modelData.caps_isWait)) {
     				//Modchu_Debug.Debug("firstPerson isWait false");
     				modelData.setCapsValue(modelData.caps_isWait, false);
-    				if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.isWait = false;
+    				if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.pflm_main.isWait = false;
     				modelData.setCapsValue(modelData.caps_isWaitTime, 0);
     				modelData.setCapsValue(modelData.caps_isWaitF, copyf(f));
-    				if(mod_PFLM_PlayerFormLittleMaid.waitTime == 0) modelData.setCapsValue(modelData.caps_isWaitFSetFlag, true);
+    				if(mod_PFLM_PlayerFormLittleMaid.pflm_main.waitTime == 0) modelData.setCapsValue(modelData.caps_isWaitFSetFlag, true);
     			} else {
-    				if(mod_PFLM_PlayerFormLittleMaid.waitTime == 0
+    				if(mod_PFLM_PlayerFormLittleMaid.pflm_main.waitTime == 0
     						&& !modelData.getCapsValueBoolean(modelData.caps_isWaitFSetFlag)) {
     					modelData.setCapsValue(modelData.caps_isWaitF, copyf(f));
     					modelData.setCapsValue(modelData.caps_isWaitFSetFlag, true);
@@ -1810,17 +1807,17 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     }
 
     private static void skinMode_PlayerOfflineSetting(EntityPlayer entityplayer, PFLM_ModelData modelData) {
-    	if (mod_PFLM_PlayerFormLittleMaid.textureName == null
-    			| mod_PFLM_PlayerFormLittleMaid.textureName.isEmpty()) mod_PFLM_PlayerFormLittleMaid.textureName = "_Biped";
-    	if (mod_PFLM_PlayerFormLittleMaid.textureArmorName == null
-    			| mod_PFLM_PlayerFormLittleMaid.textureArmorName.isEmpty()) mod_PFLM_PlayerFormLittleMaid.textureArmorName = "_Biped";
-    	modelData.setCapsValue(modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.maidColor);
-    	modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.textureName, modelData.getCapsValueInt(modelData.caps_maidColor)));
-    	String s1 = mod_PFLM_PlayerFormLittleMaid.textureName;
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName == null
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName.isEmpty()) mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName = "_Biped";
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName == null
+    			| mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName.isEmpty()) mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName = "_Biped";
+    	modelData.setCapsValue(modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor);
+    	modelData.setCapsValue(modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName, modelData.getCapsValueInt(modelData.caps_maidColor)));
+    	String s1 = mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName;
     	modelInit(entityplayer, modelData, s1);
     	modelData.setCapsValue(modelData.caps_textureName, s1);
-    	s1 = mod_PFLM_PlayerFormLittleMaid.textureArmorName;
-    	modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.textureArmorName);
+    	s1 = mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName;
+    	modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
     	modelArmorInit(entityplayer, modelData, s1);
     }
 
@@ -1830,20 +1827,20 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	for(int i1 = 0; s4 == null && i1 < 50; i1++) {
     		int i = rnd.nextInt(16);
     		int j = 0;
-    		if (mod_Modchu_ModchuLib.getTextureManagerTexturesSize() > 0) {
-    			j = rnd.nextInt(mod_Modchu_ModchuLib.getTextureManagerTexturesSize());
-    			s3 = mod_Modchu_ModchuLib.getPackege(i, j);
+    		if (mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTexturesSize() > 0) {
+    			j = rnd.nextInt(mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTexturesSize());
+    			s3 = mod_Modchu_ModchuLib.modchu_Main.getPackege(i, j);
     		} else {
-    			s3 = mod_Modchu_ModchuLib.textureNameCheck(null);
+    			s3 = mod_Modchu_ModchuLib.modchu_Main.textureNameCheck(null);
     		}
     		modelData.setCapsValue(modelData.caps_maidColor, i);
-    		s4 = mod_Modchu_ModchuLib.textureManagerGetTexture(s3, i);
+    		s4 = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s3, i);
     		if (i1 == 49) return;
     	}
     	modelData.setCapsValue(modelData.caps_ResourceLocation, 0, s4);
     	Modchu_Debug.Debug("Random modelPackege="+s3);
     	//Modchu_Debug.mDebug("Random s4="+s4);
-    	String s1 = mod_PFLM_PlayerFormLittleMaid.getArmorName(s3);
+    	String s1 = mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(s3);
     	modelData.setCapsValue(modelData.caps_textureName, s3);
     	modelData.setCapsValue(modelData.caps_textureArmorName, s1);
     	modelInit(entityplayer, modelData, s3);
@@ -1856,22 +1853,28 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     	modelData.setCapsValue(modelData.caps_dominantArm, i);
     	modelData.modelMain.model.setCapsValue(modelData.caps_dominantArm, i);
     	if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
-    		mod_PFLM_PlayerFormLittleMaid.setFlipHorizontal(i == 0 ? false : true);
-    		mod_PFLM_PlayerFormLittleMaid.setLeftHandedness(i == 0 ? false : true);
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.setFlipHorizontal(i == 0 ? false : true);
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.setLeftHandedness(i == 0 ? false : true);
     	}
     }
 
     protected void renderModel(Entity entityliving, float par2, float par3, float par4, float par5, float par6, float par7)
     {
     	PFLM_ModelData modelData = getPlayerData((EntityPlayer) entityliving);
-    	Modchu_Reflect.invokeMethod(Render.class, "func_110776_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, this, new Object[]{ getResourceLocation(entityliving) });
-    	int PFLMVersion = mod_PFLM_PlayerFormLittleMaid.getPFLMVersion();
-    	if ((PFLMVersion > 129
-    			&& !mod_Modchu_ModchuLib.useInvisibilityBody)
-    			| (PFLMVersion > 129
-    					&& mod_Modchu_ModchuLib.useInvisibilityBody
+    	int version = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion();
+    	if ((version > 129
+    			&& !mod_Modchu_ModchuLib.modchu_Main.useInvisibilityBody)
+    			| (version > 129
+    					&& mod_Modchu_ModchuLib.modchu_Main.useInvisibilityBody
     					&& !entityliving.isInvisible())
-    					| PFLMVersion < 130) {
+    					| version < 130) {
+    		if (version < 159
+    				&& renderManager != null) {
+    			Modchu_Reflect.invokeMethod(Render.class, "func_76984_a", "loadDownloadableImageTexture", new Class[]{ String.class, String.class }, this, new Object[]{ Modchu_Reflect.getFieldObject(Entity.class, "skinUrl", entityliving), Modchu_Reflect.invokeMethod(Entity.class, "getTexture", entityliving) });
+    			//loadDownloadableImageTexture(entityliving.skinUrl, entityliving.getTexture());
+    		} else {
+    			Modchu_Reflect.invokeMethod(Render.class, "func_110776_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, this, new Object[]{ getResourceLocation(entityliving) });
+    		}
     		modelData.modelMain.setArmorRendering(true);
     	} else {
     		modelData.modelMain.setArmorRendering(false);
@@ -1881,7 +1884,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     }
 
     public float getActionSpeed(PFLM_ModelData modelData) {
-    	World theWorld = mod_PFLM_PlayerFormLittleMaid.getTheWorld();
+    	World theWorld = mod_Modchu_ModchuLib.modchu_Main.getTheWorld();
     	float f = (float)(theWorld.getWorldTime() - modelData.getCapsValueInt(modelData.caps_actionTime));
     	modelData.setCapsValue(modelData.caps_actionTime, (int) theWorld.getWorldTime());
     	return f;
@@ -1914,7 +1917,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 
     protected void renderPlayerSleep(Entity var1, double var2, double var4, double var6)
     {
-    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) renderPlayerAt(var1, var2, var4, var6);
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) renderPlayerAt(var1, var2, var4, var6);
     	Class AbstractClientPlayer = Modchu_Reflect.loadClass("AbstractClientPlayer");
     	Modchu_Reflect.invokeMethod(RenderPlayer.class, "func_77105_b", "renderPlayerSleep", new Class[]{ AbstractClientPlayer, double.class, double.class, double.class }, this, new Object[]{ var1, var2, var4, var6 });
     	//super.renderPlayerSleep((AbstractClientPlayer) var1, var2, var4, var6);
@@ -1927,7 +1930,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     public void rotatePlayer(EntityPlayer var1, float var2, float var3, float var4)
     {
     	PFLM_ModelData modelData = getPlayerData(var1);
-    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving
     			&& modelData != null) {
 //-@-125
     		Modchu_Reflect.invokeMethod("PFLM_RenderPlayerSmart", "rotatePlayer", new Class[]{ EntityPlayer.class, float.class, float.class, float.class }, pflm_RenderPlayerSmart, new Object[]{ var1, var2, var3, var4 });
@@ -1994,13 +1997,13 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
     public void renderPlayerAt(Entity var1, double var2, double var4, double var6)
     {
     	PFLM_ModelData modelData = getPlayerData((EntityPlayer) var1);
-    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving
     			&& modelData != null) Modchu_Reflect.invokeMethod("PFLM_RenderPlayerSmart", "renderPlayerAt", new Class[]{ EntityPlayer.class, double.class, double.class, double.class }, pflm_RenderPlayerSmart, new Object[]{ var1, var2, var4, var6 });
     }
 
-    public static void renderGuiIngame(Minecraft var0)
+    public static void renderGuiIngame(Object var0)
     {
-    	if (mod_PFLM_PlayerFormLittleMaid.isSmartMoving) Modchu_Reflect.invokeMethod("PFLM_RenderPlayerSmart", "renderGuiIngame", new Class[]{ Minecraft.class }, pflm_RenderPlayerSmart, new Object[]{ var0 });
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) Modchu_Reflect.invokeMethod("PFLM_RenderPlayerSmart", "renderGuiIngame", new Class[]{ Modchu_Reflect.loadClass("Minecraft") }, pflm_RenderPlayerSmart, new Object[]{ var0 });
     }
     //smartMoving関連↑
 }

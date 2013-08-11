@@ -271,7 +271,7 @@ public class PFLM_Config extends Modchu_Config {
 								continue;
 							}
 							textureName = rl.substring(0, i1);
-							if (mod_Modchu_ModchuLib.integerCheck(s1.substring(i1 + 1))) i1 = Integer.parseInt(s1.substring(i1 + 1));
+							if (mod_Modchu_ModchuLib.modchu_Main.integerCheck(s1.substring(i1 + 1))) i1 = Integer.parseInt(s1.substring(i1 + 1));
 							else {
 								addFailureShowModelList(rl);
 								continue;
@@ -285,7 +285,7 @@ public class PFLM_Config extends Modchu_Config {
 							Object[] textureModel = modelNewInstance(null, textureName);
 							if (textureModel != null
 									&& textureModel[0] != null) {
-								if (multiModelCustom != null) ;else multiModelCustom = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MultiModelCustom"));
+								if (multiModelCustom != null) ;else multiModelCustom = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("MultiModelCustom"));
 								if (multiModelCustom != null
 										&& multiModelCustom.isInstance(textureModel[0])) {
 									Object o = Modchu_Reflect.getFieldObject(multiModelCustom, "customModel", textureModel[0]);
@@ -299,7 +299,7 @@ public class PFLM_Config extends Modchu_Config {
 							if (textureModel[0] instanceof MMM_ModelBiped) {
 								if (((MMM_ModelBiped) textureModel[0]).modelCaps != null) ;else {
 									RenderLiving render = (RenderLiving) RenderManager.instance.getEntityRenderObject(Minecraft.getMinecraft().thePlayer);
-									((MMM_ModelBiped) textureModel[0]).modelCaps = (MMM_IModelCaps) Modchu_Reflect.newInstance(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("PFLM_ModelData"), new Class[]{ RenderLiving.class }, new Object[]{ render });
+									((MMM_ModelBiped) textureModel[0]).modelCaps = (MMM_IModelCaps) Modchu_Reflect.newInstance(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("PFLM_ModelData"), new Class[]{ RenderLiving.class }, new Object[]{ render });
 								}
 							}
 							configShowPartsNemeMap = getConfigShowPartsNemeMap(textureName, 0);
@@ -414,7 +414,7 @@ public class PFLM_Config extends Modchu_Config {
 
 	public String getClassName(String s) {
 		if (s == null) return null;
-		return mod_Modchu_ModchuLib.mod_modchu_modchulib.getPackage()+s;
+		return mod_Modchu_ModchuLib.modchu_Main.getPackage()+s;
 	}
 
 	public static void clearCfgData() {
@@ -734,7 +734,7 @@ public class PFLM_Config extends Modchu_Config {
 			//Modchu_Debug.mDebug("getConfigShowPartsNemeMap containsKey ok. configShowPartsNemeMap.get(s1)="+configShowPartsNemeMap.get(s1));
 			return configShowPartsNemeMap.get(s1);
 		}
-		Object[] textureModel = mod_Modchu_ModchuLib.modelNewInstance(null, s, true, false);
+		Object[] textureModel = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, s, true, false);
 		if (textureModel != null) {
 			int i1 = 0;
 			switch(i) {
@@ -749,7 +749,7 @@ public class PFLM_Config extends Modchu_Config {
 				break;
 			}
 			Object model = textureModel[i1];
-			Class multiModelCustom = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MultiModelCustom"));
+			Class multiModelCustom = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.modchu_Main.getClassName("MultiModelCustom"));
 			if (multiModelCustom != null
 					&& multiModelCustom.isInstance(model)) model = Modchu_Reflect.getFieldObject(multiModelCustom, "customModel", model);
 			if (model != null) {
@@ -829,7 +829,7 @@ public class PFLM_Config extends Modchu_Config {
 				| (getConfigShowPartsRenemeMapFlagString != null
 				&& !getConfigShowPartsRenemeMapFlagString.equals(s))) {
 			if (model instanceof MultiModelBaseBiped) {
-				PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_renderPlayer.getPlayerData(Minecraft.getMinecraft().thePlayer);
+				PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData(mod_Modchu_ModchuLib.modchu_Main.getThePlayer());
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
 				renemeMap = (HashMap<String, String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsRenemeMap);
 				if (renemeMap != null) {
@@ -886,7 +886,7 @@ public class PFLM_Config extends Modchu_Config {
 			Modchu_Debug.mDebug("getConfigShowPartsHideMap flag’Ê‰ß.");
 			if (model instanceof MultiModelBaseBiped) {
 				Modchu_Debug.mDebug("getConfigShowPartsHideMap MultiModelBaseBiped ok.");
-				PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_renderPlayer.getPlayerData(Minecraft.getMinecraft().thePlayer);
+				PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData(mod_Modchu_ModchuLib.modchu_Main.getThePlayer());
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
 				List<String> hideList = null;
 				if (data != null) hideList = (List<String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsHideList);
@@ -1056,11 +1056,11 @@ public class PFLM_Config extends Modchu_Config {
 	}
 
 	private static String getTextureName() {
-		return mod_PFLM_PlayerFormLittleMaid.textureName;
+		return mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName;
 	}
 
 	private static int getMaidColor() {
-		return mod_PFLM_PlayerFormLittleMaid.maidColor;
+		return mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor;
 	}
 
 	private static boolean getPartsSaveFlag() {

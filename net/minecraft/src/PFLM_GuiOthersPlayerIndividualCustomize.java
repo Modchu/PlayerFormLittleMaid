@@ -20,7 +20,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		drawEntitySetFlag = true;
 	}
 
-	public PFLM_GuiOthersPlayerIndividualCustomize(GuiScreen par1GuiScreen, Minecraft minecraft, World world, String s) {
+	public PFLM_GuiOthersPlayerIndividualCustomize(GuiScreen par1GuiScreen, World world, String s) {
 		this(par1GuiScreen, world);
 		playerName = s;
 	}
@@ -30,35 +30,35 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		buttonList.clear();
 		int x = width / 2 + 55;
 		int y = height / 2 - 85;
-		buttonList.add(new PFLM_GuiSmallButton(400, x + 75, y + 10, 75, 15, "ChangeMode"));
-		buttonList.add(new PFLM_GuiSmallButton(200, x, y + 100, 75, 20, "Save"));
-		buttonList.add(new PFLM_GuiSmallButton(201, x + 75, y + 100, 75, 20, "Return"));
-		buttonList.add(new PFLM_GuiSmallButton(58, x + 75, y + 55, 75, 15, "Handedness"));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 400, x + 75, y + 10, 75, 15, "ChangeMode" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 200, x, y + 100, 75, 20, "Save" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 201, x + 75, y + 100, 75, 20, "Return" }));
+		buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 58, x + 75, y + 55, 75, 15, "Handedness" }));
 		if(changeMode == modeOthersSettingOffline) {
-			buttonList.add(new PFLM_GuiSmallButton(56, x - 10, y + 10, 85, 15, "ModelListSelect"));
-			//buttonList.add(new PFLM_GuiSmallButton(57, x - 10, y + 10, 85, 15, "ArmorListSelect"));
-			buttonList.add(new PFLM_GuiSmallButton(50, x + 40, y + 25, 15, 15, "<"));
-			buttonList.add(new PFLM_GuiSmallButton(51, x + 55, y + 25, 15, 15, ">"));
-			buttonList.add(new PFLM_GuiSmallButton(52, x + 40, y + 40, 15, 15, "-"));
-			buttonList.add(new PFLM_GuiSmallButton(53, x + 55, y + 40, 15, 15, "+"));
-			buttonList.add(new PFLM_GuiSmallButton(54, x + 40, y + 55, 15, 15, "<"));
-			buttonList.add(new PFLM_GuiSmallButton(55, x + 55, y + 55, 15, 15, ">"));
-			buttonList.add(new PFLM_GuiSmallButton(20, x, y + 70, 75, 15, "showArmor"));
-			if (mod_PFLM_PlayerFormLittleMaid.useScaleChange) {
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 56, x - 10, y + 10, 85, 15, "ModelListSelect" }));
+			//buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 57, x - 10, y + 10, 85, 15, "ArmorListSelect" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 50, x + 40, y + 25, 15, 15, "<" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 51, x + 55, y + 25, 15, 15, ">" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 52, x + 40, y + 40, 15, 15, "-" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 53, x + 55, y + 40, 15, 15, "+" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 54, x + 40, y + 55, 15, 15, "<" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 55, x + 55, y + 55, 15, 15, ">" }));
+			buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 20, x, y + 70, 75, 15, "showArmor" }));
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.useScaleChange) {
 				if(modelScaleButton) {
-					buttonList.add(new PFLM_GuiSmallButton(3, width / 2 - 140, height / 2 + 20, 50, 20, "Default"));
-					buttonList.add(new PFLM_GuiSmallButton(4, width / 2 - 90, height / 2 + 20, 30, 20, "UP"));
-					buttonList.add(new PFLM_GuiSmallButton(5, width / 2 - 170, height / 2 + 20, 30, 20, "Down"));
-					buttonList.add(new PFLM_GuiSmallButton(6, x + 75, y + 25, 75, 15, "Close"));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 3, width / 2 - 140, height / 2 + 20, 50, 20, "Default" }));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 4, width / 2 - 90, height / 2 + 20, 30, 20, "UP" }));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 5, width / 2 - 170, height / 2 + 20, 30, 20, "Down" }));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 6, x + 75, y + 25, 75, 15, "Close" }));
 				} else {
-					buttonList.add(new PFLM_GuiSmallButton(7, x + 75, y + 25, 75, 15, "ScaleChange"));
+					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 7, x + 75, y + 25, 75, 15, "ScaleChange" }));
 				}
 			}
 		}
 		setTextureValue();
-		if(mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] != null) {
+		if(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[0] != null) {
 			if (othersModelScale == 0.0F) {
-				othersModelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0]).getModelScale();
+				othersModelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[0]).getModelScale();
 			}
 		}
 	}
@@ -73,7 +73,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		//isModelSize Default
 		if(guibutton.id == 3)
 		{
-			othersModelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0]).getModelScale();
+			othersModelScale = ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[0]).getModelScale();
 		}
 		//isModelSize UP
 		if(guibutton.id == 4)
@@ -144,7 +144,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			setColorTextureValue();
 			noSaveFlag = true;
 			drawEntitySetFlag = true;
-			mod_PFLM_PlayerFormLittleMaid.setResetFlag(true);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.setResetFlag(true);
 		}
 		//ArmorChange
 		if(guibutton.id == 54) setPrevTexturePackege(1);
@@ -157,7 +157,8 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		}
 		//ModelListSelect
 		if(guibutton.id == 56) {
-			mc.displayGuiScreen(new PFLM_GuiModelSelect(this, popWorld, 4, playerName));
+			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ new PFLM_GuiModelSelect(this, popWorld, 4, playerName) });
+			//mc.displayGuiScreen(new PFLM_GuiModelSelect(this, popWorld, 4, playerName));
 		}
 		//ArmorListSelect
 		if(guibutton.id == 57) {
@@ -178,16 +179,18 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		if(guibutton.id == 200)
 		{
 			setPlayerLocalData();
-			mod_PFLM_PlayerFormLittleMaid.saveOthersPlayerParamater(true);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.saveOthersPlayerParamater(true);
 			PFLM_Config.clearCfgData();
 			noSaveFlag = false;
-			mc.displayGuiScreen(parentScreen);
-			mod_PFLM_PlayerFormLittleMaid.clearPlayers();
+			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ parentScreen });
+			//mc.displayGuiScreen(parentScreen);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
 		}
 		//Return
 		if(guibutton.id == 201)
 		{
-			mc.displayGuiScreen(parentScreen);
+			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ parentScreen });
+			//mc.displayGuiScreen(parentScreen);
 		}
 		//ChangeMode
 		if(guibutton.id == 400)
@@ -199,7 +202,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			}
 			if (changeMode > changeModeMax) changeMode = 0;
 			if (changeMode < 0) changeMode = changeModeMax;
-			//mod_PFLM_PlayerFormLittleMaid.clearPlayers();
+			//mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
 			drawEntitySetFlag = true;
 			initGui();
 		}
@@ -213,7 +216,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
     	s[3] = ""+othersModelScale;
     	s[4] = ""+changeMode;
     	s[5] = ""+othersHandednessMode;
-    	mod_PFLM_PlayerFormLittleMaid.playerLocalData.put(playerName, s);
+    	mod_PFLM_PlayerFormLittleMaid.pflm_main.playerLocalData.put(playerName, s);
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
@@ -246,7 +249,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
 		s8 = s8.append(showArmor);
 		fontRenderer.drawString(s8.toString(), guiLeft, guiTop + 120, 0xffffff);
-		if(mod_PFLM_PlayerFormLittleMaid.useScaleChange
+		if(mod_PFLM_PlayerFormLittleMaid.pflm_main.useScaleChange
 				&& modelScaleButton) {
 			String s6 = "ModelScale : "+othersModelScale;
 			s6 = (new StringBuilder()).append(s6).toString();
@@ -263,20 +266,20 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			setTextureValue();
 			drawEntitySetFlag = false;
 			// 152delete((EntityLiving) drawEntity).texture = othersTexture;
-			PFLM_RenderPlayerDummy.modelData.setCapsValue(PFLM_RenderPlayerDummy.modelData.caps_ResourceLocation, 0, othersTexture);
-			((PFLM_EntityPlayerDummy) drawEntity).textureModel = mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel;
-			((PFLM_EntityPlayerDummy) drawEntity).maidColor = othersMaidColor;
+			mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData.setCapsValue(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData.caps_ResourceLocation, 0, othersTexture);
+			((PFLM_EntityPlayerDummy) drawEntity).textureModel = mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel;
+			PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, othersMaidColor);
 			((PFLM_EntityPlayerDummy) drawEntity).textureName = othersTextureName;
 			((PFLM_EntityPlayerDummy) drawEntity).textureArmorName = othersTextureArmorName;
-			((PFLM_EntityPlayerDummy) drawEntity).textureArmor0 = mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureArmor0;
-			((PFLM_EntityPlayerDummy) drawEntity).textureArmor1 = mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureArmor1;
+			((PFLM_EntityPlayerDummy) drawEntity).textureArmor0 = mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureArmor0;
+			((PFLM_EntityPlayerDummy) drawEntity).textureArmor1 = mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureArmor1;
 			((PFLM_EntityPlayerDummy) drawEntity).modelScale = othersModelScale;
 			((PFLM_EntityPlayerDummy) drawEntity).showArmor = showArmor;
 			((PFLM_EntityPlayerDummy) drawEntity).others = true;
 			//Modchu_Debug.mDebug("textureName="+othersTextureName);
 			//Modchu_Debug.mDebug("texture="+othersTexture);
 			//Modchu_Debug.mDebug("textureArmorName="+othersTextureArmorName);
-			drawEntity.setPosition(mc.thePlayer.posX , mc.thePlayer.posY, mc.thePlayer.posZ);
+			drawEntity.setPosition(thePlayer.posX , thePlayer.posY, thePlayer.posZ);
 		}
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		int l = guiLeft;
@@ -288,9 +291,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		float f1 = 50F;
 		GL11.glScalef(-f1, f1, f1);
 		GL11.glRotatef(180F, 180F, 0.0F, 1.0F);
-		float f2 = mc.thePlayer.renderYawOffset;
-		float f3 = mc.thePlayer.rotationYaw;
-		float f4 = mc.thePlayer.rotationPitch;
+		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 		float f5 = (float)(l + 51) - (float)xSize_lo;
 		float f6 = (float)((i1 + 75) - 50) - (float)ySize_lo;
 		GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
@@ -300,12 +301,9 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		((EntityLiving) drawEntity).renderYawOffset = (float)Math.atan(f5 / 40F) * 20F;
 		((EntityLiving) drawEntity).rotationYaw = (float)Math.atan(f5 / 40F) * 40F;
 		((EntityLiving) drawEntity).rotationPitch = -(float)Math.atan(f6 / 40F) * 20F;
-		GL11.glTranslatef(0.0F, mc.thePlayer.yOffset, 0.0F);
+		GL11.glTranslatef(0.0F, thePlayer.yOffset, 0.0F);
 		RenderManager.instance.playerViewY = 180F;
 		RenderManager.instance.renderEntityWithPosYaw(drawEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-		mc.thePlayer.renderYawOffset = f2;
-		mc.thePlayer.rotationYaw = f3;
-		mc.thePlayer.rotationPitch = f4;
 		GL11.glPopMatrix();
 		RenderHelper.disableStandardItemLighting();
 		GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
@@ -318,31 +316,31 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		}
 		int i = getMaidColor();
 
-		othersTexture = mod_Modchu_ModchuLib.textureManagerGetTexture(othersTextureName, i);
+		othersTexture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(othersTextureName, i);
 		if (othersTexture == null) {
 			int n = 0;
 			for (; n < 16 && othersTexture == null; n = n + 1) {
 				i++;
 				i = i & 0xf;
 				setMaidColor(i);
-				othersTexture = mod_Modchu_ModchuLib.textureManagerGetTexture(othersTextureName, i);
+				othersTexture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(othersTextureName, i);
 			}
 			if (othersTexture == null) {
 				setNextTexturePackege(0);
-				othersTexture = mod_Modchu_ModchuLib.textureManagerGetTexture(othersTextureName, i);
+				othersTexture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(othersTextureName, i);
 			}
 		}
-		if (mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel != null) {
-			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] = null;
-			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[1] = null;
-			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[2] = null;
+		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel != null) {
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[0] = null;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[1] = null;
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[2] = null;
 		} else {
-			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel = new MMM_ModelMultiBase[3];
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel = new MMM_ModelMultiBase[3];
 		}
-		Object[] o = mod_Modchu_ModchuLib.modelNewInstance(null, othersTextureName, false, true);
+		Object[] o = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, othersTextureName, false, true);
 		if (o != null
 				&& o[0] != null) {
-			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[0] = o[0];
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[0] = o[0];
 		}
 		setArmorTextureValue();
 	}
@@ -353,18 +351,18 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		}
 		int i = getMaidColor();
 		Object t = othersTexture;
-		othersTexture = mod_Modchu_ModchuLib.textureManagerGetTexture(othersTextureName, i);
+		othersTexture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(othersTextureName, i);
 		int n = 0;
 		for (; n < 16 && othersTexture == null; n = n + 1) {
 			i = colorReverse ? i - 1 : i + 1;
 			i = i & 0xf;
 			setMaidColor(i);
-			othersTexture = mod_Modchu_ModchuLib.textureManagerGetTexture(othersTextureName, i);
+			othersTexture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(othersTextureName, i);
 		}
 		if (othersTexture == null) othersTexture = t;
-		for(int i2 = 0; i2 < mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel.length; i2++) {
-			if (mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel != null
-					&& mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[i2] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[i2]).changeColor(PFLM_RenderPlayerDummy.modelData);
+		for(int i2 = 0; i2 < mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel.length; i2++) {
+			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel != null
+					&& mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[i2] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[i2]).changeColor(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData);
 		}
 	}
 
@@ -372,23 +370,23 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		if (othersTextureArmorName == null
 				| (othersTextureArmorName != null
 				&& othersTextureArmorName.isEmpty())) {
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(othersTextureName));
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(othersTextureName));
 			if (othersTextureArmorName == null
 					| (othersTextureArmorName != null
 					&& othersTextureArmorName.isEmpty())) {
 				othersTextureArmorName = "default";
 			}
 		}
-		Object[] models = mod_Modchu_ModchuLib.modelNewInstance(null, othersTextureArmorName, false, false);
+		Object[] models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, othersTextureArmorName, false, false);
 		if (models != null) {
-			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[1] = models[1];
-			mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[2] = models[2];
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[1] = models[1];
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[2] = models[2];
 		} else {
-			mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName = mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName.indexOf("_Biped") == -1 ? "default" : "Biped";
-			models = mod_Modchu_ModchuLib.modelNewInstance(null, mod_PFLM_PlayerFormLittleMaid.othersTextureArmorName, false, false);
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName = mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName.indexOf("_Biped") == -1 ? "default" : "Biped";
+			models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName, false, false);
 			if (models != null) {
-				mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[1] = models[1];
-				mod_PFLM_PlayerFormLittleMaid.othersIndividualTextureModel[2] = models[2];
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[1] = models[1];
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureModel[2] = models[2];
 			}
 		}
 	}
@@ -396,21 +394,21 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 	public static void setNextTexturePackege(int i) {
 		if (i == 0) {
 			othersTextureName =
-					mod_Modchu_ModchuLib.textureManagerGetNextPackege(othersTextureName, getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(othersTextureName));
+					mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(othersTextureName, getMaidColor());
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(othersTextureName));
 		}
 		if (i == 1) {
-			othersTextureArmorName = mod_Modchu_ModchuLib.textureManagerGetNextArmorPackege(othersTextureArmorName);
+			othersTextureArmorName = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextArmorPackege(othersTextureArmorName);
 		}
 	}
 
 	public static void setPrevTexturePackege(int i) {
 		if (i == 0) {
-			othersTextureName = mod_Modchu_ModchuLib.textureManagerGetPrevPackege(othersTextureName, getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.getArmorName(othersTextureName));
+			othersTextureName = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevPackege(othersTextureName, getMaidColor());
+			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(othersTextureName));
 		}
 		if (i == 1) {
-			othersTextureArmorName = mod_Modchu_ModchuLib.textureManagerGetPrevArmorPackege(othersTextureArmorName);
+			othersTextureArmorName = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevArmorPackege(othersTextureArmorName);
 		}
 	}
 
