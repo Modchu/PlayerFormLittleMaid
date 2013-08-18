@@ -291,7 +291,8 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		float f1 = 50F;
 		GL11.glScalef(-f1, f1, f1);
 		GL11.glRotatef(180F, 180F, 0.0F, 1.0F);
-		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
+				&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 		float f5 = (float)(l + 51) - (float)xSize_lo;
 		float f6 = (float)((i1 + 75) - 50) - (float)ySize_lo;
 		GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
@@ -393,8 +394,10 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 
 	public static void setNextTexturePackege(int i) {
 		if (i == 0) {
-			othersTextureName =
-					mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(othersTextureName, getMaidColor());
+			String s = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(othersTextureName, getMaidColor());
+			if (s != null
+					&& !s.isEmpty()) ;else return;
+			othersTextureName = s;
 			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(othersTextureName));
 		}
 		if (i == 1) {

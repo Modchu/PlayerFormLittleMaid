@@ -279,7 +279,7 @@ public class PFLM_Main
 
 	public String getVersion()
 	{
-		return "1.6.2-22c";
+		return "1.6.2-22d";
 	}
 
 	static{
@@ -1353,6 +1353,7 @@ public class PFLM_Main
     	if (data != null
     			&& data.getCapsValueBoolean(data.caps_isPlayer)) {
     		data.setCapsValue(data.caps_changeColor, entityplayer);
+        	Modchu_Debug.mDebug("changeColor");
     	}
     }
 
@@ -1971,11 +1972,13 @@ public class PFLM_Main
 	public static void setTexturePackege(boolean next, int i) {
 		if (i != 1) {
 			String s = next ? mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(textureName, getMaidColor()) : mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevPackege(textureName, getMaidColor());
-			if (s != null) ;else return;
+			if (s != null
+					&& !s.isEmpty()) ;else return;
 			textureName = s;
 			setTextureArmorName(textureName);
 			String s1 = getArmorName(textureArmorName, i);
-			if (s1 != null) setTextureArmorName(s1);
+			if (s1 != null
+					&& !s1.isEmpty()) setTextureArmorName(s1);
 		}
 		if (i == 1) textureArmorName = next ? mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextArmorPackege(textureArmorName) : mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevArmorPackege(textureArmorName);
 	}
@@ -3058,22 +3061,26 @@ public class PFLM_Main
 				texturesNamber[color][i2] = -1;
 			}
 		}
-		String t;
-		String t1;
+		String t = null;
+		String t1 = null;
 		int[] i1 = new int[16];
 		t = "";
 		Object ltb;
 		for (int i2 = 0 ; i2 < mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTexturesSize() ; ++i2) {
 			ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTextures(i2);
-			t1 = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb);
-			for (int color = 0 ; color < 16 ; color++) {
-				if (mod_Modchu_ModchuLib.modchu_Main.getTextureBoxHasColor(ltb, color)) {
-					//Modchu_Debug.mDebug("color="+color+":i1="+i1[color]+" t1="+t1+" t="+t);
-					texturesNamber[color][i1[color]] = i2;
-					++i1[color];
-					t = t1;
+			t1 = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb) != null ? mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb) : t1;
+			if (ltb != null
+					&& t1 != null
+					&& !t1.isEmpty()) {
+				for (int color = 0 ; color < 16 ; color++) {
+					if (mod_Modchu_ModchuLib.modchu_Main.getTextureBoxHasColor(ltb, color)) {
+						//Modchu_Debug.mDebug("color="+color+":i1="+i1[color]+" t1="+t1+" t="+t);
+						texturesNamber[color][i1[color]] = i2;
+						++i1[color];
+						t = t1;
+					}
+					maxTexturesNamber[color] = i1[color];
 				}
-				maxTexturesNamber[color] = i1[color];
 			}
 		}
 		if (entityReplaceFlag) Modchu_Debug.Debug("PFLM-EntityPlayerReplace setting on.");

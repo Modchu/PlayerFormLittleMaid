@@ -289,7 +289,14 @@ public class PFLM_ItemRendererMaster {
 //@-@132
             GL11.glPushMatrix();
             if (leftHandedness) {
-                var21 = 0.8F;
+            	GL11.glRotatef(105.9F, 0.0F, 0.0F, 1.0F);
+            	GL11.glRotatef(-46.9F, 0.0F, 1.0F, 0.0F);
+            	GL11.glRotatef(-74.0F, 1.0F, 0.0F, 0.0F);
+            	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
+            		GL11.glTranslatef(-1.4F, 0.1F, 0.7F);
+            	}
+/*
+            	var21 = 0.8F;
                 var20 = var3.getSwingProgress(par1);
                 var22 = MathHelper.sin(var20 * (float)Math.PI);
                 var13 = MathHelper.sin(MathHelper.sqrt_float(var20) * (float)Math.PI);
@@ -320,6 +327,7 @@ public class PFLM_ItemRendererMaster {
                 GL11.glTranslatef(-4.8F, -2.4F, 0.5F);
                 //GL11.glTranslatef(4.8F, 0.5F, 0.0F);
             	//if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
+*/
                 var27 = RenderManager.instance.getEntityRenderObject(var3);
                 var16 = 1.0F;
                 GL11.glScalef(var16, var16, var16);
@@ -400,22 +408,42 @@ public class PFLM_ItemRendererMaster {
         float var15;
         Render var17;
         float var16;
-        RenderPlayer var18;
 //-@-132
         if (!var3.isInvisible())
         {
 //@-@132
             GL11.glPushMatrix();
             if (leftHandedness) {
-                var6 = 0.8F;
+            	//GL11.glRotatef(Modchu_Debug.debaf1, 0.0F, 0.0F, 1.0F);
+            	//GL11.glRotatef(Modchu_Debug.debaf2, 0.0F, 1.0F, 0.0F);
+            	//GL11.glRotatef(Modchu_Debug.debaf3, 1.0F, 0.0F, 0.0F);
+            	GL11.glRotatef(105.9F, 0.0F, 0.0F, 1.0F);
+            	GL11.glRotatef(-46.9F, 0.0F, 1.0F, 0.0F);
+            	GL11.glRotatef(-74.0F, 1.0F, 0.0F, 0.0F);
+            	//Modchu_Debug.debaf1 = 105.9F;
+            	//Modchu_Debug.debaf2 = -46.9F;
+            	//Modchu_Debug.debaf3 = -74.0F;
+
+            	//Modchu_Debug.debaf4 = -1.4F;
+            	//Modchu_Debug.debaf5 = 0.1F;
+            	//Modchu_Debug.debaf6 = 0.7F;
+            	//Modchu_Debug.dDebug("debaf1="+Modchu_Debug.debaf1+" 2="+Modchu_Debug.debaf2+" 3="+Modchu_Debug.debaf3);
+            	//Modchu_Debug.dDebug("debaf4="+Modchu_Debug.debaf4+" 5="+Modchu_Debug.debaf5+" 6="+Modchu_Debug.debaf6, 1);
+            	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
+            		//GL11.glTranslatef(Modchu_Debug.debaf4, Modchu_Debug.debaf5, Modchu_Debug.debaf6);
+            		GL11.glTranslatef(-1.4F, 0.1F, 0.7F);
+            	}
+/*
+            	var6 = 0.8F;
                 //var13 = 0.5F;
                 var13 = var3.getSwingProgress(par1);
                 var12 = MathHelper.sin(var13 * (float)Math.PI);
                 var11 = MathHelper.sin(MathHelper.sqrt_float(var13) * (float)Math.PI);
-                float x = -var11 * 0.3F;
+                float x = -var11 * 0.7F;
                 float y = MathHelper.sin(MathHelper.sqrt_float(var13) * (float)Math.PI * 2.0F) * 0.4F;
                 float z = -var12 * 0.4F;
-                GL11.glTranslatef(-x, y, z);
+                //GL11.glTranslatef(-x, y, z);
+                GL11.glTranslatef(0F, 0F, z);
                 x = 0.8F * var6;
                 y = -0.75F * var6 - (1.0F - var2) * 0.6F;
                 z = -0.9F * var6;
@@ -433,18 +461,21 @@ public class PFLM_ItemRendererMaster {
                 EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
                 int i = (Integer) Modchu_Reflect.invokeMethod("RenderEngine", "func_78350_a", "getTextureForDownloadableImage", new Class[]{ String.class, String.class }, renderEngine, new Object[]{ Modchu_Reflect.getFieldObject(Entity.class, "field_70120_cr", "skinUrl", thePlayer), Modchu_Reflect.invokeMethod(EntityLiving.class, "func_70073_O", "getTexture", thePlayer) });
                 GL11.glBindTexture(GL11.GL_TEXTURE_2D, i);
-                GL11.glTranslatef(1.0F, 3.6F, 3.5F);
+                GL11.glTranslatef(-1.0F, 3.6F, 3.5F);
                 GL11.glRotatef(-120.0F, 0.0F, 0.0F, 1.0F);
                 GL11.glRotatef(-200.0F, 1.0F, 0.0F, 0.0F);
                 GL11.glRotatef(135.0F, 0.0F, 1.0F, 0.0F);
                 GL11.glScalef(1.0F, 1.0F, 1.0F);
                 GL11.glTranslatef(-4.8F, -2.9F, 0.5F);
+*/
                 var17 = RenderManager.instance.getEntityRenderObject(var3);
             	var16 = 1.0F;
             	GL11.glScalef(var16, var16, var16);
             } else {
-                var6 = 0.8F;
+            	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glTranslatef(0.0F, 0.6F, 0.0F);
+            	var6 = 0.8F;
                 var13 = var3.getSwingProgress(par1);
+                //Modchu_Debug.mDebug("var13="+var13);
                 var12 = MathHelper.sin(var13 * (float)Math.PI);
                 var11 = MathHelper.sin(MathHelper.sqrt_float(var13) * (float)Math.PI);
                 GL11.glTranslatef(-var11 * 0.3F, MathHelper.sin(MathHelper.sqrt_float(var13) * (float)Math.PI * 2.0F) * 0.4F, -var12 * 0.4F);

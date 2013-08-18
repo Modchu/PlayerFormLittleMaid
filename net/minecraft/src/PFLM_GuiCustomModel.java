@@ -248,6 +248,8 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		float f6 = (float)i1 - (float)ySize_lo;
 		//GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
 		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
+		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
+				&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 160) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
 		//GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-(float)Math.atan(f5 / 40F) * 90F, 0.0F, 1.0F, 0.0F);
@@ -1027,7 +1029,8 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		case 1:
 			break;
 		case 2:
-			if (addChildNameSlotSelected != i) {
+			if (addChildNameSlotSelected != i
+				&& modelRendererNameList.size() < addChildNameSlotSelected) {
 				String s = modelRendererNameList.get(addChildNameSlotSelected);
 				MMM_ModelRenderer modelRenderer = getModelRenderer(s, ((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModeltextureName, ((MultiModelCustom) drawEntity.textureModel[0]).customModel.mainModel, 0);
 				if (modelRenderer != null) {

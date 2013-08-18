@@ -16,5 +16,6 @@ public interface PFLM_IRenderPlayer {
 	public PFLM_RenderPlayerMaster getRenderPlayerMaster();
 	public boolean getResetFlag();
 	public void setResetFlag(boolean b);
+	public void superDoRenderLiving(Entity entity, double d, double d1, double d2, float f, float f1);
 
 }

@@ -36,17 +36,22 @@ public class PFLM_RenderPlayerDummyV160 extends RendererLivingEntity implements 
     		float f, float f1) {
     	if (pflm_RenderPlayerDummyMaster != null) ;else return;
     	pflm_RenderPlayerDummyMaster.doRender(entity, d, d1, d2, f, f1);
+    }
+
+    public void superDoRenderLiving(Entity entity, double d, double d1, double d2, float f, float f1)
+    {
     	PFLM_ModelData modelData = pflm_RenderPlayerDummyMaster.modelData;
-    	if (modelData != null) ;else return;
+    	mainModel = modelData.modelMain;
     	modelData.modelMain.setEntityCaps(modelData);
     	modelData.modelMain.setRender(this);
     	modelData.setCapsValue(modelData.caps_Entity, entity);
     	mainModel = modelData.modelMain;
     	setRenderPassModel(modelData.modelFATT);
-    	//Modchu_Debug.mDebug("doRender renderYawOffset="+((EntityPlayer) entity).renderYawOffset);
     	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
-    		Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
+    		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
     		//super.func_130000_a((EntityLivingBase) entity, d, d1, d2, f, f1);
+    		else Modchu_Reflect.invokeMethod(RenderLiving.class, "func_77031_a", "doRenderLiving", new Class[]{ Modchu_Reflect.loadClass("EntityLiving"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
+    		//doRenderLiving((EntityLiving) entity, d, d1, d2, f, f1);
     	}
     	else pflm_RenderPlayerDummyMaster.oldDoRenderLivingPFLM(entity, d, d1, d2, f, f1);
     	modelData.modelMain.setCapsValue(modelData.caps_aimedBow, false);

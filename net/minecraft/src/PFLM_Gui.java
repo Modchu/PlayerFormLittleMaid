@@ -626,8 +626,8 @@ public class PFLM_Gui extends GuiScreen {
     		imageWriteComplete = false;
     		imageWriteFail = false;
     		noSaveFlag = true;
-    		mod_PFLM_PlayerFormLittleMaid.pflm_main.changeColor((EntityPlayer) null);
     		PFLM_RenderPlayerMaster.getPlayerData(thePlayer).setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor);
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.changeColor((EntityPlayer) null);
     		return;
     	}
     	//ArmorChange
@@ -1008,7 +1008,8 @@ public class PFLM_Gui extends GuiScreen {
     	GL11.glTranslatef(x, y, 50F);
     	GL11.glScalef(-f, f, f);
     	GL11.glRotatef(180F, 0.0F, 0.0F, 0.0F);
-    	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+    	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
+    			&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
     	float f5 = (float)x - xSize_lo;
     	float f6 = (float)(y - 50) - ySize_lo;
     	GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);

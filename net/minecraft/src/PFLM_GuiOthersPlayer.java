@@ -314,7 +314,8 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 			float f1 = 50F;
 			GL11.glScalef(-f1, f1, f1);
 			GL11.glRotatef(180F, 180F, 0.0F, 1.0F);
-			if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+			if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
+					&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			float f5 = (float)(l + 51) - (float)xSize_lo;
 			float f6 = (float)((i1 + 75) - 50) - (float)ySize_lo;
 			GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
@@ -419,24 +420,38 @@ public class PFLM_GuiOthersPlayer extends GuiScreen {
 
 	public static void setNextTexturePackege(int i) {
 		if (i == 0) {
-			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName,
-							getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName));
+			String s = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName, getMaidColor());
+			if (s != null
+					&& !s.isEmpty()) {
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName = s;
+				s = mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName);
+				if (s != null
+						&& !s.isEmpty()) setTextureArmorName(s);
+			}
 		}
 		if (i == 1) {
-			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextArmorPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName);
+			String s = mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName);
+			if (s != null
+					&& !s.isEmpty()) setTextureArmorName(s);
 			Modchu_Debug.mDebug("setNextTexturePackege(int) mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName="+mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName);
 		}
 	}
 
 	public static void setPrevTexturePackege(int i) {
 		if (i == 0) {
-			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName =
-					mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName, getMaidColor());
-			setTextureArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName));
+			String s = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName, getMaidColor());
+			if (s != null
+					&& !s.isEmpty()) {
+				mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName = s;
+				s = mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureName);
+				if (s != null
+						&& !s.isEmpty()) setTextureArmorName(s);
+			}
 		}
 		if (i == 1) {
-			mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevArmorPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName);
+			String s = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevArmorPackege(mod_PFLM_PlayerFormLittleMaid.pflm_main.othersTextureArmorName);
+			if (s != null
+					&& !s.isEmpty()) setTextureArmorName(s);
 		}
 	}
 

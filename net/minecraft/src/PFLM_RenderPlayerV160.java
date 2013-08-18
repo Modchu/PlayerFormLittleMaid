@@ -62,15 +62,19 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     {
     	if (pflm_RenderPlayerMaster != null) ;else return;
     	pflm_RenderPlayerMaster.doRender(entity, d, d1, d2, f, f1);
-    	PFLM_ModelData modelData = getPlayerData((EntityPlayer)entity);
-    	if (modelData != null) ;else return;
+    }
+
+    @Override
+    public void superDoRenderLiving(Entity entity, double d, double d1, double d2, float f, float f1)
+    {
+    	PFLM_ModelData modelData = getPlayerData((EntityPlayer) entity);
     	mainModel = modelData.modelMain;
     	setRenderPassModel(modelData.modelFATT);
-    	d1 = pflm_RenderPlayerMaster.doRenderSettingY((EntityPlayer) entity, modelData, d1);
-    	//Modchu_Debug.mDebug("doRender renderYawOffset="+((EntityPlayer) entity).renderYawOffset);
     	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
-    		Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
+    		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
     		//super.func_130000_a((EntityLivingBase) entity, d, d1, d2, f, f1);
+    		else Modchu_Reflect.invokeMethod(RenderLiving.class, "func_77031_a", "doRenderLiving", new Class[]{ Modchu_Reflect.loadClass("EntityLiving"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
+    		//doRenderLiving((EntityLiving) entity, d, d1, d2, f, f1);
     	}
     	else pflm_RenderPlayerMaster.oldDoRenderLivingPFLM(modelData, entity, d, d1, d2, f, f1);
     	modelData.modelMain.setCapsValue(modelData.caps_aimedBow, false);
@@ -184,12 +188,17 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     protected void renderPlayerSleep(AbstractClientPlayer var1, double var2, double var4, double var6)
     {
     	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.renderPlayerSleep(((EntityPlayer) var1), var2, var4, var6);
+    	//Class AbstractClientPlayer = Modchu_Reflect.loadClass("AbstractClientPlayer");
+    	//Modchu_Reflect.invokeMethod(RenderPlayer.class, "func_77105_b", "renderPlayerSleep", new Class[]{ AbstractClientPlayer, double.class, double.class, double.class }, this, new Object[]{ var1, var2, var4, var6 });
+    	super.renderPlayerSleep(var1, var2, var4, var6);
     }
 
     @Override
     public void rotatePlayer(AbstractClientPlayer var1, float var2, float var3, float var4)
     {
     	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.rotatePlayer(((EntityPlayer) var1),var2, var3, var4);
+    	PFLM_ModelData modelData = getPlayerData(var1);
+    	if (!modelData.getCapsValueBoolean(modelData.caps_isSleeping)) super.rotatePlayer((AbstractClientPlayer) var1, var2, var3, var4);
     }
 
     //smartMovingä÷òAÅ´

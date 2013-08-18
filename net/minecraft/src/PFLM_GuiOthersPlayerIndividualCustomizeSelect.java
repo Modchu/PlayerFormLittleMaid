@@ -68,7 +68,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 		buttonList.add(new GuiButton(0, width / 2 + 65, height - 44, 70, 20, "delete"));
 		buttonList.add(new GuiButton(201, width / 2 - 135, height - 44, 70, 20, "Return"));
 
-		selectPanel = new PFLM_GuiOthersPlayerSlotV160(this, popWorld);
+		selectPanel = (GuiSlot) Modchu_Reflect.newInstance("PFLM_GuiOthersPlayerSlot", new Class[]{ PFLM_GuiOthersPlayerIndividualCustomizeSelect.class, World.class }, new Object[]{ this, popWorld });
 		Class[] c;
 		Object[] o;
 		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
@@ -91,7 +91,8 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 		}
 		//delete
 		if(guibutton.id == 0) {
-			((PFLM_GuiOthersPlayerSlotV160) selectPanel).deletePlayerLocalData();
+			Modchu_Reflect.invokeMethod("PFLM_GuiOthersPlayerSlot", "deletePlayerLocalData", selectPanel);
+			//((PFLM_GuiOthersPlayerSlotV160) selectPanel).deletePlayerLocalData();
 		}
 		//Return
 		if(guibutton.id == 201)
@@ -101,7 +102,8 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 		}
 		//Select
 		if(guibutton.id == 300) {
-			((PFLM_GuiOthersPlayerSlotV160) selectPanel).openGuiCustomize();
+			Modchu_Reflect.invokeMethod("PFLM_GuiOthersPlayerSlot", "openGuiCustomize", selectPanel);
+			//((PFLM_GuiOthersPlayerSlotV160) selectPanel).openGuiCustomize();
 			return;
 		} else {
 			selectPanel.actionPerformed(guibutton);

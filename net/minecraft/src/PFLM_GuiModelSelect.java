@@ -231,7 +231,8 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 			float f5 = (float)(width / 2 + 100) - xSize_lo;
 			float f6 = (float)((height / 2 + 40) - 10) - ySize_lo;
 			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
-			else GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+			else if (mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
+					| mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 160) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 			RenderHelper.enableStandardItemLighting();
 			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef((float)Math.atan(f5 / 40F) * 30F, 0.0F, 1.0F, 0.0F);
@@ -296,8 +297,10 @@ public class PFLM_GuiModelSelect extends GuiScreen {
     	GL11.glTranslatef(x, y, 50F);
     	//entity.setWorld(popWorld);
     	GL11.glScalef(f, f, f);
-    	GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
-    	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
+    	if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
+    			&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+    	else GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
     	//RenderHelper.enableStandardItemLighting();
     	Render var10 = RenderManager.instance.getEntityRenderObject(entity);
     	if (var10 != null) var10.doRender(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);

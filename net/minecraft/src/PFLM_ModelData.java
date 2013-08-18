@@ -78,9 +78,11 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	public PFLM_ModelData(Render render) {
 		super(null);
 		modelMain = new MMM_ModelBaseSolo(null);
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 160) Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelMain, render);
 		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend;
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseSolo", "textures", modelMain, Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
 		modelFATT = new MMM_ModelBaseDuo(null);
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 160) Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelFATT, render);
 		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend;
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
@@ -476,7 +478,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) {
-				Modchu_Debug.mDebug("caps_changeColor modelFATT.modelInner instanceof  MultiModelBaseBiped ? "+(modelFATT.modelInner instanceof  MultiModelBaseBiped));
+				//Modchu_Debug.mDebug("caps_changeColor modelFATT.modelInner instanceof  MultiModelBaseBiped ? "+(modelFATT.modelInner instanceof  MultiModelBaseBiped));
 				if (modelMain.model instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelMain.model).changeColor(this);
 				if (modelFATT.modelInner instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelInner).changeColor(this);
 				if (modelFATT.modelOuter instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelOuter).changeColor(this);
@@ -837,7 +839,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		return super.getCapsValue(pIndex, (Object[]) pArg);
 	}
 
-	//-@-152
 	private Object getResourceLocation() {
 		return getResourceLocation(0);
 	}
@@ -853,7 +854,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private void setResourceLocation(int i, Object pArg) {
 		if (resourceLocations != null) resourceLocations[i] = pArg;
 	}
-//-@-152
+
 	private String getModelRendererName(MMM_ModelRenderer modelRenderer, int i) {
 		MMM_ModelRenderer modelRenderer2;
 		Object model = getModel(i);
@@ -1047,8 +1048,12 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 
 	private int getHealth() {
 		if (!(owner instanceof EntityPlayer)) return -1;
-		return mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? (Integer) Modchu_Reflect.invokeMethod("EntityLivingBase", "func_110143_aJ", owner) :
-			(Integer) Modchu_Reflect.getFieldObject("EntityLiving", "field_70260_b", "health", owner);
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
+			float f = (Float) Modchu_Reflect.invokeMethod("EntityLivingBase", "func_110143_aJ", owner);
+			return (int) f;
+		} else {
+			return (Integer) Modchu_Reflect.getFieldObject("EntityLiving", "field_70260_b", "health", owner);
+		}
 	}
 
 	private boolean isPlanter() {

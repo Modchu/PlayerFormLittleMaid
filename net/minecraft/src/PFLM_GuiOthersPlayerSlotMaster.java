@@ -10,7 +10,7 @@ public class PFLM_GuiOthersPlayerSlotMaster {
 	private int selected;
 	private World popWorld;
 
-	public PFLM_GuiOthersPlayerSlotMaster(Minecraft par1Minecraft,
+	public PFLM_GuiOthersPlayerSlotMaster(Object par1Minecraft,
 			int par2, int par3, int par4, int par5, int par6) {
 	}
 
@@ -91,7 +91,8 @@ public class PFLM_GuiOthersPlayerSlotMaster {
 		GL11.glTranslatef(j + 30, k + 30, 50F + f1);
 		GL11.glScalef(-f1, f1, f1);
 		GL11.glRotatef(180F, 180F, 0.0F, 1.0F);
-		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
+				&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 		float f5 = (float)(j + 30) - xSize_lo;
 		float f6 = (float)((k + 30) - 10) - ySize_lo;
 		GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
