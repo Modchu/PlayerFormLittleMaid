@@ -13,6 +13,7 @@ import org.lwjgl.input.Mouse;
 
 public class PFLM_Main
 {
+	public static final String version = "22e";
 	//cfg書き込み項目
 	public static boolean AlphaBlend = true;
 	public static boolean Physical_Undead = false;
@@ -126,10 +127,8 @@ public class PFLM_Main
 	public static List<String> textureList = new ArrayList<String>();
 	public static HashMap playerLocalData = new HashMap();
 	public static Object mc;
-	public final int PFLMVersion;
 	public static boolean newRelease = false;
 	public static String newVersion = "";
-	public final String minecraftVersion;
 	public static int[][] texturesNamber;
 	public static int[] maxTexturesNamber = new int [16];
 	public static Class MMM_TextureManager;
@@ -143,6 +142,7 @@ public class PFLM_Main
 	private static boolean isReleasekey = false;
 	private static boolean keySitLock = false;
 	public static boolean oldRender = false;
+	private static boolean itemRendererReplaceFlag = false;
 
 	//不具合有り機能封印
 	public static boolean guiShowArmorSupport = false;
@@ -164,113 +164,6 @@ public class PFLM_Main
 
 	public PFLM_Main()
 	{
-		if (getVersion().startsWith("1.6.2")) {
-			PFLMVersion = 162;
-			minecraftVersion = "1.6.2";
-			return;
-		}
-		if (getVersion().startsWith("1.5.2")) {
-			PFLMVersion = 152;
-			minecraftVersion = "1.5.2";
-			return;
-		}
-		if (getVersion().startsWith("1.5.1")) {
-			PFLMVersion = 151;
-			minecraftVersion = "1.5.1";
-			return;
-		}
-		if (getVersion().startsWith("1.4.6~7")) {
-			PFLMVersion = 147;
-			minecraftVersion = "1.4.7";
-			return;
-		}
-		if (getVersion().startsWith("1.4.6")) {
-			PFLMVersion = 146;
-			minecraftVersion = "1.4.6";
-			return;
-		}
-		if (getVersion().startsWith("1.4.4~5")) {
-			PFLMVersion = 145;
-			minecraftVersion = "1.4.5";
-			return;
-		}
-		if (getVersion().startsWith("1.4.4")) {
-			PFLMVersion = 144;
-			minecraftVersion = "1.4.4";
-			return;
-		}
-		if (getVersion().startsWith("1.4.2")) {
-			PFLMVersion = 142;
-			minecraftVersion = "1.4.2";
-			return;
-		}
-		if (getVersion().startsWith("1.4.1")) {
-			PFLMVersion = 141;
-			minecraftVersion = "1.4.1";
-			return;
-		}
-		if (getVersion().startsWith("1.4")) {
-			PFLMVersion = 140;
-			minecraftVersion = "1.4";
-			return;
-		}
-		if (getVersion().startsWith("1.3.2")) {
-			PFLMVersion = 132;
-			minecraftVersion = "1.3.2";
-			return;
-		}
-		if (getVersion().startsWith("1.3.1")) {
-			PFLMVersion = 131;
-			minecraftVersion = "1.3.1";
-			return;
-		}
-		if (getVersion().startsWith("1-2-4")) {
-			PFLMVersion = 124;
-			minecraftVersion = "1.2.4";
-			return;
-		}
-		if (getVersion().startsWith("1-2-3")) {
-			PFLMVersion = 123;
-			minecraftVersion = "1.2.3";
-			return;
-		}
-		if (getVersion().startsWith("1-1")) {
-			PFLMVersion = 110;
-			minecraftVersion = "1.1.0";
-			return;
-		}
-		if (getVersion().startsWith("1-0-0")) {
-			PFLMVersion = 100;
-			minecraftVersion = "1.0.0";
-			return;
-		}
-		if (getVersion().startsWith("1-9pre")) {
-			PFLMVersion = 90;
-			minecraftVersion = "1.9pre";
-			return;
-		}
-		if (getVersion().startsWith("1-8-1")) {
-			PFLMVersion = 81;
-			minecraftVersion = "beta1.8.1";
-			return;
-		}
-		if (getVersion().startsWith("1-7-3")) {
-			PFLMVersion = 73;
-			minecraftVersion = "beta1.7.3";
-			return;
-		}
-		if (getVersion().startsWith("1-6-6")) {
-			PFLMVersion = 66;
-			minecraftVersion = "beta1.6.6";
-			return;
-		}
-		if (getVersion().startsWith("1-5-1")) {
-			PFLMVersion = 51;
-			minecraftVersion = "beta1.5.1";
-			return;
-		}
-		PFLMVersion = 0;
-		minecraftVersion = "";
 	}
 
 	public boolean isRelease() {
@@ -279,7 +172,7 @@ public class PFLM_Main
 
 	public String getVersion()
 	{
-		return "1.6.2-22d";
+		return Modchu_Version.getMinecraftVersion() + "-" + version;
 	}
 
 	static{
@@ -339,6 +232,67 @@ public class PFLM_Main
 			throw new RuntimeException("mod_PFLM_PlayerFormLittleMaid-The revision of MMMLib is old.");
 		}
 		shortcutKeysTexture = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? Modchu_Reflect.newInstanceArray("ResourceLocation", maxShortcutKeys) : new String[maxShortcutKeys];
+		if (mod_Modchu_ModchuLib.modchu_Main.isForge) {
+			o = Modchu_Reflect.invokeMethod("cpw.mods.fml.common.Loader", "instance");
+			if (o != null) {
+				List list = (List) Modchu_Reflect.invokeMethod("cpw.mods.fml.common.Loader", "getActiveModList", o);
+				if (list != null) {
+					int size = list.size();
+					String name = null;
+					for (int i = 0; i < size; i++)
+					{
+						o = list.get(i);
+						name = (String) Modchu_Reflect.invokeMethod("cpw.mods.fml.common.ModContainer", "getName", o);
+						if (name.startsWith("Aether")) {
+							isAether = true;
+							Modchu_Debug.lDebug("Aether Check ok.");
+							aetherAddRenderer = true;
+							Class PlayerCoreType = Modchu_Reflect.loadClass("net.aetherteam.playercore_api.PlayerCoreAPI$PlayerCoreType");
+							Class PFLM_RenderPlayerAether = Modchu_Reflect.loadClass("PFLM_RenderPlayerAether");
+							Object RENDER = Modchu_Reflect.getFieldObject(PlayerCoreType, "RENDER");
+							if (PlayerCoreType != null
+									&& PFLM_RenderPlayerAether != null
+									&& RENDER != null) {
+								Modchu_Debug.lDebug("Aether PlayerCoreAPI setting Check ok.");
+								Modchu_Reflect.invokeMethod("net.aetherteam.playercore_api.PlayerCoreAPI", "register", new Class[]{ PlayerCoreType, Class.class }, new Object[]{ RENDER, PFLM_RenderPlayerAether });
+
+								ArrayList<Class<?>> arrayList = (ArrayList) Modchu_Reflect.getFieldObject("net.aetherteam.playercore_api.PlayerCoreAPI", "playerCoreRenderList");
+								//for(int i1 = 0; i1 < arrayList.size(); i1++) {
+									//Modchu_Debug.lDebug("arrayList i1="+i1+" "+arrayList.get(i1));
+								//}
+								Class c = arrayList.get(0);
+								Render render = RenderManager.instance.getEntityClassRenderObject(EntityPlayer.class);
+								//Modchu_Debug.lDebug("Aether arrayList.get(0)="+arrayList.get(0));
+								Modchu_Debug.lDebug("Aether render="+render);
+								Class PlayerCoreRender = Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreRender");
+								mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer = (PFLM_IRenderPlayer) Modchu_Reflect.newInstance(PFLM_RenderPlayerAether, new Class[]{ int.class, PlayerCoreRender }, new Object[]{ arrayList.size(), null });
+								//Modchu_Debug.lDebug("Aether mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer="+mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
+								Modchu_Reflect.invokeMethod(Render.class, "func_76976_a", "setRenderManager", new Class[]{ RenderManager.class }, render, new Object[]{ RenderManager.instance });
+
+								//render = (Render) Modchu_Reflect.getFieldObject(PlayerCoreRender, "nextPlayerCore", render);
+								Render aRender = (Render) Modchu_Reflect.getFieldObject(PlayerCoreRender, "nextPlayerCore", render);
+								boolean b = Modchu_Reflect.setFieldObject(PlayerCoreRender, "nextPlayerCore", render, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
+								Modchu_Debug.lDebug("Aether nextPlayerCore setFieldObject b="+b);
+								b = Modchu_Reflect.setFieldObject(PlayerCoreRender, "shouldCallSuper", render, false);
+								Modchu_Debug.lDebug("Aether nextPlayerCore setFieldObject shouldCallSuper b="+b);
+								//Modchu_Reflect.invokeMethod(Render.class, "func_76976_a", "setRenderManager", new Class[]{ RenderManager.class }, render, new Object[]{ RenderManager.instance });
+								if (RenderManager.instance != null) ;else Modchu_Debug.lDebug("Aether nextPlayerCore setFieldObject RenderManager.instance == null !!");
+
+								Modchu_Reflect.setFieldObject(PlayerCoreRender, "nextPlayerCore", mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer, aRender);
+
+							} else {
+								Modchu_Debug.lDebug("Aether PlayerCoreAPI setting Check out !!", 1);
+							}
+							break;
+						}
+					}
+				} else {
+					Modchu_Debug.lDebug("Aether Check list == null !!");
+				}
+			} else {
+				Modchu_Debug.lDebug("Aether Check o == null !!");
+			}
+		}
 	}
 
 	public String getClassName(String s) {
@@ -355,10 +309,13 @@ public class PFLM_Main
 	public void addRenderer(Map map)
 	{
 		if (!isPlayerForm) return;
+		mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy = (PFLM_IRenderPlayerDummy) Modchu_Reflect.newInstance("PFLM_RenderPlayerDummy");
+		((Render) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy).setRenderManager(RenderManager.instance);
 //-@-125
 		if (!isAether) {
-			Modchu_Debug.Debug("addRenderer");
-			ModLoader.getLogger().fine("playerFormLittleMaid-addRenderer");
+			Modchu_Debug.lDebug("addRenderer");
+			mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer = (PFLM_IRenderPlayer) Modchu_Reflect.newInstance("PFLM_RenderPlayer");
+			((Render) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer).setRenderManager(RenderManager.instance);
 
 			//if (isSmartMoving) {
 				//PFLM_RenderPlayerSmart var1 = new PFLM_RenderPlayerSmart();
@@ -394,8 +351,7 @@ public class PFLM_Main
 //@-@125
 /*//125delete
 		if (!isAether) {
-			Modchu_Debug.Debug("addRenderer");
-			ModLoader.getLogger().fine("playerFormLittleMaid-addRenderer");
+			Modchu_Debug.lDebug("addRenderer");
 			map.put(EntityPlayerSP.class, new pflm_renderPlayer());
 			map.put(EntityOtherPlayerMP.class, new pflm_renderPlayer());
 		}
@@ -413,7 +369,7 @@ public class PFLM_Main
 
 	public void keyboardEvent(KeyBinding keybinding) {
 		//Modchu_Debug.Debug("keyboardEvent");
-		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mc);
+		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_71462_r", "currentScreen", mc);
 		if (currentScreen instanceof GuiChat) return;
 //-@-125
 		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 129) {
@@ -617,8 +573,7 @@ public class PFLM_Main
 				&& !mod_Modchu_ModchuLib.modchu_Main.isForge) {
 			PFLM_PlayerController.addRenderer();
 			smartMovingAddRenderer = true;
-			Modchu_Debug.Debug("SmartMovingAddRenderer");
-			ModLoader.getLogger().fine("playerFormLittleMaid-SmartMovingAddRenderer");
+			Modchu_Debug.lDebug("SmartMovingAddRenderer");
 		}
 //@-@110
 //-@-123
@@ -665,6 +620,25 @@ public class PFLM_Main
 
 	public boolean onTickInGame(float f, Object minecraft)
 	{
+/*
+		Render render = RenderManager.instance.getEntityClassRenderObject(EntityPlayer.class);
+		Class PlayerCoreRender = Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreRender");
+		//render = (Render) Modchu_Reflect.getFieldObject(PlayerCoreRender, "nextPlayerCore", render);
+		boolean b2 = (Boolean) Modchu_Reflect.getFieldObject(PlayerCoreRender, "shouldCallSuper", render);
+		Modchu_Debug.lDebug("onTickInGame get shouldCallSuper="+b2);
+*/
+		//boolean b1 = Modchu_Reflect.setFieldObject(PlayerCoreRender, "shouldCallSuper", render, false);
+		//Modchu_Debug.lDebug("onTickInGame shouldCallSuper="+b1);
+/*
+		Render render = RenderManager.instance.getEntityClassRenderObject(EntityPlayer.class);
+		Class PlayerCoreRender = Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreRender");
+		render = (Render) Modchu_Reflect.getFieldObject(PlayerCoreRender, "nextPlayerCore", render);
+		Modchu_Debug.lDebug("onTickInGame nextPlayerCore render="+render.getClass());
+		boolean b2 = Modchu_Reflect.setFieldObject(PlayerCoreRender, "nextPlayerCore", render, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
+		Modchu_Debug.lDebug("onTickInGame nextPlayerCore setFieldObject="+b2);
+		if (!b2) return false;
+*/
+
 		if (!Keyboard.getEventKeyState()
 				&& !Mouse.getEventButtonState()) {
 			if (!isReleasekey) isReleasekey = true;
@@ -675,14 +649,15 @@ public class PFLM_Main
 		} else if (isReleasekey) isReleasekey = false;
 		if (mc != null) ;else {
 			mc = mod_Modchu_ModchuLib.modchu_Main.getMinecraft();
-			if (mc != null) ;else Modchu_Debug.Debug("onTickInGame mc == null !!");
+			if (mc != null) ;else Modchu_Debug.lDebug("onTickInGame mc == null !!");
 		}
 //-@-125
-		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mc);
+		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_71462_r", "currentScreen", mc);
 		if (currentScreen != null
 				&& !mod_Modchu_ModchuLib.modchu_Main.isForge) onTickInGUI(0.0F, minecraft, (GuiScreen) currentScreen);
 //@-@125
-		if (itemRendererClass != null) {
+		if (!itemRendererReplaceFlag
+				&& itemRendererClass != null) {
 			ItemRenderer itemRenderer = null;
 			EntityRenderer entityRenderer = (EntityRenderer) Modchu_Reflect.getFieldObject("Minecraft", "field_71460_t", "entityRenderer", mc);
 			if (entityRenderer != null) ;else Modchu_Debug.Debug("onTickInGame entityRenderer == null !!");
@@ -702,6 +677,7 @@ public class PFLM_Main
 						} else {
 							initItemRenderer = true;
 						}
+						itemRendererReplaceFlag = true;
 					} else {
 						Modchu_Debug.mDebug("onTickInGame itemRenderer2 == null !!");
 					}
@@ -853,12 +829,10 @@ public class PFLM_Main
 						((Map) obj).put(thePlayer.getClass(), renderplayer);
 						((Map) obj).put(EntityOtherPlayerMP.class, renderplayer);
 						renderplayer.setRenderManager(RenderManager.instance);
-						Modchu_Debug.Debug("aetherAddRenderer");
-						ModLoader.getLogger().fine("playerFormLittleMaid-aetherAddRenderer");
-						//Modchu_Debug.Debug("getEntityClassRenderObject "+(RenderManager.instance.getEntityClassRenderObject(thePlayer.getClass())));
+						Modchu_Debug.lDebug("aetherAddRenderer");
+						//Modchu_Debug.lDebug("getEntityClassRenderObject "+(RenderManager.instance.getEntityClassRenderObject(thePlayer.getClass())));
 					} else {
-						Modchu_Debug.Debug("aetherAddRenderer obj null !!");
-						ModLoader.getLogger().warning("playerFormLittleMaid-aetherAddRenderer obj null !!");
+						Modchu_Debug.lDebug("aetherAddRenderer obj null !!");
 					}
 				}
 			}
@@ -937,23 +911,23 @@ public class PFLM_Main
 						Modchu_Reflect.setFieldObject("Minecraft", "field_71442_b", "playerController", mc, Modchu_Reflect.newInstance("PFLM_PlayerControllerCreative2", types, args));
 						//playerController = (PlayerControllerMP) Modchu_Reflect.newInstance(pflm_playerControllerCreative2, types, args);
 						//playerController = new PFLM_PlayerControllerCreative2(mc, netClientHandler);
-						Modchu_Debug.Debug("Replace PFLM_PlayerControllerCreative2.");
+						Modchu_Debug.lDebug("Replace PFLM_PlayerControllerCreative2.");
 					} else {
 						Modchu_Reflect.setFieldObject("Minecraft", "field_71442_b", "playerController", mc, Modchu_Reflect.newInstance("PFLM_PlayerController2", types, args));
 						//playerController = (PlayerControllerMP) Modchu_Reflect.newInstance(pflm_playerController2, types, args);
 						//playerController = new PFLM_PlayerController2(mc, netClientHandler);
-						Modchu_Debug.Debug("Replace PFLM_PlayerController2.");
+						Modchu_Debug.lDebug("Replace PFLM_PlayerController2.");
 					}
 				} else {
 					Modchu_Reflect.setFieldObject("Minecraft", "field_71442_b", "playerController", mc, Modchu_Reflect.newInstance("PFLM_PlayerController2", types, args));
 					//playerController = (PlayerControllerMP) Modchu_Reflect.newInstance(pflm_playerController2, types, args);
 					//playerController = new PFLM_PlayerController2(mc, netClientHandler);
-					Modchu_Debug.Debug("Replace PFLM_PlayerController2.");
+					Modchu_Debug.lDebug("Replace PFLM_PlayerController2.");
 				}
 			} else {
 				Modchu_Reflect.setFieldObject("Minecraft", "field_71442_b", "playerController", mc, Modchu_Reflect.newInstance("PFLM_PlayerController", types, args));
 				//playerController = new PFLM_PlayerController(mc, netClientHandler);
-				Modchu_Debug.Debug("Replace PFLM_PlayerController.");
+				Modchu_Debug.lDebug("Replace PFLM_PlayerController.");
 			}
 
 			if (enumGameType != null) {
@@ -1051,11 +1025,11 @@ public class PFLM_Main
  		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 79
  				&& !(Boolean) Modchu_Reflect.getFieldObject("PlayerController", "field_1064_b", "isInTestMode", playerController)
  				| mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 80) {
-			Modchu_Debug.Debug("Replace PFLM_PlayerController.");
+			Modchu_Debug.lDebug("Replace PFLM_PlayerController.");
 			Modchu_Reflect.setFieldObject("Minecraft", "field_71442_b", "playerController", mc, Modchu_Reflect.newInstance("PFLM_PlayerController", new Class[]{ Modchu_Reflect.loadClass("Minecraft") }, new Object[]{ mc }));
 			//playerController = new PFLM_PlayerController(mc);
  		} else {
-			Modchu_Debug.Debug("Replace PFLM_PlayerControllerCreative.");
+			Modchu_Debug.lDebug("Replace PFLM_PlayerControllerCreative.");
 			Modchu_Reflect.setFieldObject("Minecraft", "field_71442_b", "playerController", mc, Modchu_Reflect.newInstance("PFLM_PlayerControllerCreative", new Class[]{ Modchu_Reflect.loadClass("Minecraft") }, new Object[]{ mc }));
 			//playerController = new PFLM_PlayerControllerCreative(mc);
 		}
@@ -2486,46 +2460,41 @@ public class PFLM_Main
 		//対応MOD導入チェック
 		List list = ModLoader.getLoadedMods();
 		int size = list.size();
+		BaseMod mod = null;
+		String name = null;
 		for (int i = 0; i < size; i++)
 		{
-			BaseMod mod = (BaseMod)list.get(i);
-			String name = mod.getClass().getSimpleName();
+			mod = (BaseMod)list.get(i);
+			name = mod.getClass().getSimpleName();
 			if (name.equals("mod_ThirdPersonCamera")) {
 				isThirdPersonCamera = true;
-				ModLoader.getLogger().fine("playerFormLittleMaid-mod_ThirdPersonCamera Check ok.");
-				Modchu_Debug.Debug("mod_ThirdPersonCamera Check ok.");
+				Modchu_Debug.lDebug("mod_ThirdPersonCamera Check ok.");
 			}
 			else if (name.equals("mod_noBiomesX")) {
 				isnoBiomesX = true;
-				ModLoader.getLogger().fine("playerFormLittleMaid-mod_noBiomesX Check ok.");
-				Modchu_Debug.Debug("mod_noBiomesX Check ok.");
+				Modchu_Debug.lDebug("mod_noBiomesX Check ok.");
 			}
 			else if (name.equals("mod_SmartMoving")) {
 				if (!isRelease()) {
 					isSmartMoving = true;
-					ModLoader.getLogger().fine("playerFormLittleMaid-mod_SmartMoving Check ok.");
-					Modchu_Debug.Debug("mod_SmartMoving Check ok.");
+					Modchu_Debug.lDebug("mod_SmartMoving Check ok.");
 				}
 			}
 			else if (name.equals("mod_Aether")) {
 				isAether = true;
-				ModLoader.getLogger().fine("playerFormLittleMaid-mod_Aether Check ok.");
-				Modchu_Debug.Debug("mod_Aether Check ok.");
+				Modchu_Debug.lDebug("mod_Aether Check ok.");
 			}
 			else if (name.equals("mod_2DCraft")) {
 				is2D = true;
-				ModLoader.getLogger().fine("playerFormLittleMaid-mod_2DCraft Check ok.");
-				Modchu_Debug.Debug("mod_2DCraft Check ok.");
+				Modchu_Debug.lDebug("mod_2DCraft Check ok.");
 			}
 			else if (name.equals("mod_CCTV")) {
 				isCCTV = true;
-				ModLoader.getLogger().fine("playerFormLittleMaid-mod_CCTV Check ok.");
-				Modchu_Debug.Debug("mod_CCTV Check ok.");
+				Modchu_Debug.lDebug("mod_CCTV Check ok.");
 			}
 			else if (name.equals("mod_LMM_littleMaidMob")) {
 				isLMM = true;
-				ModLoader.getLogger().fine("playerFormLittleMaid-mod_LMM_littleMaidMob Check ok.");
-				Modchu_Debug.Debug("mod_LMM_littleMaidMob Check ok.");
+				Modchu_Debug.lDebug("mod_LMM_littleMaidMob Check ok.");
 			}
 		}
 		//mod_SmartMovingMp Shaders MinecraftForgeなど対応クラス存在チェック
@@ -2540,8 +2509,7 @@ public class PFLM_Main
 				test2 = mod_Modchu_ModchuLib.modchu_Main.getClassName(className1[n]);
 				//Modchu_Debug.mDebug("test2 = "+test2);
 				test2 = ""+Class.forName(test2);
-				ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-"+ test2 + " Check ok.")).toString());
-				Modchu_Debug.Debug(test2 + " Check ok.");
+				Modchu_Debug.lDebug(test2 + " Check ok.");
 				if(n == 0) isSmartMoving = true;
 				if(n == 1) isShaders = true;
 				if(n == 2) isDynamicLights = true;
@@ -2564,10 +2532,9 @@ public class PFLM_Main
 						Object o = Modchu_Reflect.getFieldObject(ItemRenderer.class, "olddays", -1);
 						if (o != null) {
 							isOlddays = true;
-							ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-ItemRenderer olddays Check ok.")).toString());
-							Modchu_Debug.Debug("ItemRenderer olddays Check ok.");
+							Modchu_Debug.lDebug("ItemRenderer olddays Check ok.");
 						} else {
-							Modchu_Debug.Debug("ItemRenderer olddays Check false.");
+							Modchu_Debug.lDebug("ItemRenderer olddays Check false.");
 						}
 					} catch(Exception e) {
 					}
@@ -2577,52 +2544,40 @@ public class PFLM_Main
 			}
 		}
     	if (!isThirdPersonCamera) {
-			ModLoader.getLogger().fine("playerFormLittleMaid-isThirdPersonCamera false.");
-			Modchu_Debug.Debug("isThirdPersonCamera false.");
+			Modchu_Debug.lDebug("isThirdPersonCamera false.");
 		}
 		if (!isnoBiomesX) {
-			ModLoader.getLogger().fine("playerFormLittleMaid-isnoBiomesX false.");
-			Modchu_Debug.Debug("isnoBiomesX false.");
+			Modchu_Debug.lDebug("isnoBiomesX false.");
 		}
 		if (!isSmartMoving) {
-			ModLoader.getLogger().fine("playerFormLittleMaid-isSmartMoving false.");
-			Modchu_Debug.Debug("isSmartMoving false.");
+			Modchu_Debug.lDebug("isSmartMoving false.");
 		}
 		if (!isShaders) {
-			ModLoader.getLogger().fine("playerFormLittleMaid-isShaders false.");
-			Modchu_Debug.Debug("isShaders false.");
+			Modchu_Debug.lDebug("isShaders false.");
 		}
 		if (!isDynamicLights) {
-			ModLoader.getLogger().fine("playerFormLittleMaid-isDynamicLights false.");
-			Modchu_Debug.Debug("isDynamicLights false.");
+			Modchu_Debug.lDebug("isDynamicLights false.");
 		}
 		if (!isShader) {
-			ModLoader.getLogger().fine("playerFormLittleMaid-isShader false.");
-			Modchu_Debug.Debug("isShader false.");
+			Modchu_Debug.lDebug("isShader false.");
 		}
 		if (!isAether) {
-			ModLoader.getLogger().fine("playerFormLittleMaid-isAether false.");
-			Modchu_Debug.Debug("isAether false.");
+			Modchu_Debug.lDebug("isAether false.");
 		}
 		if (!is2D) {
-			ModLoader.getLogger().fine("playerFormLittleMaid-is2D false.");
-			Modchu_Debug.Debug("is2D false.");
+			Modchu_Debug.lDebug("is2D false.");
 		}
 		if (!isCCTV) {
-			ModLoader.getLogger().fine("playerFormLittleMaid-isCCTV false.");
-			Modchu_Debug.Debug("isCCTV false.");
+			Modchu_Debug.lDebug("isCCTV false.");
 		}
 		if (!isOlddays) {
-			ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No Olddays.")).toString());
-			Modchu_Debug.Debug("No Olddays.");
+			Modchu_Debug.lDebug("No Olddays.");
 		}
 		if (!isLMM) {
-			ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No littleMaidMob.")).toString());
-			Modchu_Debug.Debug("No littleMaidMob.");
+			Modchu_Debug.lDebug("No littleMaidMob.");
 		}
 		if (!isItemRendererHD) {
-			ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No ItemRendererHD.")).toString());
-			Modchu_Debug.Debug("No ItemRendererHD.");
+			Modchu_Debug.lDebug("No ItemRendererHD.");
 		}
 
 		if (isItemRendererHD) {
@@ -2663,7 +2618,7 @@ public class PFLM_Main
 					}
 				}
 			} else {
-				Modchu_Debug.Debug("IDtoClassMapping map == null !!");
+				Modchu_Debug.lDebug("IDtoClassMapping map == null !!");
 			}
 //@-@147
 			if (guiMultiPngSaveButton
@@ -2693,8 +2648,7 @@ public class PFLM_Main
 			int n1 = 0;
 			try {
 				test2 = ""+Class.forName(className2);
-				ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-"+ test2 + " Check ok.")).toString());
-				Modchu_Debug.Debug(test2 + " Check ok.");
+				Modchu_Debug.lDebug(test2 + " Check ok.");
 				t = true;
 				// b166deleteerpflmCheck = 4;
 			} catch (ClassNotFoundException e) {
@@ -2710,8 +2664,7 @@ public class PFLM_Main
 					String s1 = (String) f11.get(null);
 					erpflmCheck = optiNameCheck(s1, erpflmCheck);
 				} catch (Exception e1) {
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No OptiFine.")).toString());
-					Modchu_Debug.Debug("No OptiFine.");
+					Modchu_Debug.lDebug("No OptiFine.");
 				}
 //@-@b166
 *///110delete
@@ -2722,12 +2675,10 @@ public class PFLM_Main
 						s = (String) f11.get(null);
 					} catch (Exception e) {
 						e.printStackTrace();
-						ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No OptiFine.")).toString());
-						Modchu_Debug.Debug("No OptiFine.");
+						Modchu_Debug.lDebug("No OptiFine.");
 					}
 				} catch (Exception e1) {
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No OptiFine.")).toString());
-					Modchu_Debug.Debug("No OptiFine.");
+					Modchu_Debug.lDebug("No OptiFine.");
 				}
 				erpflmCheck = optiNameCheck(s, erpflmCheck);
 				if (erpflmCheck <= 1) {
@@ -2752,8 +2703,7 @@ public class PFLM_Main
 //-@-123
 							String s1 = "B2";
 							if (s2.indexOf(s1) != -1) {
-								ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-OptiFine "+ s2 + " Check ok.")).toString());
-								Modchu_Debug.Debug("OptiFine "+ s2 + " Check ok.");
+								Modchu_Debug.lDebug("OptiFine "+ s2 + " Check ok.");
 								// 125deleteerpflmCheck = erpflmCheck == 3 ? 6 : 5 ;
 								/*125//*/erpflmCheck = 6;
 							}
@@ -2762,8 +2712,7 @@ public class PFLM_Main
 //-@-125
 							s1 = "B3";
 							if (s2.indexOf(s1) != -1) {
-								ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-OptiFine "+ s2 + " Check ok.")).toString());
-								Modchu_Debug.Debug("OptiFine "+ s2 + " Check ok.");
+								Modchu_Debug.lDebug("OptiFine "+ s2 + " Check ok.");
 								erpflmCheck = 5;
 							}
 //@-@125
@@ -2774,8 +2723,7 @@ public class PFLM_Main
 						err = true;
 					}
 					if(err) {
-						ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No OptiFine.")).toString());
-						Modchu_Debug.Debug("No OptiFine.");
+						Modchu_Debug.lDebug("No OptiFine.");
 					}
 				}
 //@-@110
@@ -2788,20 +2736,17 @@ public class PFLM_Main
 					Method method = Class.forName(s).getDeclaredMethod("lineIsCommand", new Class[] {int.class});
 					erpflmCheck = 2;
 				} catch (Exception e1) {
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No Optimine.")).toString());
-					Modchu_Debug.Debug("No Optimine.");
+					Modchu_Debug.lDebug("No Optimine.");
 *///b166delete
 //-@-b166
-				ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No OptiFine Config.")).toString());
-				Modchu_Debug.Debug("No OptiFine Config.");
+				Modchu_Debug.lDebug("No OptiFine Config.");
 //-@-125
 				try {
 					s = "VersionThread";
 					s = ""+Class.forName(s);
 					erpflmCheck = 2;
 				} catch (Exception e1) {
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No OptiFineL.")).toString());
-					Modchu_Debug.Debug("No OptiFineL.");
+					Modchu_Debug.lDebug("No OptiFineL.");
 				}
 //@-@125
 //@-@b166
@@ -2816,8 +2761,7 @@ public class PFLM_Main
 					entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("PFLM_EntityRendererCCTV"), new Class[]{ Modchu_Reflect.loadClass("Minecraft") }, new Object[]{ mc });
 					entityRenderer.itemRenderer = newInstanceItemRenderer();
 					s3 = "PFLM_EntityRendererCCTV";
-					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
-					Modchu_Debug.Debug(s3 + " to set.");
+					Modchu_Debug.lDebug(s3 + " to set.");
 					Class CCTV = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("mod_CCTV"));
 					Modchu_Reflect.setFieldObject(CCTV, "c", entityRenderer);
 					Modchu_Reflect.setFieldObject(CCTV, "rendererReplaced", true);
@@ -2826,23 +2770,19 @@ public class PFLM_Main
 					String s3;
 					entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("PFLM_EntityRenderer2D"), new Class[]{ Modchu_Reflect.loadClass("Minecraft") }, new Object[]{ mc });
 					s3 = "PFLM_EntityRenderer2D";
-					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
-					Modchu_Debug.Debug(s3 + " to set.");
+					Modchu_Debug.lDebug(s3 + " to set.");
 				} else
 				if (erpflmCheck == 0) {
 					entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("PFLM_EntityRenderer"), new Class[]{ Modchu_Reflect.loadClass("Minecraft") }, new Object[]{ mc });
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRenderer to set.")).toString());
-					Modchu_Debug.Debug("PFLM_EntityRenderer to set.");
+					Modchu_Debug.lDebug("PFLM_EntityRenderer to set.");
 				} else
 				if (erpflmCheck == 1) {
 					entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("PFLM_EntityRendererForge"), new Class[]{ Modchu_Reflect.loadClass("Minecraft") }, new Object[]{ mc });
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRendererForge to set.")).toString());
-					Modchu_Debug.Debug("PFLM_EntityRendererForge to set.");
+					Modchu_Debug.lDebug("PFLM_EntityRendererForge to set.");
 				} else
 				if (erpflmCheck == 2) {
 					entityRenderer = (EntityRenderer) Modchu_Reflect.newInstance(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("PFLM_EntityRendererOptiL"), new Class[]{ Modchu_Reflect.loadClass("Minecraft") }, new Object[]{ mc });
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRendererOptiL to set.")).toString());
-					Modchu_Debug.Debug("PFLM_EntityRendererOptiL to set.");
+					Modchu_Debug.lDebug("PFLM_EntityRendererOptiL to set.");
 				} else
 				if (erpflmCheck == 3) {
 					String s3;
@@ -2870,8 +2810,7 @@ public class PFLM_Main
 *///125delete
 /*//125delete
 					}
-					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
-					Modchu_Debug.Debug(s3 + " to set.");
+					Modchu_Debug.lDebug(s3 + " to set.");
 				} else
 				if (erpflmCheck == 4) {
 					String s3;
@@ -2898,8 +2837,7 @@ public class PFLM_Main
 *///125delete
 /*//125delete
 					}
-					ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
-					Modchu_Debug.Debug(s3 + " to set.");
+					Modchu_Debug.lDebug(s3 + " to set.");
 				} else
 					if (erpflmCheck == 5) {
 						String s3;
@@ -2926,8 +2864,7 @@ public class PFLM_Main
 *///125delete
 /*//125delete
 						}
-						ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
-						Modchu_Debug.Debug(s3 + " to set.");
+						Modchu_Debug.lDebug(s3 + " to set.");
 					} else
 						if (erpflmCheck == 6) {
 						String s3;
@@ -2954,8 +2891,7 @@ public class PFLM_Main
 *///125delete
 /*//125delete
 						}
-						ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
-						Modchu_Debug.Debug(s3 + " to set.");
+						Modchu_Debug.lDebug(s3 + " to set.");
 					} else
 					if (erpflmCheck == 7) {
 					String s3;
@@ -2970,13 +2906,11 @@ public class PFLM_Main
 						s3 = "PFLM_EntityRenderer";
 *///110delete
 /*//125delete
-						ModLoader.getLogger().fine((new StringBuilder(s3 + " to set.")).toString());
-						Modchu_Debug.Debug(s3 + " to set.");
+						Modchu_Debug.lDebug(s3 + " to set.");
 					}
 				}
 			} catch(Exception exception) {
-				ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PFLM_EntityRenderer Fail to set.")).toString());
-				Modchu_Debug.Debug("PFLM_EntityRenderer Fail to set!");
+				Modchu_Debug.lDebug("PFLM_EntityRenderer Fail to set!");
 				exception.printStackTrace();
 			}
 		} else {
@@ -3038,8 +2972,7 @@ public class PFLM_Main
 			}
 		}
 		if (!isPlayerAPI) {
-			ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-PlayerAPI false.")).toString());
-			Modchu_Debug.Debug("PlayerAPI false.");
+			Modchu_Debug.lDebug("PlayerAPI false.");
 		}
 
 		if (!isClearWater) {
@@ -3091,27 +3024,23 @@ public class PFLM_Main
 		int i = j;
 		String s1 = "HD_MT_AA";
 		if (s.indexOf(s1) != -1) {
-			ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-"+ s + " Check ok.")).toString());
-			Modchu_Debug.Debug(s + " Check ok.");
+			Modchu_Debug.lDebug(s + " Check ok.");
 			i = 3;
 			getIconWidthTerrain = 0;
 		} else {
 			s1 = "HD_U";
 			if (s.indexOf(s1) != -1) {
 				/*125//*/optiVersionName = "HD_U ";
-				ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-"+ s + " Check ok.")).toString());
-				Modchu_Debug.Debug(s + " Check ok.");
+				Modchu_Debug.lDebug(s + " Check ok.");
 				i = 3;
 			} else {
 				s1 = "HD";
 				/*125//*/optiVersionName = "HD ";
 				if (s.indexOf(s1) != -1) {
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-"+ s + " Check ok.")).toString());
-					Modchu_Debug.Debug(s + " Check ok.");
+					Modchu_Debug.lDebug(s + " Check ok.");
 					i = 4;
 				} else {
-					ModLoader.getLogger().fine((new StringBuilder("playerFormLittleMaid-No OptiFine.Name Chenk error.")).toString());
-					Modchu_Debug.Debug("No OptiFine.Name Chenk error.Name="+s);
+					Modchu_Debug.lDebug("No OptiFine.Name Chenk error.Name="+s);
 				}
 			}
 		}

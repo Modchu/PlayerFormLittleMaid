@@ -487,7 +487,7 @@ public class PFLM_ItemRendererMaster {
                 var11 = MathHelper.sin(MathHelper.sqrt_float(var13) * (float)Math.PI);
                 GL11.glRotatef(var11 * 70.0F, 0.0F, 1.0F, 0.0F);
                 GL11.glRotatef(-var12 * 20.0F, 0.0F, 0.0F, 1.0F);
-                Object renderEngine = Modchu_Reflect.getFieldObject("Minecraft", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+                Object renderEngine = Modchu_Reflect.getFieldObject("Minecraft", "field_71446_o", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
                 EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
                 int i = (Integer) Modchu_Reflect.invokeMethod("RenderEngine", "func_78350_a", "getTextureForDownloadableImage", new Class[]{ String.class, String.class }, renderEngine, new Object[]{ Modchu_Reflect.getFieldObject(Entity.class, "field_70120_cr", "skinUrl", thePlayer), Modchu_Reflect.invokeMethod(EntityLiving.class, "func_70073_O", "getTexture", thePlayer) });
                 GL11.glTranslatef(-1.0F, 3.6F, 3.5F);

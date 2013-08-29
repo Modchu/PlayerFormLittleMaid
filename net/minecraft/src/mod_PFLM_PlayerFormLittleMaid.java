@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import java.util.Map;
+
 //import net.minecraft.client.Minecraft;
 
 public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
@@ -18,7 +19,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public String getVersion()
 	{
-		return "1.6.2-22b";
+		if (pflm_main != null) ;else pflm_main = new PFLM_Main();
+		return pflm_main.getVersion();
 	}
 
 	public void load()
@@ -34,10 +36,6 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 
 	public void addRenderer(Map map)
 	{
-		pflm_RenderPlayerDummy = (PFLM_IRenderPlayerDummy) Modchu_Reflect.newInstance("PFLM_RenderPlayerDummy");
-		pflm_RenderPlayer = (PFLM_IRenderPlayer) Modchu_Reflect.newInstance("PFLM_RenderPlayer");
-		((Render) pflm_RenderPlayerDummy).setRenderManager(RenderManager.instance);
-		((Render) pflm_RenderPlayer).setRenderManager(RenderManager.instance);
 		pflm_main.addRenderer(map);
 	}
 

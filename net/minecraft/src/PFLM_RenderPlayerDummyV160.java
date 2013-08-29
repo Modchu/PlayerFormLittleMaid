@@ -50,7 +50,7 @@ public class PFLM_RenderPlayerDummyV160 extends RendererLivingEntity implements 
     	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
     		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
     		//super.func_130000_a((EntityLivingBase) entity, d, d1, d2, f, f1);
-    		else Modchu_Reflect.invokeMethod(RenderLiving.class, "func_77031_a", "doRenderLiving", new Class[]{ Modchu_Reflect.loadClass("EntityLiving"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
+    		else Modchu_Reflect.invokeMethod(RenderLiving.class, "func_77031_a", "doRenderLiving", new Class[]{ EntityLiving.class, double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
     		//doRenderLiving((EntityLiving) entity, d, d1, d2, f, f1);
     	}
     	else pflm_RenderPlayerDummyMaster.oldDoRenderLivingPFLM(entity, d, d1, d2, f, f1);

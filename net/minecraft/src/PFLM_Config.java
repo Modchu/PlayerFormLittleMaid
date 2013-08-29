@@ -138,7 +138,7 @@ public class PFLM_Config extends Modchu_Config {
 					}
 				}
 			} catch (Exception er) {
-				Modchu_Debug.Debug("saveParamater file error.");
+				Modchu_Debug.lDebug("PFLM_Config", "saveParamater file="+ file.toString(), 2, er);
 				er.printStackTrace();
 			}
 			try {
@@ -337,7 +337,7 @@ public class PFLM_Config extends Modchu_Config {
 				}
 			}
 		} catch (Exception ee) {
-			Modchu_Debug.Debug("loadShowModelList fail.");
+			Modchu_Debug.lDebug("PFLM_Config", "loadShowModelList fail.", 2, ee);
 			ee.printStackTrace();
 		}
 	}
@@ -364,9 +364,8 @@ public class PFLM_Config extends Modchu_Config {
 			bwriter.close();
 			//Modchu_Debug.Debug("file new file create.");
 		} catch (Exception e) {
-			Modchu_Debug.Debug("file writer fail.");
+			Modchu_Debug.lDebug("PFLM_Config", "writerModelList", 2, e);
 			e.printStackTrace();
-			Modchu_Debug.Debug(" ");
 		}
 	}
 
@@ -404,7 +403,7 @@ public class PFLM_Config extends Modchu_Config {
 			breader.close();
 			//Modchu_Debug.mDebug("modelList "+listName+" load end.");
 		} catch (Exception e) {
-			Modchu_Debug.Debug("modelList file "+listName+" load fail.");
+			Modchu_Debug.lDebug("PFLM_Config", "modelList file "+ listName +" load fail.", 2, e);
 			e.printStackTrace();
 			Modchu_Debug.Debug(" ");
 			return false;
@@ -528,11 +527,11 @@ public class PFLM_Config extends Modchu_Config {
 						.append(t[1]).append("][").append(t[2]).append("][").append(t[3]).append("][").append(t[4]).append("]");
 						lines.add(sb1.toString());
 						sb.delete(0, sb.length());
-						Modchu_Debug.mDebug("saveOthersPlayerParamater file save. s=" + s);
+						Modchu_Debug.lDebug("saveOthersPlayerParamater file save. s=" + s);
 					}
 				}
 			} catch (Exception er) {
-				Modchu_Debug.Debug("saveOthersPlayerParamater file error.");
+				Modchu_Debug.lDebug("PFLM_Config", "saveOthersPlayerParamater file="+ file.toString(), 2, er);
 				er.printStackTrace();
 			}
 			try {
@@ -551,7 +550,7 @@ public class PFLM_Config extends Modchu_Config {
 					bwriter.close();
 				}
 			} catch (Exception er) {
-				Modchu_Debug.Debug("saveOthersPlayerParamater file save fail.");
+				Modchu_Debug.lDebug("saveOthersPlayerParamater file save fail.");
 				er.printStackTrace();
 			}
 		}
@@ -629,12 +628,12 @@ public class PFLM_Config extends Modchu_Config {
 				}
 			}
 			breader.close();
-			Modchu_Debug.mDebug("Modchu_Config loadConfigOthersPlayer");
+			Modchu_Debug.mDebug("PFLM_Config loadConfigOthersPlayer");
 		} catch (Exception e) {
-			Modchu_Debug.Debug("Modchu_Config loadConfigShowModel load fail.");
+			Modchu_Debug.lDebug("PFLM_Config", "loadConfigShowModel "+ file.toString() +" load fail.", 2, e);
 			e.printStackTrace();
 		}
-		//Modchu_Debug.mDebug("Modchu_Config loadConfigOthersPlayer");
+		//Modchu_Debug.mDebug("PFLM_Config loadConfigOthersPlayer");
 	}
 
 	public static void removeOthersPlayerParamater(File file, String name) {
@@ -666,7 +665,7 @@ public class PFLM_Config extends Modchu_Config {
 				}
 				breader.close();
 			} catch (Exception er) {
-				Modchu_Debug.Debug("removeOthersPlayerParamater error.");
+				Modchu_Debug.lDebug("PFLM_Config", "removeOthersPlayerParamater", 2, er);
 				er.printStackTrace();
 			}
 			try {
@@ -685,7 +684,7 @@ public class PFLM_Config extends Modchu_Config {
 					bwriter.close();
 				}
 			} catch (Exception er) {
-				Modchu_Debug.Debug("removeOthersPlayerParamater file save fail.");
+				Modchu_Debug.lDebug("PFLM_Config", "removeOthersPlayerParamater file="+ file.toString(), 2, er);
 				er.printStackTrace();
 			}
 		}
@@ -777,12 +776,12 @@ public class PFLM_Config extends Modchu_Config {
 			try {
 				o = fields[i1].get(model);
 				if (MMM_ModelRenderer.class.isInstance(o)) {
-					//Modchu_Debug.mDebug("Modchu_Config showPartsSetting MMM_ModelRenderer.class.isInstance fields["+i1+"].getType() = "+fields[i1].getType());
+					//Modchu_Debug.mDebug("PFLM_Config showPartsSetting MMM_ModelRenderer.class.isInstance fields["+i1+"].getType() = "+fields[i1].getType());
 					try {
 						s1 = fields[i1].getName();
 						map.put(k, s1);
 						modelRendererMap1.put(s1, fields[i1]);
-						//Modchu_Debug.mDebug("Modchu_Config showPartsSetting put s1="+s1+" fields["+i1+"].getType() = "+fields[i1].getType());
+						//Modchu_Debug.mDebug("PFLM_Config showPartsSetting put s1="+s1+" fields["+i1+"].getType() = "+fields[i1].getType());
 					} catch (Exception e) {
 					}
 					k++;

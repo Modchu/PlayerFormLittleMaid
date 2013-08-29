@@ -102,7 +102,7 @@ public class PFLM_EntityPlayerMaster {
 			player.attackEntityFrom(DamageSource.drown,
 					mod_PFLM_PlayerFormLittleMaid.pflm_main.Physical_MeltingPlayer);
 		}
-		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_71462_r", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
 		if (currentScreen == null
 				&& locationPositionCorrectionY != 0.0F) {
 			setPositionCorrection(0.0D, locationPositionCorrectionY, 0.0D);

@@ -191,7 +191,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
 				Modchu_Reflect.invokeMethod("TextureUtil", "func_110987_a", new Class[]{ int.class, BufferedImage.class }, new Object[]{ 0, bufferedimage });
 				//TextureUtil.func_110987_a(0, bufferedimage);
 			} else {
-				Object renderEngine = Modchu_Reflect.getFieldObject("Minecraft", "field_72770_i", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+				Object renderEngine = Modchu_Reflect.getFieldObject("Minecraft", "field_71446_o", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
 				Modchu_Reflect.invokeMethod("RenderEngine", "func_78351_a", "setupTexture", new Class[]{ BufferedImage.class, int.class }, renderEngine, new Object[]{ bufferedimage, 0 });
 				//mc.renderEngine.setupTexture(bufferedimage, 0);
 			}

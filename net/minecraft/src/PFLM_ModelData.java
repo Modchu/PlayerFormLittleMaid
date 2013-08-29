@@ -1499,7 +1499,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     private int getMaidColor() {
 		return maidColor;
 /*
-		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_71462_r", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
     	if (owner instanceof EntityPlayer) {
     		if (currentScreen != null
     				&& currentScreen instanceof PFLM_Gui) {

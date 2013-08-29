@@ -124,6 +124,7 @@ public class PFLM_RenderPlayerDummyMaster extends RenderPlayer
     		t4 = modelData.modelFATT.textureOuter;
     		t4[i] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 80, is);
     		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
+    		//Modchu_Debug.mlDebug("t3["+i+"]="+t3[i]);
     	}
     	//Modchu_Debug.mlDebug("modelData.modelFATT.textureOuter["+i+"]="+modelData.modelFATT.textureOuter[i]);
     	//Modchu_Debug.mlDebug("modelData.modelFATT.textureInner["+i+"]="+modelData.modelFATT.textureInner[i]);
@@ -175,7 +176,7 @@ public class PFLM_RenderPlayerDummyMaster extends RenderPlayer
     		f2 = prevRenderYawOffset + (renderYawOffset - prevRenderYawOffset) * f1;
     		f3 = entityliving.prevRotationYaw + (entityliving.rotationYaw - entityliving.prevRotationYaw) * f1;
     		f4 = entityliving.prevRotationPitch + (entityliving.rotationPitch - entityliving.prevRotationPitch) * f1;
-    		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_6313_p", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+    		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_71462_r", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
     		//renderLivingAt(entityliving, d, d1, d2);
     		float f5 = handleRotationFloat((Entity) entityliving, f1);
     		//rotateCorpse((EntityPlayer) entityliving, f5, f2, f1);
@@ -268,7 +269,7 @@ public class PFLM_RenderPlayerDummyMaster extends RenderPlayer
     				f10 = mod_PFLM_PlayerFormLittleMaid.pflm_main.transparency;
     				GL11.glColor4f(f9, f9, f9, f10);
     				modelData.modelMain.setEntityCaps(modelData);
-    				Modchu_Reflect.invokeMethod(renderPassModel.getClass(), "setLivingAnimations", new Class[]{ EntityLivingBase, float.class, float.class, float.class }, renderPassModel, new Object[]{ entityliving, f8, f7, f1});
+    				Modchu_Reflect.invokeMethod(renderPassModel.getClass(), "func_78086_a", "setLivingAnimations", new Class[]{ EntityLivingBase, float.class, float.class, float.class }, renderPassModel, new Object[]{ entityliving, f8, f7, f1});
     				//renderPassModel.setLivingAnimations(entityliving, f8, f7, f1);
     				((MMM_ModelBaseDuo) renderPassModel).setArmorRendering(true);
     				if ((PFLMVersion > 129
@@ -671,7 +672,7 @@ public class PFLM_RenderPlayerDummyMaster extends RenderPlayer
 		Object resourceLocation = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(entityDummy.textureName, modelData.getCapsValueInt(modelData.caps_maidColor));
 		modelData.setCapsValue(modelData.caps_ResourceLocation, 0, resourceLocation);
 		if (resourceLocation != null) ;else {
-			Modchu_Debug.Debug("PFLM_RenderPlayerDummy doRender texture null !! entityDummy.textureName="+entityDummy.textureName+" color="+modelData.getCapsValueInt(modelData.caps_maidColor));
+			Modchu_Debug.lDebug("PFLM_RenderPlayerDummy doRender texture null !! entityDummy.textureName="+entityDummy.textureName+" color="+modelData.getCapsValueInt(modelData.caps_maidColor));
 			return;
 		}
 		if (!flag) {

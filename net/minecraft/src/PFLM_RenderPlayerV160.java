@@ -17,7 +17,8 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
 	public static PFLM_RenderPlayerMaster pflm_RenderPlayerMaster;
 
 	public PFLM_RenderPlayerV160() {
-		pflm_RenderPlayerMaster = new PFLM_RenderPlayerMaster();
+		Modchu_Debug.lDebug("PFLM_RenderPlayerV160 init");
+		if (pflm_RenderPlayerMaster != null) ;else pflm_RenderPlayerMaster = new PFLM_RenderPlayerMaster();
 		pflm_RenderPlayerMaster.renderManager = renderManager;
 	}
 
@@ -73,7 +74,7 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
     		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
     		//super.func_130000_a((EntityLivingBase) entity, d, d1, d2, f, f1);
-    		else Modchu_Reflect.invokeMethod(RenderLiving.class, "func_77031_a", "doRenderLiving", new Class[]{ Modchu_Reflect.loadClass("EntityLiving"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
+    		else Modchu_Reflect.invokeMethod(RenderLiving.class, "func_77031_a", "doRenderLiving", new Class[]{ EntityLiving.class, double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
     		//doRenderLiving((EntityLiving) entity, d, d1, d2, f, f1);
     	}
     	else pflm_RenderPlayerMaster.oldDoRenderLivingPFLM(modelData, entity, d, d1, d2, f, f1);
@@ -83,6 +84,7 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     @Override
     protected void renderEquippedItems(EntityLivingBase entityliving, float f)
     {
+    	if (pflm_RenderPlayerMaster.renderManager != null) ;else pflm_RenderPlayerMaster.renderManager = renderManager;
     	renderSpecials((AbstractClientPlayer)entityliving, f);
     }
 
@@ -94,13 +96,13 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
 
     @Override
     public void renderFirstPersonArm(EntityPlayer entityplayer) {
-    	pflm_RenderPlayerMaster.renderManager = renderManager;
+    	if (pflm_RenderPlayerMaster.renderManager != null) ;else pflm_RenderPlayerMaster.renderManager = renderManager;
     	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.renderFirstPersonArm(entityplayer, 2);
     }
 
     public void renderFirstPersonArm(EntityPlayer entityplayer, int i) {
     	//olddaysì±ì¸éûÇ…2à»äOÇÃintïtÇ´Ç≈åƒÇŒÇÍÇÈÅB
-    	pflm_RenderPlayerMaster.renderManager = renderManager;
+    	if (pflm_RenderPlayerMaster.renderManager != null) ;else pflm_RenderPlayerMaster.renderManager = renderManager;
     	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.renderFirstPersonArm(entityplayer, i);
     }
 

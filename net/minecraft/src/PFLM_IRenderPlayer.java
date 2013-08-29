@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 
 public interface PFLM_IRenderPlayer {
 
+	public static Object steveTexture = null;
 	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1);
 	public PFLM_ModelData getPlayerData(EntityPlayer entityplayer);
 	public Object[] checkimage(BufferedImage bufferedimage);

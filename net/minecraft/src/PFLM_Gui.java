@@ -145,8 +145,7 @@ public class PFLM_Gui extends GuiScreen {
 								if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isRelease()) {
 									mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName = "_Biped";
 									mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName = "_Biped";
-									t = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? Modchu_Reflect.newInstance("ResourceLocation", new Class[]{ String.class }, new Object[]{ "textures/entity/steve.png" }) :
-										"/mob/char.png";
+									t = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.steveTexture;
 									if (url != null) {
 										mod_PFLM_PlayerFormLittleMaid.pflm_main.setSkinUrl(null);
 										mod_PFLM_PlayerFormLittleMaid.pflm_main.setTexture(t);
@@ -175,11 +174,13 @@ public class PFLM_Gui extends GuiScreen {
 									}
 									try
 									{
-										bufferedimage1 = ImageIO.read((File) Modchu_Reflect.invokeMethod(Class.class, "getResource", new Class[]{ String.class }, Modchu_Reflect.loadClass("Minecraft"), new Object[]{ mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? (String) Modchu_Reflect.invokeMethod("ResourceLocation", "func_110624_b", t) : t}));
+										bufferedimage1 = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ?
+												ImageIO.read((File) Modchu_Reflect.invokeMethod(Class.class, "getResource", new Class[]{ String.class }, Modchu_Reflect.loadClass("Minecraft"), new Object[]{ (String) Modchu_Reflect.invokeMethod("ResourceLocation", "func_110624_b", t)})) :
+												ImageIO.read((URL) Modchu_Reflect.invokeMethod(Class.class, "getResource", new Class[]{ String.class }, Modchu_Reflect.loadClass("Minecraft"), new Object[]{ t }));
 									}
 									catch (Exception e2)
 									{
-										Modchu_Debug.Debug("PFLM_Gui initGui image read miss. File = "+t);
+										Modchu_Debug.lDebug(""+getClass().getName(), "initGui image read miss. File = "+t, 2, e2);
 										e2.printStackTrace();
 									}
 								} else {
@@ -1325,10 +1326,10 @@ public class PFLM_Gui extends GuiScreen {
     		for (int x = 0 ; x < w ; x++) {
     			int c = image.getRGB(x, y);
     			write.setRGB(x,y,c);
-			}
+    		}
     	}
     	} catch (Exception e) {
-			Modchu_Debug.Debug(e.getMessage());
+    		Modchu_Debug.lDebug(""+getClass().getName(), "fullColorConversion", 2, e);
     	}
         return write;
     }

@@ -16,7 +16,7 @@ public class PFLM_PlayerControllerMaster {
     			| mod_PFLM_PlayerFormLittleMaid.pflm_main.isPlayerAPIDebug) {
     		if (pflm_entityPlayersp != null
     				&& !PFLM_Gui.noSaveFlag) mod_PFLM_PlayerFormLittleMaid.pflm_main.loadParamater();
-    		Modchu_Debug.Debug("Replace PFLM_EntityPlayerSP.");
+    		Modchu_Debug.lDebug("Replace PFLM_EntityPlayerSP.");
 //-@-125
     		Class[] types = { Modchu_Reflect.loadClass("Minecraft") , World.class, Session.class, NetClientHandler.class };
     		EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
