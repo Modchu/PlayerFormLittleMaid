@@ -1315,6 +1315,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					| (!modelData.getCapsValueBoolean(modelData.caps_isPlayer)
 					&& modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_online)) {
 				Modchu_Debug.lDebug((new StringBuilder()).append("new model read username = ").append(entityplayer.username).toString());
+				textureBipedDefaultSetting(modelData);
 				String skinUrl = modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_PlayerOnline ? thePlayer.username : entityplayer.username;
 				skinUrl = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? (String) Modchu_Reflect.invokeMethod(AbstractClientPlayer, "func_110300_d", new Class[]{ String.class }, entityplayer, new Object[]{ skinUrl })
 						: (new StringBuilder()).append("http://skins.minecraft.net/MinecraftSkins/").append(skinUrl).append(".png").toString();
@@ -1324,6 +1325,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 				bufferedimage = ImageIO.read(url);
 				//Modchu_Debug.mlDebug("OnlineMode bufferedimage != null ?"+(bufferedimage != null));
 				String n = modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_PlayerOnline ? thePlayer.username : entityplayer.username;
+				modelData.setCapsValue(modelData.caps_initFlag, 2);
 				if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)
 						&& !n.startsWith("Player")
 						&& modelData.getCapsValueInt(modelData.caps_initFlag) == 0
@@ -1333,7 +1335,6 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					resetFlag = true;
 					return checkModelData(modelData);
 				}
-				modelData.setCapsValue(modelData.caps_initFlag, 2);
 				//Modchu_Debug.mlDebug("OnlineMode.image ok.");
 			} else {
 				//Modchu_Debug.Debug("er OnlineMode image.");
@@ -1361,10 +1362,9 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 					| !modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
 				//Modchu_Debug.Debug("er /mob/char.png ");
 				modelData.setCapsValue(modelData.caps_skinMode, skinMode_char);
-				modelData.setCapsValue(modelData.caps_textureName, "_Biped");
-				modelData.setCapsValue(modelData.caps_textureArmorName, "_Biped");
-				modelInit(entityplayer, modelData, "_Biped");
-				modelArmorInit(entityplayer, modelData, "_Biped");
+				textureBipedDefaultSetting(modelData);
+				modelInit(entityplayer, modelData, (String) modelData.getCapsValue(modelData.caps_textureName));
+				modelArmorInit(entityplayer, modelData, (String) modelData.getCapsValue(modelData.caps_textureArmorName));
 				if (modelData.getCapsValue(modelData.caps_ResourceLocation) != null) ;else {
 					modelData.setCapsValue(modelData.caps_ResourceLocation, (Object) Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
 				}
@@ -1393,7 +1393,9 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		if (s == null
 				| (s !=null
 				&& s.isEmpty())
-				| mod_Modchu_ModchuLib.modchu_Main.checkTexturePackege(s, modelData.getCapsValueInt(modelData.caps_maidColor)) == null) {
+				| (mod_Modchu_ModchuLib.modchu_Main.checkTexturePackege(s, modelData.getCapsValueInt(modelData.caps_maidColor)) == null)
+				&& modelData.getCapsValueInt(modelData.caps_skinMode) != skinMode_char
+				&& modelData.getCapsValueInt(modelData.caps_skinMode) != skinMode_online) {
 			s = textureNameDefaultSetting(modelData);
 		}
 		if (s == null
@@ -1431,17 +1433,24 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		if (s == null
 				| (s !=null
 				&& s.isEmpty())
-				| mod_Modchu_ModchuLib.modchu_Main.checkTexturePackege(s, modelData.getCapsValueInt(modelData.caps_maidColor)) == null) {
+				| (mod_Modchu_ModchuLib.modchu_Main.checkTexturePackege(s, modelData.getCapsValueInt(modelData.caps_maidColor)) == null)
+				&& modelData.getCapsValueInt(modelData.caps_skinMode) != skinMode_char
+				&& modelData.getCapsValueInt(modelData.caps_skinMode) != skinMode_online) {
+			Modchu_Debug.lDebug("modelArmorInit modelData.getCapsValueInt(modelData.caps_skinMode)="+modelData.getCapsValueInt(modelData.caps_skinMode));
 			s = textureArmorNameDefaultSetting(modelData);
 		}
-		if (s == null
+		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model);
+		if (!isBiped
+				&& (s == null
 				| (s !=null
-				&& s.isEmpty())) {
+				&& s.isEmpty()))) {
 			throw new RuntimeException("PFLM_RenderPlayerMaster textureArmorName null error !!");
 		}
-		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model);
 		if (isBiped
-				&& (s.equalsIgnoreCase("default")
+				&& (s == null
+						| (s !=null
+						&& s.isEmpty())
+						| s.equalsIgnoreCase("default")
 						| s.equalsIgnoreCase("erasearmor"))) s = "_Biped";
 		Object[] models = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(entityplayer, s, false, true);
 		if (models != null) ;else {
@@ -1482,6 +1491,17 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName = s;
 		modelData.setCapsValue(modelData.caps_textureArmorName, s);
 		return s;
+	}
+
+	private static void textureBipedDefaultSetting(PFLM_ModelData modelData) {
+		String s = "_Biped";
+		//if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
+			//mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName = s;
+			//mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName = s;
+		//}
+		modelData.setCapsValue(modelData.caps_textureName, s);
+		modelData.setCapsValue(modelData.caps_textureArmorName, s);
+		Modchu_Debug.lDebug("textureBipedDefaultSetting textureName ="+(String) modelData.getCapsValue(modelData.caps_textureName));
 	}
 
 	private static void modelTextureReset(EntityPlayer entityplayer, PFLM_ModelData modelData) {
@@ -1548,25 +1568,25 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)
 				&& mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode == PFLM_Gui.modeOffline
 				| modelData.getCapsValueInt(modelData.caps_skinMode) == skinMode_offline) {
+			Modchu_Debug.lDebug("checkSkin skinMode_offline");
 			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName.equals("_Biped")) {
 				mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName =
 						mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName = "default";
 			}
 			modelData.setCapsValue(modelData.caps_maidColor, mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor);
 			modelData.setCapsValue(modelData.caps_skinMode, skinMode_offline);
-			modelInit(entityplayer, modelData, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
 			modelData.setCapsValue(modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
 			modelData.setCapsValue(modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
-			modelArmorInit(entityplayer, modelData, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureArmorName);
+			modelInit(entityplayer, modelData, (String) modelData.getCapsValue(modelData.caps_textureName));
+			modelArmorInit(entityplayer, modelData, (String) modelData.getCapsValue(modelData.caps_textureArmorName));
 			return checkModelData(modelData);
 		}
 		if (bufferedimage == null) {
 			Modchu_Debug.lDebug("checkSkin bufferedimage == null");
 			modelData.setCapsValue(modelData.caps_skinMode, skinMode_char);
-			modelData.setCapsValue(modelData.caps_textureName, "_Biped");
-			modelData.setCapsValue(modelData.caps_textureArmorName, "_Biped");
-			modelInit(entityplayer, modelData, "_Biped");
-			modelArmorInit(entityplayer, modelData, "_Biped");
+			textureBipedDefaultSetting(modelData);
+			modelInit(entityplayer, modelData, (String) modelData.getCapsValue(modelData.caps_textureName));
+			modelArmorInit(entityplayer, modelData, (String) modelData.getCapsValue(modelData.caps_textureArmorName));
 			return checkModelData(modelData);
 		}
 		modelData.setCapsValue(modelData.caps_isActivated, true);
@@ -1581,14 +1601,11 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 		float modelScale = (Float) s[7];
 
 		if (returnflag) {
-			if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
-				mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName = "_Biped";
-				modelData.setCapsValue(modelData.caps_textureName, "_Biped");
-				modelData.setCapsValue(modelData.caps_textureArmorName, "_Biped");
-			}
+			Modchu_Debug.lDebug("returnflag");
 			modelData.setCapsValue(modelData.caps_skinMode, skinMode_online);
-			modelInit(entityplayer, modelData, "_Biped");
-			modelArmorInit(entityplayer, modelData, "_Biped");
+			Modchu_Debug.lDebug("returnflag textureArmorName ="+(String) modelData.getCapsValue(modelData.caps_textureArmorName));
+			modelInit(entityplayer, modelData, (String) modelData.getCapsValue(modelData.caps_textureName));
+			modelArmorInit(entityplayer, modelData, (String) modelData.getCapsValue(modelData.caps_textureArmorName));
 			return checkModelData(modelData);
 		}
 		if (modelData.getCapsValueBoolean(modelData.caps_isPlayer)) {
@@ -1627,6 +1644,7 @@ public class PFLM_RenderPlayerMaster extends RenderPlayer
 			mod_PFLM_PlayerFormLittleMaid.pflm_main.handednessMode = handedness;
 			PFLM_Gui.modelScale = modelScale;
 		}
+		Modchu_Debug.lDebug("checkSkin ok.return");
 		return checkModelData(modelData);
     }
 

@@ -350,10 +350,11 @@ public class PFLM_Gui extends GuiScreen {
 						Object o = f.get(model);
 						modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
 						if (modelRenderer != null) {
+							//Modchu_Debug.mmlDebug("PFLM_Gui partsInit() modelRendererMap f.getName()="+f.getName()+" modelRenderer.showModel="+modelRenderer.showModel);
 							if (defaultShowPartsMap != null
 									&& defaultShowPartsMap.containsKey(s2)) b = defaultShowPartsMap.get(s2);
 							else b = modelRenderer.showModel;
-							//Modchu_Debug.mDebug("PFLM_Gui partsInit() modelRendererMap f.getName()="+f.getName()+" b="+b);
+							//Modchu_Debug.mmlDebug("PFLM_Gui partsInit() modelRendererMap f.getName()="+f.getName()+" b="+b);
 						}
 					} catch (Exception e) {
 					}

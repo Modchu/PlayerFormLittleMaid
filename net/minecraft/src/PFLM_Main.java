@@ -13,7 +13,7 @@ import org.lwjgl.input.Mouse;
 
 public class PFLM_Main
 {
-	public static final String version = "22e";
+	public static final String version = "22f";
 	//cfg‘‚«‚İ€–Ú
 	public static boolean AlphaBlend = true;
 	public static boolean Physical_Undead = false;

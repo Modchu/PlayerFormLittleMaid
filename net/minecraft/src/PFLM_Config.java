@@ -781,7 +781,8 @@ public class PFLM_Config extends Modchu_Config {
 						s1 = fields[i1].getName();
 						map.put(k, s1);
 						modelRendererMap1.put(s1, fields[i1]);
-						//Modchu_Debug.mDebug("PFLM_Config showPartsSetting put s1="+s1+" fields["+i1+"].getType() = "+fields[i1].getType());
+						//Modchu_Debug.mmlDebug("PFLM_Config showPartsSetting put s1="+s1+" fields["+i1+"].getType() = "+fields[i1].getType());
+						//Modchu_Debug.mmlDebug("PFLM_Config showPartsSetting put s1="+s1+" o.showModel="+((MMM_ModelRenderer) o).showModel);
 					} catch (Exception e) {
 					}
 					k++;
