@@ -81,6 +81,10 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     	modelData.modelMain.setCapsValue(modelData.caps_aimedBow, false);
     }
 
+    public void sitSleepResetCheck(PFLM_ModelData modelData, EntityPlayer entityplayer) {
+    	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.sitSleepResetCheck(modelData, entityplayer);
+    }
+
     @Override
     protected void renderEquippedItems(EntityLivingBase entityliving, float f)
     {

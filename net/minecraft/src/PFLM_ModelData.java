@@ -1052,7 +1052,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			float f = (Float) Modchu_Reflect.invokeMethod("EntityLivingBase", "func_110143_aJ", owner);
 			return (int) f;
 		} else {
-			return (Integer) Modchu_Reflect.getFieldObject("EntityLiving", "field_70260_b", "health", owner);
+			return (Integer) Modchu_Reflect.getFieldObject(EntityLiving.class, "field_70734_aK", "health", owner);
 		}
 	}
 
@@ -1111,7 +1111,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		//Modchu_Debug.mDebug("setIsSitting b="+b);
 		if (isSitting != b) {
 			isSitting = b;
-			addSendList(1);
+			addSendList(1, b);
 		}
 	}
 
@@ -1141,7 +1141,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			for (; f2 > 360F; f2 -= 360F) { }
 			int i = (int)((f2 + 45F) / 90F);
 			setRotate(i);
-			addSendList(2);
+			addSendList(2, b, rotate);
 		}
 	}
 
@@ -1208,7 +1208,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private void setShortcutKeysAction(boolean b) {
 		if (shortcutKeysAction != b) {
 			shortcutKeysAction = b;
-			addSendList(3);
+			addSendList(3, b, runActionNumber);
 		}
 	}
 
@@ -1225,7 +1225,13 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	}
 
 	private void setRunActionNumber(int i) {
-		runActionNumber = i;
+		if (runActionNumber != i) {
+			Modchu_Debug.mDebug("setRunActionNumber actionReleaseNumber="+actionReleaseNumber+" i="+i);
+			setCapsValue(caps_actionRelease, actionReleaseNumber);
+			runActionNumber = i;
+			setActionReleaseNumber(i);
+			setShortcutKeysActionInitFlag(true);
+		}
 	}
 
 	private int getActionReleaseNumber() {
@@ -1760,10 +1766,10 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     	PFLM_Config.putDefaultShowPartsMap(textureName, s, i, b);
     }
 
-    public void addSendList(int i) {
+    public void addSendList(int i, Object... o) {
     	if (mod_Modchu_ModchuLib.modchu_Main.isPFLMF) ;else return;
     	LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject(mod_Modchu_ModchuLib.modchu_Main.mod_PFLMF, "sendList");
-    	if (sendList != null) sendList.add(new Object[]{ i, this, owner });
+    	if (sendList != null) sendList.add(new Object[]{ i, this, owner, o });
     }
 
     private Object getPlayerState(int entityId, byte by) {

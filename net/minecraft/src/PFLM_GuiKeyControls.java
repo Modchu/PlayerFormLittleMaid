@@ -428,6 +428,8 @@ public class PFLM_GuiKeyControls extends
     		float f1 = 50F;
     		GL11.glScalef(-f1, f1, f1);
     		GL11.glRotatef(180F, 180F, 0.0F, 1.0F);
+    		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
+    				&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
     		float f2 = mc.thePlayer.renderYawOffset;
     		float f3 = mc.thePlayer.rotationYaw;
     		float f4 = mc.thePlayer.rotationPitch;

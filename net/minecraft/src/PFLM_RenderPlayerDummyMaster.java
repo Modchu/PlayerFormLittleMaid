@@ -288,7 +288,7 @@ public class PFLM_RenderPlayerDummyMaster extends RenderPlayer
 
     				float f11 = (float)entityliving.ticksExisted + f1;
     				if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod(Render.class, "func_110776_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, this, Modchu_Reflect.newInstance("ResourceLocation", new Class[]{ String.class }, new Object[]{ "%blur%/misc/glint.png" }));
-    				else Modchu_Reflect.invokeMethod(Render.class, "loadTexture", new Class[]{ String.class }, this, new Object[]{ "%blur%/misc/glint.png" });
+    				else Modchu_Reflect.invokeMethod(Render.class, "func_76985_a", "loadTexture", new Class[]{ String.class }, this, new Object[]{ "%blur%/misc/glint.png" });
     				if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isShaders) {
     					//Shaders.glEnableWrapper(GL11.GL_BLEND);
     					shadersGlEnableWrapper(GL11.GL_BLEND);

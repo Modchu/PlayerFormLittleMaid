@@ -13,7 +13,10 @@ import org.lwjgl.input.Mouse;
 
 public class PFLM_Main
 {
-	public static final String version = "22f";
+	public static final String version = "22g";
+	public static final String modName = "PlayerFormLittleMaid";
+	public static final String versionString = Modchu_Version.version + "-" + version;
+
 	//cfgèëÇ´çûÇ›çÄñ⁄
 	public static boolean AlphaBlend = true;
 	public static boolean Physical_Undead = false;
@@ -170,9 +173,13 @@ public class PFLM_Main
 		return isRelease;
 	}
 
+	public String getName() {
+		return modName;
+	}
+
 	public String getVersion()
 	{
-		return Modchu_Version.getMinecraftVersion() + "-" + version;
+		return versionString;
 	}
 
 	static{
@@ -524,8 +531,8 @@ public class PFLM_Main
 						if (!getShortcutKeysAction()
 								| (getShortcutKeysAction()
 										&& getRunActionNumber() != i1)) {
-							setActionReleaseNumber(getRunActionNumber());
 							setRunActionNumber(i1);
+							setActionReleaseNumber(getRunActionNumber());
 							setShortcutKeysAction(true);
 						}
 					}
@@ -639,6 +646,8 @@ public class PFLM_Main
 		if (!b2) return false;
 */
 
+		sitSleepResetCheck();
+
 		if (!Keyboard.getEventKeyState()
 				&& !Mouse.getEventButtonState()) {
 			if (!isReleasekey) isReleasekey = true;
@@ -712,7 +721,7 @@ public class PFLM_Main
 			if (theWorld.getWorldInfo().getGameType() == EnumGameType.SURVIVAL
 					&& !Modchu_Reflect.loadClass("PFLM_EntityPlayerSP2").isInstance(thePlayer)
 					&& b != null) {
-				Modchu_Reflect.setFieldObject("Minecraft", "field_70475_c", "thePlayer", mc, (EntityClientPlayerMP) b);
+				mod_Modchu_ModchuLib.modchu_Main.setThePlayer((EntityClientPlayerMP) b);
 				//thePlayer = PFLM_PlayerController2.entityplayerformlittlemaidsp;
 			}
 			if (theWorld.getWorldInfo().getGameType() == EnumGameType.CREATIVE
@@ -892,7 +901,7 @@ public class PFLM_Main
 			y = getPosY(thePlayer);
 			z = getPosZ(thePlayer);
 		}
-		EntityPlayer var9 = (EntityPlayer) Modchu_Reflect.getFieldObject("Minecraft", "field_70475_c", "thePlayer", mc);
+		EntityPlayer var9 = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 		//Modchu_Debug.Debug("get x="+x+" y="+y+" z="+z);
 		Object playerController = Modchu_Reflect.getFieldObject("Minecraft", "field_71442_b", "playerController", mc);
 		World theWorld = mod_Modchu_ModchuLib.modchu_Main.getTheWorld();
@@ -943,7 +952,7 @@ public class PFLM_Main
 				//((PFLM_PlayerControllerCreative2) playerController).setPlayerCapabilities(thePlayer);
 				Modchu_Reflect.invokeMethod("PFLM_PlayerControllerCreative2", "setInCreativeMode", new Class[]{boolean.class}, playerController, new Object[]{ true });
 				//((PFLM_PlayerControllerCreative2) playerController).setInCreativeMode(true);
-				Modchu_Reflect.invokeMethod("PFLM_EntityPlayerSP2", "copyPlayer", new Class[]{EntityPlayer.class}, Modchu_Reflect.getFieldObject("Minecraft", "field_70475_c", "thePlayer", mc), new Object[]{ var9 });
+				Modchu_Reflect.invokeMethod("PFLM_EntityPlayerSP2", "copyPlayer", new Class[]{EntityPlayer.class}, mod_Modchu_ModchuLib.modchu_Main.getThePlayer(), new Object[]{ var9 });
 				//((PFLM_EntityPlayerSP2) thePlayer).copyPlayer(var9);
 				//Modchu_Debug.Debug("isSSP CREATIVE set");
 			}
@@ -1034,14 +1043,14 @@ public class PFLM_Main
 			//playerController = new PFLM_PlayerControllerCreative(mc);
 		}
 		if (thePlayer != null) thePlayer.setDead();
-		Modchu_Reflect.setFieldObject("Minecraft", "field_70475_c", "thePlayer", mc, Modchu_Reflect.invokeMethod("PlayerControllerMP", "createPlayer", new Class[]{ World.class }, playerController, new Object[]{ theWorld }));
+		mod_Modchu_ModchuLib.modchu_Main.setThePlayer((EntityPlayer) Modchu_Reflect.invokeMethod("PlayerControllerMP", "createPlayer", new Class[]{ World.class }, playerController, new Object[]{ theWorld }));
 		Modchu_Reflect.setFieldObject("Minecraft", "renderViewEntity", mc, new Object[]{ null });
 		if (thePlayer != null
 				&& var9 != null) {
 			if (isPlayerAPI && !isPlayerAPIDebug) {
-				Modchu_Reflect.invokeMethod("PFLM_EntityPlayer", "copyPlayer", new Class[]{EntityPlayer.class}, Modchu_Reflect.getFieldObject("Minecraft", "field_70475_c", "thePlayer", mc), new Object[]{ var9 });
+				Modchu_Reflect.invokeMethod("PFLM_EntityPlayer", "copyPlayer", new Class[]{EntityPlayer.class}, mod_Modchu_ModchuLib.modchu_Main.getThePlayer(), new Object[]{ var9 });
 			} else {
-				Modchu_Reflect.invokeMethod("PFLM_EntityPlayerSP", "copyPlayer", new Class[]{EntityPlayer.class}, Modchu_Reflect.getFieldObject("Minecraft", "field_70475_c", "thePlayer", mc), new Object[]{ var9 });
+				Modchu_Reflect.invokeMethod("PFLM_EntityPlayerSP", "copyPlayer", new Class[]{EntityPlayer.class}, mod_Modchu_ModchuLib.modchu_Main.getThePlayer(), new Object[]{ var9 });
 			}
 			//thePlayer.copyPlayer(var9);
 		}
@@ -1322,12 +1331,16 @@ public class PFLM_Main
     }
 
     public static void changeColor(EntityPlayer entityplayer) {
-    	if (entityplayer != null) ;else entityplayer = (EntityPlayer) Modchu_Reflect.getFieldObject("Minecraft", "field_70475_c", "thePlayer", mc);
+    	if (entityplayer != null) ;else entityplayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
     	PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData(entityplayer);
     	if (data != null
     			&& data.getCapsValueBoolean(data.caps_isPlayer)) {
     		data.setCapsValue(data.caps_changeColor, entityplayer);
-        	Modchu_Debug.mDebug("changeColor");
+    		//Modchu_Debug.lDebug("changeColor");
+    	} else {
+    		//Modchu_Debug.lDebug("changeColor out.entityplayer != null ?"+(entityplayer != null));
+    		//Modchu_Debug.lDebug("changeColor out.data != null ?"+(data != null));
+    		//if (data != null) Modchu_Debug.lDebug("changeColor out.data.getCapsValueBoolean(data.caps_isPlayer) ?"+(data.getCapsValueBoolean(data.caps_isPlayer)));
     	}
     }
 
@@ -1337,6 +1350,14 @@ public class PFLM_Main
     	((MultiModelBaseBiped) dummy.textureModel[0]).changeColor(data);
     	if (dummy.textureModel[1] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) dummy.textureModel[1]).changeColor(data);
     	if (dummy.textureModel[2] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) dummy.textureModel[2]).changeColor(data);
+    }
+
+    private void sitSleepResetCheck() {
+    	EntityPlayer entityplayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
+    	if (entityplayer != null) {
+    		PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData(entityplayer);
+    		if (data != null) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.sitSleepResetCheck(data, entityplayer);
+    	}
     }
 
     public void setPosition(double x, double y, double z) {

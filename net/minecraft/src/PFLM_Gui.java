@@ -830,9 +830,9 @@ public class PFLM_Gui extends GuiScreen {
     	int x = 0;
     	//int x = partsButton | !getModelType().startsWith("Biped") ? 0 : 150;
     	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode != modeRandom) {
-    		s = s.append(mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
-    		fontRenderer.drawString(s.toString(), guiLeft - x, guiTop + 90, 0xffffff);
     		if(mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode != modeOnline) {
+    			s = s.append(mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName);
+    			fontRenderer.drawString(s.toString(), guiLeft - x, guiTop + 90, 0xffffff);
     			s2 = s2.append(mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor);
     			fontRenderer.drawString(s2.toString(), guiLeft - x, guiTop + 100, 0xffffff);
     		}

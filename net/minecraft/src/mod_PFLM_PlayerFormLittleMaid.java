@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.Map;
 
+import net.minecraft.server.MinecraftServer;
+
 //import net.minecraft.client.Minecraft;
 
 public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
@@ -10,6 +12,24 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	public static PFLM_Main pflm_main;
 	public static PFLM_IRenderPlayer pflm_RenderPlayer;
 	public static PFLM_IRenderPlayerDummy pflm_RenderPlayerDummy;
+	public static boolean isServer = false;
+
+	static {
+		//boolean b = cpw.mods.fml.common.FMLCommonHandler.instance().getSide().isServer();
+		//Modchu_Debug.Debug("static b="+b);
+		Object o = Modchu_Reflect.invokeMethod("cpw.mods.fml.common.FMLCommonHandler", "instance");
+		if (o != null) {
+			o = Modchu_Reflect.invokeMethod(o.getClass(), "getSide", o);
+			if (o != null) {
+				if ((Boolean) Modchu_Reflect.invokeMethod(o.getClass(), "isServer", o)) isServer = true;
+			} else {
+				//Modchu_Debug.Debug("static 2 o == null !!");
+			}
+		} else {
+			//Modchu_Debug.Debug("static o == null !!");
+		}
+		//Modchu_Debug.Debug("static isServer="+isServer);
+	}
 
 	public mod_PFLM_PlayerFormLittleMaid()
 	{
@@ -17,39 +37,44 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 		// b181deleteload();
 	}
 
-	public String getVersion()
-	{
-		if (pflm_main != null) ;else pflm_main = new PFLM_Main();
-		return pflm_main.getVersion();
+	public String getName() {
+		return PFLM_Main.modName;
+	}
+
+	public String getVersion() {
+		return PFLM_Main.versionString;
 	}
 
 	public void load()
 	{
-		pflm_main = new PFLM_Main();
-		pflm_main.load();
+		if (isServer) return;
+		if (pflm_main != null) ;else pflm_main = new PFLM_Main();
+		if (pflm_main != null) pflm_main.load();
 	}
 
 	public void loadInit() {
-		pflm_main.loadInit();
-		ModLoader.setInGameHook(this, true, true);
+		if (pflm_main != null) {
+			pflm_main.loadInit();
+			ModLoader.setInGameHook(this, true, true);
+		}
 	}
 
 	public void addRenderer(Map map)
 	{
-		pflm_main.addRenderer(map);
+		if (pflm_main != null) pflm_main.addRenderer(map);
 	}
 
 	public void keyboardEvent(KeyBinding keybinding) {
-		pflm_main.keyboardEvent(keybinding);
+		if (pflm_main != null) pflm_main.keyboardEvent(keybinding);
 	}
 
 	public boolean onTickInGUI(float f, Minecraft minecraft, GuiScreen par1GuiScreen) {
-		return pflm_main.onTickInGUI(f, minecraft, par1GuiScreen);
+		return pflm_main != null ? pflm_main.onTickInGUI(f, minecraft, par1GuiScreen) : false;
 	}
 
 	public boolean onTickInGame(float f, Minecraft minecraft)
 	{
-		return pflm_main.onTickInGame(f, minecraft);
+		return pflm_main != null ? pflm_main.onTickInGame(f, minecraft) : false;
 	}
 
 	public void serverConnect(NetClientHandler netClientHandler) {
@@ -58,11 +83,12 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public void clientConnect(NetClientHandler netClientHandler) {
-		pflm_main.clientConnect(netClientHandler);
+		if (pflm_main != null) pflm_main.clientConnect(netClientHandler);
 	}
 
 	public void modsLoaded()
 	{
+		if (isServer) return;
 		boolean keyFlag = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 129 ? mod_Modchu_ModchuLib.modchu_Main.isForge : false;
 		//ƒL[‚Ì“o˜^‚Æ–¼Ì•ÏŠ·ƒe[ƒuƒ‹‚Ì“o˜^
 		String s;
@@ -105,11 +131,14 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 	}
 
 	public void modsLoadedInit() {
-		pflm_main.modsLoadedInit();
-		ModLoader.setInGUIHook(this, true, true);
+		if (pflm_main != null) {
+			pflm_main.modsLoadedInit();
+			ModLoader.setInGUIHook(this, true, true);
+		}
 	}
 
 	public static void shortcutKeysinit() {
+		if (isServer) return;
 		boolean keyFlag = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 129 ? mod_Modchu_ModchuLib.modchu_Main.isForge : false;
 		String s;
 		for(int i = 0; i < pflm_main.maxShortcutKeys;i++) {
