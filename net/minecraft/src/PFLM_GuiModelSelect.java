@@ -300,7 +300,7 @@ public class PFLM_GuiModelSelect extends GuiScreen {
     	if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
     	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
     			&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
-    	else GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
+    	if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
     	//RenderHelper.enableStandardItemLighting();
     	Render var10 = RenderManager.instance.getEntityRenderObject(entity);
     	if (var10 != null) var10.doRender(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);

@@ -13,9 +13,9 @@ import org.lwjgl.input.Mouse;
 
 public class PFLM_Main
 {
-	public static final String version = "22g";
+	public static final String version = "22h";
 	public static final String modName = "PlayerFormLittleMaid";
-	public static final String versionString = Modchu_Version.version + "-" + version;
+	public static final String versionString = ""+ Modchu_Version.version + "-" + version;
 
 	//cfg書き込み項目
 	public static boolean AlphaBlend = true;
@@ -146,6 +146,7 @@ public class PFLM_Main
 	private static boolean keySitLock = false;
 	public static boolean oldRender = false;
 	private static boolean itemRendererReplaceFlag = false;
+	private static boolean notDefaultModelSetError = false;
 
 	//不具合有り機能封印
 	public static boolean guiShowArmorSupport = false;
@@ -254,42 +255,34 @@ public class PFLM_Main
 							isAether = true;
 							Modchu_Debug.lDebug("Aether Check ok.");
 							aetherAddRenderer = true;
-							Class PlayerCoreType = Modchu_Reflect.loadClass("net.aetherteam.playercore_api.PlayerCoreAPI$PlayerCoreType");
-							Class PFLM_RenderPlayerAether = Modchu_Reflect.loadClass("PFLM_RenderPlayerAether");
-							Object RENDER = Modchu_Reflect.getFieldObject(PlayerCoreType, "RENDER");
-							if (PlayerCoreType != null
-									&& PFLM_RenderPlayerAether != null
-									&& RENDER != null) {
-								Modchu_Debug.lDebug("Aether PlayerCoreAPI setting Check ok.");
-								Modchu_Reflect.invokeMethod("net.aetherteam.playercore_api.PlayerCoreAPI", "register", new Class[]{ PlayerCoreType, Class.class }, new Object[]{ RENDER, PFLM_RenderPlayerAether });
-
-								ArrayList<Class<?>> arrayList = (ArrayList) Modchu_Reflect.getFieldObject("net.aetherteam.playercore_api.PlayerCoreAPI", "playerCoreRenderList");
-								//for(int i1 = 0; i1 < arrayList.size(); i1++) {
-									//Modchu_Debug.lDebug("arrayList i1="+i1+" "+arrayList.get(i1));
-								//}
-								Class c = arrayList.get(0);
-								Render render = RenderManager.instance.getEntityClassRenderObject(EntityPlayer.class);
-								//Modchu_Debug.lDebug("Aether arrayList.get(0)="+arrayList.get(0));
-								Modchu_Debug.lDebug("Aether render="+render);
-								Class PlayerCoreRender = Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreRender");
-								mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer = (PFLM_IRenderPlayer) Modchu_Reflect.newInstance(PFLM_RenderPlayerAether, new Class[]{ int.class, PlayerCoreRender }, new Object[]{ arrayList.size(), null });
-								//Modchu_Debug.lDebug("Aether mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer="+mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
-								Modchu_Reflect.invokeMethod(Render.class, "func_76976_a", "setRenderManager", new Class[]{ RenderManager.class }, render, new Object[]{ RenderManager.instance });
-
-								//render = (Render) Modchu_Reflect.getFieldObject(PlayerCoreRender, "nextPlayerCore", render);
-								Render aRender = (Render) Modchu_Reflect.getFieldObject(PlayerCoreRender, "nextPlayerCore", render);
-								boolean b = Modchu_Reflect.setFieldObject(PlayerCoreRender, "nextPlayerCore", render, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
-								Modchu_Debug.lDebug("Aether nextPlayerCore setFieldObject b="+b);
-								b = Modchu_Reflect.setFieldObject(PlayerCoreRender, "shouldCallSuper", render, false);
-								Modchu_Debug.lDebug("Aether nextPlayerCore setFieldObject shouldCallSuper b="+b);
-								//Modchu_Reflect.invokeMethod(Render.class, "func_76976_a", "setRenderManager", new Class[]{ RenderManager.class }, render, new Object[]{ RenderManager.instance });
-								if (RenderManager.instance != null) ;else Modchu_Debug.lDebug("Aether nextPlayerCore setFieldObject RenderManager.instance == null !!");
-
-								Modchu_Reflect.setFieldObject(PlayerCoreRender, "nextPlayerCore", mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer, aRender);
-
-							} else {
-								Modchu_Debug.lDebug("Aether PlayerCoreAPI setting Check out !!", 1);
+							oldRender = true;
+							Class PlayerCoreRender = Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreRender");
+							Modchu_Debug.lDebug("Aether Check PlayerCoreRender="+PlayerCoreRender);
+							Modchu_Debug.lDebug("Aether Check Modchu_Reflect.loadClass(PFLM_RenderPlayerAether)="+Modchu_Reflect.loadClass("PFLM_RenderPlayerAether"));
+							Render render = RenderManager.instance.getEntityClassRenderObject(EntityPlayer.class);
+							Class PFLMF_Aether = Modchu_Reflect.loadClass("PFLMF_Aether");
+							if (PFLMF_Aether != null) ;else throw new RuntimeException("PlayerFormLittleMaidFML PFLMF_Aether not found !!");
+							boolean b1 = Modchu_Reflect.setFieldObject("PFLMF_Aether", "render_PlayerCoreRender", render);
+							if (!b1) throw new RuntimeException("PlayerFormLittleMaidFML PFLMF_Aether set error !!");
+							Modchu_Debug.lDebug("Aether Check render.getClass()="+render.getClass());
+							//mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer = (PFLM_IRenderPlayer) Modchu_Reflect.invokeMethod(PlayerCoreRender, "getPlayerCoreObject", new Class[]{ Class.class }, render, new Object[]{ Modchu_Reflect.loadClass("PFLM_RenderPlayerAether") });
+							mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer = (PFLM_IRenderPlayer) Modchu_Reflect.newInstance("PFLM_RenderPlayerAether");
+							if (mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer != null) ;else {
+								throw new RuntimeException("Aether Check pflm_RenderPlayer == null !!");
 							}
+							//render = (Render) Modchu_Reflect.invokeMethod(PlayerCoreRender, "getPlayerCoreObject", new Class[]{ Class.class }, render, new Object[]{ Modchu_Reflect.loadClass("net.aetherteam.aether.client.RenderPlayerAether") });
+							render = (Render) Modchu_Reflect.newInstance("modchu.pflm.PFLMF_RenderPlayerAether");
+							if (render != null) ;else {
+								throw new RuntimeException("Aether Check PFLMF_RenderPlayerAether render == null !!");
+							}
+							render.setRenderManager(RenderManager.instance);
+							Modchu_Reflect.setFieldObject("PFLMF_Aether", "renderPlayerAether", render);
+							Render render2 = (Render) Modchu_Reflect.getFieldObject(PlayerCoreRender, "renderPlayer", render);
+							Modchu_Reflect.setFieldObject(PlayerCoreRender, "nextPlayerCore", render, render2);
+							Modchu_Debug.lDebug("Aether Check render="+render.getClass()+" render2="+render2.getClass());
+							//Modchu_Reflect.setFieldObject(PlayerCoreRender, "shouldCallSuper", render, true);
+							//cpw.mods.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler(Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreClient"), (Render) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
+							//Modchu_Reflect.invokeMethod("cpw.mods.fml.client.registry.RenderingRegistry", "registerEntityRenderingHandler", new Class[]{ Class.class, Render.class }, new Object[]{ EntityPlayer.class, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer });
 							break;
 						}
 					}
@@ -319,8 +312,8 @@ public class PFLM_Main
 		mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy = (PFLM_IRenderPlayerDummy) Modchu_Reflect.newInstance("PFLM_RenderPlayerDummy");
 		((Render) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy).setRenderManager(RenderManager.instance);
 //-@-125
+		Modchu_Debug.lDebug("addRenderer");
 		if (!isAether) {
-			Modchu_Debug.lDebug("addRenderer");
 			mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer = (PFLM_IRenderPlayer) Modchu_Reflect.newInstance("PFLM_RenderPlayer");
 			((Render) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer).setRenderManager(RenderManager.instance);
 
@@ -353,6 +346,10 @@ public class PFLM_Main
 				map.put(EntityClientPlayerMP.class, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
 				map.put(EntityOtherPlayerMP.class, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
 			}
+		} else {
+			Modchu_Debug.lDebug("addRenderer isAether mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer="+mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
+			((Render) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer).setRenderManager(RenderManager.instance);
+			map.put(EntityPlayer.class, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
 		}
 		map.put(PFLM_EntityPlayerDummy.class, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy);
 //@-@125
@@ -627,25 +624,7 @@ public class PFLM_Main
 
 	public boolean onTickInGame(float f, Object minecraft)
 	{
-/*
-		Render render = RenderManager.instance.getEntityClassRenderObject(EntityPlayer.class);
-		Class PlayerCoreRender = Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreRender");
-		//render = (Render) Modchu_Reflect.getFieldObject(PlayerCoreRender, "nextPlayerCore", render);
-		boolean b2 = (Boolean) Modchu_Reflect.getFieldObject(PlayerCoreRender, "shouldCallSuper", render);
-		Modchu_Debug.lDebug("onTickInGame get shouldCallSuper="+b2);
-*/
-		//boolean b1 = Modchu_Reflect.setFieldObject(PlayerCoreRender, "shouldCallSuper", render, false);
-		//Modchu_Debug.lDebug("onTickInGame shouldCallSuper="+b1);
-/*
-		Render render = RenderManager.instance.getEntityClassRenderObject(EntityPlayer.class);
-		Class PlayerCoreRender = Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreRender");
-		render = (Render) Modchu_Reflect.getFieldObject(PlayerCoreRender, "nextPlayerCore", render);
-		Modchu_Debug.lDebug("onTickInGame nextPlayerCore render="+render.getClass());
-		boolean b2 = Modchu_Reflect.setFieldObject(PlayerCoreRender, "nextPlayerCore", render, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer);
-		Modchu_Debug.lDebug("onTickInGame nextPlayerCore setFieldObject="+b2);
-		if (!b2) return false;
-*/
-
+		if (notDefaultModelSetError) throw new RuntimeException("MultiModel_DefaultModelSet not found !!");
 		sitSleepResetCheck();
 
 		if (!Keyboard.getEventKeyState()
@@ -660,10 +639,13 @@ public class PFLM_Main
 			mc = mod_Modchu_ModchuLib.modchu_Main.getMinecraft();
 			if (mc != null) ;else Modchu_Debug.lDebug("onTickInGame mc == null !!");
 		}
+
 //-@-125
+/*
 		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_71462_r", "currentScreen", mc);
 		if (currentScreen != null
 				&& !mod_Modchu_ModchuLib.modchu_Main.isForge) onTickInGUI(0.0F, minecraft, (GuiScreen) currentScreen);
+*/
 //@-@125
 		if (!itemRendererReplaceFlag
 				&& itemRendererClass != null) {
@@ -943,8 +925,8 @@ public class PFLM_Main
 				Modchu_Debug.mDebug("enumGameType="+enumGameType);
 				Modchu_Reflect.invokeMethod("PlayerControllerMP", "setGameType", new Class[]{ EnumGameType.class }, playerController, new Object[]{ enumGameType });
 			}
-			if (thePlayer != null) Modchu_Reflect.invokeMethod("Minecraft", "setDimensionAndSpawnPlayer", new Class[]{ int.class }, mc, new Object[]{ thePlayer.dimension });
-			else Modchu_Reflect.invokeMethod("Minecraft", "setDimensionAndSpawnPlayer", mc, new Object[]{ 0 });
+			if (thePlayer != null) Modchu_Reflect.invokeMethod("Minecraft", "func_71354_a", "setDimensionAndSpawnPlayer", new Class[]{ int.class }, mc, new Object[]{ thePlayer.dimension });
+			else Modchu_Reflect.invokeMethod("Minecraft", "func_71354_a", "setDimensionAndSpawnPlayer", new Class[]{ int.class }, mc, new Object[]{ 0 });
 			if(isSSP
 					&& enumGameType != null
 					&& enumGameType == EnumGameType.CREATIVE) {
@@ -1026,7 +1008,7 @@ public class PFLM_Main
 
 		if (thePlayer != null) {
 			var10 = thePlayer.entityId;
-			Modchu_Reflect.invokeMethod("World", "setEntityDead", new Class[]{ Entity.class }, theWorld, new Object[]{ thePlayer });
+			Modchu_Reflect.invokeMethod(World.class, "func_607_d", "setEntityDead", new Class[]{ Entity.class }, theWorld, new Object[]{ thePlayer });
 			//theWorld.setEntityDead(thePlayer);
 		}
 		//Modchu_Debug.Debug("x="+minecraft.thePlayer.posX+" y="+minecraft.thePlayer.posY+" z="+minecraft.thePlayer.posZ);
@@ -1044,7 +1026,7 @@ public class PFLM_Main
 		}
 		if (thePlayer != null) thePlayer.setDead();
 		mod_Modchu_ModchuLib.modchu_Main.setThePlayer((EntityPlayer) Modchu_Reflect.invokeMethod("PlayerControllerMP", "createPlayer", new Class[]{ World.class }, playerController, new Object[]{ theWorld }));
-		Modchu_Reflect.setFieldObject("Minecraft", "renderViewEntity", mc, new Object[]{ null });
+		Modchu_Reflect.setFieldObject("Minecraft", "field_71451_h", "renderViewEntity", mc, new Object[]{ null });
 		if (thePlayer != null
 				&& var9 != null) {
 			if (isPlayerAPI && !isPlayerAPIDebug) {
@@ -1055,20 +1037,20 @@ public class PFLM_Main
 			//thePlayer.copyPlayer(var9);
 		}
 		//minecraft.thePlayer.dimension = par2;
-		Modchu_Reflect.setFieldObject("Minecraft", "renderViewEntity", mc, thePlayer);
+		Modchu_Reflect.setFieldObject("Minecraft", "field_71451_h", "renderViewEntity", mc, thePlayer);
 		//minecraft.thePlayer.preparePlayerToSpawn();
 		//minecraft.thePlayer.setLocationAndAngles((double)((float)minecraft.thePlayer.posX + 0.5F), (double)((float)minecraft.thePlayer.posY + 0.1F), (double)((float)minecraft.thePlayer.posZ + 0.5F), 0.0F, 0.0F);
 
-		Modchu_Reflect.invokeMethod("PlayerController", "flipPlayer", new Class[]{ EntityPlayer.class }, playerController, new Object[]{ thePlayer });
-		Modchu_Reflect.invokeMethod("World", "spawnPlayerWithLoadedChunks", new Class[]{ EntityPlayer.class }, theWorld, new Object[]{ thePlayer });
+		Modchu_Reflect.invokeMethod("PlayerControllerMP", "func_78745_b", "flipPlayer", new Class[]{ EntityPlayer.class }, playerController, new Object[]{ thePlayer });
+		Modchu_Reflect.invokeMethod(World.class, "spawnPlayerWithLoadedChunks", new Class[]{ EntityPlayer.class }, theWorld, new Object[]{ thePlayer });
 		//playerController.flipPlayer(thePlayer);
 		//theWorld.spawnPlayerWithLoadedChunks(thePlayer);
-		Modchu_Reflect.setFieldObject("EntityPlayerSP", "movementInput", thePlayer, new MovementInputFromOptions((GameSettings) Modchu_Reflect.getFieldObject("Minecraft", "field_71474_y", "gameSettings", mc)));
+		Modchu_Reflect.setFieldObject(EntityPlayerSP.class, "movementInput", thePlayer, new MovementInputFromOptions((GameSettings) Modchu_Reflect.getFieldObject("Minecraft", "field_71474_y", "gameSettings", mc)));
 		//thePlayer.movementInput = new MovementInputFromOptions(gameSettings);
 
-		Modchu_Reflect.setFieldObject("Entity", "entityId", thePlayer, var10);
+		Modchu_Reflect.setFieldObject(Entity.class, "entityId", thePlayer, var10);
 		//thePlayer.entityId = var10;
-		Modchu_Reflect.invokeMethod("EntityPlayerSP", "func_6420_o", thePlayer);
+		Modchu_Reflect.invokeMethod(EntityPlayerSP.class, "func_6420_o", thePlayer);
 		//thePlayer.func_6420_o();
 		if(mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 79
  				&& (Boolean) Modchu_Reflect.invokeMethod("PlayerController", "isInCreativeMode", playerController)) Modchu_Reflect.invokeMethod("PlayerController", "func_6473_b", new Class[]{ EntityPlayer.class }, playerController, new Object[]{ thePlayer });
@@ -2473,6 +2455,9 @@ public class PFLM_Main
 
 	public void modsLoadedInit() {
 		if (!loadInitFlag) throw new RuntimeException("mod_PFLM_PlayerFormLittleMaid-modsLoaded() loadInit error !");
+		if (Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.modchu_Main.getClassName("MultiModel")) != null) ;else {
+			notDefaultModelSetError = true;
+		}
 		loadParamater();
 		loadTextureList();
 		loadOthersPlayerParamater();
@@ -3079,8 +3064,7 @@ public class PFLM_Main
 			if (s.length() > 1) {
 				String ck = s.substring(s.length() - 1);
 				String mck = mod_PFLM_PlayerFormLittleMaid.pflm_main.getVersion();
-				String k = mck;
-				if (k.lastIndexOf("-") > -1) k = k.substring(k.lastIndexOf("-") + 1);
+				String k = version;
 				mck = k.substring(k.length() - 1);
 				if (mod_Modchu_ModchuLib.modchu_Main.integerCheck(mck)) mck = "";
 				boolean check = mod_Modchu_ModchuLib.modchu_Main.integerCheck(k);

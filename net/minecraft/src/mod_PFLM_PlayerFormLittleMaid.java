@@ -2,10 +2,6 @@ package net.minecraft.src;
 
 import java.util.Map;
 
-import net.minecraft.server.MinecraftServer;
-
-//import net.minecraft.client.Minecraft;
-
 public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 {
 	public static mod_PFLM_PlayerFormLittleMaid mod_pflm_playerformlittlemaid;

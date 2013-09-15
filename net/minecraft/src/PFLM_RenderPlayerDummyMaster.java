@@ -142,6 +142,7 @@ public class PFLM_RenderPlayerDummyMaster extends RenderPlayer
 	protected void preRenderCallback(Entity entityliving, float f) {
 		PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
 		float f1 = entity.modelScale;
+		//Modchu_Debug.mDebug("preRenderCallback f1="+f1);
 		if (f1 == 0.0F) {
 			f1 = modelData.modelMain.model instanceof MultiModelBaseBiped ? ((MultiModelBaseBiped) modelData.modelMain.model).getModelScale() : 0.9375F;
 		}
@@ -176,7 +177,7 @@ public class PFLM_RenderPlayerDummyMaster extends RenderPlayer
     		f2 = prevRenderYawOffset + (renderYawOffset - prevRenderYawOffset) * f1;
     		f3 = entityliving.prevRotationYaw + (entityliving.rotationYaw - entityliving.prevRotationYaw) * f1;
     		f4 = entityliving.prevRotationPitch + (entityliving.rotationPitch - entityliving.prevRotationPitch) * f1;
-    		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_71462_r", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+    		//Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_71462_r", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
     		//renderLivingAt(entityliving, d, d1, d2);
     		float f5 = handleRotationFloat((Entity) entityliving, f1);
     		//rotateCorpse((EntityPlayer) entityliving, f5, f2, f1);
@@ -236,7 +237,8 @@ public class PFLM_RenderPlayerDummyMaster extends RenderPlayer
     		//renderModel(entityliving, f8, f7, f5, f3 - f2, f4, f6);
     		float f9 = 1.0F;
     		if (PFLMVersion < 80) {
-    			if (currentScreen == null | currentScreen instanceof GuiIngameMenu) f9 = (Float) Modchu_Reflect.invokeMethod(Entity.class, "func_382_a", "getEntityBrightness", new Class[]{ float.class }, entityliving, new Object[]{ f1 });
+    			//if (currentScreen == null | currentScreen instanceof GuiIngameMenu)
+    			f9 = (Float) Modchu_Reflect.invokeMethod(Entity.class, "func_382_a", "getEntityBrightness", new Class[]{ float.class }, entityliving, new Object[]{ f1 });
     		}
     		modelData.modelFATT.showAllParts();
     		for (int i = 0; i < 4; i++)

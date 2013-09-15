@@ -101,17 +101,23 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 				}
 			}
 		}
+		if (guibutton.id > 2 && guibutton.id < 6) {
+			drawEntitySetFlag = true;
+			return;
+		}
 		//ScaleChange Close
 		if(guibutton.id == 6)
 		{
 			modelScaleButton = false;
 			initGui();
+			return;
 		}
 		//ScaleChange Open
 		if(guibutton.id == 7)
 		{
 			modelScaleButton = true;
 			initGui();
+			return;
 		}
 		//guiMultiPngSaveButton ShowArmor
 		if(guibutton.id == 20)
@@ -119,6 +125,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			showArmor = !showArmor;
 			drawEntitySetFlag = true;
 			initGui();
+			return;
 		}
 		//ModelChange
 		if(guibutton.id == 50) setPrevTexturePackege(0);
@@ -127,6 +134,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 				| guibutton.id == 51)
 		{
 			modelChange();
+			return;
 		}
 		//ColorChange
 		if(guibutton.id == 52) {
@@ -145,6 +153,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			noSaveFlag = true;
 			drawEntitySetFlag = true;
 			mod_PFLM_PlayerFormLittleMaid.pflm_main.setResetFlag(true);
+			return;
 		}
 		//ArmorChange
 		if(guibutton.id == 54) setPrevTexturePackege(1);
@@ -154,15 +163,17 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 		{
 			noSaveFlag = true;
 			drawEntitySetFlag = true;
+			return;
 		}
 		//ModelListSelect
 		if(guibutton.id == 56) {
 			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ new PFLM_GuiModelSelect(this, popWorld, 4, playerName) });
 			//mc.displayGuiScreen(new PFLM_GuiModelSelect(this, popWorld, 4, playerName));
+			return;
 		}
 		//ArmorListSelect
 		if(guibutton.id == 57) {
-
+			return;
 		}
 		//Handedness
 		if(guibutton.id == 58) {
@@ -185,12 +196,14 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ parentScreen });
 			//mc.displayGuiScreen(parentScreen);
 			mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
+			return;
 		}
 		//Return
 		if(guibutton.id == 201)
 		{
 			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ parentScreen });
 			//mc.displayGuiScreen(parentScreen);
+			return;
 		}
 		//ChangeMode
 		if(guibutton.id == 400)
@@ -205,6 +218,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			//mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
 			drawEntitySetFlag = true;
 			initGui();
+			return;
 		}
 	}
 

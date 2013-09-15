@@ -712,8 +712,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			return owner.height;
 		case caps_width:
 			return owner.width;
-		case caps_YOffset:
-			return owner.yOffset;
 		case caps_HeadMount:
 			return getHeadMount();
 		case caps_Items:
@@ -1768,13 +1766,16 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 
     public void addSendList(int i, Object... o) {
     	if (mod_Modchu_ModchuLib.modchu_Main.isPFLMF) ;else return;
-    	LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject(mod_Modchu_ModchuLib.modchu_Main.mod_PFLMF, "sendList");
-    	if (sendList != null) sendList.add(new Object[]{ i, this, owner, o });
+    	LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject(mod_Modchu_ModchuLib.modchu_Main.PFLMF, "sendList");
+    	if (sendList != null) {
+    		sendList.add(new Object[]{ i, this, owner, o });
+    		//Modchu_Debug.mDebug("addSendList add.");
+    	}
     }
 
     private Object getPlayerState(int entityId, byte by) {
     	if (mod_Modchu_ModchuLib.modchu_Main.isPFLMF) ;else return null;
-    	return Modchu_Reflect.invokeMethod(mod_Modchu_ModchuLib.modchu_Main.mod_PFLMF, "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
+    	return Modchu_Reflect.invokeMethod(mod_Modchu_ModchuLib.modchu_Main.PFLMF, "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
     }
 
 	public int getCapsValueInt(int pIndex, Object ...pArg) {

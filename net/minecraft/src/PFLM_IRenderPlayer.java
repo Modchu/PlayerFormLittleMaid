@@ -19,5 +19,7 @@ public interface PFLM_IRenderPlayer {
 	public void setResetFlag(boolean b);
 	public void superDoRenderLiving(Entity entity, double d, double d1, double d2, float f, float f1);
 	public void sitSleepResetCheck(PFLM_ModelData modelData, EntityPlayer entityplayer);
+	public void superRenderLivingAt(Entity par1EntityLivingBase, double par2, double par4, double par6);
+	public void superPreRenderCallback(Entity par1EntityLiving, float par2);
 
 }

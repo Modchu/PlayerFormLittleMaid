@@ -16,7 +16,7 @@ public class PFLM_ThreadVersionCheck extends Thread
         HttpURLConnection var1 = null;
         try
         {
-        	String s = Modchu_Version.getMinecraftVersion();
+        	String s = Modchu_Version.getMinecraftVersionString();
         	if (s != null) {
             	URL var2 = new URL((new StringBuilder()).append("https://dl.dropbox.com/u/105864172/PlayerFormLittleMaid").append(s).append(".txt").toString());
                 var1 = (HttpURLConnection)var2.openConnection();

@@ -1,16 +1,6 @@
 package net.minecraft.src;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Random;
-import javax.imageio.ImageIO;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-//import net.minecraft.client.Minecraft;
 
 public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderPlayer
 {
@@ -30,7 +20,7 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     protected int setArmorModel(MultiModelBaseBiped model, EntityPlayer entityplayer, int i, float f, int i2) {
     	if (pflm_RenderPlayerMaster != null) return pflm_RenderPlayerMaster.setArmorModel(model, entityplayer, i, f, i2);
     	return -1;
-   }
+    }
 
     @Override
     protected int shouldRenderPass(EntityLivingBase entityliving, int i, float f)
@@ -56,6 +46,17 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     protected void renderPlayerScale(AbstractClientPlayer entityliving, float f)
     {
     	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.renderPlayerScale((EntityPlayer) entityliving, f);
+    }
+
+    @Override
+    protected void preRenderCallback(EntityLivingBase par1EntityLiving, float par2)
+    {
+        renderPlayerScale((AbstractClientPlayer) par1EntityLiving, par2);
+    }
+
+    public void superPreRenderCallback(Entity par1EntityLiving, float par2)
+    {
+    	super.preRenderCallback((EntityLivingBase) par1EntityLiving, par2);
     }
 
     @Override
@@ -190,6 +191,11 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
         renderPlayerSleep((AbstractClientPlayer)par1EntityLivingBase, par2, par4, par6);
     }
 
+    public void superRenderLivingAt(Entity par1EntityLivingBase, double par2, double par4, double par6)
+    {
+        super.renderLivingAt((EntityLivingBase) par1EntityLivingBase, par2, par4, par6);
+    }
+
     @Override
     protected void renderPlayerSleep(AbstractClientPlayer var1, double var2, double var4, double var6)
     {
@@ -235,7 +241,6 @@ public class PFLM_RenderPlayerV160 extends RenderPlayer implements PFLM_IRenderP
     	if (pflm_RenderPlayerMaster != null) pflm_RenderPlayerMaster.resetFlag = b;
     }
 
-    @Override
     public PFLM_RenderPlayerMaster getRenderPlayerMaster() {
     	return pflm_RenderPlayerMaster;
     }

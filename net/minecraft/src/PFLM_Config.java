@@ -349,8 +349,9 @@ public class PFLM_Config extends Modchu_Config {
 
 	public static void writerModelList(String[] s, File file, List<String> list) {
 		//Listファイル書き込み
+		BufferedWriter bwriter = null;
 		try {
-			BufferedWriter bwriter = new BufferedWriter(new FileWriter(file));
+			bwriter = new BufferedWriter(new FileWriter(file));
 			list.clear();
 			for (int i = 0; i < s.length ; i++)
 			{
@@ -361,20 +362,24 @@ public class PFLM_Config extends Modchu_Config {
 					bwriter.newLine();
 				}
 			}
-			bwriter.close();
 			//Modchu_Debug.Debug("file new file create.");
 		} catch (Exception e) {
 			Modchu_Debug.lDebug("PFLM_Config", "writerModelList", 2, e);
 			e.printStackTrace();
+		} finally {
+			try {
+				if (bwriter != null) bwriter.close();
+			} catch (Exception e) {
+			}
 		}
 	}
 
 	public static boolean loadList(File file, List<String> list,String listName) {
 		// ModelList読み込み
 		List<String> lines = new ArrayList<String>();
+		BufferedReader breader = null;
 		try {
-			BufferedReader breader = new BufferedReader(new FileReader(
-					file));
+			breader = new BufferedReader(new FileReader(file));
 			String rl;
 			int i = 0;
 			while ((rl = breader.readLine()) != null) {
@@ -400,13 +405,17 @@ public class PFLM_Config extends Modchu_Config {
 				}
 				i++;
 			}
-			breader.close();
 			//Modchu_Debug.mDebug("modelList "+listName+" load end.");
 		} catch (Exception e) {
 			Modchu_Debug.lDebug("PFLM_Config", "modelList file "+ listName +" load fail.", 2, e);
 			e.printStackTrace();
 			Modchu_Debug.Debug(" ");
 			return false;
+		} finally {
+			try {
+				if (breader != null) breader.close();
+			} catch (Exception e) {
+			}
 		}
 		return true;
 	}
@@ -424,9 +433,9 @@ public class PFLM_Config extends Modchu_Config {
 		// GuiOthersPlayer設定項目をcfgファイルに保存
 		if (file.exists() && file.canRead() && file.canWrite()) {
 			List lines = new LinkedList();
+			BufferedReader breader = null;
 			try {
-				BufferedReader breader = new BufferedReader(new FileReader(
-						file));
+				breader = new BufferedReader(new FileReader(file));
 				String rl;
 				String s;
 				String s1;
@@ -533,14 +542,19 @@ public class PFLM_Config extends Modchu_Config {
 			} catch (Exception er) {
 				Modchu_Debug.lDebug("PFLM_Config", "saveOthersPlayerParamater file="+ file.toString(), 2, er);
 				er.printStackTrace();
+			} finally {
+				try {
+					if (breader != null) breader.close();
+				} catch (Exception e) {
+				}
 			}
+			BufferedWriter bwriter = null;
 			try {
 			// 保存
 				if (!lines.isEmpty()
 						&& (file.exists() || file.createNewFile())
 						&& file.canWrite()) {
-					BufferedWriter bwriter = new BufferedWriter(
-							new FileWriter(file));
+					bwriter = new BufferedWriter(new FileWriter(file));
 					String t;
 					for (int i = 0 ; i < lines.size() ; i++) {
 						t = (String) lines.get(i);
@@ -552,6 +566,11 @@ public class PFLM_Config extends Modchu_Config {
 			} catch (Exception er) {
 				Modchu_Debug.lDebug("saveOthersPlayerParamater file save fail.");
 				er.printStackTrace();
+			} finally {
+				try {
+					if (bwriter != null) bwriter.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 	}
@@ -559,9 +578,9 @@ public class PFLM_Config extends Modchu_Config {
 	public static void loadConfigPlayerLocalData(HashMap map, File file) {
 		// GuiOthersPlayer設定項目PlayerLocalData読み込み
 		int modeOthersSettingOffline = getModeOthersSettingOffline();
+		BufferedReader breader = null;
 		try {
-			BufferedReader breader = new BufferedReader(new FileReader(
-					file));
+			breader = new BufferedReader(new FileReader(file));
 			String rl;
 			for (int i = 0; (rl = breader.readLine()) != null && i < file.length(); i++) {
 				int i1;
@@ -627,11 +646,15 @@ public class PFLM_Config extends Modchu_Config {
 					}
 				}
 			}
-			breader.close();
 			Modchu_Debug.mDebug("PFLM_Config loadConfigOthersPlayer");
 		} catch (Exception e) {
 			Modchu_Debug.lDebug("PFLM_Config", "loadConfigShowModel "+ file.toString() +" load fail.", 2, e);
 			e.printStackTrace();
+		} finally {
+			try {
+				if (breader != null) breader.close();
+			} catch (Exception e) {
+			}
 		}
 		//Modchu_Debug.mDebug("PFLM_Config loadConfigOthersPlayer");
 	}
@@ -640,9 +663,9 @@ public class PFLM_Config extends Modchu_Config {
 		// GuiOthersPlayer設定から指定内容削除
 		if (file.exists() && file.canRead() && file.canWrite()) {
 			List lines = new LinkedList();
+			BufferedReader breader = null;
 			try {
-				BufferedReader breader = new BufferedReader(new FileReader(
-						file));
+				breader = new BufferedReader(new FileReader(file));
 				String rl;
 				String s;
 				String s1;
@@ -667,25 +690,34 @@ public class PFLM_Config extends Modchu_Config {
 			} catch (Exception er) {
 				Modchu_Debug.lDebug("PFLM_Config", "removeOthersPlayerParamater", 2, er);
 				er.printStackTrace();
+			} finally {
+				try {
+					if (breader != null) breader.close();
+				} catch (Exception e) {
+				}
 			}
+			BufferedWriter bwriter = null;
 			try {
 			// 保存
 				if (!lines.isEmpty()
 						&& (file.exists() || file.createNewFile())
 						&& file.canWrite()) {
-					BufferedWriter bwriter = new BufferedWriter(
-							new FileWriter(file));
+					bwriter = new BufferedWriter(new FileWriter(file));
 					String t;
 					for (int i = 0 ; i < lines.size() ; i++) {
 						t = (String) lines.get(i);
 						bwriter.write(t);
 						bwriter.newLine();
 					}
-					bwriter.close();
 				}
 			} catch (Exception er) {
 				Modchu_Debug.lDebug("PFLM_Config", "removeOthersPlayerParamater file="+ file.toString(), 2, er);
 				er.printStackTrace();
+			} finally {
+				try {
+					if (bwriter != null) bwriter.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 	}
@@ -829,7 +861,7 @@ public class PFLM_Config extends Modchu_Config {
 				| (getConfigShowPartsRenemeMapFlagString != null
 				&& !getConfigShowPartsRenemeMapFlagString.equals(s))) {
 			if (model instanceof MultiModelBaseBiped) {
-				PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData(mod_Modchu_ModchuLib.modchu_Main.getThePlayer());
+				PFLM_ModelData data = (PFLM_ModelData) Modchu_Reflect.invokeMethod(PFLM_IRenderPlayer.class, "getPlayerData", new Class[]{ EntityPlayer.class }, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer, new Object[]{ mod_Modchu_ModchuLib.modchu_Main.getThePlayer() } );
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
 				renemeMap = (HashMap<String, String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsRenemeMap);
 				if (renemeMap != null) {
@@ -886,7 +918,7 @@ public class PFLM_Config extends Modchu_Config {
 			Modchu_Debug.mDebug("getConfigShowPartsHideMap flag通過.");
 			if (model instanceof MultiModelBaseBiped) {
 				Modchu_Debug.mDebug("getConfigShowPartsHideMap MultiModelBaseBiped ok.");
-				PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData(mod_Modchu_ModchuLib.modchu_Main.getThePlayer());
+				PFLM_ModelData data = (PFLM_ModelData) Modchu_Reflect.invokeMethod(PFLM_IRenderPlayer.class, "getPlayerData", new Class[]{ EntityPlayer.class }, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer, new Object[]{ mod_Modchu_ModchuLib.modchu_Main.getThePlayer() } );
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
 				List<String> hideList = null;
 				if (data != null) hideList = (List<String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsHideList);
