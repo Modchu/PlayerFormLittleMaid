@@ -7,28 +7,21 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
+public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends PFLM_GuiBase {
 	protected String screenTitle;
 	protected GuiSlot selectPanel;
 	private GuiButton localScroll;
-	private World popWorld;
 	public static List<String> playerList = new ArrayList<String>();
-	public static HashMap playerDummyEntityList = new HashMap();
-	private GuiScreen parentScreen;
-	private EntityPlayer thePlayer;
 
-	public PFLM_GuiOthersPlayerIndividualCustomizeSelect(GuiScreen par1GuiScreen, World world) {
-		popWorld = world;
+	public PFLM_GuiOthersPlayerIndividualCustomizeSelect(PFLM_GuiBase par1GuiScreen, World world) {
+		super(par1GuiScreen, world);
 		screenTitle = "OthersPlayerModelCustomize";
 		playerListClear();
 		setPlayerList();
-		parentScreen = par1GuiScreen;
-		thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 	}
 
 	private void playerListClear() {
 		playerList.clear();
-		playerDummyEntityList.clear();
 	}
 
 	private void setPlayerList() {
@@ -38,11 +31,10 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 			for (int i = 0 ; i < 2 ; i++) {
 				s = "a"+i;
 				playerList.add(s);
-				playerDummyEntityList.put(s, new PFLM_EntityPlayerDummy(popWorld));
 			}
 			return;
 		}
-		thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
+		EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 		Iterator var3 = popWorld.playerEntities.iterator();
 		int i = 0;
 		while (var3.hasNext())
@@ -52,7 +44,6 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 				//Modchu_Debug.mDebug("setPlayerList var1.username="+var1.username);
 				if (!var1.username.equalsIgnoreCase(thePlayer.username)) {
 					playerList.add(var1.username);
-					playerDummyEntityList.put(var1.username, new PFLM_EntityPlayerDummy(popWorld));
 				}
 				i++;
 			} catch (Exception e) {
@@ -114,7 +105,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 	public void drawScreen(int i, int j, float f) {
 		selectPanel.drawScreen(i, j, f);
 		drawCenteredString(fontRenderer, screenTitle, width / 2, 20, 0xffffff);
-		super.drawScreen(i, j, f);
+		superDrawScreen(i, j, f);
 	}
 
 	@Override
@@ -129,7 +120,10 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
-		super.onGuiClosed();
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+	}
+
+	@Override
+	public void memoryRelease() {
 	}
 }

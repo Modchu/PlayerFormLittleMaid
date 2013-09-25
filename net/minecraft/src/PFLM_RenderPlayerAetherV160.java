@@ -73,6 +73,7 @@ public class PFLM_RenderPlayerAetherV160 extends PFLM_RenderPlayerV160 implement
     	modelData.modelMain.setEntityCaps(modelData);
     	modelData.modelMain.setRender(this);
     	setRenderPassModel(modelData.modelFATT);
+    	GL11.glPushMatrix();
     	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
     		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
     			superFunc_130009_a((AbstractClientPlayer) entity, d, d1, d2, f, f1);
@@ -85,6 +86,7 @@ public class PFLM_RenderPlayerAetherV160 extends PFLM_RenderPlayerV160 implement
     		//Modchu_Debug.Debug("superDoRenderLiving");
     	}
     	func_130009_aAether(modelData, (AbstractClientPlayer) entity, d, d1, d2, f, f1);
+    	GL11.glPopMatrix();
     	modelData.modelMain.setCapsValue(modelData.caps_aimedBow, false);
     }
 

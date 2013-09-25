@@ -7,6 +7,7 @@ public class PFLM_RenderPlayerDummyV160 extends RendererLivingEntity implements 
 	public PFLM_RenderPlayerDummyV160() {
 		super(null, 0.0F);
 		pflm_RenderPlayerDummyMaster = new PFLM_RenderPlayerDummyMaster();
+		pflm_RenderPlayerDummyMaster.renderManager = renderManager;
 	}
 
     protected int setArmorModel(EntityLivingBase entityliving, int i, float f)

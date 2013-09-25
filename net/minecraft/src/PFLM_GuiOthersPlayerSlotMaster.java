@@ -3,23 +3,23 @@ package net.minecraft.src;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-public class PFLM_GuiOthersPlayerSlotMaster {
+public class PFLM_GuiOthersPlayerSlotMaster extends PFLM_GuiModelSelectBase {
 	public PFLM_GuiOthersPlayerIndividualCustomizeSelect ownerGui;
-	private float xSize_lo;
-	private float ySize_lo;
 	private int selected;
-	private World popWorld;
+	private int mouseX;
+	private int mouseY;
 
 	public PFLM_GuiOthersPlayerSlotMaster(Object par1Minecraft,
 			int par2, int par3, int par4, int par5, int par6) {
+		this((PFLM_GuiBase)null, (World)null);
 	}
 
-	public PFLM_GuiOthersPlayerSlotMaster(
-			PFLM_GuiOthersPlayerIndividualCustomizeSelect gui,
-			World world) {
+	public PFLM_GuiOthersPlayerSlotMaster(PFLM_GuiBase par1GuiScreen, World world) {
+		super(par1GuiScreen, world);
 		popWorld = world;
-		ownerGui = gui;
+		ownerGui = (PFLM_GuiOthersPlayerIndividualCustomizeSelect) par1GuiScreen;
 		selected = 0;
+		PFLM_RenderPlayerDummyMaster.showArmor = false;
 	}
 
 	protected int getSize() {
@@ -44,13 +44,13 @@ public class PFLM_GuiOthersPlayerSlotMaster {
 		PFLM_GuiOthersPlayerIndividualCustomize gui = new PFLM_GuiOthersPlayerIndividualCustomize(ownerGui, popWorld, s);
 		Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ gui });
 		//mc.displayGuiScreen(gui);
-		PFLM_GuiOthersPlayerIndividualCustomize.setChangeMode(PFLM_GuiOthersPlayerIndividualCustomize.modeOthersSettingOffline);
+		gui.setChangeMode(PFLM_GuiOthersPlayerIndividualCustomize.modeOthersSettingOffline);
 		String t[] = (String[]) mod_PFLM_PlayerFormLittleMaid.pflm_main.playerLocalData.get(s);
 		if (t != null) {
 			gui.setTextureName(t[0]);
 			gui.setTextureArmorName(t[1]);
-			gui.setMaidColor(Integer.valueOf(t[2]));
-			gui.setModelScale(Float.valueOf(t[3]));
+			gui.setColor(Integer.valueOf(t[2]));
+			gui.setScale(Float.valueOf(t[3]));
 			gui.setChangeMode(Integer.valueOf(t[4]));
 		}
 		gui.initGui();
@@ -68,8 +68,8 @@ public class PFLM_GuiOthersPlayerSlotMaster {
 
 	public void drawScreen(int i, int j, float f)
 	{
-		xSize_lo = i;
-		ySize_lo = j;
+		mouseX = i;
+		mouseY = j;
 	}
 
 	protected void drawSlot(int i, int j, int k, int l, Tessellator tessellator) {
@@ -79,10 +79,27 @@ public class PFLM_GuiOthersPlayerSlotMaster {
 		boolean setting = mod_PFLM_PlayerFormLittleMaid.pflm_main.playerLocalData.get(s) != null;
 		String s0 = setting ? "Setting" : "Non Settings";
 		ownerGui.drawString(ownerGui.fontRenderer, s0, j + 70, k + 17, 0xffffff);
-		EntityLiving entityliving = (EntityLiving)PFLM_GuiOthersPlayerIndividualCustomizeSelect.playerDummyEntityList.get(s);
-
-		GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-		GL11.glEnable(2903 /*GL_COLOR_MATERIAL*/);
+		if (setting) {
+			String t[] = (String[]) mod_PFLM_PlayerFormLittleMaid.pflm_main.playerLocalData.get(s);
+			boolean flag = false;
+			if(t[4] != null) {
+				if (Integer.valueOf(t[4]) == PFLM_GuiOthersPlayerIndividualCustomize.modeOthersSettingOffline) {
+					setTextureValue(t[0], t[1], Integer.valueOf(t[2]));
+					PFLM_RenderPlayerDummyMaster.allModelInit(drawEntity, false);
+					float f5 = -((float)(width / 2) - i) + ((float)(j + 30) - i);
+					float f6 = -((float)(height / 2) - j) + ((float)((k + 30) - 10) - j);
+		    		drawMobModel2(mouseX, mouseY, j + 30, k + 30, (int)f5, (int)f6, 15F, 15F, true);
+					flag = true;
+				}
+			}
+			if (!flag) {
+				String s1 = PFLM_GuiOthersPlayerIndividualCustomize.getChangeModeString(Integer.valueOf(t[4]));
+				ownerGui.fontRenderer.drawString(s1.toString(), j + 10, k + 17, 0xffffff);
+			}
+		}
+/*
+		GL11.glEnable(32826);
+		GL11.glEnable(2903);
 		GL11.glPushMatrix();
 		float f1 = 15F;
 		if (entityliving.height > 2F) {
@@ -93,8 +110,8 @@ public class PFLM_GuiOthersPlayerSlotMaster {
 		GL11.glRotatef(180F, 180F, 0.0F, 1.0F);
 		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
 				&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
-		float f5 = (float)(j + 30) - xSize_lo;
-		float f6 = (float)((k + 30) - 10) - ySize_lo;
+		float f5 = (float)(j + 30) - i;
+		float f6 = (float)((k + 30) - 10) - j;
 		GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
 		GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
@@ -106,52 +123,74 @@ public class PFLM_GuiOthersPlayerSlotMaster {
 		entityliving.rotationYawHead = entityliving.rotationYaw;
 		GL11.glTranslatef(0.0F, entityliving.yOffset, 0.0F);
 		RenderManager.instance.playerViewY = 180F;
-		if (setting) {
-			String t[] = (String[]) mod_PFLM_PlayerFormLittleMaid.pflm_main.playerLocalData.get(s);
-			boolean flag = false;
-			if(t[4] != null) {
-				if (Integer.valueOf(t[4]) == PFLM_GuiOthersPlayerIndividualCustomize.modeOthersSettingOffline) {
-					// 152delete((PFLM_EntityPlayerDummy) entityliving).texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(t[0], Integer.valueOf(t[2]));
-					mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData.setCapsValue(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData.caps_ResourceLocation, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(t[0], Integer.valueOf(t[2])));
-					PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, Integer.valueOf(t[2]));
-					((PFLM_EntityPlayerDummy) entityliving).textureModel = (Object[]) getTextureModel(t[0], t[1]);
-					((PFLM_EntityPlayerDummy) entityliving).textureName = t[0];
-					((PFLM_EntityPlayerDummy) entityliving).textureArmorName = t[1];
-					((PFLM_EntityPlayerDummy) entityliving).textureArmor0 = mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureArmor0;
-					((PFLM_EntityPlayerDummy) entityliving).textureArmor1 = mod_PFLM_PlayerFormLittleMaid.pflm_main.othersIndividualTextureArmor1;
-					((PFLM_EntityPlayerDummy) entityliving).modelScale = 0.0F;
-					((PFLM_EntityPlayerDummy) entityliving).showArmor = false;
-					((PFLM_EntityPlayerDummy) entityliving).others = false;
-					RenderManager.instance.renderEntityWithPosYaw(entityliving, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-					flag = true;
-				}
-			}
-			if (!flag) {
-				String s1 = PFLM_GuiOthersPlayerIndividualCustomize.getChangeModeString(Integer.valueOf(t[4]));
-				ownerGui.fontRenderer.drawString(s1.toString(), j + 10, k + 17, 0xffffff);
-			}
-		}
-		GL13.glMultiTexCoord2f(33985 /*GL_TEXTURE1_ARB*/, 240.0F, 240.0F);
+		GL13.glMultiTexCoord2f(33985, 240.0F, 240.0F);
 		GL11.glPopMatrix();
 		RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+		GL11.glDisable(32826);
+*/
 	}
 
-	private Object[] getTextureModel(String s1, String s2) {
-		Object amodelPlayerFormLittleMaid = null;
-		Object ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureBox(s1);
-		Object[] models = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxModels(ltb);
-		if (ltb == null) {
-			if (s1.indexOf("Biped") == -1) s1 = "default";
-			ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureBox(s1);
-			models = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxModels(ltb);
-		}
-		return models;
+	public void setTextureValue(String texture, String armorTexture, int color) {
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName, texture);
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, color);
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, armorTexture);
+		setTextureArmorPackege();
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, armorTexture);
+	}
+
+	public void setTextureArmorPackege() {
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName));
+		String s = mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName((String)PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName), 2);
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, s);
 	}
 
 	public void deletePlayerLocalData() {
 		if (PFLM_GuiOthersPlayerIndividualCustomizeSelect.playerList.size() < 1) return;
 		mod_PFLM_PlayerFormLittleMaid.pflm_main.playerLocalData.remove(PFLM_GuiOthersPlayerIndividualCustomizeSelect.playerList.get(selected));
 		mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
+	}
+
+	@Override
+	public String getTextureName() {
+		return null;
+	}
+
+	@Override
+	public void setTextureName(String s) {
+	}
+
+	@Override
+	public String getTextureArmorName() {
+		return null;
+	}
+
+	@Override
+	public void setTextureArmorName(String s) {
+	}
+
+	@Override
+	public int getColor() {
+		return -1;
+	}
+
+	@Override
+	public void setColor(int i) {
+	}
+
+	@Override
+	public float getScale() {
+		return 0.0F;
+	}
+
+	@Override
+	public void setScale(float f) {
+	}
+
+	@Override
+	public void modelChange() {
+	}
+
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 	}
 }

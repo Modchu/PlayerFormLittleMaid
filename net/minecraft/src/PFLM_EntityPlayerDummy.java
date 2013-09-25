@@ -2,21 +2,9 @@ package net.minecraft.src;
 
 public class PFLM_EntityPlayerDummy extends EntityLiving {
 
-	public String[] armorPrefix = new String[] {"", "", "", ""};
-	public Object[] textureModel;
-	public String textureName;
-	public String[] textureArmor0;
-	public String[] textureArmor1;
-	public String textureArmorName;
-	public boolean showArmor;
-	public boolean others;
-	public float modelScale;
-	//public int maidColor;
-
 	public PFLM_EntityPlayerDummy(World world) {
 		super(world);
 		//Modchu_Debug.mDebug("new PFLM_EntityPlayerDummy()");
-		// 152deleteskinUrl = null;
 	}
 
 	@Override
@@ -44,9 +32,4 @@ public class PFLM_EntityPlayerDummy extends EntityLiving {
     {
         super.onDeath(par1DamageSource);
     }
-/*//152delete
-	public void setTexture(String s) {
-		texture = s;
-	}
-*///152delete
 }

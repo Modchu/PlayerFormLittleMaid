@@ -7,13 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 public class PFLM_Main
 {
-	public static final String version = "22h";
+	public static final String version = "22i";
 	public static final String modName = "PlayerFormLittleMaid";
 	public static final String versionString = ""+ Modchu_Version.version + "-" + version;
 
@@ -92,24 +93,13 @@ public class PFLM_Main
 	public static Object texture = null;
 	public static String textureName = "default";
 	public static String textureArmorName = "default";
-	public static Object othersTexture = null;
 	public static String othersTextureName = "default";
 	public static String othersTextureArmorName = "default";
 	public static int othersMaidColor = 0;
-	public static Object othersTextureModel[];
-	public static String othersTextureArmor0[] = new String[4];
-	public static String othersTextureArmor1[] = new String[4];
 	public static float othersModelScale = 0.0F;
-	public static Object othersIndividualTextureModel[];
-	public static String othersIndividualTextureArmor0[] = new String[4];
-	public static String othersIndividualTextureArmor1[] = new String[4];
 	public static int othersHandednessMode = 0;
 	public static final int maxShortcutKeys = 100;
-	public static Object shortcutKeysTextureModel[];
-	public static String shortcutKeysTextureArmor0[] = new String[4];
-	public static String shortcutKeysTextureArmor1[] = new String[4];
 	public static float shortcutKeysModelScale[] = new float[maxShortcutKeys];
-	public static Object shortcutKeysTexture[];
 	public static String shortcutKeysTextureName[] = new String[maxShortcutKeys];
 	public static String shortcutKeysTextureArmorName[] = new String[maxShortcutKeys];
 	public static int shortcutKeysMaidColor[] = new int[maxShortcutKeys];
@@ -128,12 +118,14 @@ public class PFLM_Main
 	private static File shortcutKeysCfgfile;
 	public static List<String> showModelList = new ArrayList<String>();
 	public static List<String> textureList = new ArrayList<String>();
-	public static HashMap playerLocalData = new HashMap();
+	public static ConcurrentHashMap playerLocalData = new ConcurrentHashMap();
 	public static Object mc;
 	public static boolean newRelease = false;
 	public static String newVersion = "";
 	public static int[][] texturesNamber;
+	public static int[] texturesArmorNamber;
 	public static int[] maxTexturesNamber = new int [16];
+	public static int maxTexturesArmorNamber;
 	public static Class MMM_TextureManager;
 	public static Class MMM_FileManager;
 	public static Class MMM_TextureBox;
@@ -147,6 +139,7 @@ public class PFLM_Main
 	public static boolean oldRender = false;
 	private static boolean itemRendererReplaceFlag = false;
 	private static boolean notDefaultModelSetError = false;
+	private static boolean texturesNamberInitFlag = false;
 
 	//不具合有り機能封印
 	public static boolean guiShowArmorSupport = false;
@@ -239,7 +232,6 @@ public class PFLM_Main
 			ModLoader.getLogger().warning("mod_PFLM_PlayerFormLittleMaid-you must check MMMLib revision.");
 			throw new RuntimeException("mod_PFLM_PlayerFormLittleMaid-The revision of MMMLib is old.");
 		}
-		shortcutKeysTexture = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? Modchu_Reflect.newInstanceArray("ResourceLocation", maxShortcutKeys) : new String[maxShortcutKeys];
 		if (mod_Modchu_ModchuLib.modchu_Main.isForge) {
 			o = Modchu_Reflect.invokeMethod("cpw.mods.fml.common.Loader", "instance");
 			if (o != null) {
@@ -304,12 +296,12 @@ public class PFLM_Main
 
 	public void loadInit() {
 		loadInitFlag = true;
+		mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy = (PFLM_IRenderPlayerDummy) Modchu_Reflect.newInstance("PFLM_RenderPlayerDummy");
 	}
 
 	public void addRenderer(Map map)
 	{
 		if (!isPlayerForm) return;
-		mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy = (PFLM_IRenderPlayerDummy) Modchu_Reflect.newInstance("PFLM_RenderPlayerDummy");
 		((Render) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy).setRenderManager(RenderManager.instance);
 //-@-125
 		Modchu_Debug.lDebug("addRenderer");
@@ -617,7 +609,8 @@ public class PFLM_Main
 		}
 *///125delete
 //-@-b166
-		return true;
+		return false;
+		//return true;
 //@-@b166
 		// b166deletereturn;
 	}
@@ -625,6 +618,7 @@ public class PFLM_Main
 	public boolean onTickInGame(float f, Object minecraft)
 	{
 		if (notDefaultModelSetError) throw new RuntimeException("MultiModel_DefaultModelSet not found !!");
+		//else if (!notDefaultModelSetError) return false;
 		sitSleepResetCheck();
 
 		if (!Keyboard.getEventKeyState()
@@ -1327,11 +1321,12 @@ public class PFLM_Main
     }
 
     public static void changeColor(PFLM_EntityPlayerDummy dummy) {
-    	if (dummy.textureModel[0] instanceof MultiModelBaseBiped) ;else return;
-    	PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.pflm_RenderPlayerDummyMaster.modelData;
-    	((MultiModelBaseBiped) dummy.textureModel[0]).changeColor(data);
-    	if (dummy.textureModel[1] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) dummy.textureModel[1]).changeColor(data);
-    	if (dummy.textureModel[2] instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) dummy.textureModel[2]).changeColor(data);
+    	if (PFLM_RenderPlayerDummyMaster.modelData != null
+    			&& PFLM_RenderPlayerDummyMaster.modelData.modelMain != null
+    			&& PFLM_RenderPlayerDummyMaster.modelData.modelMain.model instanceof MultiModelBaseBiped) ;else return;
+    	((MultiModelBaseBiped) PFLM_RenderPlayerDummyMaster.modelData.modelMain.model).changeColor(PFLM_RenderPlayerDummyMaster.modelData);
+    	if (PFLM_RenderPlayerDummyMaster.modelData.modelFATT.modelInner instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) PFLM_RenderPlayerDummyMaster.modelData.modelFATT.modelInner).changeColor(PFLM_RenderPlayerDummyMaster.modelData);
+    	if (PFLM_RenderPlayerDummyMaster.modelData.modelFATT.modelOuter instanceof MultiModelBaseBiped) ((MultiModelBaseBiped) PFLM_RenderPlayerDummyMaster.modelData.modelFATT.modelOuter).changeColor(PFLM_RenderPlayerDummyMaster.modelData);
     }
 
     private void sitSleepResetCheck() {
@@ -1419,6 +1414,7 @@ public class PFLM_Main
 		} else {
 			s1 = mod_Modchu_ModchuLib.modchu_Main.getModelSpecificationArmorPackege(s);
 			if (s1 != null) return s1;
+			s = mod_Modchu_ModchuLib.modchu_Main.lastIndexProcessing(s, "_");
 			String[] cheackModelName = {
 					"Elsa"
 			};
@@ -1429,14 +1425,17 @@ public class PFLM_Main
 					flag = true;
 				}
 			}
-			if (!flag
-					&& i == 0) {
-				s1 = "default";
+			if (!flag) {
+				if (i == 1) {
+					s1 = s1 != null ? s1.indexOf("_Biped") > -1 ? "_Biped" : "default" : "erasearmor";
+				} else {
+					s1 = s1 != null ? s1.indexOf("_Biped") > -1 ? "_Biped" : "default" : "default";
+				}
 			} else {
-				if (i == 2) s1 = "erasearmor";
+				s1 = i == 1 ? "erasearmor" : "default";
 			}
 		}
-		Modchu_Debug.mDebug("getArmorName s1="+s1);
+		//Modchu_Debug.mDebug("getArmorName s1="+s1);
 		return s1;
 	}
 
@@ -1562,9 +1561,10 @@ public class PFLM_Main
     public static float getModelScale(Entity entity) {
     	EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
     	if (entity != null) ;else entity = thePlayer;
-    	Object textureModel = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData((EntityPlayer) entity).modelMain.model;
+    	PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData((EntityPlayer) entity);
+    	Object textureModel = data.modelMain.model;
     	if (textureModel != null
-    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getModelScale();
+    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getModelScale(data);
     	return 0.9375F;
     }
 
@@ -1581,7 +1581,7 @@ public class PFLM_Main
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.model;
     	if (textureModel != null
-    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getWidth();
+    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getWidth(data);
     	return f;
     }
 
@@ -1632,7 +1632,7 @@ public class PFLM_Main
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.model;
     	if (textureModel != null
-    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingWidth();
+    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingWidth(data);
     	return f;
     }
 
@@ -1649,7 +1649,7 @@ public class PFLM_Main
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.model;
     	if (textureModel != null
-    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingHeight();
+    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingHeight(data);
     	return f;
     }
 
@@ -1666,7 +1666,7 @@ public class PFLM_Main
     	if (data != null) ;else return f;
     	Object textureModel = data.modelMain.model;
     	if (textureModel != null
-    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingyOffset();
+    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getRidingyOffset(data);
     	return f;
     }
 
@@ -1683,7 +1683,7 @@ public class PFLM_Main
     	if (data != null) ;else return d;
     	Object textureModel = data.modelMain.model;
     	if (textureModel != null
-    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getMountedYOffset();
+    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).getMountedYOffset(data);
     	return d;
     }
 
@@ -1713,7 +1713,7 @@ public class PFLM_Main
     	if (data != null) ;else return 0.0F;
     	Object textureModel = data.modelMain.model;
     	if (textureModel != null
-    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).ridingViewCorrection();
+    			&& textureModel instanceof MultiModelBaseBiped) return ((MultiModelBaseBiped) textureModel).ridingViewCorrection(data);
     	return 0.0F;
     }
 
@@ -1891,91 +1891,48 @@ public class PFLM_Main
     	return;
     }
 
-	public static void setTextureValue() {
-		if (textureName != null) ;else return;
-		if (changeMode == PFLM_Gui.modeOnline) return;
-		int i = getMaidColor();
-		texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
-		if (texture == null) {
-			int n = 0;
-			for (; n < 16 && texture == null; n = n + 1) {
-				i++;
-				i = i & 0xf;
-				setMaidColor(i);
-				texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
-			}
-			if (texture == null) {
-				setTexturePackege(true, 0);
-				texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
-				if (texture == null) {
-					Modchu_Debug.mDebug("setTextureValue() texture == null");
-					return;
-				}
-			}
-		}
-		// setSizeの設定値はダミー。設定は呼び出し先で
-		if (isModelSize) {
-			setSize(0.5F, 1.35F);
-			resetHeight();
-		}
-		setArmorTextureValue();
-	}
+    public static String[] setTexturePackege(String textureName, String textureArmorName, int color, int prevNextNormal, boolean armorOnly) {
+    	if (!armorOnly) {
+    		String s = textureName;
+    		switch(prevNextNormal) {
+    		case 0:
+    			s = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevPackege(textureName, color);
+    			break;
+    		case 1:
+    			s = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(textureName, color);
+    			break;
+    		case 2:
+    			break;
+    		}
+    		if (s != null
+    				&& !s.isEmpty()) ;else return null;
+    		textureName = s;
+    		textureArmorName = textureName;
+    		String s1 = getArmorName(textureArmorName, prevNextNormal);
+    		if (s1 != null
+    				&& !s1.isEmpty()) textureArmorName = s1;
+    	} else {
+    		textureArmorName = prevNextNormal == 0 ? mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevArmorPackege(textureArmorName) : mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextArmorPackege(textureArmorName);
+    	}
+    	return new String[]{ textureName, textureArmorName };
+    }
 
-	public static void setColorTextureValue() {
-		if (textureName != null) ;else return;
-		if (changeMode == PFLM_Gui.modeOnline) return;
-		int i = getMaidColor();
-		Object t = texture;
-		texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
-		for (int n = 0; n < 16 && texture == null; n = n + 1) {
-			if (PFLM_Gui.colorReverse) {
-				i--;
-			} else {
-				i++;
-			}
-			i = i & 0xf;
-			setMaidColor(i);
-			texture = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(textureName, i);
-		}
-		if (texture == null) texture = t;
-	}
+    public static int getMaidColor() {
+    	return maidColor;
+    }
 
-	public static void setArmorTextureValue() {
-		// Modchu_Debug.mDebug("setArmorTextureValue textureArmorName="+textureArmorName);
-		if (changeMode == PFLM_Gui.modeOnline) return;
-		if (textureArmorName == null) setTextureArmorName(getArmorName(textureName));
-	}
+    public static void setMaidColor(int i) {
+    	maidColor = i & 0xf;
+    }
 
-	public static void setTexturePackege(boolean next, int i) {
-		if (i != 1) {
-			String s = next ? mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextPackege(textureName, getMaidColor()) : mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevPackege(textureName, getMaidColor());
-			if (s != null
-					&& !s.isEmpty()) ;else return;
-			textureName = s;
-			setTextureArmorName(textureName);
-			String s1 = getArmorName(textureArmorName, i);
-			if (s1 != null
-					&& !s1.isEmpty()) setTextureArmorName(s1);
-		}
-		if (i == 1) textureArmorName = next ? mod_Modchu_ModchuLib.modchu_Main.textureManagerGetNextArmorPackege(textureArmorName) : mod_Modchu_ModchuLib.modchu_Main.textureManagerGetPrevArmorPackege(textureArmorName);
-	}
-
-	public static int getMaidColor() {
-		return maidColor;
-	}
-
-	public static void setMaidColor(int i) {
-		maidColor = i & 0xf;
-	}
-
-	public static void setMaidColor(EntityPlayer entityplayer, int i) {
+    public static void setMaidColor(EntityPlayer entityplayer, int i) {
     	EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
-		if (entityplayer != null) ;else entityplayer = thePlayer;
-		PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData(entityplayer);
-		if (data != null) {
-			data.setCapsValue(data.caps_maidColor, i);
-		}
-	}
+    	if (entityplayer != null) ;else entityplayer = thePlayer;
+    	PFLM_ModelData data = mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer.getPlayerData(entityplayer);
+    	if (data != null) {
+    		data.setCapsValue(data.caps_maidColor, i);
+    	}
+    }
 
     public static void setTextureName(String s) {
     	textureName = s;
@@ -2167,8 +2124,7 @@ public class PFLM_Main
 		String s[] = {
 				"textureName="+textureName, "textureArmorName="+textureArmorName, "maidColor="+maidColor,
 				"ModelScale="+PFLM_Gui.modelScale, "changeMode="+changeMode, "setModel="+PFLM_Gui.setModel,
-				"setColor="+PFLM_Gui.setColor, "setArmor="+PFLM_Gui.setArmor, "showArmor="+PFLM_Gui.showArmor,
-				"changeMode="+changeMode
+				"setColor="+PFLM_RenderPlayerDummyMaster.modelData.getCapsValueInt(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor), "setArmor="+PFLM_Gui.setArmor, "changeMode="+changeMode
 		};
 		PFLM_Config.writerConfig(cfgfile, s);
 	}
@@ -2188,9 +2144,8 @@ public class PFLM_Main
 				PFLM_Gui.modelScale = Float.valueOf((PFLM_Config.loadConfig(cfgfile, "ModelScale", PFLM_Gui.modelScale)).toString());
 				changeMode = Integer.valueOf((PFLM_Config.loadConfig(cfgfile, "changeMode", changeMode)).toString());
 				PFLM_Gui.setModel = Integer.valueOf((PFLM_Config.loadConfig(cfgfile, "setModel", PFLM_Gui.setModel)).toString());
-				PFLM_Gui.setColor = Integer.valueOf((PFLM_Config.loadConfig(cfgfile, "maidColor", maidColor)).toString());
+				PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, Integer.valueOf((PFLM_Config.loadConfig(cfgfile, "maidColor", maidColor)).toString()));
 				PFLM_Gui.setArmor = Integer.valueOf((PFLM_Config.loadConfig(cfgfile, "setArmor", PFLM_Gui.setArmor)).toString());
-				PFLM_Gui.showArmor = Boolean.valueOf((PFLM_Config.loadConfig(cfgfile, "showArmor", PFLM_Gui.showArmor)).toString());
 				handednessMode = Integer.valueOf((PFLM_Config.loadConfig(cfgfile, "handednessMode", handednessMode)).toString());
 				changeMode = Integer.valueOf((PFLM_Config.loadConfig(cfgfile, "changeMode", changeMode)).toString());
 				PFLM_Config.loadConfig(showModelList, cfgfile);
@@ -2204,12 +2159,11 @@ public class PFLM_Main
 		// Gui設定項目をcfgファイルに保存
 		String k[] = {
 				"textureName", "textureArmorName", "maidColor", "ModelScale", "setModel",
-				"setColor", "setArmor", "showArmor", "handednessMode", "changeMode"
+				"setColor", "setArmor", "handednessMode", "changeMode"
 		};
 		String k1[] = {
 				""+textureName, ""+textureArmorName, ""+maidColor, ""+PFLM_Gui.modelScale, ""+PFLM_Gui.setModel,
-				""+PFLM_Gui.setColor, ""+PFLM_Gui.setArmor, ""+PFLM_Gui.showArmor, ""+handednessMode,
-				""+changeMode
+				""+PFLM_RenderPlayerDummyMaster.modelData.getCapsValueInt(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor), ""+PFLM_Gui.setArmor, ""+handednessMode, ""+changeMode
 		};
 		PFLM_Config.saveParamater(cfgfile, k, k1);
 	}
@@ -2264,7 +2218,7 @@ public class PFLM_Main
 		//GUIOthersPlayer設定ファイル書き込み
 		String s[] = {
 				"othersTextureName="+othersTextureName, "othersTextureArmorName="+othersTextureArmorName, "othersMaidColor="+othersMaidColor,
-				"othersModelScale="+othersModelScale, "showArmor="+PFLM_GuiOthersPlayer.showArmor
+				"othersModelScale="+othersModelScale
 		};
 		PFLM_Config.writerConfig(othersCfgfile, s);
 	}
@@ -2282,7 +2236,6 @@ public class PFLM_Main
 				othersTextureArmorName = (PFLM_Config.loadConfig(othersCfgfile, "othersTextureArmorName", othersTextureArmorName)).toString();
 				othersMaidColor = Integer.valueOf((PFLM_Config.loadConfig(othersCfgfile, "othersMaidColor", othersMaidColor)).toString());
 				othersModelScale = Float.valueOf((PFLM_Config.loadConfig(othersCfgfile, "othersModelScale", othersModelScale)).toString());
-				PFLM_GuiOthersPlayer.showArmor = Boolean.valueOf((PFLM_Config.loadConfig(othersCfgfile, "showArmor", PFLM_GuiOthersPlayer.showArmor)).toString());
 				PFLM_GuiOthersPlayer.changeMode = Integer.valueOf((PFLM_Config.loadConfig(othersCfgfile, "changeMode", PFLM_GuiOthersPlayer.changeMode)).toString());
 				othersHandednessMode = Integer.valueOf((PFLM_Config.loadConfig(othersCfgfile, "othersHandednessMode", othersHandednessMode)).toString());
 				PFLM_Config.loadConfigPlayerLocalData(playerLocalData, othersCfgfile);
@@ -2295,14 +2248,11 @@ public class PFLM_Main
 	public static void saveOthersPlayerParamater(boolean flag) {
 		// GuiOthersPlayer設定項目をcfgファイルに保存
 		String k[] = {
-				"othersTextureName", "othersTextureArmorName", "othersMaidColor", "othersModelScale", "showArmor",
-				"changeMode", "othersHandednessMode"
+				"othersTextureName", "othersTextureArmorName", "othersMaidColor", "othersModelScale", "changeMode",
+				"othersHandednessMode"
 		};
 		String k1[] = {
-				""+othersTextureName, ""+othersTextureArmorName, ""+othersMaidColor,
-				""+othersModelScale,
-				""+PFLM_GuiOthersPlayer.showArmor,
-				""+PFLM_GuiOthersPlayer.changeMode,
+				""+othersTextureName, ""+othersTextureArmorName, ""+othersMaidColor, ""+othersModelScale, ""+PFLM_GuiOthersPlayer.changeMode,
 				""+othersHandednessMode
 		};
 		PFLM_Config.saveOthersPlayerParamater(PFLM_GuiOthersPlayerIndividualCustomize.playerName, playerLocalData, othersCfgfile, k, k1, flag);
@@ -2986,28 +2936,41 @@ public class PFLM_Main
 			setWatherFog2 = watherFog2;
 			setwaterStillLightOpacity = waterStillLightOpacity;
 			setwaterMovingLightOpacity = waterMovingLightOpacity;
+		} else {
+			Block.waterStill.setLightOpacity(setwaterStillLightOpacity);
+			Block.waterMoving.setLightOpacity(setwaterMovingLightOpacity);
 		}
-		Block.waterStill.setLightOpacity(setwaterStillLightOpacity);
-		Block.waterMoving.setLightOpacity(setwaterMovingLightOpacity);
 		//MMM_TextureManager.getArmorPrefix();
 		//MMM_TextureManager.getModFile();
 		//MMM_TextureManager.getTextures();
 
+		if (entityReplaceFlag) Modchu_Debug.Debug("PFLM-EntityPlayerReplace setting on.");
+		else Modchu_Debug.Debug("PFLM-EntityPlayerReplace setting off.");
+	}
+
+	public static void texturesNamberInit() {
 		//モデルリスト用テクスチャーパックナンバー作成
-		texturesNamber = new int[16][mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTexturesSize()];
+		if (texturesNamberInitFlag) return;
+		texturesNamberInitFlag = true;
+		List textures = mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTextures();
+		texturesNamber = new int[16][textures.size()];
+		texturesArmorNamber = new int[textures.size()];
 		for (int color = 0 ; color < 16 ; color++) {
-			for (int i2 = 0 ; i2 < mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTexturesSize() ; ++i2) {
+			for (int i2 = 0 ; i2 < textures.size() ; ++i2) {
 				texturesNamber[color][i2] = -1;
 			}
 		}
+		String fileName = null;
 		String t = null;
 		String t1 = null;
 		int[] i1 = new int[16];
-		t = "";
+		int i3 = 0;
 		Object ltb;
-		for (int i2 = 0 ; i2 < mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTexturesSize() ; ++i2) {
-			ltb = mod_Modchu_ModchuLib.modchu_Main.getTextureManagerTextures(i2);
-			t1 = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb) != null ? mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb) : t1;
+		for (int i2 = 0 ; i2 < textures.size() ; ++i2) {
+			texturesArmorNamber[i3] = -1;
+			ltb = textures.get(i2);
+			fileName = mod_Modchu_ModchuLib.modchu_Main.getTextureBoxFileName(ltb);
+			t1 = fileName != null ? fileName : t1;
 			if (ltb != null
 					&& t1 != null
 					&& !t1.isEmpty()) {
@@ -3020,11 +2983,14 @@ public class PFLM_Main
 					}
 					maxTexturesNamber[color] = i1[color];
 				}
+				if (mod_Modchu_ModchuLib.modchu_Main.getTextureBoxHasArmor(ltb)) {
+					texturesArmorNamber[i3] = i2;
+					++i3;
+				}
 			}
 		}
-		if (entityReplaceFlag) Modchu_Debug.Debug("PFLM-EntityPlayerReplace setting on.");
-		else Modchu_Debug.Debug("PFLM-EntityPlayerReplace setting off.");
-    }
+		maxTexturesArmorNamber = i3;
+	}
 
 	public static int optiNameCheck(String s, int j) {
 		int i = j;

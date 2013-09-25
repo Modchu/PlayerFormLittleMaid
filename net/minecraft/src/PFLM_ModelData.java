@@ -2,11 +2,11 @@ package net.minecraft.src;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps {
 
@@ -59,7 +59,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private int rotate = 0;
 	private final int mushroomConfusionTypeMax = 4;
 	private List<String> showPartsHideList = new ArrayList();
-	private HashMap<String, String> showPartsRenemeMap = new HashMap();
+	private ConcurrentHashMap<String, String> showPartsRenemeMap = new ConcurrentHashMap();
 //-@-152
 	private Object[] resourceLocations;
 //@-@152
@@ -87,6 +87,13 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		modelMain.capsLink = modelFATT;
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159
+				&& mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 499) {
+			int i2 = 15728784;
+			boolean b = false;
+			b = Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseNihil, "lighting", modelMain, i2, 1);
+			b = Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseNihil, "lighting", modelFATT, i2, 1);
+		}
 	}
 
 	@Override
@@ -856,7 +863,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private String getModelRendererName(MMM_ModelRenderer modelRenderer, int i) {
 		MMM_ModelRenderer modelRenderer2;
 		Object model = getModel(i);
-		HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+		ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
 		Modchu_Debug.mDebug("getModelRendererName modelRendererMap != null ?"+(modelRendererMap != null));
 		Iterator<Entry<String, Field>> iterator = modelRendererMap.entrySet().iterator();
 		Entry<String, Field> entry;
@@ -935,7 +942,10 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		MultiModelBaseBiped multiModelBaseBiped = (MultiModelBaseBiped) model;
 		if (Modchu_ModelCapsHelper.getCapsValueBoolean(multiModelBaseBiped, caps_firstPerson)) ((MultiModelBaseBiped) model).setRotationAnglesfirstPerson(f, f1, f2, f3, f4, f5, this);
 		if (getShortcutKeysAction()) {
-			if (model instanceof MultiModelAction) ((MultiModelAction) model).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
+			//if (model instanceof MultiModelAction) ((MultiModelAction) model).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
+			if (modelMain.model instanceof MultiModelAction) ((MultiModelAction) modelMain.model).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
+			if (modelFATT.modelInner instanceof MultiModelAction) ((MultiModelAction) modelFATT.modelInner).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
+			if (modelFATT.modelOuter instanceof MultiModelAction) ((MultiModelAction) modelFATT.modelOuter).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
 			if (getActionFlag()) {
 				setActionSpeed(0.0F);
 				setActionFlag(false);
@@ -1003,7 +1013,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		localFlag = b;
 	}
 
-	private HashMap<String, Boolean> getShowPartsMap(int i) {
+	private ConcurrentHashMap<String, Boolean> getShowPartsMap(int i) {
 		return PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
 	}
 
@@ -1224,7 +1234,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 
 	private void setRunActionNumber(int i) {
 		if (runActionNumber != i) {
-			Modchu_Debug.mDebug("setRunActionNumber actionReleaseNumber="+actionReleaseNumber+" i="+i);
+			//Modchu_Debug.mDebug("setRunActionNumber actionReleaseNumber="+actionReleaseNumber+" i="+i);
 			setCapsValue(caps_actionRelease, actionReleaseNumber);
 			runActionNumber = i;
 			setActionReleaseNumber(i);
@@ -1501,24 +1511,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     }
 
     private int getMaidColor() {
-		return maidColor;
-/*
-		Object currentScreen = Modchu_Reflect.getFieldObject("Minecraft", "field_71462_r", "currentScreen", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
-    	if (owner instanceof EntityPlayer) {
-    		if (currentScreen != null
-    				&& currentScreen instanceof PFLM_Gui) {
-    			return mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor;
-    		}
-    		return maidColor;
-    	} else {
-    		if (currentScreen != null) ;else return 0;
-    		if (currentScreen instanceof PFLM_Gui) return PFLM_Gui.setColor;
-    		if (currentScreen instanceof PFLM_GuiModelSelect) return ((PFLM_GuiModelSelect) currentScreen).modelColor;
-    		if (currentScreen instanceof PFLM_GuiOthersPlayerIndividualCustomize) return PFLM_GuiOthersPlayerIndividualCustomize.othersMaidColor;
-    		if (currentScreen instanceof PFLM_GuiOthersPlayer) return mod_PFLM_PlayerFormLittleMaid.pflm_main.othersMaidColor;
-    	}
-    	return 0;
-*/
+    	return maidColor;
     }
 
     private void setMaidColor(int i) {
@@ -1543,20 +1536,20 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
      */
     private void showModelSettingReflects(int i) {
     	//Modchu_Debug.mDebug("showModelSettingReflects i="+i);
-    	HashMap<String, Boolean> showPartsMap = PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
-    	HashMap<String, Boolean> defaultShowPartsMap = getDefaultShowPartsMap(i);
+    	ConcurrentHashMap<String, Boolean> showPartsMap = PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
+    	ConcurrentHashMap<String, Boolean> defaultShowPartsMap = getDefaultShowPartsMap(i);
     	Object model = getModel(i);
-    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+    	ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
     	//Modchu_Debug.mDebug("showModelSettingReflects textureName="+textureName+" modelRendererMap != null ?"+(modelRendererMap != null));
     	if (modelRendererMap != null) ;else return;
     	if (defaultShowPartsMap != null) settingReflects(modelRendererMap, defaultShowPartsMap, null, null, i);
-    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
+    	ConcurrentHashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
     	if (showPartsMap != null
     			&& !showPartsMap.isEmpty()) settingReflects(modelRendererMap, showPartsMap, PFLM_Config.getIndexOfAllSetVisibleMap(textureName, i), indexOfAllSetVisibleBooleanMap, i);
     }
 
-    private void settingReflects(HashMap<String, Field> modelRendererMap, HashMap<String, Boolean> map,
-    		HashMap<String, List<String>> indexOfAllSetVisibleMap, HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap, int i) {
+    private void settingReflects(ConcurrentHashMap<String, Field> modelRendererMap, ConcurrentHashMap<String, Boolean> map,
+    		ConcurrentHashMap<String, List<String>> indexOfAllSetVisibleMap, ConcurrentHashMap<String, Boolean> indexOfAllSetVisibleBooleanMap, int i) {
     	Object model = getModel(i);
     	Field f = null;
     	String s2 = null;
@@ -1677,7 +1670,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     	}
     }
 
-    private HashMap<String, String> getShowPartsRenemeMap() {
+    private ConcurrentHashMap<String, String> getShowPartsRenemeMap() {
     	return showPartsRenemeMap;
     }
 
@@ -1696,7 +1689,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     private void indexOfAllSetVisible(String s, int i) {
     	MultiModelBaseBiped model = (MultiModelBaseBiped) getModel(i);
     	List<String> indexOfAllSetVisibleList = PFLM_Config.getIndexOfAllSetVisibleMap(textureName, s, i);
-    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+    	ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
     	if (modelRendererMap != null
     			&& modelRendererMap.containsKey(s)) ;else return;
     	String s0 = null;
@@ -1730,13 +1723,13 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
      * indexOfで検索対象のパーツをまとめて指定booleanにセットするListへの追加
      */
     private void indexOfAllSetVisible(String s, int i, boolean b) {
-    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
+    	ConcurrentHashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
     	indexOfAllSetVisibleBooleanMap.put(s, b);
     	PFLM_Config.setIndexOfAllSetVisibleBooleanMap(textureName, i, indexOfAllSetVisibleBooleanMap);
 /*
-    	HashMap<Integer, String> nemeMap = PFLM_Config.getConfigShowPartsNemeMap(s, i);
+    	ConcurrentHashMap<Integer, String> nemeMap = PFLM_Config.getConfigShowPartsNemeMap(s, i);
     	MultiModelBaseBiped model = (MultiModelBaseBiped) getModel(i);
-    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+    	ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
     	if (nemeMap != null) ;else return;
     	String s0 = null;
     	for(int i1 = 0; i1 < nemeMap.size(); i1++) {
@@ -1752,7 +1745,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 */
     }
 
-    private HashMap<String, Boolean> getDefaultShowPartsMap(int i) {
+    private ConcurrentHashMap<String, Boolean> getDefaultShowPartsMap(int i) {
     	return PFLM_Config.getDefaultShowPartsMap(textureName, i);
     }
 
