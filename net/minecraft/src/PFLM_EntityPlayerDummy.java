@@ -4,6 +4,7 @@ public class PFLM_EntityPlayerDummy extends EntityLiving {
 
 	public PFLM_EntityPlayerDummy(World world) {
 		super(world);
+		getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(0.0D);
 		//Modchu_Debug.mDebug("new PFLM_EntityPlayerDummy()");
 	}
 
@@ -14,11 +15,11 @@ public class PFLM_EntityPlayerDummy extends EntityLiving {
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
 	}
-
+/*
 	public int getMaxHealth() {
 		return 0;
 	}
-
+*/
 	@Override
 	public float getShadowSize()
 	{

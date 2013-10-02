@@ -17,7 +17,7 @@ public class PFLM_ItemRendererMaster {
 
     public PFLM_ItemRendererMaster() {
     	try {
-    		Object o = Modchu_Reflect.getFieldObject(ItemRenderer.class, "olddays", false);
+    		Object o = Modchu_Reflect.getFieldObject(ItemRenderer.class, "olddays", -1);
     		if (o != null) isOlddays = true;
     	} catch(Exception e) {
     	}
@@ -91,7 +91,7 @@ public class PFLM_ItemRendererMaster {
         Render var27;
         RenderPlayer var26;
 
-        Object textureManager = Modchu_Reflect.invokeMethod("Minecraft", "func_110434_K", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+        Object textureManager = Modchu_Reflect.invokeMethod("Minecraft", "func_110434_K", "getTextureManager", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
         if (var8 != null && var8.itemID == Item.map.itemID)
         {
             GL11.glPushMatrix();
@@ -345,7 +345,7 @@ public class PFLM_ItemRendererMaster {
                 var13 = MathHelper.sin(MathHelper.sqrt_float(var20) * (float)Math.PI);
                 GL11.glRotatef(var13 * 70.0F, 0.0F, 1.0F, 0.0F);
                 GL11.glRotatef(-var22 * 20.0F, 0.0F, 0.0F, 1.0F);
-                Modchu_Reflect.invokeMethod("TextureManager", "func_110577_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, textureManager, new Object[]{ Modchu_Reflect.invokeMethod("AbstractClientPlayer", "func_110306_p", var3) });
+                Modchu_Reflect.invokeMethod("TextureManager", "func_110577_a", "bindTexture", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, textureManager, new Object[]{ Modchu_Reflect.invokeMethod("AbstractClientPlayer", "func_110306_p", "getLocationSkin", var3) });
                 //mc.func_110434_K().func_110577_a(var3.func_110306_p());
                 GL11.glTranslatef(-1.0F, 3.6F, 3.5F);
                 GL11.glRotatef(120.0F, 0.0F, 0.0F, 1.0F);

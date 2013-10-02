@@ -25,6 +25,21 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 	}
 
 	@Override
+	public void initGui() {
+		buttonOnline = changeMode == modePlayerOnline;
+		buttonRandom = changeMode == modeRandom;
+		buttonScale = modelScaleButton;
+		buttonParts = false;
+		buttonReturn = true;
+		buttonPlayer = changeMode == modePlayerOffline
+				| changeMode == modePlayerOnline
+						| changeMode == modePlayer
+								| changeMode == modefalse;
+		buttonShowArmor = changeMode == modeOthersSettingOffline;
+		super.initGui();
+	}
+
+	@Override
 	protected void actionPerformed(GuiButton guibutton)
 	{
 		if(!guibutton.enabled)
@@ -57,7 +72,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			return;
 		}
 		//ChangeMode
-		if(guibutton.id == 400)
+		if(guibutton.id == 13)
 		{
 			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
 				changeMode--;
@@ -105,6 +120,15 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
     	s11 = s11.append(getHandednessModeString(getHandednessMode()));
     	//if (getHandednessMode() == -1) s11 = s11.append(" Result : ").append(getHandednessModeString(handedness));
     	fontRenderer.drawString(s11.toString(), guiLeft, guiTop + 140, 0xffffff);
+    	if(mod_PFLM_PlayerFormLittleMaid.pflm_main.useScaleChange
+    			&& modelScaleButton) {
+    		String s6 = "modelScale : "+getScale();
+    		s6 = (new StringBuilder()).append(s6).toString();
+    		fontRenderer.drawString(s6, guiLeft - 140, guiTop + 30, 0xffffff);
+    		String s7 = "modelScaleChange";
+    		s7 = (new StringBuilder()).append(s7).toString();
+    		fontRenderer.drawString(s7, guiLeft - 140, guiTop - 5, 0xffffff);
+    	}
     	if(changeMode == modeOthersSettingOffline) {
     		s = s.append(getTextureName());
     		fontRenderer.drawString(s.toString(), guiLeft, guiTop + 90, 0xffffff);
@@ -115,23 +139,13 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
     		StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
     		s8 = s8.append(PFLM_RenderPlayerDummyMaster.showArmor);
     		fontRenderer.drawString(s8.toString(), guiLeft, guiTop + 120, 0xffffff);
-    		if(mod_PFLM_PlayerFormLittleMaid.pflm_main.useScaleChange
-    				&& modelScaleButton) {
-    			String s6 = "ModelScale : "+othersModelScale;
-    			s6 = (new StringBuilder()).append(s6).toString();
-    			fontRenderer.drawString(s6, guiLeft - 120, guiTop + 90, 0xffffff);
-    			String s7 = "ModelScaleChange";
-    			s7 = (new StringBuilder()).append(s7).toString();
-    			fontRenderer.drawString(s7, guiLeft - 120, guiTop + 55, 0xffffff);
-    		}
     		fontRenderer.drawString("Model", width / 2 + 60, height / 2 - 56, 0xffffff);
     		fontRenderer.drawString("Color", width / 2 + 60, height / 2 - 41, 0xffffff);
     		fontRenderer.drawString("Armor", width / 2 + 60, height / 2 - 27, 0xffffff);
     		if (drawEntitySetFlag) {
-    			if (drawEntity == null) drawEntity = new PFLM_EntityPlayerDummy(popWorld);
     			drawEntitySetFlag = false;
     			setTextureValue();
-    			PFLM_RenderPlayerDummyMaster.allModelInit(drawEntity, false);
+    			mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.allModelInit(drawEntity, false);
     			drawEntity.setPosition(thePlayer.posX , thePlayer.posY, thePlayer.posZ);
     		}
     		int l = guiLeft;
@@ -146,6 +160,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 
 	public void setTextureName(String s) {
 		othersTextureName = s;
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName, s);
 	}
 
 	public String getTextureArmorName() {
@@ -154,6 +169,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 
 	public void setTextureArmorName(String s) {
 		othersTextureArmorName = s;
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, s);
 	}
 
 	public int getColor() {
@@ -162,6 +178,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 
 	public void setColor(int i) {
 		othersMaidColor = i & 0xf;
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, i & 0xf);
 	}
 
 	public float getScale() {

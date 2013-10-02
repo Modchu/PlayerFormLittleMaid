@@ -861,7 +861,7 @@ public class PFLM_Config extends Modchu_Config {
 				| (getConfigShowPartsRenemeMapFlagString != null
 				&& !getConfigShowPartsRenemeMapFlagString.equals(s))) {
 			if (model instanceof MultiModelBaseBiped) {
-				PFLM_ModelData data = (PFLM_ModelData) Modchu_Reflect.invokeMethod(PFLM_IRenderPlayer.class, "getPlayerData", new Class[]{ EntityPlayer.class }, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer, new Object[]{ mod_Modchu_ModchuLib.modchu_Main.getThePlayer() } );
+				PFLM_ModelData data = PFLM_ModelDataMaster.instance.getPlayerData(mod_Modchu_ModchuLib.modchu_Main.getThePlayer());
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
 				renemeMap = (ConcurrentHashMap<String, String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsRenemeMap);
 				if (renemeMap != null) {
@@ -918,7 +918,7 @@ public class PFLM_Config extends Modchu_Config {
 			Modchu_Debug.mDebug("getConfigShowPartsHideMap flag’Ê‰ß.");
 			if (model instanceof MultiModelBaseBiped) {
 				Modchu_Debug.mDebug("getConfigShowPartsHideMap MultiModelBaseBiped ok.");
-				PFLM_ModelData data = (PFLM_ModelData) Modchu_Reflect.invokeMethod(PFLM_IRenderPlayer.class, "getPlayerData", new Class[]{ EntityPlayer.class }, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer, new Object[]{ mod_Modchu_ModchuLib.modchu_Main.getThePlayer() } );
+				PFLM_ModelData data = PFLM_ModelDataMaster.instance.getPlayerData(mod_Modchu_ModchuLib.modchu_Main.getThePlayer());
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
 				List<String> hideList = null;
 				if (data != null) hideList = (List<String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsHideList);
@@ -939,7 +939,7 @@ public class PFLM_Config extends Modchu_Config {
 			}
 			getConfigShowPartsHideMapFlagString = s3;
 		}
-		Modchu_Debug.mDebug("getConfigShowPartsHideMap null. s="+s+" flag="+flag+" getConfigShowPartsHideMapFlagString ="+getConfigShowPartsHideMapFlagString+" getConfigShowPartsHideMapFlagString.equals(s) ?"+(getConfigShowPartsHideMapFlagString.equals(s)));
+		Modchu_Debug.mDebug("getConfigShowPartsHideMap null. s="+s+" flag="+flag+" getConfigShowPartsHideMapFlagString ="+getConfigShowPartsHideMapFlagString+" getConfigShowPartsHideMapFlagString.equals(s3) ?"+(getConfigShowPartsHideMapFlagString.equals(s3)));
 		hideMap = new ConcurrentHashMap();
 		setConfigShowPartsHideMap(model, s, i, hideMap);
 		return hideMap;

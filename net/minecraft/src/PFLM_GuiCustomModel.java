@@ -57,7 +57,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		editBoxInitFlag = false;
 		addButtonList.clear();
 		setTextureValue();
-		PFLM_RenderPlayerDummyMaster.allModelInit(drawEntity, false);
+		mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.allModelInit(drawEntity, false);
 		mod_PFLM_PlayerFormLittleMaid.pflm_main.changeColor((PFLM_EntityPlayerDummy)drawEntity);
 	}
 
@@ -212,9 +212,8 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		s = s.append(customNumber);
 		fontRenderer.drawString(s.toString(), width / 2 - 80, 20, 0xffffff);
 		if (drawEntitySetFlag) {
-			if (drawEntity == null) drawEntity = new PFLM_EntityPlayerDummy(popWorld);
 			setTextureValue();
-			PFLM_RenderPlayerDummyMaster.allModelInit(drawEntity, false);
+			mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.allModelInit(drawEntity, false);
 			drawEntity.setPosition(mc.thePlayer.posX , mc.thePlayer.posY, mc.thePlayer.posZ);
 			drawEntitySetFlag = false;
 		}

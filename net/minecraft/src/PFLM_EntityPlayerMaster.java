@@ -60,7 +60,7 @@ public class PFLM_EntityPlayerMaster {
 	public void preparePlayerToSpawn() {
 		resetHeight();
 		setSize(0.6F, 1.8F);
-		player.setEntityHealth(getMaxHealth(player));
+		player.setHealth(getMaxHealth(player));
 		player.deathTime = 0;
 	}
 
@@ -315,7 +315,7 @@ public class PFLM_EntityPlayerMaster {
 *///125delete
 //-@-125~b181
     	copyInventory(entityplayer.inventory);
-        player.setEntityHealth(getHealth(player));
+        player.setHealth(getHealth(player));
         player.foodStats = entityplayer.getFoodStats();
 //@-@125~b181
 //-@-b173

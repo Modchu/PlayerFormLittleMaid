@@ -1,13 +1,11 @@
 package net.minecraft.src;
 
-public class PFLM_RenderPlayerDummyV160 extends RendererLivingEntity implements PFLM_IRenderPlayerDummy
+public class PFLM_RenderPlayerDummyV160 extends PFLM_RenderPlayerDummy
 {
-	public static PFLM_RenderPlayerDummyMaster pflm_RenderPlayerDummyMaster;
 
 	public PFLM_RenderPlayerDummyV160() {
 		super(null, 0.0F);
 		pflm_RenderPlayerDummyMaster = new PFLM_RenderPlayerDummyMaster();
-		pflm_RenderPlayerDummyMaster.renderManager = renderManager;
 	}
 
     protected int setArmorModel(EntityLivingBase entityliving, int i, float f)
@@ -49,8 +47,8 @@ public class PFLM_RenderPlayerDummyV160 extends RendererLivingEntity implements 
     	mainModel = modelData.modelMain;
     	setRenderPassModel(modelData.modelFATT);
     	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
-    		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
-    		//super.func_130000_a((EntityLivingBase) entity, d, d1, d2, f, f1);
+    		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", "doRenderLiving", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
+    		//super.doRenderLiving((EntityLivingBase) entity, d, d1, d2, f, f1);
     		else Modchu_Reflect.invokeMethod(RenderLiving.class, "func_77031_a", "doRenderLiving", new Class[]{ EntityLiving.class, double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
     		//doRenderLiving((EntityLiving) entity, d, d1, d2, f, f1);
     	}
@@ -78,28 +76,21 @@ public class PFLM_RenderPlayerDummyV160 extends RendererLivingEntity implements 
     	pflm_RenderPlayerDummyMaster.renderModel((Entity) entityliving, f, f1, f2, f3, f4, f5);
     }
 
-    public static RenderManager getRenderManager() {
-    	return pflm_RenderPlayerDummyMaster.renderManager;
+    public RenderManager getRenderManager() {
+    	return renderManager;
     }
 
     @Override
-    protected ResourceLocation func_110775_a(Entity entity) {
-    	return (ResourceLocation) pflm_RenderPlayerDummyMaster.getResourceLocation(entity);
+    protected ResourceLocation getEntityTexture(Entity entity) {
+    	return (ResourceLocation) PFLM_ModelDataMaster.instance.getResourceLocation(entity);
     }
 
-    protected ResourceLocation func_110775_a(Entity entity, int i) {
-    	return (ResourceLocation) pflm_RenderPlayerDummyMaster.getResourceLocation(entity, i);
+    protected ResourceLocation getEntityTexture(Entity entity, int i) {
+    	return (ResourceLocation) PFLM_ModelDataMaster.instance.getResourceLocation(entity, i);
     }
 
-    protected static void setResourceLocation(Entity entity, ResourceLocation[] resourceLocation) {
-    	pflm_RenderPlayerDummyMaster.setResourceLocation(entity, resourceLocation);
-    }
-
-    protected static void setResourceLocation(Entity entity, ResourceLocation resourceLocation) {
-    	pflm_RenderPlayerDummyMaster.setResourceLocation(entity, resourceLocation);
-    }
-
-    protected static void setResourceLocation(Entity entity, int i, ResourceLocation resourceLocation) {
-    	pflm_RenderPlayerDummyMaster.setResourceLocation(entity, i, resourceLocation);
+    @Override
+    public void allModelInit(Entity entity, boolean debug) {
+    	pflm_RenderPlayerDummyMaster.allModelInit(entity, debug);
     }
 }

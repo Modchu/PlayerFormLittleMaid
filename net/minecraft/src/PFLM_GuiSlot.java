@@ -425,11 +425,11 @@ public class PFLM_GuiSlot {
 	{
 		Tessellator var5 = Tessellator.instance;
 		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
-			Object var4 = Modchu_Reflect.invokeMethod("Minecraft", "func_110434_K", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
-			Modchu_Reflect.invokeMethod("TextureManager", "func_110577_a", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, var4, new Object[]{ Modchu_Reflect.getFieldObject(Gui.class, "field_110325_k") });
+			Object var4 = Modchu_Reflect.invokeMethod("Minecraft", "func_110434_K", "getTextureManager", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
+			Modchu_Reflect.invokeMethod("TextureManager", "func_110577_a", "bindTexture", new Class[]{ Modchu_Reflect.loadClass("ResourceLocation") }, var4, new Object[]{ Modchu_Reflect.getFieldObject(Gui.class, "field_110325_k", "optionsBackground") });
 			//mc.func_110434_K().func_110577_a(Gui.field_110325_k);
 		} else {
-			Modchu_Reflect.invokeMethod("RenderEngine", "bindTexture", new Class[]{ String.class }, Modchu_Reflect.getFieldObject("Minecraft", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft()), new Object[]{ "/gui/background.png" });
+			Modchu_Reflect.invokeMethod("RenderEngine", "func_94277_a", "bindTexture", new Class[]{ String.class }, Modchu_Reflect.getFieldObject("Minecraft", "field_71446_o", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft()), new Object[]{ "/gui/background.png" });
 			//mc.renderEngine.bindTexture("/gui/background.png");
 		}
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

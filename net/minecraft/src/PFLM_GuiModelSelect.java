@@ -40,6 +40,7 @@ public class PFLM_GuiModelSelect extends PFLM_GuiModelSelectBase {
 	public PFLM_GuiModelSelect(PFLM_GuiBase par1GuiScreen, World world, boolean b, int j) {
 		super(par1GuiScreen, world);
 		mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesNamberInit();
+		//mod_PFLM_PlayerFormLittleMaid.pflm_main.texturesArmorNamberInit();
 		textureRect = new double[8];
 		int i1 = getMaxSelectBoxViewCount();
 		textureModel = new Object[3][i1];
@@ -55,7 +56,6 @@ public class PFLM_GuiModelSelect extends PFLM_GuiModelSelectBase {
 			GameSettings gameSettings = (GameSettings) Modchu_Reflect.getFieldObject("Minecraft", "field_71474_y", "gameSettings", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
 			if (gameSettings.thirdPersonView > 0) Modchu_Reflect.setFieldObject(GameSettings.class, "field_74320_O", "thirdPersonView", Modchu_Reflect.getFieldObject("Minecraft", "field_71474_y", "gameSettings", mod_Modchu_ModchuLib.modchu_Main.getMinecraft()), (Object) 0);
 		}
-		if (drawEntity != null) ;else drawEntity = new PFLM_EntityPlayerDummy(popWorld);
 		drawEntity.setPosition(thePlayer.posX , thePlayer.posY, thePlayer.posZ);
 		try {
 			bufferedimage = ImageIO.read((URL) Modchu_Reflect.invokeMethod(Class.class, "getResource", new Class[]{ String.class }, Modchu_Reflect.loadClass("Minecraft"),
@@ -66,6 +66,9 @@ public class PFLM_GuiModelSelect extends PFLM_GuiModelSelectBase {
 			bufferedimage = bufferedimage.getSubimage(0, 32 * sy, 8 * sx, 8 * sy);
 			drawSelectCursorInit();
 		} catch (Exception e) {
+			e.printStackTrace();
+			Modchu_Debug.lDebug("PFLM_GuiModelSelect bufferedimage Exception!!");
+			selectCursorId = -1;
 		}
 		resetTextureRect();
 		drawEntitySetFlag = true;
@@ -151,7 +154,7 @@ public class PFLM_GuiModelSelect extends PFLM_GuiModelSelectBase {
     		((PFLM_GuiModelSelectBase) parentScreen).setTextureValue();
     		PFLM_RenderPlayerDummyMaster.showArmor = true;
     		PFLM_RenderPlayerDummyMaster.showMainModel = true;
-    		PFLM_RenderPlayerDummyMaster.allModelInit(drawEntity, false);
+			mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.allModelInit(drawEntity, false);
     	}
     	//Armor | Model
     	if(guibutton.id == 102
@@ -207,25 +210,25 @@ public class PFLM_GuiModelSelect extends PFLM_GuiModelSelectBase {
 	private void drawSelectCursorInit() {
 		if (bufferedimage != null) {
 			if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
-				selectCursorId = (Integer) Modchu_Reflect.invokeMethod("TextureUtil", "func_110987_a", new Class[]{ int.class, BufferedImage.class }, new Object[]{ 0, bufferedimage });
-				//selectCursorId = TextureUtil.func_110987_a(0, bufferedimage);
+				selectCursorId = (Integer) Modchu_Reflect.invokeMethod("TextureUtil", "func_110987_a", "uploadTextureImage", new Class[]{ int.class, BufferedImage.class }, new Object[]{ 1, bufferedimage });
+				//selectCursorId = TextureUtil.func_110987_a(1, bufferedimage);
 			} else {
 				Object renderEngine = Modchu_Reflect.getFieldObject("Minecraft", "field_71446_o", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
-				Modchu_Reflect.invokeMethod("RenderEngine", "func_78351_a", "setupTexture", new Class[]{ BufferedImage.class, int.class }, renderEngine, new Object[]{ bufferedimage, 0 });
-				//mc.renderEngine.setupTexture(bufferedimage, 0);
+				Modchu_Reflect.invokeMethod("RenderEngine", "func_78351_a", "setupTexture", new Class[]{ BufferedImage.class, int.class }, renderEngine, new Object[]{ bufferedimage, 1 });
+				//mc.renderEngine.setupTexture(bufferedimage, 1);
 			}
 		}
 	}
 
 	private void drawSelectCursor() {
-		if (selectCursorId != -1
+		if (selectCursorId > 0
 				&& selectSlot > -1
 				&& getTexturesNamber(selectSlot, getColor()) != -1) {
 			if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
-				TextureUtil.bindTexture(selectCursorId);
+				Modchu_Reflect.invokeMethod("TextureUtil", "func_94277_a", "bindTexture", new Class[]{ int.class }, new Object[]{ selectCursorId });
 			} else {
 				Object renderEngine = Modchu_Reflect.getFieldObject("Minecraft", "field_71446_o", "renderEngine", mod_Modchu_ModchuLib.modchu_Main.getMinecraft());
-				Modchu_Reflect.invokeMethod("RenderEngine", "func_78351_a", "setupTexture", new Class[]{ BufferedImage.class, int.class }, renderEngine, new Object[]{ bufferedimage, 0 });
+				Modchu_Reflect.invokeMethod("RenderEngine", "func_78351_a", "setupTexture", new Class[]{ BufferedImage.class, int.class }, renderEngine, new Object[]{ bufferedimage, 1 });
 				//mc.renderEngine.setupTexture(bufferedimage, 0);
 			}
 			renderTexture((selectSlot - offsetSlot) % selectBoxX * 25 + modelListx, (selectSlot - offsetSlot) / selectBoxX * 55 + modelListy - 50, 8, 8);
@@ -238,6 +241,7 @@ public class PFLM_GuiModelSelect extends PFLM_GuiModelSelectBase {
 		if (drawEntitySetFlag) {
 			int i1 = getTexturesNamber(modelNamber, getColor());
 			if (armorMode) setColor(0);
+			setScale(mod_PFLM_PlayerFormLittleMaid.pflm_main.getModelScale(drawEntity));
 			if (i2 == 0) {
 				for(int i3 = 0; i3 < getMaxSelectBoxViewCount(); i3++) {
 					textureModel[0][i3] = null;
@@ -261,13 +265,14 @@ public class PFLM_GuiModelSelect extends PFLM_GuiModelSelectBase {
 						&& ltb != null) {
 					setTextureValue(getTextureName(i2), getTextureName(i2), getColor());
 					setTextureArmorName(i2, (String)PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName));
-					//Modchu_Debug.mDebug("getTextureArmorName(i2)="+getTextureArmorName(i2));
+					Modchu_Debug.mDebug("getTextureName(i2)="+getTextureName(i2));
+					Modchu_Debug.mDebug("getTextureArmorName(i2)="+getTextureArmorName(i2));
 					if (changeColorFlag) mod_PFLM_PlayerFormLittleMaid.pflm_main.changeColor((PFLM_EntityPlayerDummy)drawEntity);
-					PFLM_RenderPlayerDummyMaster.allModelInit(drawEntity, false);
+					mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.allModelInit(drawEntity, false);
 					textureModel[0][i2] = !armorMode ? PFLM_RenderPlayerDummyMaster.modelData.modelMain.model : PFLM_RenderPlayerDummyMaster.modelData.modelFATT.modelInner;
 					textureModel[1][i2] = PFLM_RenderPlayerDummyMaster.modelData.modelFATT.modelInner;
 					textureModel[2][i2] = PFLM_RenderPlayerDummyMaster.modelData.modelFATT.modelOuter;
-					//Modchu_Debug.mDebug("textureModel[0][i2]="+textureModel[0][i2]);
+					Modchu_Debug.mDebug("textureModel[0][i2]="+textureModel[0][i2]);
 					//Modchu_Debug.mDebug("textureModel[1][i2]="+textureModel[1][i2]);
 					//Modchu_Debug.mDebug("textureModel[2][i2]="+textureModel[2][i2]);
 				}
@@ -473,14 +478,15 @@ public class PFLM_GuiModelSelect extends PFLM_GuiModelSelectBase {
 		modelColor = i & 0xf;
 	}
 
-    @Override
-    public float getScale() {
-    	return 0.0F;
-    }
+	@Override
+	public float getScale() {
+		return PFLM_RenderPlayerDummyMaster.modelData.getCapsValueFloat(PFLM_RenderPlayerDummyMaster.modelData.caps_modelScale);
+	}
 
-    @Override
-    public void setScale(float f) {
-    }
+	@Override
+	public void setScale(float f) {
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_modelScale, f);
+	}
 
 	@Override
 	public void memoryRelease() {

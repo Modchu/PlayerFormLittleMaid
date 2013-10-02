@@ -2,7 +2,7 @@ package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
 
-public class PFLM_RenderPlayerAetherV160 extends PFLM_RenderPlayerV160 implements PFLM_IRenderPlayer
+public class PFLM_RenderPlayerAetherV160 extends PFLM_RenderPlayerV160
 {
 
 	public PFLM_RenderPlayerAetherV160() {
@@ -65,9 +65,8 @@ public class PFLM_RenderPlayerAetherV160 extends PFLM_RenderPlayerV160 implement
     public void superDoRenderLiving(Entity entity, double d, double d1, double d2, float f, float f1)
     {
     	//Modchu_Debug.Debug("superDoRenderLiving");
-    	PFLM_ModelData modelData = getPlayerData((EntityPlayer) entity);
+    	PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData((EntityPlayer) entity);
     	if (renderManager != null) ;else setRenderManager(RenderManager.instance);
-    	if (pflm_RenderPlayerMaster.renderManager != null) ;else pflm_RenderPlayerMaster.setRenderManager(RenderManager.instance);
     	//Modchu_Debug.Debug("superDoRenderLiving modelData.modelMain="+modelData.modelMain.getClass());
     	setMainModel(modelData.modelMain);
     	modelData.modelMain.setEntityCaps(modelData);
@@ -115,8 +114,6 @@ public class PFLM_RenderPlayerAetherV160 extends PFLM_RenderPlayerV160 implement
     }
 
     public ModelBiped getModelBipedMain() {
-    	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
-    			&& pflm_RenderPlayerMaster != null) return (ModelBiped)pflm_RenderPlayerMaster.mainModel;
     	return (ModelBiped)this.mainModel;
     }
 }

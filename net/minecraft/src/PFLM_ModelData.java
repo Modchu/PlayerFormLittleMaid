@@ -87,6 +87,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		modelMain.capsLink = modelFATT;
+		setRender(render);
 		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159
 				&& mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 499) {
 			int i2 = 15728784;
@@ -1757,6 +1758,10 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     	PFLM_Config.putDefaultShowPartsMap(textureName, s, i, b);
     }
 
+    public void addSendList(int i) {
+    	addSendList(i, (Object)null);
+    }
+
     public void addSendList(int i, Object... o) {
     	if (mod_Modchu_ModchuLib.modchu_Main.isPFLMF) ;else return;
     	LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject(mod_Modchu_ModchuLib.modchu_Main.PFLMF, "sendList");
@@ -1769,6 +1774,17 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     private Object getPlayerState(int entityId, byte by) {
     	if (mod_Modchu_ModchuLib.modchu_Main.isPFLMF) ;else return null;
     	return Modchu_Reflect.invokeMethod(mod_Modchu_ModchuLib.modchu_Main.PFLMF, "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
+    }
+
+    public void setRender(Render render) {
+    	if (modelMain != null) {
+    		Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelMain, render);
+    		modelMain.setRender(render);
+    	}
+    	if (modelFATT != null) {
+    		Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelFATT, render);
+    		modelFATT.setRender(render);
+    	}
     }
 
 	public int getCapsValueInt(int pIndex, Object ...pArg) {

@@ -67,7 +67,7 @@ public class PFLM_GuiKeyControls extends
 					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
 				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 54, x + 40, y + 55, 15, 15, "<" }));
 				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 55, x + 55, y + 55, 15, 15, ">" }));
-				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 20, x, y + 70, 75, 15, "showArmor" }));
+				buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 20, x, y + 85, 75, 15, "showArmor" }));
 			}
 			if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
 					| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeModelScale) {
@@ -97,106 +97,6 @@ public class PFLM_GuiKeyControls extends
     {
     	if(!guibutton.enabled)
     	{
-    		return;
-    	}
-    	//isModelSize Default
-    	if(guibutton.id == 3)
-    	{
-    		setScale(PFLM_RenderPlayerDummyMaster.modelData.modelMain.model instanceof MultiModelBaseBiped ? ((MultiModelBaseBiped) PFLM_RenderPlayerDummyMaster.modelData.modelMain.model).getModelScale(PFLM_RenderPlayerDummyMaster.modelData) : 0.9375F);
-    	}
-    	//isModelSize UP
-    	if(guibutton.id == 4)
-    	{
-    		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
-    			setScale(getScale() <= 9.5 ? getScale() + 0.5F : 10.0F);
-    		} else {
-    			if (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157)) {
-    				setScale(getScale() <= 9.99 ? getScale() + 0.01F : 10.0F);
-    			} else {
-    				setScale(getScale() <= 9.9 ? getScale() + 0.1F : 10.0F);
-    			}
-    		}
-    	}
-    	//isModelSize Down
-    	if(guibutton.id == 5)
-    	{
-    		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
-    			setScale(getScale() > 0.5 ? getScale()  - 0.5F : 0.01F);
-    		}
-    		else if (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157)) {
-    			setScale(getScale() > 0.01 ? getScale()  - 0.01F : 0.01F);
-    		} else {
-    			setScale(getScale() > 0.1 ? getScale()  - 0.1F : 0.01F);
-    		}
-    	}
-    	if (guibutton.id > 2 && guibutton.id < 6) {
-    		drawEntitySetFlag = true;
-    		return;
-    	}
-    	//ScaleChange Close
-    	if(guibutton.id == 6)
-    	{
-    		modelScaleButton = false;
-    		initGui();
-    		return;
-    	}
-    	//ScaleChange Open
-    	if(guibutton.id == 7)
-    	{
-    		modelScaleButton = true;
-    		initGui();
-    		return;
-    	}
-    	//guiMultiPngSaveButton ShowArmor
-    	if(guibutton.id == 20)
-    	{
-    		PFLM_RenderPlayerDummyMaster.showArmor = !PFLM_RenderPlayerDummyMaster.showArmor;
-    		drawEntitySetFlag = true;
-    		initGui();
-    		return;
-    	}
-    	//ModelChange
-    	if(guibutton.id == 50
-    			| guibutton.id == 51) {
-    		String[] s0 = mod_PFLM_PlayerFormLittleMaid.pflm_main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), guibutton.id == 50 ? 1 : 0, false);
-    		setTextureName(s0[0]);
-    		setTextureArmorName(s0[1]);
-    		modelChange();
-    		return;
-    	}
-    	//ColorChange
-    	if(guibutton.id == 52) {
-    		setColor(getColor() - 1);
-    		colorReverse = true;
-    	}
-    	if(guibutton.id == 53) {
-    		setColor(getColor() + 1);
-    		colorReverse = false;
-    	}
-    	if(guibutton.id == 52
-    			| guibutton.id == 53) {
-    		setColor(getColor());
-    		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, getColor());
-    		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_changeColor, PFLM_RenderPlayerDummyMaster.modelData);
-    		noSaveFlag = true;
-    		drawEntitySetFlag = true;
-    		return;
-    	}
-    	//ArmorChange
-    	if(guibutton.id == 54
-    			| guibutton.id == 55) {
-    		String[] s0 = mod_PFLM_PlayerFormLittleMaid.pflm_main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), guibutton.id == 54 ? 1 : 0, true);
-    		setTextureArmorName(s0[1]);
-    		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, getTextureArmorName());
-    		noSaveFlag = true;
-    		drawEntitySetFlag = true;
-    		mod_PFLM_PlayerFormLittleMaid.pflm_main.setResetFlag(true);
-    		return;
-    	}
-    	//ModelListSelect
-    	if(guibutton.id == 56) {
-    		Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ new PFLM_GuiModelSelect(this, popWorld, false, getColor()) });
-    		//mc.displayGuiScreen(new PFLM_GuiModelSelect(this, popWorld, 6, select));
     		return;
     	}
     	//Save
@@ -331,6 +231,7 @@ public class PFLM_GuiKeyControls extends
     		initGui();
     		return;
     	}
+    	super.actionPerformed(guibutton);
     }
 
     public void selectInit() {
@@ -360,12 +261,6 @@ public class PFLM_GuiKeyControls extends
     	return null;
     }
 
-    public void modelChange() {
-    	setTextureValue();
-    	noSaveFlag = true;
-    	drawEntitySetFlag = true;
-    }
-
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
     	int xSize = 80;
@@ -393,7 +288,7 @@ public class PFLM_GuiKeyControls extends
     			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
     		s = s.append(getTextureName());
     		fontRenderer.drawString(s.toString(), guiLeft, guiTop + 100, 0xffffff);
-        	fontRenderer.drawString("Model", width / 2 + 60, height / 2 - 56, 0xffffff);
+    		fontRenderer.drawString("Model", width / 2 + 60, height / 2 - 56, 0xffffff);
     	}
     	if(mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeOthersSettingOffline
     			| mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] == modeSetColor
@@ -430,10 +325,9 @@ public class PFLM_GuiKeyControls extends
     			&& mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] != modeRandom
     			&& mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] < modeActionRelease) {
     		if (drawEntitySetFlag) {
-    			if (drawEntity == null) drawEntity = new PFLM_EntityPlayerDummy(popWorld);
     			drawEntitySetFlag = false;
     			setTextureValue();
-    			PFLM_RenderPlayerDummyMaster.allModelInit(drawEntity, false);
+    			mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.allModelInit(drawEntity, false);
     		}
     		int l = guiLeft;
     		int i1 = guiTop;
@@ -442,107 +336,100 @@ public class PFLM_GuiKeyControls extends
     }
 
     @Override
-    public void setTextureArmorPackege(int i) {
-    	PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName));
-    	String s = mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName((String)PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName), i);
+    public String getTextureName() {
+    	return mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select];
+    }
+
+    @Override
+    public void setTextureName(String s) {
+    	mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] = s;
+    	PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName, s);
+    }
+
+    @Override
+    public String getTextureArmorName() {
+    	return mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select];
+    }
+
+    @Override
+    public void setTextureArmorName(String s) {
+    	mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select] = s;
     	PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, s);
     }
 
-    public void setArmorTextureValue() {
-    	if (getTextureArmorName() == null) {
-    		setTextureArmorName(getTextureName());
-    	}
-    	if (mod_Modchu_ModchuLib.modchu_Main.checkTextureArmorPackege(getTextureArmorName()) == null) {
-    		String s = mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName(getTextureName(), 1);
-    		setTextureArmorName(s != null && !s.isEmpty() ? s : getTextureArmorName().indexOf("_Biped") == -1 ? "default" : "Biped");
-    	}
-    	//Modchu_Debug.mDebug("setArmorTextureValue key getTextureArmorName()="+getTextureArmorName());
+    @Override
+    public int getColor() {
+    	return mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select];
     }
 
-	public String getTextureName() {
-		return mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select];
-	}
-
-	public void setTextureName(String s) {
-		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureName[select] = s;
-	}
-
-	public String getTextureArmorName() {
-		return mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select];
-	}
-
-	public void setTextureArmorName(String s) {
-		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysTextureArmorName[select] = s;
-	}
-
-	public int getColor() {
-		return mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select];
-	}
-
-	public void setColor(int i) {
-		mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select] = i & 0xf;
-	}
+    @Override
+    public void setColor(int i) {
+    	mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysMaidColor[select] = i & 0xf;
+    	PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, i & 0xf);
+    }
 
     public void setChangeMode(int i) {
     	mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysChangeMode[select] = i;
     }
 
+    @Override
     public float getScale() {
     	return mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select];
     }
 
+    @Override
     public void setScale(float f) {
     	mod_PFLM_PlayerFormLittleMaid.pflm_main.shortcutKeysModelScale[select] = f;
     }
 
-	public static String getChangeModeString(int i) {
-		String s = null;
-		switch (i) {
-		case modeOthersSettingOffline:
-			s = "AllParameterSetting";
-			break;
-		case modeSetModelAndArmor:
-			s = "ModelAndArmor";
-			break;
-		case modeSetModelAndColor:
-			s = "ModelAndColor";
-			break;
-		case modeSetModel:
-			s = "ModelOnly";
-			break;
-		case modeSetColor:
-			s = "ColorOnly";
-			break;
-		case modeSetColorAndArmor:
-			s = "ColorAndArmor";
-			break;
-		case modeSetArmor:
-			s = "ArmorOnly";
-			break;
-		case modeModelScale:
-			s = "ModelScaleOnly";
-			break;
-		case modePlayerOffline:
-			s = "SetPlayerOffline";
-			break;
-		case modePlayerOnline:
-			s = "SetPlayerOnline";
-			break;
-		case modeRandom:
-			s = "SetRandom";
-			break;
-		case modeActionRelease:
-			s = "ActionRelease";
-			break;
-		case modeCustomModelCfgReLoad:
-			s = "CustomModelCfgReLoad";
-			break;
-		}
-		if (i >= modeAction
-				&& i <= modeActionLast) {
-			int j = i - modeAction + 1;
-			s = "Action"+j;
-		}
-		return s;
-	}
+    public static String getChangeModeString(int i) {
+    	String s = null;
+    	switch (i) {
+    	case modeOthersSettingOffline:
+    		s = "AllParameterSetting";
+    		break;
+    	case modeSetModelAndArmor:
+    		s = "ModelAndArmor";
+    		break;
+    	case modeSetModelAndColor:
+    		s = "ModelAndColor";
+    		break;
+    	case modeSetModel:
+    		s = "ModelOnly";
+    		break;
+    	case modeSetColor:
+    		s = "ColorOnly";
+    		break;
+    	case modeSetColorAndArmor:
+    		s = "ColorAndArmor";
+    		break;
+    	case modeSetArmor:
+    		s = "ArmorOnly";
+    		break;
+    	case modeModelScale:
+    		s = "ModelScaleOnly";
+    		break;
+    	case modePlayerOffline:
+    		s = "SetPlayerOffline";
+    		break;
+    	case modePlayerOnline:
+    		s = "SetPlayerOnline";
+    		break;
+    	case modeRandom:
+    		s = "SetRandom";
+    		break;
+    	case modeActionRelease:
+    		s = "ActionRelease";
+    		break;
+    	case modeCustomModelCfgReLoad:
+    		s = "CustomModelCfgReLoad";
+    		break;
+    	}
+    	if (i >= modeAction
+    			&& i <= modeActionLast) {
+    		int j = i - modeAction + 1;
+    		s = "Action"+j;
+    	}
+    	return s;
+    }
 }

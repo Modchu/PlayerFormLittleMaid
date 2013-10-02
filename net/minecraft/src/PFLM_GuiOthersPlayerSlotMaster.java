@@ -54,6 +54,7 @@ public class PFLM_GuiOthersPlayerSlotMaster extends PFLM_GuiModelSelectBase {
 			gui.setChangeMode(Integer.valueOf(t[4]));
 		}
 		gui.initGui();
+		mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.allModelInit(drawEntity, false);
 	}
 
 	protected boolean isSelected(int i) {
@@ -85,10 +86,11 @@ public class PFLM_GuiOthersPlayerSlotMaster extends PFLM_GuiModelSelectBase {
 			if(t[4] != null) {
 				if (Integer.valueOf(t[4]) == PFLM_GuiOthersPlayerIndividualCustomize.modeOthersSettingOffline) {
 					setTextureValue(t[0], t[1], Integer.valueOf(t[2]));
-					PFLM_RenderPlayerDummyMaster.allModelInit(drawEntity, false);
+					setScale(Float.valueOf(t[3]));
+					mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.allModelInit(drawEntity, false);
 					float f5 = -((float)(width / 2) - i) + ((float)(j + 30) - i);
 					float f6 = -((float)(height / 2) - j) + ((float)((k + 30) - 10) - j);
-		    		drawMobModel2(mouseX, mouseY, j + 30, k + 30, (int)f5, (int)f6, 15F, 15F, true);
+					drawMobModel2(mouseX, mouseY, j + 30, k + 30, (int)f5, (int)f6, 15F, 15F, true);
 					flag = true;
 				}
 			}
@@ -97,37 +99,6 @@ public class PFLM_GuiOthersPlayerSlotMaster extends PFLM_GuiModelSelectBase {
 				ownerGui.fontRenderer.drawString(s1.toString(), j + 10, k + 17, 0xffffff);
 			}
 		}
-/*
-		GL11.glEnable(32826);
-		GL11.glEnable(2903);
-		GL11.glPushMatrix();
-		float f1 = 15F;
-		if (entityliving.height > 2F) {
-			f1 = f1 * 2F / entityliving.height;
-		}
-		GL11.glTranslatef(j + 30, k + 30, 50F + f1);
-		GL11.glScalef(-f1, f1, f1);
-		GL11.glRotatef(180F, 180F, 0.0F, 1.0F);
-		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
-				&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
-		float f5 = (float)(j + 30) - i;
-		float f6 = (float)((k + 30) - 10) - j;
-		GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
-		RenderHelper.enableStandardItemLighting();
-		GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-(float)Math.atan(f6 / 40F) * 20F, 1.0F, 0.0F, 0.0F);
-		entityliving.renderYawOffset = (float)Math.atan(f5 / 40F) * 20F;
-		entityliving.rotationYaw = (float)Math.atan(f5 / 40F) * 40F;
-		entityliving.rotationPitch = -(float)Math.atan(f6 / 40F) * 20F;
-		entityliving.prevRotationYawHead = entityliving.rotationYawHead;
-		entityliving.rotationYawHead = entityliving.rotationYaw;
-		GL11.glTranslatef(0.0F, entityliving.yOffset, 0.0F);
-		RenderManager.instance.playerViewY = 180F;
-		GL13.glMultiTexCoord2f(33985, 240.0F, 240.0F);
-		GL11.glPopMatrix();
-		RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(32826);
-*/
 	}
 
 	public void setTextureValue(String texture, String armorTexture, int color) {
@@ -139,7 +110,7 @@ public class PFLM_GuiOthersPlayerSlotMaster extends PFLM_GuiModelSelectBase {
 	}
 
 	public void setTextureArmorPackege() {
-		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName));
+		//PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName));
 		String s = mod_PFLM_PlayerFormLittleMaid.pflm_main.getArmorName((String)PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName), 2);
 		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, s);
 	}
@@ -152,38 +123,42 @@ public class PFLM_GuiOthersPlayerSlotMaster extends PFLM_GuiModelSelectBase {
 
 	@Override
 	public String getTextureName() {
-		return null;
+		return (String) PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName);
 	}
 
 	@Override
 	public void setTextureName(String s) {
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName, s);
 	}
 
 	@Override
 	public String getTextureArmorName() {
-		return null;
+		return (String) PFLM_RenderPlayerDummyMaster.modelData.getCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName);
 	}
 
 	@Override
 	public void setTextureArmorName(String s) {
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, s);
 	}
 
 	@Override
 	public int getColor() {
-		return -1;
+		return PFLM_RenderPlayerDummyMaster.modelData.getCapsValueInt(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor);
 	}
 
 	@Override
 	public void setColor(int i) {
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_maidColor, i);
 	}
 
 	@Override
 	public float getScale() {
-		return 0.0F;
+		return PFLM_RenderPlayerDummyMaster.modelData.getCapsValueFloat(PFLM_RenderPlayerDummyMaster.modelData.caps_modelScale);
 	}
 
 	@Override
 	public void setScale(float f) {
+		PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_modelScale, f);
 	}
 
 	@Override

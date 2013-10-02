@@ -6,8 +6,8 @@ public class mod_PFLM_PlayerFormLittleMaid extends BaseMod
 {
 	public static mod_PFLM_PlayerFormLittleMaid mod_pflm_playerformlittlemaid;
 	public static PFLM_Main pflm_main;
-	public static PFLM_IRenderPlayer pflm_RenderPlayer;
-	public static PFLM_IRenderPlayerDummy pflm_RenderPlayerDummy;
+	public static PFLM_RenderPlayer pflm_RenderPlayer;
+	public static PFLM_RenderPlayerDummy pflm_RenderPlayerDummy;
 	public static boolean isServer = false;
 
 	static {
