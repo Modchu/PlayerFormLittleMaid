@@ -5,58 +5,45 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-/*//FMLdelete
-import net.minecraft.client.gui.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.world.*;
-*///FMLdelete
 import org.lwjgl.input.Mouse;
 
-public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
+public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends PFLM_GuiBase {
 	protected String screenTitle;
 	protected GuiSlot selectPanel;
 	private GuiButton localScroll;
-	private World popWorld;
-	private Minecraft mc;
 	public static List<String> playerList = new ArrayList<String>();
-	public static HashMap playerDummyEntityList = new HashMap();
-	private GuiScreen parentScreen;
 
-	public PFLM_GuiOthersPlayerIndividualCustomizeSelect(GuiScreen par1GuiScreen, Minecraft minecraft, World world) {
-		mc = minecraft;
-		popWorld = world;
+	public PFLM_GuiOthersPlayerIndividualCustomizeSelect(PFLM_GuiBase par1GuiScreen, World world) {
+		super(par1GuiScreen, world);
 		screenTitle = "OthersPlayerModelCustomize";
 		playerListClear();
 		setPlayerList();
-		parentScreen = par1GuiScreen;
 	}
 
 	private void playerListClear() {
 		playerList.clear();
-		playerDummyEntityList.clear();
 	}
 
 	private void setPlayerList() {
-		if (!mod_PFLM_PlayerFormLittleMaid.mod_pflm_playerformlittlemaid.isRelease()
-				&& !mod_PFLM_PlayerFormLittleMaid.isMulti) {
+		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.isRelease()
+				&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.isMulti) {
 			String s;
 			for (int i = 0 ; i < 2 ; i++) {
 				s = "a"+i;
 				playerList.add(s);
-				playerDummyEntityList.put(s, new PFLM_EntityPlayerDummy(popWorld));
 			}
 			return;
 		}
+		EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 		Iterator var3 = popWorld.playerEntities.iterator();
 		int i = 0;
 		while (var3.hasNext())
 		{
 			try {
 				EntityPlayer var1 = (EntityPlayer)popWorld.playerEntities.get(i);
-				if (!var1.username.equalsIgnoreCase(mc.thePlayer.username)) {
+				//Modchu_Debug.mDebug("setPlayerList var1.username="+var1.username);
+				if (!var1.username.equalsIgnoreCase(thePlayer.username)) {
 					playerList.add(var1.username);
-					playerDummyEntityList.put(var1.username, new PFLM_EntityPlayerDummy(popWorld));
 				}
 				i++;
 			} catch (Exception e) {
@@ -72,9 +59,19 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 		buttonList.add(new GuiButton(0, width / 2 + 65, height - 44, 70, 20, "delete"));
 		buttonList.add(new GuiButton(201, width / 2 - 135, height - 44, 70, 20, "Return"));
 
-		selectPanel = new PFLM_GuiOthersPlayerSlot(mc, this, popWorld);
-		selectPanel.registerScrollButtons(buttonList, 3, 4);
-
+		selectPanel = (GuiSlot) Modchu_Reflect.newInstance("PFLM_GuiOthersPlayerSlot", new Class[]{ PFLM_GuiOthersPlayerIndividualCustomizeSelect.class, World.class }, new Object[]{ this, popWorld });
+		Class[] c;
+		Object[] o;
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
+			c = new Class[]{ int.class, int.class };
+			o = new Object[]{ 3, 4 };
+			//selectPanel.registerScrollButtons(3, 4);
+		} else {
+			c = new Class[]{ List.class, int.class, int.class };
+			o = new Object[]{ null, 3, 4 };
+			//selectPanel.registerScrollButtons(null, 3, 4);
+		}
+		Modchu_Reflect.invokeMethod(GuiSlot.class, "func_77220_a", "registerScrollButtons", c, selectPanel, o);
 		localScroll = new GuiButton(3, 0, 0, "");
 	}
 
@@ -85,16 +82,19 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 		}
 		//delete
 		if(guibutton.id == 0) {
-			((PFLM_GuiOthersPlayerSlot) selectPanel).deletePlayerLocalData();
+			Modchu_Reflect.invokeMethod("PFLM_GuiOthersPlayerSlot", "deletePlayerLocalData", selectPanel);
+			//((PFLM_GuiOthersPlayerSlotV160) selectPanel).deletePlayerLocalData();
 		}
 		//Return
 		if(guibutton.id == 201)
 		{
-			mc.displayGuiScreen(new PFLM_GuiOthersPlayer(this, popWorld));
+			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ new PFLM_GuiOthersPlayer(this, popWorld) });
+			//mc.displayGuiScreen(new PFLM_GuiOthersPlayer(this, popWorld));
 		}
 		//Select
 		if(guibutton.id == 300) {
-			((PFLM_GuiOthersPlayerSlot) selectPanel).openGuiCustomize();
+			Modchu_Reflect.invokeMethod("PFLM_GuiOthersPlayerSlot", "openGuiCustomize", selectPanel);
+			//((PFLM_GuiOthersPlayerSlotV160) selectPanel).openGuiCustomize();
 			return;
 		} else {
 			selectPanel.actionPerformed(guibutton);
@@ -105,7 +105,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 	public void drawScreen(int i, int j, float f) {
 		selectPanel.drawScreen(i, j, f);
 		drawCenteredString(fontRenderer, screenTitle, width / 2, 20, 0xffffff);
-		super.drawScreen(i, j, f);
+		superDrawScreen(i, j, f);
 	}
 
 	@Override
@@ -120,7 +120,10 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelect extends GuiScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
-		super.onGuiClosed();
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+	}
+
+	@Override
+	public void memoryRelease() {
 	}
 }

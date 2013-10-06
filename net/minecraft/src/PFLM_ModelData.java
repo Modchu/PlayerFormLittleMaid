@@ -2,20 +2,16 @@ package net.minecraft.src;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-
-import net.minecraft.client.Minecraft;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps {
 
 	public MMM_ModelBaseSolo modelMain;
 	public MMM_ModelBaseDuo modelFATT;
-	private Minecraft mc = Minecraft.getMinecraft();
 	private String textureName = null;
 	private String modelArmorName = null;
 	private boolean localFlag = false;
@@ -63,7 +59,10 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private int rotate = 0;
 	private final int mushroomConfusionTypeMax = 4;
 	private List<String> showPartsHideList = new ArrayList();
-	private HashMap<String, String> showPartsRenemeMap = new HashMap();
+	private ConcurrentHashMap<String, String> showPartsRenemeMap = new ConcurrentHashMap();
+//-@-152
+	private Object[] resourceLocations;
+//@-@152
 /*//b173delete
 	private boolean keyBindForwardPressed;
 	private boolean keyBindBackPressed;
@@ -76,16 +75,26 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private boolean mushroomConfusionFlag = false;
 *///b173delete
 
-	public PFLM_ModelData(RenderLiving renderLiving) {
+	public PFLM_ModelData(Render render) {
 		super(null);
-		modelMain = new MMM_ModelBaseSolo(renderLiving);
-		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
-		modelMain.textures = new String [3];
-		modelFATT = new MMM_ModelBaseDuo(renderLiving);
-		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.AlphaBlend;
-		modelFATT.textureInner = new String [4];
-		modelFATT.textureOuter = new String [4];
+		modelMain = new MMM_ModelBaseSolo(null);
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 160) Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelMain, render);
+		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend;
+		Modchu_Reflect.setFieldObject("MMM_ModelBaseSolo", "textures", modelMain, Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
+		modelFATT = new MMM_ModelBaseDuo(null);
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 160) Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelFATT, render);
+		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend;
+		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
+		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		modelMain.capsLink = modelFATT;
+		setRender(render);
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159
+				&& mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 499) {
+			int i2 = 15728784;
+			boolean b = false;
+			b = Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseNihil, "lighting", modelMain, i2, 1);
+			b = Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseNihil, "lighting", modelFATT, i2, 1);
+		}
 	}
 
 	@Override
@@ -96,6 +105,32 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	@Override
 	public boolean setCapsValue(MultiModelBaseBiped model, int pIndex, Object... pArg) {
 		switch (pIndex) {
+		case caps_Entity:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) {
+				setEntity((Entity) pArg[0]);
+				return true;
+			}
+			return false;
+		case caps_isRiding:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) {
+				setIsRiding((Boolean) pArg[0]);
+				return true;
+			}
+			return false;
+		case caps_ResourceLocation:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) {
+				if (pArg.length > 1) {
+					setResourceLocation((Integer) pArg[0], (Object) pArg[1]);
+				} else setResourceLocation((Object[]) pArg[0]);
+				return true;
+			}
+			return false;
 		case caps_maidColor:
 			if (pArg != null
 			&& pArg.length > 0
@@ -451,7 +486,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			if (pArg != null
 			&& pArg.length > 0
 			&& pArg[0] != null) {
-				Modchu_Debug.mDebug("caps_changeColor modelFATT.modelInner instanceof  MultiModelBaseBiped ? "+(modelFATT.modelInner instanceof  MultiModelBaseBiped));
+				//Modchu_Debug.mDebug("caps_changeColor modelFATT.modelInner instanceof  MultiModelBaseBiped ? "+(modelFATT.modelInner instanceof  MultiModelBaseBiped));
 				if (modelMain.model instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelMain.model).changeColor(this);
 				if (modelFATT.modelInner instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelInner).changeColor(this);
 				if (modelFATT.modelOuter instanceof  MultiModelBaseBiped) ((MultiModelBaseBiped) modelFATT.modelOuter).changeColor(this);
@@ -584,6 +619,29 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		return super.setCapsValue(pIndex, (Object[]) pArg);
 	}
 
+	private void setEntity(Entity entity) {
+		Modchu_Reflect.setFieldObject("MMM_EntityCaps", "owner", this, entity);
+	}
+
+	private boolean getIsRiding() {
+		if (getIsSitting()) return true;
+		return owner.isRiding();
+	}
+
+	private void setIsRiding(boolean b) {
+		if (!(owner instanceof EntityPlayer)) return;
+		modelMain.setCapsValue(caps_isRiding, b);
+/*
+		if (!owner.isRiding()) {
+			owner.ridingEntity = b ? owner : null;
+		} else {
+			if (!b
+					&& owner.equals(owner.ridingEntity)) owner.ridingEntity = null;
+		}
+*/
+		//Modchu_Debug.mDebug("setIsRiding owner.ridingEntity="+owner.ridingEntity);
+	}
+
 	@Override
 	public boolean setCapsValue(int pIndex, Object... pArg) {
 		return setCapsValue((MultiModelBaseBiped) null, pIndex, pArg);
@@ -602,6 +660,18 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	@Override
 	public Object getCapsValue(MultiModelBaseBiped model, int pIndex, Object ...pArg) {
 		switch (pIndex) {
+		case caps_health:
+			return getHealth();
+		case caps_isRiding:
+			return getIsRiding();
+		case caps_ResourceLocation:
+			if (pArg != null
+					&& pArg.length > 0
+					&& pArg[0] != null) return getResourceLocation((Integer) pArg[0]);
+			else return getResourceLocation();
+		case caps_heldItems:
+		case caps_currentEquippedItem:
+			return getCurrentEquippedItem();
 		case caps_dominantArm:
 			return getHandedness();
 		case caps_isLookSuger:
@@ -650,8 +720,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			return owner.height;
 		case caps_width:
 			return owner.width;
-		case caps_YOffset:
-			return owner.yOffset;
 		case caps_HeadMount:
 			return getHeadMount();
 		case caps_Items:
@@ -777,10 +845,26 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		return super.getCapsValue(pIndex, (Object[]) pArg);
 	}
 
+	private Object getResourceLocation() {
+		return getResourceLocation(0);
+	}
+
+	private Object getResourceLocation(int i) {
+		return resourceLocations != null ? resourceLocations[i] : null;
+	}
+
+	private void setResourceLocation(Object[] resourceLocation) {
+		resourceLocations = resourceLocation;
+	}
+
+	private void setResourceLocation(int i, Object pArg) {
+		if (resourceLocations != null) resourceLocations[i] = pArg;
+	}
+
 	private String getModelRendererName(MMM_ModelRenderer modelRenderer, int i) {
 		MMM_ModelRenderer modelRenderer2;
 		Object model = getModel(i);
-		HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+		ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
 		Modchu_Debug.mDebug("getModelRendererName modelRendererMap != null ?"+(modelRendererMap != null));
 		Iterator<Entry<String, Field>> iterator = modelRendererMap.entrySet().iterator();
 		Entry<String, Field> entry;
@@ -819,8 +903,11 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	 */
 	private void setLivingAnimationsAfter(MMM_ModelMultiBase model, float f, float f1, float f2) {
 		if (model != null) ;else return;
-		model.setCapsValue(caps_isRiding, !owner.isRiding() ? getIsSitting() : true);
-		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter caps_isRiding="+modelBiped.getCapsValue(caps_isRiding));
+		//setCapsValue(caps_isRiding, getIsSitting());
+		//model.setCapsValue(caps_isRiding, getIsSitting());
+		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter m getIsSitting()="+mod_PFLM_PlayerFormLittleMaid.pflm_main.getIsSitting());
+		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter getIsSitting()="+getIsSitting());
+		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter caps_isRiding="+model.getCapsValue(caps_isRiding));
 		//Modchu_Debug.mDebug("PFLM_ModelData setLivingAnimationsAfter PFLM_Gui.partsSetFlag="+PFLM_Gui.partsSetFlag);
 		if (owner != null
 				&& model != null
@@ -831,7 +918,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			partsSetFlag = 1;
 		}
 		if(partsSetFlag == 1) {
-			PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.showModelList);
+			PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.pflm_main.showModelList);
 			multiModelBaseBiped.defaultPartsSettingBefore(this);
 			multiModelBaseBiped.defaultPartsSettingAfter(this);
 			partsSetFlag = 2;
@@ -856,7 +943,10 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		MultiModelBaseBiped multiModelBaseBiped = (MultiModelBaseBiped) model;
 		if (Modchu_ModelCapsHelper.getCapsValueBoolean(multiModelBaseBiped, caps_firstPerson)) ((MultiModelBaseBiped) model).setRotationAnglesfirstPerson(f, f1, f2, f3, f4, f5, this);
 		if (getShortcutKeysAction()) {
-			if (model instanceof MultiModelAction) ((MultiModelAction) model).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
+			//if (model instanceof MultiModelAction) ((MultiModelAction) model).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
+			if (modelMain.model instanceof MultiModelAction) ((MultiModelAction) modelMain.model).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
+			if (modelFATT.modelInner instanceof MultiModelAction) ((MultiModelAction) modelFATT.modelInner).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
+			if (modelFATT.modelOuter instanceof MultiModelAction) ((MultiModelAction) modelFATT.modelOuter).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
 			if (getActionFlag()) {
 				setActionSpeed(0.0F);
 				setActionFlag(false);
@@ -924,7 +1014,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		localFlag = b;
 	}
 
-	private HashMap<String, Boolean> getShowPartsMap(int i) {
+	private ConcurrentHashMap<String, Boolean> getShowPartsMap(int i) {
 		return PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
 	}
 
@@ -958,6 +1048,21 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		ItemStack[] itemStack = new ItemStack[2];
 		itemStack[getHandedness()] = ((EntityPlayer) owner).inventory.getCurrentItem();
 		return itemStack;
+	}
+
+	private ItemStack getCurrentEquippedItem() {
+		if (!(owner instanceof EntityPlayer)) return null;
+		return ((EntityPlayer) owner).inventory.getCurrentItem();
+	}
+
+	private int getHealth() {
+		if (!(owner instanceof EntityPlayer)) return -1;
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
+			float f = (Float) Modchu_Reflect.invokeMethod("EntityLivingBase", "func_110143_aJ", owner);
+			return (int) f;
+		} else {
+			return (Integer) Modchu_Reflect.getFieldObject(EntityLiving.class, "field_70734_aK", "health", owner);
+		}
 	}
 
 	private boolean isPlanter() {
@@ -1004,6 +1109,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 
 	private boolean getIsSitting() {
 		if (!isPlayer) {
+			//Modchu_Debug.mDebug("getIsSitting() !isPlayer");
 			Object o = getPlayerState(owner.entityId, (byte)1);
 			if (o != null) return (Boolean) o;
 		}
@@ -1011,9 +1117,10 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	}
 
 	private void setIsSitting(boolean b) {
+		//Modchu_Debug.mDebug("setIsSitting b="+b);
 		if (isSitting != b) {
 			isSitting = b;
-			addSendList(1);
+			addSendList(1, b);
 		}
 	}
 
@@ -1043,7 +1150,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			for (; f2 > 360F; f2 -= 360F) { }
 			int i = (int)((f2 + 45F) / 90F);
 			setRotate(i);
-			addSendList(2);
+			addSendList(2, b, rotate);
 		}
 	}
 
@@ -1110,7 +1217,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private void setShortcutKeysAction(boolean b) {
 		if (shortcutKeysAction != b) {
 			shortcutKeysAction = b;
-			addSendList(3);
+			addSendList(3, b, runActionNumber);
 		}
 	}
 
@@ -1127,7 +1234,13 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	}
 
 	private void setRunActionNumber(int i) {
-		runActionNumber = i;
+		if (runActionNumber != i) {
+			//Modchu_Debug.mDebug("setRunActionNumber actionReleaseNumber="+actionReleaseNumber+" i="+i);
+			setCapsValue(caps_actionRelease, actionReleaseNumber);
+			runActionNumber = i;
+			setActionReleaseNumber(i);
+			setShortcutKeysActionInitFlag(true);
+		}
 	}
 
 	private int getActionReleaseNumber() {
@@ -1399,37 +1512,24 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     }
 
     private int getMaidColor() {
-    	if (owner instanceof EntityPlayer) {
-    		if (mc.currentScreen != null
-    				&& mc.currentScreen instanceof PFLM_Gui) {
-    			return mod_PFLM_PlayerFormLittleMaid.maidColor;
-    		}
-    		return maidColor;
-    	} else {
-    		if (mc.currentScreen != null) ;else return 0;
-    		if (mc.currentScreen instanceof PFLM_Gui) return PFLM_Gui.setColor;
-    		if (mc.currentScreen instanceof PFLM_GuiModelSelect) return ((PFLM_GuiModelSelect) mc.currentScreen).modelColor;
-    		if (mc.currentScreen instanceof PFLM_GuiOthersPlayerIndividualCustomize) return PFLM_GuiOthersPlayerIndividualCustomize.othersMaidColor;
-    		if (mc.currentScreen instanceof PFLM_GuiOthersPlayer) return mod_PFLM_PlayerFormLittleMaid.othersMaidColor;
-    	}
-    	return 0;
+    	return maidColor;
     }
 
     private void setMaidColor(int i) {
     	maidColor = i;
     }
 
-    private String getTexture(String s, int i) {
-    	return mod_Modchu_ModchuLib.textureManagerGetTexture(s, i);
+    private Object getTexture(String s, int i) {
+    	return mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s, i);
     }
 
 
-    private String getArmorTexture(String s, int i) {
-    	return mod_Modchu_ModchuLib.textureManagerGetArmorTexture(s, i, new ItemStack(Item.helmetDiamond));
+    private Object getArmorTexture(String s, int i) {
+    	return mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(s, i, new ItemStack(Item.helmetDiamond));
     }
 
-    private String getArmorTexture(String s, int i, ItemStack itemStack) {
-    	return mod_Modchu_ModchuLib.textureManagerGetArmorTexture(s, i, itemStack);
+    private Object getArmorTexture(String s, int i, ItemStack itemStack) {
+    	return mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(s, i, itemStack);
     }
 
     /**
@@ -1437,20 +1537,20 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
      */
     private void showModelSettingReflects(int i) {
     	//Modchu_Debug.mDebug("showModelSettingReflects i="+i);
-    	HashMap<String, Boolean> showPartsMap = PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
-    	HashMap<String, Boolean> defaultShowPartsMap = getDefaultShowPartsMap(i);
+    	ConcurrentHashMap<String, Boolean> showPartsMap = PFLM_Config.getConfigShowPartsMap(textureName, maidColor, i);
+    	ConcurrentHashMap<String, Boolean> defaultShowPartsMap = getDefaultShowPartsMap(i);
     	Object model = getModel(i);
-    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+    	ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
     	//Modchu_Debug.mDebug("showModelSettingReflects textureName="+textureName+" modelRendererMap != null ?"+(modelRendererMap != null));
     	if (modelRendererMap != null) ;else return;
     	if (defaultShowPartsMap != null) settingReflects(modelRendererMap, defaultShowPartsMap, null, null, i);
-    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
+    	ConcurrentHashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
     	if (showPartsMap != null
     			&& !showPartsMap.isEmpty()) settingReflects(modelRendererMap, showPartsMap, PFLM_Config.getIndexOfAllSetVisibleMap(textureName, i), indexOfAllSetVisibleBooleanMap, i);
     }
 
-    private void settingReflects(HashMap<String, Field> modelRendererMap, HashMap<String, Boolean> map,
-    		HashMap<String, List<String>> indexOfAllSetVisibleMap, HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap, int i) {
+    private void settingReflects(ConcurrentHashMap<String, Field> modelRendererMap, ConcurrentHashMap<String, Boolean> map,
+    		ConcurrentHashMap<String, List<String>> indexOfAllSetVisibleMap, ConcurrentHashMap<String, Boolean> indexOfAllSetVisibleBooleanMap, int i) {
     	Object model = getModel(i);
     	Field f = null;
     	String s2 = null;
@@ -1473,8 +1573,8 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     				modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
     				if (modelRenderer != null) {
     					((MultiModelBaseBiped) model).setCapsValue(caps_visible, modelRenderer, b, true);
-    					if (mod_Modchu_ModchuLib.ngPlayerModelList != null
-    							&& !mod_Modchu_ModchuLib.ngPlayerModelList.contains(textureName)) mod_Modchu_ModchuLib.ngPlayerModelList.add(textureName);
+    					if (mod_Modchu_ModchuLib.modchu_Main.ngPlayerModelList != null
+    							&& !mod_Modchu_ModchuLib.modchu_Main.ngPlayerModelList.contains(textureName)) mod_Modchu_ModchuLib.modchu_Main.ngPlayerModelList.add(textureName);
     				}
     			} catch (Exception e) {
     				//e.printStackTrace();
@@ -1571,7 +1671,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     	}
     }
 
-    private HashMap<String, String> getShowPartsRenemeMap() {
+    private ConcurrentHashMap<String, String> getShowPartsRenemeMap() {
     	return showPartsRenemeMap;
     }
 
@@ -1590,7 +1690,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     private void indexOfAllSetVisible(String s, int i) {
     	MultiModelBaseBiped model = (MultiModelBaseBiped) getModel(i);
     	List<String> indexOfAllSetVisibleList = PFLM_Config.getIndexOfAllSetVisibleMap(textureName, s, i);
-    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+    	ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
     	if (modelRendererMap != null
     			&& modelRendererMap.containsKey(s)) ;else return;
     	String s0 = null;
@@ -1624,13 +1724,13 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
      * indexOfで検索対象のパーツをまとめて指定booleanにセットするListへの追加
      */
     private void indexOfAllSetVisible(String s, int i, boolean b) {
-    	HashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
+    	ConcurrentHashMap<String, Boolean> indexOfAllSetVisibleBooleanMap = PFLM_Config.getIndexOfAllSetVisibleBooleanMap(textureName, i);
     	indexOfAllSetVisibleBooleanMap.put(s, b);
     	PFLM_Config.setIndexOfAllSetVisibleBooleanMap(textureName, i, indexOfAllSetVisibleBooleanMap);
 /*
-    	HashMap<Integer, String> nemeMap = PFLM_Config.getConfigShowPartsNemeMap(s, i);
+    	ConcurrentHashMap<Integer, String> nemeMap = PFLM_Config.getConfigShowPartsNemeMap(s, i);
     	MultiModelBaseBiped model = (MultiModelBaseBiped) getModel(i);
-    	HashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
+    	ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
     	if (nemeMap != null) ;else return;
     	String s0 = null;
     	for(int i1 = 0; i1 < nemeMap.size(); i1++) {
@@ -1646,7 +1746,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 */
     }
 
-    private HashMap<String, Boolean> getDefaultShowPartsMap(int i) {
+    private ConcurrentHashMap<String, Boolean> getDefaultShowPartsMap(int i) {
     	return PFLM_Config.getDefaultShowPartsMap(textureName, i);
     }
 
@@ -1659,14 +1759,32 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     }
 
     public void addSendList(int i) {
-    	if (mod_Modchu_ModchuLib.isPFLMF) ;else return;
-    	LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject(mod_Modchu_ModchuLib.mod_PFLMF, "sendList");
-    	if (sendList != null) sendList.add(new Object[]{ i, this, owner });
+    	addSendList(i, (Object)null);
+    }
+
+    public void addSendList(int i, Object... o) {
+    	if (mod_Modchu_ModchuLib.modchu_Main.isPFLMF) ;else return;
+    	LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject(mod_Modchu_ModchuLib.modchu_Main.PFLMF, "sendList");
+    	if (sendList != null) {
+    		sendList.add(new Object[]{ i, this, owner, o });
+    		//Modchu_Debug.mDebug("addSendList add.");
+    	}
     }
 
     private Object getPlayerState(int entityId, byte by) {
-    	if (mod_Modchu_ModchuLib.isPFLMF) ;else return null;
-    	return Modchu_Reflect.invokeMethod(mod_Modchu_ModchuLib.mod_PFLMF, "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
+    	if (mod_Modchu_ModchuLib.modchu_Main.isPFLMF) ;else return null;
+    	return Modchu_Reflect.invokeMethod(mod_Modchu_ModchuLib.modchu_Main.PFLMF, "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
+    }
+
+    public void setRender(Render render) {
+    	if (modelMain != null) {
+    		Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelMain, render);
+    		modelMain.setRender(render);
+    	}
+    	if (modelFATT != null) {
+    		Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelFATT, render);
+    		modelFATT.setRender(render);
+    	}
     }
 
 	public int getCapsValueInt(int pIndex, Object ...pArg) {

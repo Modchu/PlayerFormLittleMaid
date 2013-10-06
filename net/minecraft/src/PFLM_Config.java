@@ -7,24 +7,22 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-
-import net.minecraft.client.Minecraft;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PFLM_Config extends Modchu_Config {
 
-	public static HashMap<String, HashMap> configPartsMap = new HashMap();
-	public static HashMap<String, HashMap> configShowPartsNemeMap = new HashMap();
-	public static HashMap<String, HashMap> configModelRendererMap = new HashMap();
-	public static HashMap<String, HashMap> configShowPartsHideMap= new HashMap();
-	public static HashMap<String, HashMap> configShowPartsRenemeMap = new HashMap();
-	public static HashMap<String, HashMap> configDefaultShowPartsMap = new HashMap();
-	public static HashMap<String, HashMap> configIndexOfAllSetVisibleMap = new HashMap();
-	public static HashMap<String, HashMap> configIndexOfAllSetVisibleBooleanMap = new HashMap();
+	public static ConcurrentHashMap<String, ConcurrentHashMap> configPartsMap = new ConcurrentHashMap();
+	public static ConcurrentHashMap<String, ConcurrentHashMap> configShowPartsNemeMap = new ConcurrentHashMap();
+	public static ConcurrentHashMap<String, ConcurrentHashMap> configModelRendererMap = new ConcurrentHashMap();
+	public static ConcurrentHashMap<String, ConcurrentHashMap> configShowPartsHideMap= new ConcurrentHashMap();
+	public static ConcurrentHashMap<String, ConcurrentHashMap> configShowPartsRenemeMap = new ConcurrentHashMap();
+	public static ConcurrentHashMap<String, ConcurrentHashMap> configDefaultShowPartsMap = new ConcurrentHashMap();
+	public static ConcurrentHashMap<String, ConcurrentHashMap> configIndexOfAllSetVisibleMap = new ConcurrentHashMap();
+	public static ConcurrentHashMap<String, ConcurrentHashMap> configIndexOfAllSetVisibleBooleanMap = new ConcurrentHashMap();
 	public static boolean loadShowModelListInitFlag = false;
 	private static String getConfigShowPartsHideMapFlagString;
 	private static String getConfigShowPartsRenemeMapFlagString;
@@ -101,10 +99,10 @@ public class PFLM_Config extends Modchu_Config {
 				//showModel[]専用
 				if (partsSaveFlag) {
 					boolean b;
-					HashMap<String, Boolean> map1 = null;
-					Iterator<Entry<String, HashMap>> iterator = configPartsMap.entrySet().iterator();
+					ConcurrentHashMap<String, Boolean> map1 = null;
+					Iterator<Entry<String, ConcurrentHashMap>> iterator = configPartsMap.entrySet().iterator();
 					Iterator<Entry<String, Boolean>> iterator2;
-					Entry<String, HashMap> entry;
+					Entry<String, ConcurrentHashMap> entry;
 					Entry<String, Boolean> entry2;
 					s = "showModel[],";
 					Modchu_Debug.mDebug("saveParamater showModel[] partsSaveFlag configPartsMap != null ? "+(configPartsMap != null));
@@ -140,7 +138,7 @@ public class PFLM_Config extends Modchu_Config {
 					}
 				}
 			} catch (Exception er) {
-				Modchu_Debug.Debug("saveParamater file error.");
+				Modchu_Debug.lDebug("PFLM_Config", "saveParamater file="+ file.toString(), 2, er);
 				er.printStackTrace();
 			}
 			try {
@@ -172,7 +170,7 @@ public class PFLM_Config extends Modchu_Config {
 		loadShowModelListInitFlag = true;
 		String textureName = null;
 		int maidColor = getMaidColor();
-		HashMap<Integer, Boolean>[] maps;
+		ConcurrentHashMap<Integer, Boolean>[] maps;
 		try {
 			//Modchu_Debug.mDebug("loadShowModelList showModelList="+showModelList);
 			if(!list.isEmpty()) {
@@ -185,9 +183,9 @@ public class PFLM_Config extends Modchu_Config {
 				int i1 = 0;
 				int i2 = 0;
 				int i3 = 0;
-				HashMap<String, Boolean> booleanMap;
-				HashMap<Integer, String> configShowPartsNemeMap;
-				HashMap<Integer, String> configShowPartsHideMap;
+				ConcurrentHashMap<String, Boolean> booleanMap;
+				ConcurrentHashMap<Integer, String> configShowPartsNemeMap;
+				ConcurrentHashMap<Integer, String> configShowPartsHideMap;
 				Class multiModelCustom = null;
 				//Modchu_Debug.mDebug("loadShowModelList");
 				for (String rl : list.toArray(new String[0])) {
@@ -196,7 +194,7 @@ public class PFLM_Config extends Modchu_Config {
 						s = "showModel[]";
 						i1 = rl.indexOf(s);
 						if (i1 < 0) continue;
-						booleanMap = new HashMap();
+						booleanMap = new ConcurrentHashMap();
 						color = 0;
 						type = 0;
 						boolean breakFlag = false;
@@ -273,7 +271,7 @@ public class PFLM_Config extends Modchu_Config {
 								continue;
 							}
 							textureName = rl.substring(0, i1);
-							if (mod_Modchu_ModchuLib.integerCheck(s1.substring(i1 + 1))) i1 = Integer.parseInt(s1.substring(i1 + 1));
+							if (mod_Modchu_ModchuLib.modchu_Main.integerCheck(s1.substring(i1 + 1))) i1 = Integer.parseInt(s1.substring(i1 + 1));
 							else {
 								addFailureShowModelList(rl);
 								continue;
@@ -287,7 +285,7 @@ public class PFLM_Config extends Modchu_Config {
 							Object[] textureModel = modelNewInstance(null, textureName);
 							if (textureModel != null
 									&& textureModel[0] != null) {
-								if (multiModelCustom != null) ;else multiModelCustom = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MultiModelCustom"));
+								if (multiModelCustom != null) ;else multiModelCustom = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("MultiModelCustom"));
 								if (multiModelCustom != null
 										&& multiModelCustom.isInstance(textureModel[0])) {
 									Object o = Modchu_Reflect.getFieldObject(multiModelCustom, "customModel", textureModel[0]);
@@ -301,7 +299,7 @@ public class PFLM_Config extends Modchu_Config {
 							if (textureModel[0] instanceof MMM_ModelBiped) {
 								if (((MMM_ModelBiped) textureModel[0]).modelCaps != null) ;else {
 									RenderLiving render = (RenderLiving) RenderManager.instance.getEntityRenderObject(Minecraft.getMinecraft().thePlayer);
-									((MMM_ModelBiped) textureModel[0]).modelCaps = (MMM_IModelCaps) Modchu_Reflect.newInstance(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("PFLM_ModelData"), new Class[]{ RenderLiving.class }, new Object[]{ render });
+									((MMM_ModelBiped) textureModel[0]).modelCaps = (MMM_IModelCaps) Modchu_Reflect.newInstance(mod_Modchu_ModchuLib.modchu_Main.mod_modchu_modchulib.getClassName("PFLM_ModelData"), new Class[]{ RenderLiving.class }, new Object[]{ render });
 								}
 							}
 							configShowPartsNemeMap = getConfigShowPartsNemeMap(textureName, 0);
@@ -339,7 +337,7 @@ public class PFLM_Config extends Modchu_Config {
 				}
 			}
 		} catch (Exception ee) {
-			Modchu_Debug.Debug("loadShowModelList fail.");
+			Modchu_Debug.lDebug("PFLM_Config", "loadShowModelList fail.", 2, ee);
 			ee.printStackTrace();
 		}
 	}
@@ -351,8 +349,9 @@ public class PFLM_Config extends Modchu_Config {
 
 	public static void writerModelList(String[] s, File file, List<String> list) {
 		//Listファイル書き込み
+		BufferedWriter bwriter = null;
 		try {
-			BufferedWriter bwriter = new BufferedWriter(new FileWriter(file));
+			bwriter = new BufferedWriter(new FileWriter(file));
 			list.clear();
 			for (int i = 0; i < s.length ; i++)
 			{
@@ -363,21 +362,24 @@ public class PFLM_Config extends Modchu_Config {
 					bwriter.newLine();
 				}
 			}
-			bwriter.close();
 			//Modchu_Debug.Debug("file new file create.");
 		} catch (Exception e) {
-			Modchu_Debug.Debug("file writer fail.");
+			Modchu_Debug.lDebug("PFLM_Config", "writerModelList", 2, e);
 			e.printStackTrace();
-			Modchu_Debug.Debug(" ");
+		} finally {
+			try {
+				if (bwriter != null) bwriter.close();
+			} catch (Exception e) {
+			}
 		}
 	}
 
 	public static boolean loadList(File file, List<String> list,String listName) {
 		// ModelList読み込み
 		List<String> lines = new ArrayList<String>();
+		BufferedReader breader = null;
 		try {
-			BufferedReader breader = new BufferedReader(new FileReader(
-					file));
+			breader = new BufferedReader(new FileReader(file));
 			String rl;
 			int i = 0;
 			while ((rl = breader.readLine()) != null) {
@@ -403,33 +405,37 @@ public class PFLM_Config extends Modchu_Config {
 				}
 				i++;
 			}
-			breader.close();
 			//Modchu_Debug.mDebug("modelList "+listName+" load end.");
 		} catch (Exception e) {
-			Modchu_Debug.Debug("modelList file "+listName+" load fail.");
+			Modchu_Debug.lDebug("PFLM_Config", "modelList file "+ listName +" load fail.", 2, e);
 			e.printStackTrace();
 			Modchu_Debug.Debug(" ");
 			return false;
+		} finally {
+			try {
+				if (breader != null) breader.close();
+			} catch (Exception e) {
+			}
 		}
 		return true;
 	}
 
 	public String getClassName(String s) {
 		if (s == null) return null;
-		return mod_Modchu_ModchuLib.mod_modchu_modchulib.getPackage()+s;
+		return mod_Modchu_ModchuLib.modchu_Main.getPackage()+s;
 	}
 
 	public static void clearCfgData() {
 		cfgData.clear();
 	}
 
-	public static void saveOthersPlayerParamater(String playerName, HashMap map, File file, String[] k, String[] k1, boolean flag) {
+	public static void saveOthersPlayerParamater(String playerName, ConcurrentHashMap map, File file, String[] k, String[] k1, boolean flag) {
 		// GuiOthersPlayer設定項目をcfgファイルに保存
 		if (file.exists() && file.canRead() && file.canWrite()) {
 			List lines = new LinkedList();
+			BufferedReader breader = null;
 			try {
-				BufferedReader breader = new BufferedReader(new FileReader(
-						file));
+				breader = new BufferedReader(new FileReader(file));
 				String rl;
 				String s;
 				String s1;
@@ -530,20 +536,25 @@ public class PFLM_Config extends Modchu_Config {
 						.append(t[1]).append("][").append(t[2]).append("][").append(t[3]).append("][").append(t[4]).append("]");
 						lines.add(sb1.toString());
 						sb.delete(0, sb.length());
-						Modchu_Debug.mDebug("saveOthersPlayerParamater file save. s=" + s);
+						Modchu_Debug.lDebug("saveOthersPlayerParamater file save. s=" + s);
 					}
 				}
 			} catch (Exception er) {
-				Modchu_Debug.Debug("saveOthersPlayerParamater file error.");
+				Modchu_Debug.lDebug("PFLM_Config", "saveOthersPlayerParamater file="+ file.toString(), 2, er);
 				er.printStackTrace();
+			} finally {
+				try {
+					if (breader != null) breader.close();
+				} catch (Exception e) {
+				}
 			}
+			BufferedWriter bwriter = null;
 			try {
 			// 保存
 				if (!lines.isEmpty()
 						&& (file.exists() || file.createNewFile())
 						&& file.canWrite()) {
-					BufferedWriter bwriter = new BufferedWriter(
-							new FileWriter(file));
+					bwriter = new BufferedWriter(new FileWriter(file));
 					String t;
 					for (int i = 0 ; i < lines.size() ; i++) {
 						t = (String) lines.get(i);
@@ -553,18 +564,23 @@ public class PFLM_Config extends Modchu_Config {
 					bwriter.close();
 				}
 			} catch (Exception er) {
-				Modchu_Debug.Debug("saveOthersPlayerParamater file save fail.");
+				Modchu_Debug.lDebug("saveOthersPlayerParamater file save fail.");
 				er.printStackTrace();
+			} finally {
+				try {
+					if (bwriter != null) bwriter.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 	}
 
-	public static void loadConfigPlayerLocalData(HashMap map, File file) {
+	public static void loadConfigPlayerLocalData(ConcurrentHashMap map, File file) {
 		// GuiOthersPlayer設定項目PlayerLocalData読み込み
 		int modeOthersSettingOffline = getModeOthersSettingOffline();
+		BufferedReader breader = null;
 		try {
-			BufferedReader breader = new BufferedReader(new FileReader(
-					file));
+			breader = new BufferedReader(new FileReader(file));
 			String rl;
 			for (int i = 0; (rl = breader.readLine()) != null && i < file.length(); i++) {
 				int i1;
@@ -630,22 +646,26 @@ public class PFLM_Config extends Modchu_Config {
 					}
 				}
 			}
-			breader.close();
-			Modchu_Debug.mDebug("Modchu_Config loadConfigOthersPlayer");
+			Modchu_Debug.mDebug("PFLM_Config loadConfigOthersPlayer");
 		} catch (Exception e) {
-			Modchu_Debug.Debug("Modchu_Config loadConfigShowModel load fail.");
+			Modchu_Debug.lDebug("PFLM_Config", "loadConfigShowModel "+ file.toString() +" load fail.", 2, e);
 			e.printStackTrace();
+		} finally {
+			try {
+				if (breader != null) breader.close();
+			} catch (Exception e) {
+			}
 		}
-		//Modchu_Debug.mDebug("Modchu_Config loadConfigOthersPlayer");
+		//Modchu_Debug.mDebug("PFLM_Config loadConfigOthersPlayer");
 	}
 
 	public static void removeOthersPlayerParamater(File file, String name) {
 		// GuiOthersPlayer設定から指定内容削除
 		if (file.exists() && file.canRead() && file.canWrite()) {
 			List lines = new LinkedList();
+			BufferedReader breader = null;
 			try {
-				BufferedReader breader = new BufferedReader(new FileReader(
-						file));
+				breader = new BufferedReader(new FileReader(file));
 				String rl;
 				String s;
 				String s1;
@@ -668,36 +688,45 @@ public class PFLM_Config extends Modchu_Config {
 				}
 				breader.close();
 			} catch (Exception er) {
-				Modchu_Debug.Debug("removeOthersPlayerParamater error.");
+				Modchu_Debug.lDebug("PFLM_Config", "removeOthersPlayerParamater", 2, er);
 				er.printStackTrace();
+			} finally {
+				try {
+					if (breader != null) breader.close();
+				} catch (Exception e) {
+				}
 			}
+			BufferedWriter bwriter = null;
 			try {
 			// 保存
 				if (!lines.isEmpty()
 						&& (file.exists() || file.createNewFile())
 						&& file.canWrite()) {
-					BufferedWriter bwriter = new BufferedWriter(
-							new FileWriter(file));
+					bwriter = new BufferedWriter(new FileWriter(file));
 					String t;
 					for (int i = 0 ; i < lines.size() ; i++) {
 						t = (String) lines.get(i);
 						bwriter.write(t);
 						bwriter.newLine();
 					}
-					bwriter.close();
 				}
 			} catch (Exception er) {
-				Modchu_Debug.Debug("removeOthersPlayerParamater file save fail.");
+				Modchu_Debug.lDebug("PFLM_Config", "removeOthersPlayerParamater file="+ file.toString(), 2, er);
 				er.printStackTrace();
+			} finally {
+				try {
+					if (bwriter != null) bwriter.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 	}
 
-	public static HashMap<String, HashMap> getPartsMap() {
+	public static ConcurrentHashMap<String, ConcurrentHashMap> getPartsMap() {
 		return configPartsMap;
 	}
 
-	public static HashMap<String, Boolean> getConfigShowPartsMap(String s, int i, int i2) {
+	public static ConcurrentHashMap<String, Boolean> getConfigShowPartsMap(String s, int i, int i2) {
 		if (configPartsMap != null) return configPartsMap.get(new StringBuilder().append(s).append(",").append(i).append(",").append(i2).toString());
 		//Modchu_Debug.mDebug("getConfigShowPartsMap return null");
 		return null;
@@ -705,7 +734,7 @@ public class PFLM_Config extends Modchu_Config {
 
 	public static int getConfigShowPartsMapBoolean(String s, String s1, int i, int i2) {
 		if (configPartsMap != null) {
-			HashMap<String, Boolean> map = configPartsMap.get(new StringBuilder().append(s).append(",").append(i).append(",").append(i2).toString());
+			ConcurrentHashMap<String, Boolean> map = configPartsMap.get(new StringBuilder().append(s).append(",").append(i).append(",").append(i2).toString());
 			if (map != null
 					&& map.containsKey(s1)) return map.get(s1) ? 1 : 0;
 		}
@@ -713,7 +742,7 @@ public class PFLM_Config extends Modchu_Config {
 		return -1;
 	}
 
-	public static void setConfigShowPartsMap(String s, int i, int i2, HashMap<String, Boolean> map) {
+	public static void setConfigShowPartsMap(String s, int i, int i2, ConcurrentHashMap<String, Boolean> map) {
 		//Modchu_Debug.mDebug("setConfigShowPartsMap s="+s+" i="+i+" i2="+i2+" map="+(map != null));
 		String s1 = new StringBuilder().append(s).append(",").append(i).append(",").append(i2).toString();
 		if (map != null
@@ -722,21 +751,21 @@ public class PFLM_Config extends Modchu_Config {
 		//Modchu_Debug.mDebug("setConfigShowPartsMap s="+s+" i="+i+" i2="+i2+" map.size()="+map.size());
 	}
 
-	public static HashMap<String, HashMap> getConfigShowPartsNemeMap() {
+	public static ConcurrentHashMap<String, ConcurrentHashMap> getConfigShowPartsNemeMap() {
 		return configShowPartsNemeMap;
 	}
 
-	public static HashMap<Integer, String> getConfigShowPartsNemeMap(String s, int i) {
+	public static ConcurrentHashMap<Integer, String> getConfigShowPartsNemeMap(String s, int i) {
 		if (s != null) ;else return null;
 		//Modchu_Debug.mDebug("getConfigShowPartsNemeMap s="+s+" i="+i);
 		String s1 = new StringBuilder().append(s).append(",").append(i).toString();
-		HashMap<Integer, String> map = null;
+		ConcurrentHashMap<Integer, String> map = null;
 		if (configShowPartsNemeMap != null
 				&& configShowPartsNemeMap.containsKey(s1)) {
 			//Modchu_Debug.mDebug("getConfigShowPartsNemeMap containsKey ok. configShowPartsNemeMap.get(s1)="+configShowPartsNemeMap.get(s1));
 			return configShowPartsNemeMap.get(s1);
 		}
-		Object[] textureModel = mod_Modchu_ModchuLib.modelNewInstance(null, s, true, false);
+		Object[] textureModel = mod_Modchu_ModchuLib.modchu_Main.modelNewInstance(null, s, true, false);
 		if (textureModel != null) {
 			int i1 = 0;
 			switch(i) {
@@ -751,7 +780,7 @@ public class PFLM_Config extends Modchu_Config {
 				break;
 			}
 			Object model = textureModel[i1];
-			Class multiModelCustom = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.mod_modchu_modchulib.getClassName("MultiModelCustom"));
+			Class multiModelCustom = Modchu_Reflect.loadClass(mod_Modchu_ModchuLib.modchu_Main.getClassName("MultiModelCustom"));
 			if (multiModelCustom != null
 					&& multiModelCustom.isInstance(model)) model = Modchu_Reflect.getFieldObject(multiModelCustom, "customModel", model);
 			if (model != null) {
@@ -768,8 +797,8 @@ public class PFLM_Config extends Modchu_Config {
 	}
 
 	private static void showPartsSetting(Object model, String s, int i) {
-		HashMap<Integer, String> map = new HashMap();
-		HashMap<String, Field> modelRendererMap1 = new HashMap();
+		ConcurrentHashMap<Integer, String> map = new ConcurrentHashMap();
+		ConcurrentHashMap<String, Field> modelRendererMap1 = new ConcurrentHashMap();
 		Field[] fields = model.getClass().getFields();
 		String s1;
 		int k = 0;
@@ -779,12 +808,13 @@ public class PFLM_Config extends Modchu_Config {
 			try {
 				o = fields[i1].get(model);
 				if (MMM_ModelRenderer.class.isInstance(o)) {
-					//Modchu_Debug.mDebug("Modchu_Config showPartsSetting MMM_ModelRenderer.class.isInstance fields["+i1+"].getType() = "+fields[i1].getType());
+					//Modchu_Debug.mDebug("PFLM_Config showPartsSetting MMM_ModelRenderer.class.isInstance fields["+i1+"].getType() = "+fields[i1].getType());
 					try {
 						s1 = fields[i1].getName();
 						map.put(k, s1);
 						modelRendererMap1.put(s1, fields[i1]);
-						//Modchu_Debug.mDebug("Modchu_Config showPartsSetting put s1="+s1+" fields["+i1+"].getType() = "+fields[i1].getType());
+						//Modchu_Debug.mmlDebug("PFLM_Config showPartsSetting put s1="+s1+" fields["+i1+"].getType() = "+fields[i1].getType());
+						//Modchu_Debug.mmlDebug("PFLM_Config showPartsSetting put s1="+s1+" o.showModel="+((MMM_ModelRenderer) o).showModel);
 					} catch (Exception e) {
 					}
 					k++;
@@ -797,12 +827,12 @@ public class PFLM_Config extends Modchu_Config {
 		setConfigModelRendererMap(s, i, modelRendererMap1);
 	}
 
-	public static void setConfigShowPartsNemeMap(String s, int i, HashMap<Integer, String> map) {
+	public static void setConfigShowPartsNemeMap(String s, int i, ConcurrentHashMap<Integer, String> map) {
 		String s3 = new StringBuilder().append(s).append(",").append(i).toString();
 		configShowPartsNemeMap.put(s3, map);
 	}
 
-	public static HashMap<String, Field> getConfigModelRendererMap(Object model, String s, int i) {
+	public static ConcurrentHashMap<String, Field> getConfigModelRendererMap(Object model, String s, int i) {
 		String s3 = new StringBuilder().append(s).append(",").append(i).toString();
 		if (configModelRendererMap != null
 				&& configModelRendererMap.containsKey(s3)) return configModelRendererMap.get(s3);
@@ -813,27 +843,27 @@ public class PFLM_Config extends Modchu_Config {
 		return null;
 	}
 
-	public static void setConfigModelRendererMap(String s, int i, HashMap<String, Field> map) {
+	public static void setConfigModelRendererMap(String s, int i, ConcurrentHashMap<String, Field> map) {
 		String s3 = new StringBuilder().append(s).append(",").append(i).toString();
 		configModelRendererMap.put(s3, map);
 	}
 
-	public static HashMap<String, String> getConfigShowPartsRenemeMap(Object model, String s, int i) {
+	public static ConcurrentHashMap<String, String> getConfigShowPartsRenemeMap(Object model, String s, int i) {
 		String s3 = new StringBuilder().append(s).append(",").append(i).toString();
 		if (configShowPartsRenemeMap != null
 				&& configShowPartsRenemeMap.containsKey(s3)) {
 			getConfigShowPartsRenemeMapFlagString = null;
 			return configShowPartsRenemeMap.get(s3);
 		}
-		HashMap<String, String> renemeMap = null;
+		ConcurrentHashMap<String, String> renemeMap = null;
 		boolean flag = getConfigShowPartsRenemeMapFlagString != null ? false : true;
 		if (flag
 				| (getConfigShowPartsRenemeMapFlagString != null
 				&& !getConfigShowPartsRenemeMapFlagString.equals(s))) {
 			if (model instanceof MultiModelBaseBiped) {
-				PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(Minecraft.getMinecraft().thePlayer);
+				PFLM_ModelData data = PFLM_ModelDataMaster.instance.getPlayerData(mod_Modchu_ModchuLib.modchu_Main.getThePlayer());
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
-				renemeMap = (HashMap<String, String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsRenemeMap);
+				renemeMap = (ConcurrentHashMap<String, String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsRenemeMap);
 				if (renemeMap != null) {
 					setConfigShowPartsRenemeMap(model, s, i, renemeMap);
 					getConfigShowPartsRenemeMapFlagString = null;
@@ -842,36 +872,36 @@ public class PFLM_Config extends Modchu_Config {
 			}
 			getConfigShowPartsRenemeMapFlagString = s;
 		}
-		renemeMap = new HashMap();
+		renemeMap = new ConcurrentHashMap();
 		setConfigShowPartsRenemeMap(model, s, i, renemeMap);
 		return renemeMap;
 	}
 
 	public static void addConfigShowPartsRenemeMap(Object model, String s, int i, String[] s1, String[] s2) {
 		String s3 = new StringBuilder().append(s).append(",").append(i).toString();
-		HashMap<String, String> renemeMap = null;
+		ConcurrentHashMap<String, String> renemeMap = null;
 		if (configShowPartsRenemeMap != null
 				&& configShowPartsRenemeMap.containsKey(s3)) renemeMap = configShowPartsRenemeMap.get(s3);
-		if (renemeMap != null) ;else renemeMap = new HashMap();
+		if (renemeMap != null) ;else renemeMap = new ConcurrentHashMap();
 		for(int i1 = 0; i1 < s1.length && i1 < s2.length; i1++) {
 			renemeMap.put(s1[i1], s2[i1]);
 		}
 		setConfigShowPartsRenemeMap(model, s, i, renemeMap);
 	}
 
-	public static void setConfigShowPartsRenemeMap(Object model, String s, int i, HashMap<String, String> map) {
+	public static void setConfigShowPartsRenemeMap(Object model, String s, int i, ConcurrentHashMap<String, String> map) {
 		String s3 = new StringBuilder().append(s).append(",").append(i).toString();
 		configShowPartsRenemeMap.put(s3, map);
 	}
 
-	public static HashMap<Integer, String> getConfigShowPartsHideMap(Object model, String s, int i) {
+	public static ConcurrentHashMap<Integer, String> getConfigShowPartsHideMap(Object model, String s, int i) {
 		//Modchu_Debug.mDebug("getConfigShowPartsHideMap s="+s);
 		if (model != null) ;else {
 			//Modchu_Debug.mDebug("getConfigShowPartsHideMap model == null !!");
 			return null;
 		}
 		String s3 = new StringBuilder().append(s).append(",").append(i).toString();
-		HashMap<Integer, String> hideMap = null;
+		ConcurrentHashMap<Integer, String> hideMap = null;
 		if (configShowPartsHideMap != null
 				&& configShowPartsHideMap.containsKey(s3)) {
 			hideMap = configShowPartsHideMap.get(s3);
@@ -888,12 +918,12 @@ public class PFLM_Config extends Modchu_Config {
 			Modchu_Debug.mDebug("getConfigShowPartsHideMap flag通過.");
 			if (model instanceof MultiModelBaseBiped) {
 				Modchu_Debug.mDebug("getConfigShowPartsHideMap MultiModelBaseBiped ok.");
-				PFLM_ModelData data = PFLM_RenderPlayer.getPlayerData(Minecraft.getMinecraft().thePlayer);
+				PFLM_ModelData data = PFLM_ModelDataMaster.instance.getPlayerData(mod_Modchu_ModchuLib.modchu_Main.getThePlayer());
 				((MultiModelBaseBiped) model).defaultPartsSettingBefore(data);
 				List<String> hideList = null;
 				if (data != null) hideList = (List<String>) data.getCapsValue(((MultiModelBaseBiped) model).caps_showPartsHideList);
 				if (hideList != null) {
-					hideMap = new HashMap();
+					hideMap = new ConcurrentHashMap();
 					for(int i1 = 0; i1 < hideList.size(); i1++) {
 						hideMap.put(i1, hideList.get(i1));
 					}
@@ -909,14 +939,14 @@ public class PFLM_Config extends Modchu_Config {
 			}
 			getConfigShowPartsHideMapFlagString = s3;
 		}
-		Modchu_Debug.mDebug("getConfigShowPartsHideMap null. s="+s+" flag="+flag+" getConfigShowPartsHideMapFlagString ="+getConfigShowPartsHideMapFlagString+" getConfigShowPartsHideMapFlagString.equals(s) ?"+(getConfigShowPartsHideMapFlagString.equals(s)));
-		hideMap = new HashMap();
+		Modchu_Debug.mDebug("getConfigShowPartsHideMap null. s="+s+" flag="+flag+" getConfigShowPartsHideMapFlagString ="+getConfigShowPartsHideMapFlagString+" getConfigShowPartsHideMapFlagString.equals(s3) ?"+(getConfigShowPartsHideMapFlagString.equals(s3)));
+		hideMap = new ConcurrentHashMap();
 		setConfigShowPartsHideMap(model, s, i, hideMap);
 		return hideMap;
 	}
 
 	public static void addConfigShowPartsHideMap(Object model, String s, int i, List<String> hideList) {
-		HashMap<Integer, String> map = getConfigShowPartsHideMap(model, s, i);
+		ConcurrentHashMap<Integer, String> map = getConfigShowPartsHideMap(model, s, i);
 		int size = map.size();
 		for(int i1 = 0; i1 < hideList.size(); i1++) {
 			map.put(size + i1, hideList.get(i1));
@@ -925,7 +955,7 @@ public class PFLM_Config extends Modchu_Config {
 	}
 
 	public static void addConfigShowPartsHideMap(Object model, String s, int i, String[] s1) {
-		HashMap<Integer, String> map = getConfigShowPartsHideMap(model, s, i);
+		ConcurrentHashMap<Integer, String> map = getConfigShowPartsHideMap(model, s, i);
 		int size = map.size();
 		for(int i1 = 0; i1 < s1.length; i1++) {
 			map.put(size + i1, s1[i1]);
@@ -933,12 +963,12 @@ public class PFLM_Config extends Modchu_Config {
 		setConfigShowPartsHideMap(model, s, i, map);
 	}
 
-	public static void setConfigShowPartsHideMap(Object model, String s, int i, HashMap<Integer, String> hideMap) {
+	public static void setConfigShowPartsHideMap(Object model, String s, int i, ConcurrentHashMap<Integer, String> hideMap) {
 		String s3 = new StringBuilder().append(s).append(",").append(i).toString();
 		configShowPartsHideMap.put(s3, hideMap);
 	}
 
-	public static HashMap<String, Boolean> getDefaultShowPartsMap(String s, int i) {
+	public static ConcurrentHashMap<String, Boolean> getDefaultShowPartsMap(String s, int i) {
 		String s1 = new StringBuilder().append(s).append(",").append(i).toString();
 		if (configDefaultShowPartsMap != null
 				&& configDefaultShowPartsMap.containsKey(s1)) return configDefaultShowPartsMap.get(s1);
@@ -949,7 +979,7 @@ public class PFLM_Config extends Modchu_Config {
 		String s2 = new StringBuilder().append(s).append(",").append(i).toString();
 		if (configDefaultShowPartsMap != null
 				&& configDefaultShowPartsMap.containsKey(s2)) {
-			HashMap<String, Boolean> defaultShowPartsMap = configDefaultShowPartsMap.get(s2);
+			ConcurrentHashMap<String, Boolean> defaultShowPartsMap = configDefaultShowPartsMap.get(s2);
 			if (defaultShowPartsMap != null
 					&& defaultShowPartsMap.containsKey(s1)) return defaultShowPartsMap.get(s1);
 		}
@@ -958,25 +988,25 @@ public class PFLM_Config extends Modchu_Config {
 
 	public static void putDefaultShowPartsMap(String s, String s1, int i, boolean b) {
 		String s2 = new StringBuilder().append(s).append(",").append(i).toString();
-		HashMap<String, Boolean> defaultShowPartsMap = null;
+		ConcurrentHashMap<String, Boolean> defaultShowPartsMap = null;
 		if (configDefaultShowPartsMap != null
 				&& configDefaultShowPartsMap.containsKey(s2)) {
 			defaultShowPartsMap = configDefaultShowPartsMap.get(s2);
-		} else defaultShowPartsMap = new HashMap();
+		} else defaultShowPartsMap = new ConcurrentHashMap();
 		defaultShowPartsMap.put(s1, b);
 		configDefaultShowPartsMap.put(s2, defaultShowPartsMap);
 		//Modchu_Debug.mDebug("putDefaultShowPartsMap s1="+s1+" b="+b);
 	}
 
-	public static HashMap<String, HashMap> getIndexOfAllSetVisibleMap() {
+	public static ConcurrentHashMap<String, ConcurrentHashMap> getIndexOfAllSetVisibleMap() {
 		return configIndexOfAllSetVisibleMap;
 	}
 
-	public static HashMap<String, List<String>> getIndexOfAllSetVisibleMap(String s, int i) {
+	public static ConcurrentHashMap<String, List<String>> getIndexOfAllSetVisibleMap(String s, int i) {
 		String s1 = new StringBuilder().append(s).append(",").append(i).toString();
 		if (configIndexOfAllSetVisibleMap != null
 				&& configIndexOfAllSetVisibleMap.containsKey(s1)) return configIndexOfAllSetVisibleMap.get(s1);
-		HashMap<String, List<String>> map = new HashMap();
+		ConcurrentHashMap<String, List<String>> map = new ConcurrentHashMap();
 		setIndexOfAllSetVisibleMap(s, i, map);
 		return map;
 	}
@@ -985,7 +1015,7 @@ public class PFLM_Config extends Modchu_Config {
 		String s2 = new StringBuilder().append(s).append(",").append(i).toString();
 		if (configIndexOfAllSetVisibleMap != null
 				&& configIndexOfAllSetVisibleMap.containsKey(s2)) {
-			HashMap<String, List<String>> map = configIndexOfAllSetVisibleMap.get(s2);
+			ConcurrentHashMap<String, List<String>> map = configIndexOfAllSetVisibleMap.get(s2);
 			if (map != null
 					&& map.containsKey(s1)) return map.get(s1);
 		}
@@ -994,19 +1024,19 @@ public class PFLM_Config extends Modchu_Config {
 		return list;
 	}
 
-	public static void setIndexOfAllSetVisibleMap(String s, int i, HashMap<String, List<String>> map) {
+	public static void setIndexOfAllSetVisibleMap(String s, int i, ConcurrentHashMap<String, List<String>> map) {
 		String s1 = new StringBuilder().append(s).append(",").append(i).toString();
 		configIndexOfAllSetVisibleMap.put(s1, map);
 	}
 
 	public static void setIndexOfAllSetVisibleMap(String s, String s1, int i, List<String> list) {
 		String s2 = new StringBuilder().append(s).append(",").append(i).toString();
-		HashMap<String, List<String>> map = null;
+		ConcurrentHashMap<String, List<String>> map = null;
 		if (configIndexOfAllSetVisibleMap != null
 				&& configIndexOfAllSetVisibleMap.containsKey(s2)) {
 			map = configIndexOfAllSetVisibleMap.get(s2);
 		}
-		if (map != null) ;else map = new HashMap();
+		if (map != null) ;else map = new ConcurrentHashMap();
 		if (list != null
 				&& !list.isEmpty()) {
 			map.put(s1, list);
@@ -1016,15 +1046,15 @@ public class PFLM_Config extends Modchu_Config {
 		}
 	}
 
-	public static HashMap<String, HashMap> getIndexOfAllSetVisibleBooleanMap() {
+	public static ConcurrentHashMap<String, ConcurrentHashMap> getIndexOfAllSetVisibleBooleanMap() {
 		return configIndexOfAllSetVisibleBooleanMap;
 	}
 
-	public static HashMap<String, Boolean> getIndexOfAllSetVisibleBooleanMap(String s, int i) {
+	public static ConcurrentHashMap<String, Boolean> getIndexOfAllSetVisibleBooleanMap(String s, int i) {
 		String s1 = new StringBuilder().append(s).append(",").append(i).toString();
 		if (configIndexOfAllSetVisibleBooleanMap != null
 				&& configIndexOfAllSetVisibleBooleanMap.containsKey(s1)) return configIndexOfAllSetVisibleBooleanMap.get(s1);
-		HashMap<String, Boolean> map = new HashMap();
+		ConcurrentHashMap<String, Boolean> map = new ConcurrentHashMap();
 		setIndexOfAllSetVisibleBooleanMap(s, i, map);
 		return map;
 	}
@@ -1033,36 +1063,36 @@ public class PFLM_Config extends Modchu_Config {
 		String s2 = new StringBuilder().append(s).append(",").append(i).toString();
 		if (configIndexOfAllSetVisibleBooleanMap != null
 				&& configIndexOfAllSetVisibleBooleanMap.containsKey(s2)) {
-			HashMap<String, Boolean> map = configIndexOfAllSetVisibleBooleanMap.get(s2);
+			ConcurrentHashMap<String, Boolean> map = configIndexOfAllSetVisibleBooleanMap.get(s2);
 			if (map != null
 					&& map.containsKey(s1)) return map.get(s1) == true ? 1 : 0;
 		}
 		return -1;
 	}
 
-	public static void setIndexOfAllSetVisibleBooleanMap(String s, int i, HashMap<String, Boolean> map) {
+	public static void setIndexOfAllSetVisibleBooleanMap(String s, int i, ConcurrentHashMap<String, Boolean> map) {
 		String s1 = new StringBuilder().append(s).append(",").append(i).toString();
 		configIndexOfAllSetVisibleBooleanMap.put(s1, map);
 	}
 
 	public static void setIndexOfAllSetVisibleBooleanMap(String s, String s1, int i, boolean b) {
 		String s2 = new StringBuilder().append(s).append(",").append(i).toString();
-		HashMap<String, Boolean> map = null;
+		ConcurrentHashMap<String, Boolean> map = null;
 		if (configIndexOfAllSetVisibleBooleanMap != null
 				&& configIndexOfAllSetVisibleBooleanMap.containsKey(s2)) {
 			map = configIndexOfAllSetVisibleBooleanMap.get(s2);
 		}
-		if (map != null) ;else map = new HashMap();
+		if (map != null) ;else map = new ConcurrentHashMap();
 		map.put(s1, b);
 		configIndexOfAllSetVisibleBooleanMap.put(s2, map);
 	}
 
 	private static String getTextureName() {
-		return mod_PFLM_PlayerFormLittleMaid.textureName;
+		return mod_PFLM_PlayerFormLittleMaid.pflm_main.textureName;
 	}
 
 	private static int getMaidColor() {
-		return mod_PFLM_PlayerFormLittleMaid.maidColor;
+		return mod_PFLM_PlayerFormLittleMaid.pflm_main.maidColor;
 	}
 
 	private static boolean getPartsSaveFlag() {
