@@ -39,13 +39,8 @@ public class PFLM_RenderPlayerDummyV160 extends PFLM_RenderPlayerDummy
 
     public void superDoRenderLiving(Entity entity, double d, double d1, double d2, float f, float f1)
     {
-    	PFLM_ModelData modelData = pflm_RenderPlayerDummyMaster.modelData;
-    	mainModel = modelData.modelMain;
-    	modelData.modelMain.setEntityCaps(modelData);
-    	modelData.modelMain.setRender(this);
-    	modelData.setCapsValue(modelData.caps_Entity, entity);
-    	mainModel = modelData.modelMain;
-    	setRenderPassModel(modelData.modelFATT);
+    	mainModel = pflm_RenderPlayerDummyMaster.modelData.modelMain;
+    	setRenderPassModel(pflm_RenderPlayerDummyMaster.modelData.modelFATT);
     	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
     		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) Modchu_Reflect.invokeMethod("RendererLivingEntity", "func_130000_a", "doRenderLiving", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class, float.class, float.class }, this, new Object[]{ entity, d, d1, d2, f, f1 });
     		//super.doRenderLiving((EntityLivingBase) entity, d, d1, d2, f, f1);
@@ -53,7 +48,7 @@ public class PFLM_RenderPlayerDummyV160 extends PFLM_RenderPlayerDummy
     		//doRenderLiving((EntityLiving) entity, d, d1, d2, f, f1);
     	}
     	else pflm_RenderPlayerDummyMaster.oldDoRenderLivingPFLM(entity, d, d1, d2, f, f1);
-    	modelData.modelMain.setCapsValue(modelData.caps_aimedBow, false);
+    	pflm_RenderPlayerDummyMaster.modelData.modelMain.setCapsValue(pflm_RenderPlayerDummyMaster.modelData.caps_aimedBow, false);
     }
 
     @Override

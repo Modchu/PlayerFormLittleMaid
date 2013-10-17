@@ -27,7 +27,7 @@ public class PFLM_RenderPlayerV160 extends PFLM_RenderPlayer
     {
     	if (pflm_RenderPlayerMaster != null) ;else return -1;
     	int i1 = setArmorModel((AbstractClientPlayer) entityliving, i, f);
-    	PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData((EntityPlayer) entityliving);
+    	PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData((EntityPlayer) entityliving);
     	setRenderPassModel(modelData.modelFATT);
     	int version = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion();
     	if ((version > 129
@@ -36,8 +36,8 @@ public class PFLM_RenderPlayerV160 extends PFLM_RenderPlayer
     					&& mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor
     					&& !entityliving.isInvisible())
     					| version < 130) {
-    		((MMM_ModelBaseDuo) renderPassModel).setArmorRendering(true);
-    	} else ((MMM_ModelBaseDuo) renderPassModel).setArmorRendering(false);
+    		((Modchu_ModelBaseDuo) renderPassModel).setArmorRendering(true);
+    	} else ((Modchu_ModelBaseDuo) renderPassModel).setArmorRendering(false);
     	return i1;
     	//return pflm_RenderPlayerMaster.shouldRenderPass((Entity) entityliving, i, f);
     }
@@ -71,7 +71,7 @@ public class PFLM_RenderPlayerV160 extends PFLM_RenderPlayer
     @Override
     public void superDoRenderLiving(Entity entity, double d, double d1, double d2, float f, float f1)
     {
-    	PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData((EntityPlayer) entity);
+    	PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData((EntityPlayer) entity);
     	mainModel = modelData.modelMain;
     	setRenderPassModel(modelData.modelFATT);
     	if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) {
@@ -168,12 +168,22 @@ public class PFLM_RenderPlayerV160 extends PFLM_RenderPlayer
     {
     	if (pflm_RenderPlayerMaster != null
     			&& !mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) pflm_RenderPlayerMaster.rotatePlayer(((EntityPlayer) var1),var2, var3, var4);
-    	PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData(var1);
+    	PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(var1);
     	if (!modelData.getCapsValueBoolean(modelData.caps_isSleeping)) super.rotatePlayer((AbstractClientPlayer) var1, var2, var3, var4);
     }
 
     public void superRotateCorpse(EntityLivingBase par1EntityLivingBase, float par2, float par3, float par4) {
     	super.rotateCorpse(par1EntityLivingBase, par2, par3, par4);
+    }
+
+    @Override
+    protected int getColorMultiplier(EntityLivingBase par1EntityLivingBase, float par2, float par3) {
+    	return pflm_RenderPlayerMaster != null ? pflm_RenderPlayerMaster.getColorMultiplier(((Entity) par1EntityLivingBase), par2, par3) : 0;
+    }
+
+    @Override
+    protected int inheritRenderPass(EntityLivingBase par1EntityLivingBase, int par2, float par3) {
+    	return pflm_RenderPlayerMaster != null ? pflm_RenderPlayerMaster.inheritRenderPass(((Entity) par1EntityLivingBase), par2, par3) : 0;
     }
 
     //smartMovingŠÖ˜A«

@@ -7,22 +7,27 @@ public class PFLM_GuiKeyControls extends
 		PFLM_GuiOthersPlayer {
 
 	private static int select;
-	public static final int modeOthersSettingOffline 		= 0;
-	public static final int modeSetModelAndArmor 		= 1;
-	public static final int modeSetModelAndColor			= 2;
-	public static final int modeSetModel 						= 3;
-	public static final int modeSetColor 						= 4;
-	public static final int modeSetColorAndArmor	 		= 5;
-	public static final int modeSetArmor 						= 6;
-	public static final int modeModelScale 					= 7;
-	public static final int modePlayerOffline 					= 8;
-	public static final int modePlayerOnline					= 9;
-	public static final int modeRandom 						= 10;
-	public static final int modeActionRelease				= 11;
-	public static final int modeAction 							= 12;
-	public static final int modeActionLast 					= 41;
-	public static final int modeCustomModelCfgReLoad	= 42;
-	public static final int changeModeMax 					= 43;
+	public static final int modeOthersSettingOffline 							= 0;
+	public static final int modeSetModelAndArmor 							= 1;
+	public static final int modeSetModelAndColor								= 2;
+	public static final int modeSetModel 											= 3;
+	public static final int modeSetColor 											= 4;
+	public static final int modeSetColorAndArmor	 							= 5;
+	public static final int modeSetArmor 											= 6;
+	public static final int modeModelScale 										= 7;
+	public static final int modePlayerOffline 										= 8;
+	public static final int modePlayerOnline										= 9;
+	public static final int modeRandom 											= 10;
+	public static final int modeActionRelease									= 11;
+	public static final int modeAction 												= 12;
+	public static final int modeActionLast 										= 41;
+	public static final int modeCustomModelCfgReLoad						= 42;
+	public static final int modeAllMultiModelActionPlus						= 43;
+	public static final int modeAllMultiModelActionMinus						= 44;
+	public static final int modeAllMultiModelActionModeChangePlus		= 45;
+	public static final int modeAllMultiModelActionModeChangeMinus	= 46;
+	public static final int modeAllMultiModelActionRun						= 47;
+	public static final int changeModeMax 										= 48;
 	private String shortcutKey;
 
 	public PFLM_GuiKeyControls(PFLM_GuiBase par1GuiScreen, World world) {
@@ -107,7 +112,7 @@ public class PFLM_GuiKeyControls extends
     		noSaveFlag = false;
     		Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ null });
     		//mc.displayGuiScreen(null);
-    		mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.clearDataMap();
     		return;
     	}
     	//Return
@@ -423,6 +428,21 @@ public class PFLM_GuiKeyControls extends
     		break;
     	case modeCustomModelCfgReLoad:
     		s = "CustomModelCfgReLoad";
+    		break;
+    	case modeAllMultiModelActionPlus:
+    		s = "AllActionPlus";
+    		break;
+    	case modeAllMultiModelActionMinus:
+    		s = "AllActionMinus";
+    		break;
+    	case modeAllMultiModelActionModeChangePlus:
+    		s = "AllActionModeChangePlus";
+    		break;
+    	case modeAllMultiModelActionModeChangeMinus:
+    		s = "AllActionModeChangeMinus";
+    		break;
+    	case modeAllMultiModelActionRun:
+    		s = "AllActionRun";
     		break;
     	}
     	if (i >= modeAction

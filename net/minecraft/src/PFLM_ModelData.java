@@ -8,49 +8,34 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps {
+public class PFLM_ModelData extends Modchu_ModelDataBase {
 
-	public MMM_ModelBaseSolo modelMain;
-	public MMM_ModelBaseDuo modelFATT;
+	public Modchu_ModelBaseSolo modelMain;
+	public Modchu_ModelBaseDuo modelFATT;
 	private String textureName = null;
 	private String modelArmorName = null;
 	private boolean localFlag = false;
+	private boolean isWaitFSetFlag = false;
 	private boolean isActivated = false;
 	private boolean isPlayer = false;
 	private boolean isWait = false;
-	private boolean isWaitFSetFlag = false;
 	private boolean isInventory = false;
-	private boolean isSitting = false;
-	private boolean shortcutKeysAction = false;
-	private boolean shortcutKeysActionInitFlag = true;
-	private boolean actionFlag = false;
-	private boolean actionReverse = false;
 	private boolean changeModelFlag = true;
 	private boolean resetHandedness = true;
-	private boolean motionResetFlag = false;
 	private boolean mushroomConfusionLeft = false;
 	private boolean mushroomConfusionRight = false;
 	private boolean mushroomConfusionFront = false;
 	private boolean mushroomConfusionBack = false;
-	private boolean motionSetFlag = false;
 	private boolean mushroomBack = false;
 	private boolean mushroomForward = false;
 	private boolean mushroomKeyBindResetFlag = false;
 	private boolean mushroomKeyBindSetFlag = false;
 	private boolean mushroomLeft = false;
 	private boolean mushroomRight = false;
-	private boolean sleeping = false;
-	private float isWaitF = 0.0F;
 	private float modelScale = 0.0F;
-	private float actionSpeed = 0.0F;
 	private float tempLimbSwing = 0.0F;
+	private float isWaitF = 0.0F;
 	private int isWaitTime = 0;
-	private int skinMode = 0;
-	private int initFlag = 0;
-	private int runActionNumber = 0;
-	private int actionReleaseNumber = 0;
-	private int actionCount = 0;
-	private int actionTime = 0;
 	private int handedness = 0;
 	private int maidColor = 0;
 	private int partsSetFlag = 1;
@@ -58,11 +43,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private int mushroomConfusionCount = 0;
 	private int rotate = 0;
 	private final int mushroomConfusionTypeMax = 4;
-	private List<String> showPartsHideList = new ArrayList();
-	private ConcurrentHashMap<String, String> showPartsRenemeMap = new ConcurrentHashMap();
-//-@-152
 	private Object[] resourceLocations;
-//@-@152
 /*//b173delete
 	private boolean keyBindForwardPressed;
 	private boolean keyBindBackPressed;
@@ -75,19 +56,16 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private boolean mushroomConfusionFlag = false;
 *///b173delete
 
-	public PFLM_ModelData(Render render) {
-		super(null);
-		modelMain = new MMM_ModelBaseSolo(null);
-		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 160) Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelMain, render);
+	public PFLM_ModelData() {
+		super();
+		modelMain = new Modchu_ModelBaseSolo(null);
 		modelMain.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend;
-		Modchu_Reflect.setFieldObject("MMM_ModelBaseSolo", "textures", modelMain, Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
-		modelFATT = new MMM_ModelBaseDuo(null);
-		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() < 160) Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelFATT, render);
+		Modchu_Reflect.setFieldObject("Modchu_ModelBaseSolo", "textures", modelMain, Modchu_Reflect.newInstanceArray("ResourceLocation", 3));
+		modelFATT = new Modchu_ModelBaseDuo(null);
 		modelFATT.isModelAlphablend = mod_PFLM_PlayerFormLittleMaid.pflm_main.AlphaBlend;
-		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
-		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
+		Modchu_Reflect.setFieldObject("Modchu_ModelBaseDuo", "textureInner", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
+		Modchu_Reflect.setFieldObject("Modchu_ModelBaseDuo", "textureOuter", modelFATT, Modchu_Reflect.newInstanceArray("ResourceLocation", 4));
 		modelMain.capsLink = modelFATT;
-		setRender(render);
 		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159
 				&& mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 499) {
 			int i2 = 15728784;
@@ -98,7 +76,168 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	}
 
 	@Override
-	public boolean setCapsValue(MultiModelBaseBiped model, MMM_IModelCaps entityCaps, int pIndex, Object... pArg) {
+	public Object getCapsValue(int pIndex, Object ...pArg) {
+		return getCapsValue(null, pIndex, pArg);
+	}
+
+	@Override
+	public Object getCapsValue(MultiModelBaseBiped model, Modchu_IModelCaps entityCaps, int pIndex, Object ...pArg) {
+		return null;
+	}
+
+	@Override
+	public Object getCapsValue(MultiModelBaseBiped model, int pIndex, Object ...pArg) {
+		switch (pIndex) {
+		case caps_health:
+			return getHealth();
+		case caps_isRiding:
+			return getIsRiding();
+		case caps_ResourceLocation:
+			if (pArg != null
+					&& pArg.length > 0
+					&& pArg[0] != null) return getResourceLocation((Integer) pArg[0]);
+			else return getResourceLocation();
+		case caps_heldItems:
+		case caps_currentEquippedItem:
+			return getCurrentEquippedItem();
+		case caps_dominantArm:
+			return getHandedness();
+		case caps_isLookSuger:
+			return getIsLookSuger();
+		case caps_entityIdFactor:
+			return getEntityIdFactor();
+		case caps_isOpenInv:
+			return getIsInventory();
+		case caps_Inventory:
+			return getInventory();
+		case caps_maidColor:
+			return getMaidColor();
+		case caps_localFlag:
+			return getLocalFlag();
+		case caps_rotate:
+			return getRotate();
+		case caps_texture:
+			if (pArg != null
+			&& pArg.length > 1
+			&& pArg[0] != null
+			&& pArg[1] != null) return getTexture((String) pArg[0], (Integer) pArg[1]);
+			break;
+		case caps_armorTexture:
+			if (pArg != null
+			&& pArg.length > 1
+			&& pArg[0] != null
+			&& pArg[1] != null) {
+				if (pArg.length > 2
+						&& pArg[2] != null) return getArmorTexture((String) pArg[0], (Integer) pArg[1], (ItemStack) pArg[2]);
+				return getArmorTexture((String) pArg[0], (Integer) pArg[1]);
+			}
+			break;
+		case caps_isPlayer:
+			return getIsPlayer();
+		case caps_isWait:
+			return getIsWait();
+		case caps_isCamouflage:
+			return isCamouflage();
+		case caps_isPlanter:
+			return isPlanter();
+		case caps_HeadMount:
+			return getHeadMount();
+		case caps_Items:
+			return getItems();
+		case caps_Actions:
+			return getActions();
+		case caps_tempLimbSwing:
+			return getTempLimbSwing();
+		case caps_changeModelFlag:
+			return getChangeModelFlag();
+		case caps_partsSetFlag:
+			return getPartsSetFlag();
+		case caps_isActivated:
+			return getIsActivated();
+		case caps_modelScale:
+			return getModelScale();
+		case caps_isWaitF:
+			return getIsWaitF();
+		case caps_isWaitFSetFlag:
+			return getIsWaitFSetFlag();
+		case caps_isWaitTime:
+			return getIsWaitTime();
+		case caps_mushroomConfusionCount:
+			return getMushroomConfusionCount();
+		case caps_mushroomConfusionType:
+			return getMushroomConfusionType();
+		case caps_mushroomConfusionTypeMax:
+			return getMushroomConfusionTypeMax();
+		case caps_mushroomConfusionLeft:
+			return getMushroomConfusionLeft();
+		case caps_mushroomConfusionRight:
+			return getMushroomConfusionRight();
+		case caps_mushroomConfusionFront:
+			return getMushroomConfusionFront();
+		case caps_mushroomConfusionBack:
+			return getMushroomConfusionBack();
+		case caps_mushroomLeft:
+			return getMushroomLeft();
+		case caps_mushroomRight:
+			return getMushroomRight();
+		case caps_model:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) return getModel((Integer) pArg[0]);
+			break;
+		case caps_currentArmor:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) return getArmorItemInSlot((Integer) pArg[0]);
+			break;
+		case caps_isRendering:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) return getArmorRendering((Integer) pArg[0]);
+			return getArmorRendering();
+		case caps_textureName:
+			return getTextureName();
+		case caps_textureArmorName:
+			return getTextureArmorName();
+		case caps_defaultShowPartsMap:
+			if (pArg != null
+			&& pArg.length > 1
+			&& pArg[0] != null
+			&& pArg[1] != null) return getDefaultShowPartsMapBoolean((String) pArg[0], (Integer) pArg[1]);
+			break;
+		case caps_showPartsMap:
+			if (pArg != null
+			&& pArg.length > 0
+			&& pArg[0] != null) return getShowPartsMap((Integer) pArg[0]);
+			break;
+		case caps_showPartsMapBoolean:
+			if (pArg != null
+			&& pArg.length > 1
+			&& pArg[0] != null
+			&& pArg[1] != null) {
+				return getShowPartsMapBoolean((String) pArg[0], (Integer) pArg[1]);
+			}
+			break;
+		case caps_modelRendererName:
+			if (pArg != null
+			&& pArg.length > 1
+			&& pArg[0] != null
+			&& pArg[1] != null) return getModelRendererName((Modchu_ModelRenderer) pArg[0], (Integer) pArg[1]);
+			break;
+		}
+		Object o = null;
+		if (model != null) {
+			o = model.getCapsValue(pIndex, (Object[]) pArg);
+		} else {
+			if (modelMain != null
+					&& modelMain.model != null) o = modelMain.model.getCapsValue(pIndex, (Object[]) pArg);
+		}
+		if (o != null) return o;
+		return super.getCapsValue(model, pIndex, (Object[]) pArg);
+	}
+
+	@Override
+	public boolean setCapsValue(MultiModelBaseBiped model, Modchu_IModelCaps entityCaps, int pIndex, Object... pArg) {
 		return false;
 	}
 
@@ -189,22 +328,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				return true;
 			}
 			return false;
-		case caps_initFlag:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setInitFlag((Integer) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_skinMode:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setSkinMode((Integer) pArg[0]);
-				return true;
-			}
-			return false;
 		case caps_isWaitTime:
 			if (pArg != null
 			&& pArg.length > 0
@@ -226,22 +349,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			&& pArg.length > 0
 			&& pArg[0] != null) {
 				setIsWait((Boolean) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_isSitting:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setIsSitting((Boolean) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_isSleeping:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setIsSleeping((Boolean) pArg[0]);
 				return true;
 			}
 			return false;
@@ -277,14 +384,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				return true;
 			}
 			return false;
-		case caps_shortcutKeysAction:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setShortcutKeysAction((Boolean) pArg[0]);
-				return true;
-			}
-			return false;
 		case caps_actionInit:
 			if (pArg != null
 			&& pArg.length > 0
@@ -302,54 +401,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				if (modelMain.model instanceof  MultiModelAction) ((MultiModelAction) modelMain.model).actionRelease(this, (Integer) pArg[0]);
 				if (modelFATT.modelInner instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelInner).actionRelease(this, (Integer) pArg[0]);;
 				if (modelFATT.modelOuter instanceof  MultiModelAction) ((MultiModelAction) modelFATT.modelOuter).actionRelease(this, (Integer) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_runActionNumber:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setRunActionNumber((Integer) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_actionReleaseNumber:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setActionReleaseNumber((Integer) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_actionCount:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setActionCount((Integer) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_actionTime:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setActionTime((Integer) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_actionFlag:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setActionFlag((Boolean) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_actionSpeed:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setActionSpeed((Float) pArg[0]);
 				return true;
 			}
 			return false;
@@ -377,14 +428,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				return true;
 			}
 			return false;
-		case caps_motionResetFlag:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setMotionResetFlag((Boolean) pArg[0]);
-				return true;
-			}
-			return false;
 /*
 		case caps_partsSetInit:
 			if (pArg != null
@@ -394,14 +437,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				return true;
 			}
 */
-		case caps_shortcutKeysActionInitFlag:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setShortcutKeysActionInitFlag((Boolean) pArg[0]);
-				return true;
-			}
-			return false;
 		case caps_mushroomConfusionCount:
 			if (pArg != null
 			&& pArg.length > 0
@@ -447,14 +482,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			&& pArg.length > 0
 			&& pArg[0] != null) {
 				setMushroomConfusionBack((Boolean) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_motionSetFlag:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				setMotionSetFlag((Boolean) pArg[0]);
 				return true;
 			}
 			return false;
@@ -512,23 +539,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				return true;
 			}
 			return false;
-		case caps_showPartsHideList:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) {
-				addShowPartsHideList((String[]) pArg[0]);
-				return true;
-			}
-			return false;
-		case caps_showPartsRenemeMap:
-			if (pArg != null
-			&& pArg.length > 1
-			&& pArg[0] != null
-			&& pArg[1] != null) {
-				addShowPartsRenemeMap((String[]) pArg[0], (String[]) pArg[1]);
-				return true;
-			}
-			return false;
 /*
 		case caps_showPartsNemeMap:
 			if (pArg != null
@@ -572,7 +582,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			&& pArg[1] != null
 			&& pArg[2] != null
 			&& pArg[3] != null) {
-				setLivingAnimationsBefore((MMM_ModelMultiBase) pArg[0], (Float) pArg[1], (Float) pArg[2], (Float) pArg[3]);
+				setLivingAnimationsBefore(pArg[0], (Float) pArg[1], (Float) pArg[2], (Float) pArg[3]);
 				return true;
 			}
 			return false;
@@ -583,7 +593,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			&& pArg[1] != null
 			&& pArg[2] != null
 			&& pArg[3] != null) {
-				setLivingAnimationsAfter((MMM_ModelMultiBase) pArg[0], (Float) pArg[1], (Float) pArg[2], (Float) pArg[3]);
+				setLivingAnimationsAfter(pArg[0], (Float) pArg[1], (Float) pArg[2], (Float) pArg[3]);
 				return true;
 			}
 			return false;
@@ -597,7 +607,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			&& pArg[4] != null
 			&& pArg[5] != null
 			&& pArg[6] != null) {
-				setRotationAnglesBefore((MMM_ModelMultiBase) pArg[0], (Float) pArg[1] ,(Float) pArg[2], (Float) pArg[3], (Float) pArg[4], (Float) pArg[5], (Float) pArg[6]);
+				setRotationAnglesBefore(pArg[0], (Float) pArg[1] ,(Float) pArg[2], (Float) pArg[3], (Float) pArg[4], (Float) pArg[5], (Float) pArg[6]);
 				return true;
 			}
 			return false;
@@ -611,16 +621,21 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 			&& pArg[4] != null
 			&& pArg[5] != null
 			&& pArg[6] != null) {
-				setRotationAnglesAfter((MMM_ModelMultiBase) pArg[0], (Float) pArg[1] ,(Float) pArg[2], (Float) pArg[3], (Float) pArg[4], (Float) pArg[5], (Float) pArg[6]);
+				setRotationAnglesAfter(pArg[0], (Float) pArg[1] ,(Float) pArg[2], (Float) pArg[3], (Float) pArg[4], (Float) pArg[5], (Float) pArg[6]);
 				return true;
 			}
 			return false;
 		}
-		return super.setCapsValue(pIndex, (Object[]) pArg);
+		return super.setCapsValue(model, pIndex, (Object[]) pArg);
+	}
+
+	@Override
+	public boolean setCapsValue(int pIndex, Object... pArg) {
+		return setCapsValue((MultiModelBaseBiped) null, pIndex, pArg);
 	}
 
 	private void setEntity(Entity entity) {
-		Modchu_Reflect.setFieldObject("MMM_EntityCaps", "owner", this, entity);
+		Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_EntityCaps, "owner", this, entity);
 	}
 
 	private boolean getIsRiding() {
@@ -642,209 +657,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		//Modchu_Debug.mDebug("setIsRiding owner.ridingEntity="+owner.ridingEntity);
 	}
 
-	@Override
-	public boolean setCapsValue(int pIndex, Object... pArg) {
-		return setCapsValue((MultiModelBaseBiped) null, pIndex, pArg);
-	}
-
-	@Override
-	public Object getCapsValue(int pIndex, Object ...pArg) {
-		return getCapsValue(null, pIndex, pArg);
-	}
-
-	@Override
-	public Object getCapsValue(MultiModelBaseBiped model, MMM_IModelCaps entityCaps, int pIndex, Object ...pArg) {
-		return null;
-	}
-
-	@Override
-	public Object getCapsValue(MultiModelBaseBiped model, int pIndex, Object ...pArg) {
-		switch (pIndex) {
-		case caps_health:
-			return getHealth();
-		case caps_isRiding:
-			return getIsRiding();
-		case caps_ResourceLocation:
-			if (pArg != null
-					&& pArg.length > 0
-					&& pArg[0] != null) return getResourceLocation((Integer) pArg[0]);
-			else return getResourceLocation();
-		case caps_heldItems:
-		case caps_currentEquippedItem:
-			return getCurrentEquippedItem();
-		case caps_dominantArm:
-			return getHandedness();
-		case caps_isLookSuger:
-			return getIsLookSuger();
-		case caps_entityIdFactor:
-			return getEntityIdFactor();
-		case caps_isOpenInv:
-			return getIsInventory();
-		case caps_Inventory:
-			return getInventory();
-		case caps_maidColor:
-			return getMaidColor();
-		case caps_localFlag:
-			return getLocalFlag();
-		case caps_rotate:
-			return getRotate();
-		case caps_texture:
-			if (pArg != null
-			&& pArg.length > 1
-			&& pArg[0] != null
-			&& pArg[1] != null) return getTexture((String) pArg[0], (Integer) pArg[1]);
-			break;
-		case caps_armorTexture:
-			if (pArg != null
-			&& pArg.length > 1
-			&& pArg[0] != null
-			&& pArg[1] != null) {
-				if (pArg.length > 2
-						&& pArg[2] != null) return getArmorTexture((String) pArg[0], (Integer) pArg[1], (ItemStack) pArg[2]);
-				return getArmorTexture((String) pArg[0], (Integer) pArg[1]);
-			}
-			break;
-		case caps_isPlayer:
-			return getIsPlayer();
-		case caps_isWait:
-			return getIsWait();
-		case caps_isSitting:
-			return getIsSitting();
-		case caps_isSleeping:
-			return getIsSleeping();
-		case caps_isCamouflage:
-			return isCamouflage();
-		case caps_isPlanter:
-			return isPlanter();
-		case caps_height:
-			return owner.height;
-		case caps_width:
-			return owner.width;
-		case caps_HeadMount:
-			return getHeadMount();
-		case caps_Items:
-			return getItems();
-		case caps_Actions:
-			return getActions();
-		case caps_shortcutKeysAction:
-			return getShortcutKeysAction();
-		case caps_runActionNumber:
-			return getRunActionNumber();
-		case caps_actionReleaseNumber:
-			return getActionReleaseNumber();
-		case caps_actionFlag:
-			return getActionFlag();
-		case caps_actionCount:
-			return getActionCount();
-		case caps_actionTime:
-			return getActionTime();
-		case caps_actionSpeed:
-			return getActionSpeed();
-		case caps_actionReverse:
-			return getActionReverse();
-		case caps_tempLimbSwing:
-			return getTempLimbSwing();
-		case caps_changeModelFlag:
-			return getChangeModelFlag();
-		case caps_partsSetFlag:
-			return getPartsSetFlag();
-		case caps_shortcutKeysActionInitFlag:
-			return getShortcutKeysActionInitFlag();
-		case caps_isActivated:
-			return getIsActivated();
-		case caps_initFlag:
-			return getInitFlag();
-		case caps_skinMode:
-			return getSkinMode();
-		case caps_modelScale:
-			return getModelScale();
-		case caps_isWaitF:
-			return getIsWaitF();
-		case caps_isWaitFSetFlag:
-			return getIsWaitFSetFlag();
-		case caps_isWaitTime:
-			return getIsWaitTime();
-		case caps_mushroomConfusionCount:
-			return getMushroomConfusionCount();
-		case caps_mushroomConfusionType:
-			return getMushroomConfusionType();
-		case caps_mushroomConfusionTypeMax:
-			return getMushroomConfusionTypeMax();
-		case caps_mushroomConfusionLeft:
-			return getMushroomConfusionLeft();
-		case caps_mushroomConfusionRight:
-			return getMushroomConfusionRight();
-		case caps_mushroomConfusionFront:
-			return getMushroomConfusionFront();
-		case caps_mushroomConfusionBack:
-			return getMushroomConfusionBack();
-		case caps_motionResetFlag:
-			return getMotionResetFlag();
-		case caps_motionSetFlag:
-			return getMotionSetFlag();
-		case caps_mushroomLeft:
-			return getMushroomLeft();
-		case caps_mushroomRight:
-			return getMushroomRight();
-		case caps_showPartsHideList:
-			return getShowPartsHideList();
-		case caps_model:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) return getModel((Integer) pArg[0]);
-			break;
-		case caps_currentArmor:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) return getArmorItemInSlot((Integer) pArg[0]);
-			break;
-		case caps_isRendering:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) return getArmorRendering((Integer) pArg[0]);
-			return getArmorRendering();
-		case caps_textureName:
-			return getTextureName();
-		case caps_textureArmorName:
-			return getTextureArmorName();
-		case caps_defaultShowPartsMap:
-			if (pArg != null
-			&& pArg.length > 1
-			&& pArg[0] != null
-			&& pArg[1] != null) return getDefaultShowPartsMapBoolean((String) pArg[0], (Integer) pArg[1]);
-			break;
-		case caps_showPartsRenemeMap:
-			return getShowPartsRenemeMap();
-		case caps_showPartsMap:
-			if (pArg != null
-			&& pArg.length > 0
-			&& pArg[0] != null) return getShowPartsMap((Integer) pArg[0]);
-			break;
-		case caps_showPartsMapBoolean:
-			if (pArg != null
-			&& pArg.length > 1
-			&& pArg[0] != null
-			&& pArg[1] != null) {
-				return getShowPartsMapBoolean((String) pArg[0], (Integer) pArg[1]);
-			}
-			break;
-		case caps_modelRendererName:
-			if (pArg != null
-			&& pArg.length > 1
-			&& pArg[0] != null
-			&& pArg[1] != null) return getModelRendererName((MMM_ModelRenderer) pArg[0], (Integer) pArg[1]);
-			break;
-		}
-		Object o = null;
-		if (model != null) {
-			o = model.getCapsValue(pIndex, (Object[]) pArg);
-		} else {
-			o = modelMain.model.getCapsValue(pIndex, (Object[]) pArg);
-		}
-		if (o != null) return o;
-		return super.getCapsValue(pIndex, (Object[]) pArg);
-	}
-
 	private Object getResourceLocation() {
 		return getResourceLocation(0);
 	}
@@ -861,8 +673,8 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		if (resourceLocations != null) resourceLocations[i] = pArg;
 	}
 
-	private String getModelRendererName(MMM_ModelRenderer modelRenderer, int i) {
-		MMM_ModelRenderer modelRenderer2;
+	private String getModelRendererName(Modchu_ModelRenderer modelRenderer, int i) {
+		Modchu_ModelRenderer modelRenderer2;
 		Object model = getModel(i);
 		ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, textureName, i);
 		Modchu_Debug.mDebug("getModelRendererName modelRendererMap != null ?"+(modelRendererMap != null));
@@ -883,7 +695,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				e.printStackTrace();
 			}
 			if (o != null) {
-				modelRenderer2 = (MMM_ModelRenderer) o;
+				modelRenderer2 = (Modchu_ModelRenderer) o;
 				if (modelRenderer2.equals(modelRenderer)) {
 					return s;
 				}
@@ -895,13 +707,13 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	/**
 	 * setLivingAnimationsLM 呼び出し前に呼ばれる。
 	 */
-	private void setLivingAnimationsBefore(MMM_ModelMultiBase model, float f, float f1, float f2) {
+	private void setLivingAnimationsBefore(Object model, float f, float f1, float f2) {
 	}
 
 	/**
 	 * setLivingAnimationsLM 呼び出し後に呼ばれる。
 	 */
-	private void setLivingAnimationsAfter(MMM_ModelMultiBase model, float f, float f1, float f2) {
+	private void setLivingAnimationsAfter(Object model, float f, float f1, float f2) {
 		if (model != null) ;else return;
 		//setCapsValue(caps_isRiding, getIsSitting());
 		//model.setCapsValue(caps_isRiding, getIsSitting());
@@ -927,31 +739,19 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		}
 	}
 
-	/**
-	 * setRotationAnglesLM 呼び出し前に呼ばれる。
-	 */
-	private void setRotationAnglesBefore(MMM_ModelMultiBase model, float f, float f1, float f2, float f3, float f4, float f5) {
-	}
-
-	/**
-	 * setRotationAnglesLM 呼び出し後に呼ばれる。
-	 */
-	private void setRotationAnglesAfter(MMM_ModelMultiBase model, float f, float f1, float f2, float f3, float f4, float f5) {
+	@Override
+	protected void setRotationAnglesAfter(Object model, float f, float f1, float f2, float f3, float f4, float f5) {
 		if (owner != null
 				&& model != null
 				&& model instanceof MultiModelBaseBiped) ;else return;
 		MultiModelBaseBiped multiModelBaseBiped = (MultiModelBaseBiped) model;
 		if (Modchu_ModelCapsHelper.getCapsValueBoolean(multiModelBaseBiped, caps_firstPerson)) ((MultiModelBaseBiped) model).setRotationAnglesfirstPerson(f, f1, f2, f3, f4, f5, this);
-		if (getShortcutKeysAction()) {
-			//if (model instanceof MultiModelAction) ((MultiModelAction) model).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
-			if (modelMain.model instanceof MultiModelAction) ((MultiModelAction) modelMain.model).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
-			if (modelFATT.modelInner instanceof MultiModelAction) ((MultiModelAction) modelFATT.modelInner).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
-			if (modelFATT.modelOuter instanceof MultiModelAction) ((MultiModelAction) modelFATT.modelOuter).action(f, f1, f2, f3, f4, f5, getRunActionNumber(), this);
-			if (getActionFlag()) {
-				setActionSpeed(0.0F);
-				setActionFlag(false);
-			}
-		}
+		super.setRotationAnglesAfter(model, f, f1, f2, f3, f4, f5);
+	}
+
+	@Override
+	protected Object[] getTextureDataModel() {
+		return new Object[]{ modelMain.model, modelFATT.modelInner, modelFATT.modelOuter };
 	}
 
 	private Object getModel(int i) {
@@ -988,14 +788,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 
 	private void setChangeModelFlag(boolean b) {
 		changeModelFlag = b;
-	}
-
-	private boolean getMotionResetFlag() {
-		return motionResetFlag;
-	}
-
-	private void setMotionResetFlag(boolean b) {
-		motionResetFlag = b;
 	}
 
 	private boolean getIsWaitFSetFlag() {
@@ -1058,7 +850,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 	private int getHealth() {
 		if (!(owner instanceof EntityPlayer)) return -1;
 		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
-			float f = (Float) Modchu_Reflect.invokeMethod("EntityLivingBase", "func_110143_aJ", owner);
+			float f = (Float) Modchu_Reflect.invokeMethod("EntityLivingBase", "func_110143_aJ", "getHealth", owner);
 			return (int) f;
 		} else {
 			return (Integer) Modchu_Reflect.getFieldObject(EntityLiving.class, "field_70734_aK", "health", owner);
@@ -1107,25 +899,24 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		isWait = b;
 	}
 
-	private boolean getIsSitting() {
+	protected boolean getIsSitting() {
 		if (!isPlayer) {
 			//Modchu_Debug.mDebug("getIsSitting() !isPlayer");
 			Object o = getPlayerState(owner.entityId, (byte)1);
 			if (o != null) return (Boolean) o;
 		}
-		return isSitting;
+		return super.getIsSitting();
 	}
 
-	private void setIsSitting(boolean b) {
+	protected void setIsSitting(boolean b) {
 		//Modchu_Debug.mDebug("setIsSitting b="+b);
-		if (isSitting != b) {
-			isSitting = b;
+		if (getIsSitting() != b) {
+			super.setIsSitting(b);
 			addSendList(1, b);
 		}
 	}
 
-	private boolean getIsSleeping() {
-		if (!(owner instanceof EntityPlayer)) return false;
+	protected boolean getIsSleeping() {
 		if (!isPlayer) {
 			Object o = getPlayerState(owner.entityId, (byte)2);
 			if (o != null
@@ -1134,17 +925,16 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				return (Boolean) o1[0];
 			}
 		}
-		return ((EntityPlayer) owner).isPlayerSleeping()
-				| sleeping;
+		return super.getIsSleeping();
 	}
 
-	private void setIsSleeping(boolean b) {
+	protected void setIsSleeping(boolean b) {
 		if (!(owner instanceof EntityPlayer)) {
 			Modchu_Debug.Debug("setIsSleeping !(owner instanceof EntityPlayer)");
 			return;
 		}
-		if (sleeping != b) {
-			sleeping = b;
+		if (super.getIsSleeping() != b) {
+			super.setIsSleeping(b);
 			float f2;
 			for (f2 = ((EntityPlayer) owner).rotationYaw; f2 < 0.0F; f2 += 360F) { }
 			for (; f2 > 360F; f2 -= 360F) { }
@@ -1202,7 +992,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		isWaitTime = i;
 	}
 
-	private boolean getShortcutKeysAction() {
+	protected boolean getShortcutKeysAction() {
 		if (!isPlayer) {
 			Object o = getPlayerState(owner.entityId, (byte)3);
 			if (o != null
@@ -1211,17 +1001,17 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				return (Boolean) o1[0];
 			}
 		}
-		return shortcutKeysAction;
+		return super.getShortcutKeysAction();
 	}
 
-	private void setShortcutKeysAction(boolean b) {
-		if (shortcutKeysAction != b) {
-			shortcutKeysAction = b;
-			addSendList(3, b, runActionNumber);
+	protected void setShortcutKeysAction(boolean b) {
+		if (super.getShortcutKeysAction() != b) {
+			super.setShortcutKeysAction(b);
+			addSendList(3, b, getRunActionNumber());
 		}
 	}
 
-	private int getRunActionNumber() {
+	protected int getRunActionNumber() {
 		if (!isPlayer) {
 			Object o = getPlayerState(owner.entityId, (byte)3);
 			if (o != null
@@ -1230,65 +1020,15 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 				return Integer.valueOf(""+o1[1]);
 			}
 		}
-		return runActionNumber;
+		return super.getRunActionNumber();
 	}
 
-	private void setRunActionNumber(int i) {
-		if (runActionNumber != i) {
-			//Modchu_Debug.mDebug("setRunActionNumber actionReleaseNumber="+actionReleaseNumber+" i="+i);
-			setCapsValue(caps_actionRelease, actionReleaseNumber);
-			runActionNumber = i;
+	protected void setRunActionNumber(int i) {
+		if (getRunActionNumber() != i) {
+			super.setRunActionNumber(i);
 			setActionReleaseNumber(i);
 			setShortcutKeysActionInitFlag(true);
 		}
-	}
-
-	private int getActionReleaseNumber() {
-		return actionReleaseNumber;
-	}
-
-	private void setActionReleaseNumber(int i) {
-		actionReleaseNumber = i;
-	}
-
-	private boolean getActionFlag() {
-		return actionFlag;
-	}
-
-	private void setActionFlag(boolean b) {
-		actionFlag = b;
-	}
-
-	private int getActionCount() {
-		return actionCount;
-	}
-
-	private void setActionCount(int i) {
-		actionCount = i;
-	}
-
-	private int getActionTime() {
-		return actionTime;
-	}
-
-	private void setActionTime(int i) {
-		actionTime = i;
-	}
-
-	private float getActionSpeed() {
-		return actionSpeed;
-	}
-
-	private void setActionSpeed(float f) {
-		actionSpeed = f;
-	}
-
-	private boolean getActionReverse() {
-		return actionReverse;
-	}
-
-	private void setActionReverse(boolean b) {
-		actionReverse = b;
 	}
 
 	private float getTempLimbSwing() {
@@ -1351,14 +1091,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		return mushroomConfusionTypeMax;
 	}
 
-	private boolean getMotionSetFlag() {
-		return motionSetFlag;
-	}
-
-	private void setMotionSetFlag(boolean b) {
-		motionSetFlag = b;
-	}
-
 	private boolean getMushroomBack() {
 		return mushroomBack;
 	}
@@ -1391,28 +1123,12 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 		mushroomRight = b;
 	}
 
-	private int getSkinMode() {
-		return skinMode;
-	}
-
-	private void setSkinMode(int i) {
-		skinMode = i;
-	}
-
 	private int getPartsSetFlag() {
 		return partsSetFlag;
 	}
 
 	private void setPartsSetFlag(int i) {
 		partsSetFlag = i;
-	}
-
-	private int getInitFlag() {
-		return initFlag;
-	}
-
-	private void setInitFlag(int i) {
-		initFlag = i;
 	}
 
 	private float getModelScale() {
@@ -1437,14 +1153,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 
 	private void setIsActivated(boolean b) {
 		isActivated = b;
-	}
-
-	private boolean getShortcutKeysActionInitFlag() {
-		return shortcutKeysActionInitFlag;
-	}
-
-	private void setShortcutKeysActionInitFlag(boolean b) {
-		shortcutKeysActionInitFlag = b;
 	}
 
 	public boolean getArmorRendering() {
@@ -1554,7 +1262,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     	Object model = getModel(i);
     	Field f = null;
     	String s2 = null;
-    	MMM_ModelRenderer modelRenderer = null;
+    	Modchu_ModelRenderer modelRenderer = null;
     	boolean b;
     	Iterator<Entry<String, Boolean>> iterator = map.entrySet().iterator();
     	Entry<String, Boolean> entry;
@@ -1570,7 +1278,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     			//Modchu_Debug.mDebug("showModelSettingReflects f != null");
     			try {
     				Object o = f.get(model);
-    				modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
+    				modelRenderer = o != null ? (Modchu_ModelRenderer) o : null;
     				if (modelRenderer != null) {
     					((MultiModelBaseBiped) model).setCapsValue(caps_visible, modelRenderer, b, true);
     					if (mod_Modchu_ModchuLib.modchu_Main.ngPlayerModelList != null
@@ -1597,7 +1305,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     				//Modchu_Debug.mDebug("showModelSettingReflects indexOfAllSetVisibleMap f != null");
     				try {
     					Object o = f.get(model);
-    					modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
+    					modelRenderer = o != null ? (Modchu_ModelRenderer) o : null;
     					if (modelRenderer != null) {
     						b = modelRenderer.showModel;
     						for(int i1 = 0; i1 < list.size(); i1++) {
@@ -1609,7 +1317,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     								//Modchu_Debug.mDebug("showModelSettingReflects indexOfAllSetVisibleList f != null");
     								try {
     									o = f.get(model);
-    								modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
+    								modelRenderer = o != null ? (Modchu_ModelRenderer) o : null;
     								if (modelRenderer != null) {
     									((MultiModelBaseBiped) model).setCapsValue(caps_visible, modelRenderer, b, true);
     								}
@@ -1645,7 +1353,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     					//Modchu_Debug.mDebug("showModelSettingReflects indexOfAllSetVisibleBooleanMap f != null");
     					try {
     						Object o = f.get(model);
-    						modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
+    						modelRenderer = o != null ? (Modchu_ModelRenderer) o : null;
     						if (modelRenderer != null) {
     							((MultiModelBaseBiped) model).setCapsValue(caps_visible, modelRenderer, b, true);
     						}
@@ -1654,33 +1362,6 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     				}
     			}
     		}
-    	}
-    }
-
-	private List<String> getShowPartsHideList() {
-    	return showPartsHideList;
-    }
-
-    /**
-     * GUI パーツ表示・非表示用 ボタン非表示リスト追加
-     */
-    private void addShowPartsHideList(String[] s) {
-    	//Modchu_Debug.mDebug("addShowPartsHideList s.length="+s.length);
-    	for(int i = 0; i < s.length; i++) {
-    		showPartsHideList.add(s[i]);
-    	}
-    }
-
-    private ConcurrentHashMap<String, String> getShowPartsRenemeMap() {
-    	return showPartsRenemeMap;
-    }
-
-    /**
-     * GUI パーツ表示・非表示用 ボタン表示名リネーム用追加
-     */
-    private void addShowPartsRenemeMap(String[] s1, String[] s2) {
-    	for(int i = 0; i < s1.length && i < s2.length; i++) {
-    		showPartsRenemeMap.put(s1[i], s2[i]);
     	}
     }
 
@@ -1699,7 +1380,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     	try {
     		Object o = f.get(model);
     		if (o != null) ;else return;
-    		boolean b = ((MMM_ModelRenderer) o).showModel;
+    		boolean b = ((Modchu_ModelRenderer) o).showModel;
     		Iterator<Entry<String, Field>> iterator = modelRendererMap.entrySet().iterator();
     		Entry<String, Field> entry;
     		while(iterator.hasNext()) {
@@ -1737,7 +1418,7 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
     		s0 = nemeMap.get(i1);
     		if (s0.indexOf(s) > -1) {
     			try {
-    				model.setCapsValue(caps_visible, (MMM_ModelRenderer) modelRendererMap.get(s0).get(model), b);
+    				model.setCapsValue(caps_visible, (Modchu_ModelRenderer) modelRendererMap.get(s0).get(model), b);
     			} catch (Exception e) {
     				e.printStackTrace();
     			}
@@ -1778,59 +1459,12 @@ public class PFLM_ModelData extends MMM_EntityCaps implements Modchu_IModelCaps 
 
     public void setRender(Render render) {
     	if (modelMain != null) {
-    		Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelMain, render);
+    		Modchu_Reflect.setFieldObject("Modchu_ModelBaseNihil", "renderLiving", modelMain, render);
     		modelMain.setRender(render);
     	}
     	if (modelFATT != null) {
-    		Modchu_Reflect.setFieldObject("MMM_ModelBaseNihil", "renderLiving", modelFATT, render);
+    		Modchu_Reflect.setFieldObject("Modchu_ModelBaseNihil", "renderLiving", modelFATT, render);
     		modelFATT.setRender(render);
     	}
     }
-
-	public int getCapsValueInt(int pIndex, Object ...pArg) {
-		Object o = getCapsValue(pIndex, pArg);
-		if (o instanceof Boolean) {
-			boolean b = (Boolean) o;
-			return b ? 2 : 1;
-		}
-		return o != null ? (Integer) o : 0;
-	}
-
-	public float getCapsValueFloat(int pIndex, Object ...pArg) {
-		Object o = getCapsValue(pIndex, pArg);
-		return o != null ? (Float) o : 0.0F;
-	}
-
-	public double getCapsValueDouble(int pIndex, Object ...pArg) {
-		Object o = getCapsValue(pIndex, pArg);
-		return o != null ? (Double) o : 0.0D;
-	}
-
-	public boolean getCapsValueBoolean(int pIndex, Object ...pArg) {
-		Object o = getCapsValue(pIndex, pArg);
-		return o != null ? (Boolean) o : false;
-	}
-/*//151delete
-	public Object getCapsValue(String pCapsName, Object ...pArg) {
-		return getCapsValue(caps.get(pCapsName), pArg);
-	}
-
-	public boolean setCapsValue(String pCapsName, Object... pArg) {
-		return setCapsValue(caps.get(pCapsName), pArg);
-	}
-
-	public Object getCapsValue(int pIndex, Object ...pArg) {
-		return getCapsValue(null, pIndex, pArg);
-	}
-*///151delete
-
-	@Override
-	public Object getCapsValue(MMM_IModelCaps entityCaps, int pIndex, Object... pArg) {
-		return null;
-	}
-
-	@Override
-	public boolean setCapsValue(MMM_IModelCaps entityCaps, int pIndex, Object... pArg) {
-		return false;
-	}
 }

@@ -3,7 +3,7 @@ package net.minecraft.src;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-public class PFLM_ItemRendererV160 extends MMM_ItemRenderer {
+public class PFLM_ItemRendererV160 extends Modchu_ItemRenderer {
 
 	public PFLM_ItemRendererMaster pflm_ItemRendererMaster;
 

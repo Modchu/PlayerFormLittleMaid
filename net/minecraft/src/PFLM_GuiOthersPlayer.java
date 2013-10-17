@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 public class PFLM_GuiOthersPlayer extends PFLM_GuiModelSelectBase {
 	protected boolean modelScaleButton;
@@ -62,10 +60,10 @@ public class PFLM_GuiOthersPlayer extends PFLM_GuiModelSelectBase {
 		//isModelSize UP
 		if(guibutton.id == 4)
 		{
-			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
+			if (mod_Modchu_ModchuLib.modchu_Main.isShiftKeyDown()) {
 				setScale(getScale() <= 9.5 ? getScale() + 0.5F : 10.0F);
 			} else {
-				if (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157)) {
+				if (mod_Modchu_ModchuLib.modchu_Main.isCtrlKeyDown()) {
 					setScale(getScale() <= 9.99 ? getScale() + 0.01F : 10.0F);
 				} else {
 					setScale(getScale() <= 9.9 ? getScale() + 0.1F : 10.0F);
@@ -75,10 +73,10 @@ public class PFLM_GuiOthersPlayer extends PFLM_GuiModelSelectBase {
 		//isModelSize Down
 		if(guibutton.id == 5)
 		{
-			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
+			if (mod_Modchu_ModchuLib.modchu_Main.isShiftKeyDown()) {
 				setScale(getScale() > 0.5 ? getScale()  - 0.5F : 0.01F);
 			}
-			else if (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157)) {
+			else if (mod_Modchu_ModchuLib.modchu_Main.isCtrlKeyDown()) {
 				setScale(getScale() > 0.01 ? getScale()  - 0.01F : 0.01F);
 			} else {
 				setScale(getScale() > 0.1 ? getScale()  - 0.1F : 0.01F);
@@ -160,7 +158,7 @@ public class PFLM_GuiOthersPlayer extends PFLM_GuiModelSelectBase {
 		}
 		//Handedness
 		if(guibutton.id == 58) {
-			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
+			if (mod_Modchu_ModchuLib.modchu_Main.isShiftKeyDown()) {
 				setHandednessMode(getHandednessMode() - 1);
 			} else {
 				setHandednessMode(getHandednessMode() + 1);
@@ -174,7 +172,7 @@ public class PFLM_GuiOthersPlayer extends PFLM_GuiModelSelectBase {
 		{
 			mod_PFLM_PlayerFormLittleMaid.pflm_main.saveOthersPlayerParamater(false);
 			PFLM_Config.clearCfgData();
-			mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.clearDataMap();
 			noSaveFlag = false;
 			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ null });
 			//mc.displayGuiScreen(null);
@@ -190,14 +188,14 @@ public class PFLM_GuiOthersPlayer extends PFLM_GuiModelSelectBase {
 		//ChangeMode
 		if(guibutton.id == 13)
 		{
-			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
+			if (mod_Modchu_ModchuLib.modchu_Main.isShiftKeyDown()) {
 				changeMode--;
 			} else {
 				changeMode++;
 			}
 			if (changeMode > changeModeMax) changeMode = 0;
 			if (changeMode < 0) changeMode = changeModeMax;
-			mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.clearDataMap();
 			drawEntitySetFlag = true;
 			initGui();
 			return;

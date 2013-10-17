@@ -776,13 +776,13 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 	private float floatPlus(float f, float f1, float f2, float f3, int i) {
 		f = f * (float) i;
 		int i1 = (int) f;
-		if (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157)) {
+		if (mod_Modchu_ModchuLib.modchu_Main.isCtrlKeyDown()) {
 			i1 = i1 + (int)(f2 * (float) i);
 		} else {
-    		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
-    			i1 = i1 + (int)(f3 * (float) i);
+			if (mod_Modchu_ModchuLib.modchu_Main.isShiftKeyDown()) {
+				i1 = i1 + (int)(f3 * (float) i);
 			} else {
-    			i1 = i1 + (int)(f1 * (float) i);
+				i1 = i1 + (int)(f1 * (float) i);
 			}
 		}
 		f = (float)i1 / (float)i;
@@ -915,7 +915,7 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 			if (addChildNameSlotSelected != i
 				&& modelRendererNameList.size() < addChildNameSlotSelected) {
 				String s = modelRendererNameList.get(addChildNameSlotSelected);
-				MMM_ModelRenderer modelRenderer = getModelRenderer(s, ((MultiModelCustom) PFLM_RenderPlayerDummyMaster.modelData.modelMain.model).customModel.mainModeltextureName, ((MultiModelCustom) PFLM_RenderPlayerDummyMaster.modelData.modelMain.model).customModel.mainModel, 0);
+				Modchu_ModelRenderer modelRenderer = getModelRenderer(s, ((MultiModelCustom) PFLM_RenderPlayerDummyMaster.modelData.modelMain.model).customModel.mainModeltextureName, ((MultiModelCustom) PFLM_RenderPlayerDummyMaster.modelData.modelMain.model).customModel.mainModel, 0);
 				if (modelRenderer != null) {
 					if (modelRenderer.childModels != null) modelRenderer.childModels.remove(((MultiModelCustom) PFLM_RenderPlayerDummyMaster.modelData.modelMain.model).customModel.parts[partsSlotSelected]);
 				}
@@ -940,14 +940,14 @@ public class PFLM_GuiCustomModel extends PFLM_GuiSlotBase {
 		}
 	}
 
-	private MMM_ModelRenderer getModelRenderer(String s, String s2, MMM_ModelMultiBase model, int i) {
-		MMM_ModelRenderer modelRenderer = null;
+	private Modchu_ModelRenderer getModelRenderer(String s, String s2, Object model, int i) {
+		Modchu_ModelRenderer modelRenderer = null;
 		ConcurrentHashMap<String, Field> modelRendererMap = PFLM_Config.getConfigModelRendererMap(model, s2, 0);
 		if (modelRendererMap != null
 				&& modelRendererMap.containsKey(s)) {
 			Field f = modelRendererMap.get(s);
 			try {
-				modelRenderer = (MMM_ModelRenderer) f.get(((MultiModelCustom) PFLM_RenderPlayerDummyMaster.modelData.modelMain.model).customModel.mainModel);
+				modelRenderer = (Modchu_ModelRenderer) f.get(((MultiModelCustom) PFLM_RenderPlayerDummyMaster.modelData.modelMain.model).customModel.mainModel);
 			} catch (Exception e) {
 			}
 		}

@@ -12,8 +12,9 @@ public abstract class PFLM_GuiBase extends GuiScreen {
 		parentScreen = par1GuiScreen;
 		guiMode = true;
 		if (drawEntity != null) ;else {
-			drawEntity = new PFLM_EntityPlayerDummy(popWorld);
-			PFLM_ModelDataMaster.instance.playerData.put(drawEntity, PFLM_RenderPlayerDummyMaster.modelData);
+			drawEntity = (EntityLiving) Modchu_Reflect.newInstance("PFLM_EntityPlayerDummy", new Class[]{ World.class }, new Object[]{ popWorld });
+			PFLM_RenderPlayerDummyMaster.modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.loadPlayerData(drawEntity, PFLM_RenderPlayerDummyMaster.modelData);
+			PFLM_RenderPlayerDummyMaster.modelData.setRender(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy);
 		}
 	}
 

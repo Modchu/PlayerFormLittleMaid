@@ -61,7 +61,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			noSaveFlag = false;
 			Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ parentScreen });
 			//mc.displayGuiScreen(parentScreen);
-			mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
+			mod_PFLM_PlayerFormLittleMaid.pflm_main.clearDataMap();
 			return;
 		}
 		//Return
@@ -81,7 +81,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomize extends
 			}
 			if (changeMode > changeModeMax) changeMode = 0;
 			if (changeMode < 0) changeMode = changeModeMax;
-			//mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
+			//mod_PFLM_PlayerFormLittleMaid.pflm_main.clearDataMap();
 			drawEntitySetFlag = true;
 			initGui();
 			return;

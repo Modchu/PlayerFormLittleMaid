@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -95,7 +94,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
 					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 18, 65, y + 89, 15, 15, ">" }));
 					buttonList.add(Modchu_Reflect.newInstance(Modchu_Main.PFLM_GuiSmallButton, new Class[]{ int.class, int.class, int.class, int.class, int.class, String.class }, new Object[]{ 20, 70, y + 107, 30, 15, ""+PFLM_RenderPlayerDummyMaster.showArmor }));
 					if (bufferedimage == null) {
-						PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
+						PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 						bufferedimage = PFLM_ModelDataMaster.instance.getOnlineSkin(modelData, thePlayer);
 						if (bufferedimage != null
 								&& mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode == modeOnline) {
@@ -115,7 +114,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
 							PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureList.get(setModel));
 							PFLM_RenderPlayerDummyMaster.modelData.setCapsValue(PFLM_RenderPlayerDummyMaster.modelData.caps_textureArmorName, mod_PFLM_PlayerFormLittleMaid.pflm_main.textureList.get(setArmor));
 						}
-						mod_PFLM_PlayerFormLittleMaid.pflm_main.removePlayer();
+						mod_PFLM_PlayerFormLittleMaid.pflm_main.removeDataMap();
 					} else {
 						bufferedimageMode = mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode == modeOnline ? true : false;
 					}
@@ -173,7 +172,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
 		//if (showPartsHideMap != null) Modchu_Debug.mDebug("showPartsHideMap.size()="+showPartsHideMap.size());
 		//else Modchu_Debug.mDebug("showPartsHideMap.size()=null !!");
 		List<String> list = new ArrayList();
-		MMM_ModelRenderer modelRenderer = null;
+		Modchu_ModelRenderer modelRenderer = null;
 		Field f = null;
 		int i1 = 0;
 		for (int i = 0; i < showPartsNemeMap.size(); i++) {
@@ -220,7 +219,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
 		boolean b;
 		Field f = null;
 		List<String> list = new ArrayList();
-		MMM_ModelRenderer modelRenderer = null;
+		Modchu_ModelRenderer modelRenderer = null;
 		Object model = mod_PFLM_PlayerFormLittleMaid.pflm_main.getModel(armorType);
 		ConcurrentHashMap<Integer, String> showPartsNemeMap = PFLM_Config.getConfigShowPartsNemeMap(getTextureName(), armorType);
 		ConcurrentHashMap<String, Boolean> showPartsList = PFLM_Config.getConfigShowPartsMap(getTextureName(), getColor(), armorType);
@@ -248,7 +247,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
 					//Modchu_Debug.mDebug("PFLM_Gui partsButtonAdd() modelRendererMap f != null");
 					try {
 						Object o = f.get(model);
-						modelRenderer = o != null ? (MMM_ModelRenderer) o : null;
+						modelRenderer = o != null ? (Modchu_ModelRenderer) o : null;
 						if (modelRenderer != null) {
 							//Modchu_Debug.mmlDebug("PFLM_Gui partsInit() modelRendererMap f.getName()="+f.getName()+" modelRenderer.showModel="+modelRenderer.showModel);
 							if (defaultShowPartsMap != null
@@ -286,7 +285,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
     	{
     		return;
     	}
-    	PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
+    	PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
     	//isModelSize Default
     	if(guibutton.id == 3)
     	{
@@ -296,10 +295,10 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
     	//isModelSize UP
     	if(guibutton.id == 4)
     	{
-    		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
+    		if (mod_Modchu_ModchuLib.modchu_Main.isShiftKeyDown()) {
     			setScale(getScale() <= 9.5 ? getScale() + 0.5F : 10.0F);
     		} else {
-    			if (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157)) {
+    			if (mod_Modchu_ModchuLib.modchu_Main.isCtrlKeyDown()) {
     				setScale(getScale() <= 9.99 ? getScale() + 0.01F : 10.0F);
     			} else {
     				setScale(getScale() <= 9.9 ? getScale() + 0.1F : 10.0F);
@@ -310,10 +309,10 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
     	//isModelSize Down
     	if(guibutton.id == 5)
     	{
-    		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
+    		if (mod_Modchu_ModchuLib.modchu_Main.isShiftKeyDown()) {
     			setScale(getScale() > 0.5 ? getScale()  - 0.5F : 0.01F);
     		}
-    		else if (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157)) {
+    		else if (mod_Modchu_ModchuLib.modchu_Main.isCtrlKeyDown()) {
     			setScale(getScale() > 0.01 ? getScale()  - 0.01F : 0.01F);
     		} else {
     			setScale(getScale() > 0.1 ? getScale()  - 0.1F : 0.01F);
@@ -379,7 +378,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
 */
     		case modeOffline:
     		case modeRandom:
-    			mod_PFLM_PlayerFormLittleMaid.pflm_main.removePlayer();
+    			mod_PFLM_PlayerFormLittleMaid.pflm_main.removeDataMap();
     			break;
     		}
     		bufferedimage = null;
@@ -588,7 +587,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
     	}
     	//Handedness
     	if(guibutton.id == 58) {
-    		if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
+    		if (mod_Modchu_ModchuLib.modchu_Main.isShiftKeyDown()) {
     			mod_PFLM_PlayerFormLittleMaid.pflm_main.handednessMode--;
     		} else {
     			mod_PFLM_PlayerFormLittleMaid.pflm_main.handednessMode++;
@@ -665,7 +664,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
     		mod_PFLM_PlayerFormLittleMaid.pflm_main.saveParamater();
     		PFLM_Config.loadConfig(mod_PFLM_PlayerFormLittleMaid.pflm_main.showModelList, mod_PFLM_PlayerFormLittleMaid.pflm_main.cfgfile);
     		PFLM_Config.loadShowModelList(mod_PFLM_PlayerFormLittleMaid.pflm_main.showModelList);
-    		mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
+    		mod_PFLM_PlayerFormLittleMaid.pflm_main.clearDataMap();
     		noSaveFlag = false;
     		Modchu_Reflect.invokeMethod("Minecraft", "func_71373_a", "displayGuiScreen", new Class[]{ GuiScreen.class }, mod_Modchu_ModchuLib.modchu_Main.getMinecraft(), new Object[]{ null });
     		//mc.displayGuiScreen(null);
@@ -727,7 +726,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
     	int x = 0;
     	//int x = partsButton | !getModelType().startsWith("Biped") ? 0 : 150;
     	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode != modeRandom) {
-    		PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
+    		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
     		boolean localFlag = modelData.getCapsValueInt(modelData.caps_skinMode) == PFLM_ModelDataMaster.instance.skinMode_local;
     		if(mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode != modeOnline
     				| localFlag) {
@@ -749,7 +748,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
     	fontRenderer.drawString(s9.toString(), guiLeft - x, guiTop + 140, 0xffffff);
     	StringBuilder s10 = (new StringBuilder()).append("Handedness : ");
     	s10 = s10.append(getHandednessModeString(mod_PFLM_PlayerFormLittleMaid.pflm_main.handednessMode));
-    	PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
+    	PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
     	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.handednessMode == -1) s10 = s10.append(" Result : ").append(getHandednessModeString(modelData.getCapsValueInt(modelData.caps_dominantArm)));
     	fontRenderer.drawString(s10.toString(), guiLeft - x, guiTop + 150, 0xffffff);
     	if (mod_PFLM_PlayerFormLittleMaid.pflm_main.changeMode != modeRandom
@@ -1035,7 +1034,7 @@ public class PFLM_Gui extends PFLM_GuiModelSelectBase {
     		Modchu_Debug.mDebug("imageMultiTagSetSave r1="+r1+" g1="+g1+" b1="+b1);
 
     		//handedness r = 255 right , r = 0 left , else Random
-    		PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
+    		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
     		int handedness = modelData.getCapsValueInt(modelData.caps_dominantArm);
     		r1 = handedness == 0 ? 255 : handedness == 1 ? 0 : 128;
     		//g = modelScale

@@ -22,7 +22,7 @@ public class PFLM_RenderPlayerDummyMaster
 		modelBasicOrig[0] = new MultiModel(0.0F);
 		modelBasicOrig[1] = new MultiModel(0.1F);
 		modelBasicOrig[2] = new MultiModel(0.5F);
-		modelData = new PFLM_ModelData(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy);
+		modelData = new PFLM_ModelData();
 		armorFilename = (String[]) (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? Modchu_Reflect.getFieldObject(RenderBiped.class, "field_82424_k", "bipedArmorFilenamePrefix") :
 			Modchu_Reflect.getFieldObject(RenderPlayer.class, "field_77110_j", "armorFilenamePrefix"));
 	}
@@ -30,6 +30,7 @@ public class PFLM_RenderPlayerDummyMaster
     protected int setArmorModel(Entity entityliving, int i, float f)
     {
     	//Modchu_Debug.mDebug("setArmorModel "+modelData.getCapsValue(modelData.caps_ResourceLocation, 0));
+    	if (!showArmor) return -1;
     	PFLM_EntityPlayerDummy entity = ((PFLM_EntityPlayerDummy) entityliving);
     	/*b181//*/byte byte0 = -1;
     	//b181 deleteboolean byte0 = false;
@@ -46,8 +47,15 @@ public class PFLM_RenderPlayerDummyMaster
     		boolean flag1 = i == 1 ? true : false;
     		boolean isBiped = mod_PFLM_PlayerFormLittleMaid.pflm_main.BipedClass.isInstance(modelData.modelMain.model);
     		if (isBiped) {
-    			((MultiModelBaseBiped) modelData.modelFATT.modelInner).setArmorBipedRightLegShowModel(modelData, flag1);
-    			((MultiModelBaseBiped) modelData.modelFATT.modelInner).setArmorBipedLeftLegShowModel(modelData, flag1);
+    			if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
+    				if (mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 599) {
+    					((MultiModelBaseBiped) modelData.modelFATT.modelOuter).setArmorBipedRightLegShowModel(modelData, flag1);
+    					((MultiModelBaseBiped) modelData.modelFATT.modelOuter).setArmorBipedLeftLegShowModel(modelData, flag1);
+    				} else {
+    					((MultiModelBaseBiped) modelData.modelFATT.modelInner).setArmorBipedRightLegShowModel(modelData, flag1);
+    					((MultiModelBaseBiped) modelData.modelFATT.modelInner).setArmorBipedLeftLegShowModel(modelData, flag1);
+    				}
+    			}
     		}
     	}
     	return byte0;
@@ -98,11 +106,11 @@ public class PFLM_RenderPlayerDummyMaster
     				if (i == 1) {
     					t3 = modelData.modelFATT.textureInner;
     					t3[i] = t2;
-    					Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
+    					Modchu_Reflect.setFieldObject("Modchu_ModelMultiBase_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
     				}
     				t4 = modelData.modelFATT.textureOuter;
     				t4[i] = t1;
-    				Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
+    				Modchu_Reflect.setFieldObject("Modchu_ModelMultiBase_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
     				//Modchu_Debug.mDebug("i="+i+" t2="+t2+" t1="+t1);
     			} else {
     				t3 = modelData.modelFATT.textureInner;
@@ -114,18 +122,29 @@ public class PFLM_RenderPlayerDummyMaster
     					t3[i] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 64, is);
     					t4[i] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 80, is);
     				}
-    				Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
-    				Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
+    				Modchu_Reflect.setFieldObject("Modchu_ModelMultiBase_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
+    				Modchu_Reflect.setFieldObject("Modchu_ModelMultiBase_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
     			}
     		}
     	} else {
     		t3 = modelData.modelFATT.textureInner;
-    		t3[i] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 64, is);
-    		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureInner", modelData.modelFATT, t3);
+    		//o = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 599 ? 80 : 64, is);
+    		Object o = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 64, is);
+    		if ((t3[i] != null
+    				&& !t3[i].equals(o))
+    				| t3[i] == null) {
+    			t3[i] = o;
+    			Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseDuo, "textureInner", modelData.modelFATT, t3);
+    		}
     		t4 = modelData.modelFATT.textureOuter;
-    		t4[i] = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 80, is);
-    		Modchu_Reflect.setFieldObject("MMM_ModelBaseDuo", "textureOuter", modelData.modelFATT, t4);
-    		//Modchu_Debug.mlDebug("t3["+i+"]="+t3[i]);
+    		//o = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 599 ? 64 : 80, is);
+    		Object o2 = mod_Modchu_ModchuLib.modchu_Main.textureManagerGetArmorTexture(t, 80, is);
+    		if ((t4[i] != null
+    				&& !t4[i].equals(o2))
+    				| t4[i] == null) {
+    			t4[i] = o2;
+    			Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseDuo, "textureOuter", modelData.modelFATT, t4);
+    		}
     	}
     	//Modchu_Debug.mlDebug("modelData.modelFATT.textureOuter["+i+"]="+modelData.modelFATT.textureOuter[i]);
     	//Modchu_Debug.mlDebug("modelData.modelFATT.textureInner["+i+"]="+modelData.modelFATT.textureInner[i]);
@@ -172,8 +191,8 @@ public class PFLM_RenderPlayerDummyMaster
     		float renderYawOffset = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70761_aq", "renderYawOffset", entityliving);
     		float prevRotationYawHead = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70758_at", "prevRotationYawHead", entityliving);
     		float rotationYawHead = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70759_as", "rotationYawHead", entityliving);
-    		float prevLimbSwingAmount = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70722_aY", "prevLimbSwingAmount", entityliving);
-    		float limbSwingAmount = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70721_aZ", "limbSwingAmount", entityliving);
+    		float prevLimbSwingAmount = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70722_aY", mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? "prevLimbSwingAmount" : "prevLimbYaw", entityliving);
+    		float limbSwingAmount = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70721_aZ", mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ? "limbSwingAmount" : "prevLimbYaw", entityliving);
     		float limbSwing = (Float) Modchu_Reflect.getFieldObject(EntityLivingBase, "field_70754_ba", "limbSwing", entityliving);
     		f2 = prevRenderYawOffset + (renderYawOffset - prevRenderYawOffset) * f1;
     		f3 = entityliving.prevRotationYaw + (entityliving.rotationYaw - entityliving.prevRotationYaw) * f1;
@@ -230,10 +249,10 @@ public class PFLM_RenderPlayerDummyMaster
     			}
     		}
 
-    		modelData.modelMain.setEntityCaps(modelData);
     		modelData.setRender(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy);
     		modelData.setCapsValue(modelData.caps_Entity, entityliving);
-    		Modchu_Reflect.invokeMethod(modelData.modelMain.getClass(), "func_78086_a", "setLivingAnimations", new Class[]{ EntityLivingBase, float.class, float.class, float.class }, modelData.modelMain, new Object[]{ entityliving, f8, f7, f1 });
+    		Modchu_Reflect.invokeMethod(ModelBase.class, "func_78086_a", "setLivingAnimations", new Class[]{ EntityLivingBase, float.class, float.class, float.class }, modelData.modelMain, new Object[]{ entityliving, f8, f7, f1 });
+    		//modelData.modelMain.setLivingAnimations((EntityLivingBase) entityliving, f8, f7, f1);
     		renderModel(entityliving, f8, f7, f5, f3 - f2, f4, f6);
     		float f9 = 1.0F;
     		if (PFLMVersion < 80) {
@@ -270,10 +289,9 @@ public class PFLM_RenderPlayerDummyMaster
     				}
     				f10 = mod_PFLM_PlayerFormLittleMaid.pflm_main.transparency;
     				GL11.glColor4f(f9, f9, f9, f10);
-    				modelData.modelMain.setEntityCaps(modelData);
-    				Modchu_Reflect.invokeMethod(mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.renderPassModel.getClass(), "func_78086_a", "setLivingAnimations", new Class[]{ EntityLivingBase, float.class, float.class, float.class }, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.renderPassModel, new Object[]{ entityliving, f8, f7, f1});
+    				Modchu_Reflect.invokeMethod(ModelBase.class, "func_78086_a", "setLivingAnimations", new Class[]{ EntityLivingBase, float.class, float.class, float.class }, mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.renderPassModel, new Object[]{ entityliving, f8, f7, f1});
     				//renderPassModel.setLivingAnimations(entityliving, f8, f7, f1);
-    				((MMM_ModelBaseDuo) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.renderPassModel).setArmorRendering(true);
+    				((Modchu_ModelBaseDuo) mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.renderPassModel).setArmorRendering(true);
     				if ((PFLMVersion > 129
     						&& !mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor)
     						| (mod_Modchu_ModchuLib.modchu_Main.useInvisibilityArmor
@@ -379,7 +397,6 @@ public class PFLM_RenderPlayerDummyMaster
     			GL11.glEnable(GL11.GL_ALPHA_TEST);
     		}
     		if (PFLMVersion < 80) GL11.glColor4f(f9, f9, f9, 1.0F);
-    		modelData.modelMain.setEntityCaps(modelData);
 /*
     		if (PFLMVersion > 129
     				&& entityliving.isInvisible()
@@ -634,36 +651,18 @@ public class PFLM_RenderPlayerDummyMaster
 
 	public void doRenderPlayerFormLittleMaid(EntityLiving entity, double d,
 			double d1, double d2, float f, float f1) {
-		modelData.owner = entity;
-		modelData.modelMain.setEntityCaps(modelData);
 		// 152deleteentity.skinUrl = null;
 		// modelData.modelFATT.modelInner.isSneak = modelData.modelFATT.modelOuter.isSneak = mainModel.isSneak = false;
 		modelData.modelFATT.modelInner.isRiding = modelData.modelFATT.modelOuter.isRiding = false;
 		modelData.modelFATT.modelInner.onGrounds[0] = modelData.modelFATT.modelOuter.onGrounds[0] =
 				mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.renderSwingProgress((EntityLiving) entity, f1);
-
 		modelData.modelFATT.modelOuter.isSneak = modelData.modelFATT.modelInner.isSneak = modelData.modelMain.model.isSneak = false;
-		double d3 = d1 - (double) entity.yOffset;
-		if (entity.isSneaking()) {
-			d3 -= 0.125D;
-		}
-
-		if (entity.isRiding()) {
-			d3 += 0.15D;
-			if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isModelSize) {
-				d3 -= 0.53D;
-			}
-		}
-		if (entity.isSneaking()) {
-			if (entity.isRiding()) {
-				d3 -= 0.1D;
-			}
-		}
 	}
 
 	public void doRender(Entity entity, double d, double d1, double d2,
 			float f, float f1) {
 		PFLM_EntityPlayerDummy entityDummy = ((PFLM_EntityPlayerDummy) entity);
+/*
 		if (modelData.getCapsValue(modelData.caps_textureName) == null) modelData.setCapsValue(modelData.caps_textureName, "default");
 		if (modelData.getCapsValue(modelData.caps_textureArmorName) == null) modelData.setCapsValue(modelData.caps_textureArmorName, "default");
 		if (modelData.getCapsValue(modelData.caps_ResourceLocation) != null) ;else {
@@ -674,17 +673,19 @@ public class PFLM_RenderPlayerDummyMaster
 		if (modelData.modelMain.model != null) ;else modelData.modelMain.model = modelBasicOrig[0];
 		if (modelData.modelFATT.modelInner != null) ;else modelData.modelFATT.modelInner = modelBasicOrig[1];
 		if (modelData.modelFATT.modelOuter != null) ;else modelData.modelFATT.modelOuter = modelBasicOrig[2];
-		modelData.modelFATT.modelOuter.isWait = modelData.modelFATT.modelInner.isWait = modelData.modelMain.model.isWait;
-/*
-		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159
-				&& mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 499) {
-			int i2 = entity.getBrightnessForRender(f);
-			//Modchu_Debug.mDebug("i2="+i2);
-			boolean b = false;
-			b = Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseNihil, "lighting", modelData.modelMain, i2, 1);
-			b = Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseNihil, "lighting", modelData.modelFATT, i2, 1);
-		}
 */
+		modelData.modelFATT.modelOuter.isWait = modelData.modelFATT.modelInner.isWait = modelData.modelMain.model.isWait;
+		if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
+/*
+			if (mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 499) {
+				int i2 = entityDummy.getBrightnessForRender(f);
+				boolean b = false;
+				b = Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseNihil, "lighting", modelData.modelMain, i2, 1);
+				b = Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseNihil, "lighting", modelData.modelFATT, i2, 1);
+			}
+*/
+			setRenderCount(modelData.modelFATT, 0);
+		}
 		doRenderPlayerFormLittleMaid((EntityLiving) entityDummy, d, d1, d2, f, f1);
 		mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy.superDoRenderLiving(entityDummy, d, d1, d2, f, f1);
 	}
@@ -769,5 +770,18 @@ public class PFLM_RenderPlayerDummyMaster
 
     	GL11.glPopMatrix();
    	//Modchu_Debug.mDebug("renderModel modelData.modelMain.isRendering="+modelData.modelMain.isRendering);
+    }
+
+    private void setRenderCount(Object o, int i) {
+/*
+    	if (mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) {
+    		if (mod_Modchu_ModchuLib.modchu_Main.mmmLibVersion > 599) {
+    			boolean b2 = false;
+    			b2 = Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseNihil, "renderCount", o, i, 1);
+    		}
+    	}
+*/
+    	boolean b2 = false;
+    	b2 = Modchu_Reflect.setFieldObject(o.getClass(), "renderCount", o, i, 1);
     }
 }

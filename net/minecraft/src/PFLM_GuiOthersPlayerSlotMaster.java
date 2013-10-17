@@ -118,7 +118,7 @@ public class PFLM_GuiOthersPlayerSlotMaster extends PFLM_GuiModelSelectBase {
 	public void deletePlayerLocalData() {
 		if (PFLM_GuiOthersPlayerIndividualCustomizeSelect.playerList.size() < 1) return;
 		mod_PFLM_PlayerFormLittleMaid.pflm_main.playerLocalData.remove(PFLM_GuiOthersPlayerIndividualCustomizeSelect.playerList.get(selected));
-		mod_PFLM_PlayerFormLittleMaid.pflm_main.clearPlayers();
+		mod_PFLM_PlayerFormLittleMaid.pflm_main.clearDataMap();
 	}
 
 	@Override

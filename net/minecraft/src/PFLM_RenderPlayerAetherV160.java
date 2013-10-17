@@ -65,7 +65,7 @@ public class PFLM_RenderPlayerAetherV160 extends PFLM_RenderPlayerV160
     public void superDoRenderLiving(Entity entity, double d, double d1, double d2, float f, float f1)
     {
     	//Modchu_Debug.Debug("superDoRenderLiving");
-    	PFLM_ModelData modelData = PFLM_ModelDataMaster.instance.getPlayerData((EntityPlayer) entity);
+    	PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData((EntityPlayer) entity);
     	if (renderManager != null) ;else setRenderManager(RenderManager.instance);
     	//Modchu_Debug.Debug("superDoRenderLiving modelData.modelMain="+modelData.modelMain.getClass());
     	setMainModel(modelData.modelMain);

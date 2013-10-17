@@ -149,8 +149,7 @@ public abstract class PFLM_GuiModelSelectBase extends PFLM_GuiBase {
 				&& mod_Modchu_ModchuLib.modchu_Main.isForge)
 				| mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 180.0F, 0.0F, 1.0F);
 		else GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender
-				&& mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+		if (!mod_PFLM_PlayerFormLittleMaid.pflm_main.oldRender) GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
 		if (move) {
 			float f5 = (float)(width / 2 + x2) - i;

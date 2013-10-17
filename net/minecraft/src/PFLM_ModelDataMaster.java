@@ -5,17 +5,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
-public class PFLM_ModelDataMaster
-{
+public class PFLM_ModelDataMaster extends Modchu_ModelDataMaster {
 	public static PFLM_ModelDataMaster instance = new PFLM_ModelDataMaster();
-	public ConcurrentHashMap<Entity, PFLM_ModelData> playerData = new ConcurrentHashMap();
-	public boolean resetFlag = false;
 	public boolean initResetFlag = false;
 	public static final int skinMode_online										= 0;
 	public static final int skinMode_local										= 1;
@@ -29,7 +24,6 @@ public class PFLM_ModelDataMaster
 	public static final int skinMode_Random									= 9;
 	public static final int skinMode_OthersIndividualSettingOffline	= 10;
 	public Random rnd = new Random();
-	public Date timeDate;
 	public Object steveTexture;
 
 	public PFLM_ModelDataMaster() {
@@ -38,46 +32,46 @@ public class PFLM_ModelDataMaster
 					"/mob/char.png";
 	}
 
-	public PFLM_ModelData getPlayerData(Entity entity) {
-    	if (entity != null) ;else return null;
-    	PFLM_ModelData modelData = playerData.get(entity);
-    	boolean b = false;
-    	if (modelData != null) {
-    		//Modchu_Debug.Debug("initFlag="+modelData.initFlag);
-    		if (modelData.getCapsValueInt(modelData.caps_initFlag) != 2) b = true;
-    	} else b = true;
-    	if (b
-    			| resetFlag) {
-    		if (resetFlag) {
-    			resetFlag = false;
-    			clearPlayers();
-    			modelData = null;
-    		}
-    		modelData = loadPlayerData(entity, modelData);
-    		playerData.put(entity, modelData);
-    	}
-    	return modelData;
-    }
-
-	public PFLM_ModelData loadPlayerData(Entity entity)
-	{
-		PFLM_ModelData modelData = new PFLM_ModelData(entity instanceof EntityPlayer ? mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer : mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy);
-		return loadPlayerData(entity, modelData);
+	public Modchu_ModelDataBase getPlayerData(Entity entity) {
+		return getPlayerData((Object)entity);
 	}
 
-	public PFLM_ModelData loadPlayerData(Entity entity, PFLM_ModelData modelData)
-	{
-		if (entity != null) ;else return null;
-		if (modelData != null) ;else modelData = new PFLM_ModelData(entity instanceof EntityPlayer ? mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer : mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy);
-		if (entity instanceof EntityPlayer) ;else {
+	public Modchu_ModelDataBase loadPlayerData(Entity entity) {
+		return loadPlayerData((Object)entity);
+	}
+
+	@Override
+	public Modchu_ModelDataBase loadPlayerData(Object o) {
+		PFLM_ModelData modelData = new PFLM_ModelData();
+		modelData.setRender(o instanceof EntityPlayer ? mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer : mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy);
+		return loadPlayerData(o, modelData);
+	}
+
+	@Override
+	public Modchu_ModelDataBase loadPlayerData(Object o, Modchu_ModelDataBase data) {
+		if (o != null) ;else return null;
+		if (!(o instanceof Entity)) {
+			return super.loadPlayerData(o, !(data instanceof PFLM_ModelData) ? data : null);
+		}
+		PFLM_ModelData modelData = null;
+		if (data != null) ;else {
+		}
+		if (data != null
+				&& !(data instanceof PFLM_ModelData)) return null;
+		modelData = (PFLM_ModelData)data;
+		if (o instanceof Entity) {
+			if (modelData != null) ;else modelData = new PFLM_ModelData();
+			modelData.setRender(o instanceof EntityPlayer ? mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayer : mod_PFLM_PlayerFormLittleMaid.pflm_RenderPlayerDummy);
+		}
+		if (o instanceof EntityPlayer) ;else {
 			modelData.modelMain.setEntityCaps(modelData);
 			Modchu_Debug.lDebug("loadPlayerData !EntityPlayer return");
 			return modelData;
 		}
-		EntityPlayer entityplayer = (EntityPlayer)entity;
+		EntityPlayer entityplayer = (EntityPlayer)o;
 		EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
 		if (thePlayer != null) ;else return null;
-		Modchu_Reflect.setFieldObject(MMM_EntityCaps.class, "owner", modelData, entityplayer);
+		Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_EntityCaps, "owner", modelData, entityplayer);
 		modelData.modelMain.setEntityCaps(modelData);
 		modelData.setCapsValue(modelData.caps_isPlayer, entityplayer.username == thePlayer.username);
 //if (!modelData.getCapsValueBoolean(modelData.caps_isPlayer)) Modchu_Debug.mDebug("@@@@@isPlayer false!!");
@@ -99,7 +93,7 @@ public class PFLM_ModelDataMaster
 					String s2 = t[0];
 					modelData.setCapsValue(modelData.caps_maidColor, Integer.valueOf(t[2]));
 					setResourceLocation(modelData, entityplayer, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s2, modelData.getCapsValueInt(modelData.caps_maidColor)));
-					setResourceLocation(modelData, entity, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s2, modelData.getCapsValueInt(modelData.caps_maidColor)));
+					setResourceLocation(modelData, (Entity) o, 0, mod_Modchu_ModchuLib.modchu_Main.textureManagerGetTexture(s2, modelData.getCapsValueInt(modelData.caps_maidColor)));
 					modelInit(entityplayer, modelData, s2);
 					s2 = t[1];
 					modelData.setCapsValue(modelData.caps_textureName, s2);
@@ -226,7 +220,7 @@ public class PFLM_ModelDataMaster
 				}
 			} else {
 				if (skinMode == skinMode_Player) {
-					PFLM_ModelData modelData2 = getPlayerData(thePlayer);
+					PFLM_ModelData modelData2 = (PFLM_ModelData) getPlayerData(thePlayer);
 					if (modelData2 != null) {
 						if (modelData2.getCapsValueInt(modelData.caps_skinMode) == skinMode_char) {
 							modelData.setCapsValue(modelData.caps_skinMode, skinMode_char);
@@ -315,7 +309,7 @@ public class PFLM_ModelDataMaster
 	}
 
 	public String getUserName(EntityPlayer entityplayer) {
-		PFLM_ModelData modelData = getPlayerData(entityplayer);
+		PFLM_ModelData modelData = (PFLM_ModelData) getPlayerData(entityplayer);
 		return getUserName(modelData, entityplayer);
 	}
 
@@ -337,7 +331,7 @@ public class PFLM_ModelDataMaster
 	}
 
 	public void modelInit(Entity entity, String s) {
-		PFLM_ModelData modelData = getPlayerData(entity);
+		PFLM_ModelData modelData = (PFLM_ModelData) getPlayerData(entity);
 		modelInit(entity, modelData, s, false);
 	}
 
@@ -393,8 +387,13 @@ public class PFLM_ModelDataMaster
 				if (models != null) ;else if (debug) Modchu_Debug.mlDebug("modelInit 3 models = null !! textureName="+modelData.getCapsValue(modelData.caps_textureName));
 			}
 		}
-		modelData.modelMain.model = models != null && models[0] != null ? (MMM_ModelMultiBase) models[0] : new MultiModel(0.0F);
+		Object o = models != null && models[0] != null ? models[0] : new MultiModel(0.0F);
+		if (o != null) ;else {
+			throw new RuntimeException("modelInit set Model == null !!");
+		}
+		Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseSolo, "model", modelData.modelMain, o);
 		modelData.modelMain.model.setCapsValue(modelData.caps_armorType, 0);
+		modelData.setCapsValue(modelData.caps_Entity, entity);
 		modelTextureReset(entity, modelData, s);
 		if (debug) {
 			if (models != null
@@ -406,7 +405,7 @@ public class PFLM_ModelDataMaster
 	}
 
 	public void modelArmorInit(Entity entity, String s) {
-		PFLM_ModelData modelData = getPlayerData(entity);
+		PFLM_ModelData modelData = (PFLM_ModelData) getPlayerData(entity);
 		modelArmorInit(entity, modelData, s, false);
 	}
 
@@ -458,13 +457,13 @@ public class PFLM_ModelDataMaster
 					f1 = mod_Modchu_ModchuLib.modchu_Main.getArmorModelsSize(models[0]);
 				}
 		if (mod_PFLM_PlayerFormLittleMaid.pflm_main.isSmartMoving) {
-			modelData.modelFATT.modelInner = (MMM_ModelMultiBase) models[1];
-			modelData.modelFATT.modelOuter = (MMM_ModelMultiBase) models[2];
+			Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseDuo, "modelInner", modelData.modelFATT, models[1]);
+			Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseDuo, "modelOuter", modelData.modelFATT, models[2]);
 		} else {
-			modelData.modelFATT.modelInner = models != null && models[1] != null ?
-					(MMM_ModelMultiBase) models[1] : !isBiped ? new MultiModel(f1[0]) : new MultiModel_Biped(f1[0]);
-			modelData.modelFATT.modelOuter = models != null && models[2] != null ?
-					(MMM_ModelMultiBase) models[2] : !isBiped ? new MultiModel(f1[1]) : new MultiModel_Biped(f1[1]);
+			Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseDuo, "modelInner", modelData.modelFATT, models != null && models[1] != null ?
+					models[1] : !isBiped ? new MultiModel(f1[0]) : new MultiModel_Biped(f1[0]));
+			Modchu_Reflect.setFieldObject(mod_Modchu_ModchuLib.modchu_Main.MMM_ModelBaseDuo, "modelOuter", modelData.modelFATT, models != null && models[2] != null ?
+					models[2] : !isBiped ? new MultiModel(f1[1]) : new MultiModel_Biped(f1[1]));
 		}
 		modelData.modelFATT.modelInner.setCapsValue(modelData.caps_armorType, 1);
 		modelData.modelFATT.modelOuter.setCapsValue(modelData.caps_armorType, 2);
@@ -497,7 +496,7 @@ public class PFLM_ModelDataMaster
 	}
 
 	public void allModelTextureReset(Entity entity) {
-		PFLM_ModelData modelData = getPlayerData(entity);
+		PFLM_ModelData modelData = (PFLM_ModelData) getPlayerData(entity);
 		allModelTextureReset(entity, modelData);
 	}
 
@@ -651,7 +650,7 @@ public class PFLM_ModelDataMaster
 		Modchu_Debug.lDebug(""+entityplayer.username+" : "+"modelData.textureName = "+textureName);
 
 		modelData.setCapsValue(modelData.caps_dominantArm, handedness);
-		modelData.setCapsValue(modelData.modelMain.model, modelData.caps_dominantArm, handedness);
+		modelData.setCapsValue((MultiModelBaseBiped)modelData.modelMain.model, modelData.caps_dominantArm, handedness);
 		Modchu_Debug.lDebug(""+entityplayer.username+" : "+"localflag handedness = "+handedness+" Random=-1 Right=0 Left=1");
 		modelData.setCapsValue(modelData.caps_modelScale, modelScale);
 		Modchu_Debug.lDebug(""+entityplayer.username+" : "+"localflag modelScale = "+modelScale);
@@ -883,14 +882,6 @@ public class PFLM_ModelDataMaster
     	modelData.setCapsValue(modelData.caps_tempLimbSwing, entityplayer.limbSwing);
     }
 
-    public void clearPlayers() {
-    	playerData.clear();
-    }
-
-    public void removePlayer(EntityPlayer entityPlayer) {
-    	playerData.remove(entityPlayer);
-    }
-
     public void waitModeSetting(PFLM_ModelData modelData, float f) {
     	Object o = modelData != null
     			&& modelData.modelMain != null
@@ -976,7 +967,7 @@ public class PFLM_ModelDataMaster
 
     public void skinMode_PlayerSetting(EntityPlayer entityplayer, PFLM_ModelData modelData) {
     	EntityPlayer thePlayer = mod_Modchu_ModchuLib.modchu_Main.getThePlayer();
-    	PFLM_ModelData modelData2 = getPlayerData(thePlayer);
+    	PFLM_ModelData modelData2 = (PFLM_ModelData) getPlayerData(thePlayer);
     	if (modelData2 != null) {
     		modelData.setCapsValue(modelData.caps_skinMode, skinMode_Player);
     		modelData.setCapsValue(modelData.caps_dominantArm, playerHandednessSetting());
@@ -1049,7 +1040,7 @@ public class PFLM_ModelDataMaster
     }
 
     public void setHandedness(EntityPlayer entityplayer, int i) {
-    	PFLM_ModelData modelData = getPlayerData(entityplayer);
+    	PFLM_ModelData modelData = (PFLM_ModelData) getPlayerData(entityplayer);
     	if (i == -1) i = rnd.nextInt(2);
     	modelData.setCapsValue(modelData.caps_dominantArm, i);
     	if (modelData.modelMain != null
@@ -1058,20 +1049,6 @@ public class PFLM_ModelDataMaster
     		mod_PFLM_PlayerFormLittleMaid.pflm_main.setFlipHorizontal(i == 0 ? false : true);
     		mod_PFLM_PlayerFormLittleMaid.pflm_main.setLeftHandedness(i == 0 ? false : true);
     	}
-    }
-
-    public float getActionSpeed(PFLM_ModelData modelData) {
-/*
-    	World theWorld = mod_Modchu_ModchuLib.modchu_Main.getTheWorld();
-    	float f = (float)(theWorld.getWorldTime() - modelData.getCapsValueInt(modelData.caps_actionTime));
-    	modelData.setCapsValue(modelData.caps_actionTime, (int) theWorld.getWorldTime());
-*/
-    	timeDate = new Date();
-    	float f = (float)((int) timeDate.getTime() - modelData.getCapsValueInt(modelData.caps_actionTime)) / 40;
-    	//Modchu_Debug.mDebug("getActionSpeed f="+f);
-    	modelData.setCapsValue(modelData.caps_actionTime, (int) timeDate.getTime());
-    	//Modchu_Debug.mDebug("getActionSpeed (int) timeDate.getTime()="+(int) timeDate.getTime()+" f="+f);
-    	return f;
     }
 
     public boolean getResetFlag() {
@@ -1087,7 +1064,7 @@ public class PFLM_ModelDataMaster
     }
 
     public Object getResourceLocation(Entity entity) {
-    	PFLM_ModelData modelData = getPlayerData(entity);
+    	PFLM_ModelData modelData = (PFLM_ModelData) getPlayerData(entity);
     	return getResourceLocation(modelData, entity, 0);
     }
 
@@ -1096,7 +1073,7 @@ public class PFLM_ModelDataMaster
     }
 
     public Object getResourceLocation(Entity entity, int i) {
-    	PFLM_ModelData modelData = getPlayerData(entity);
+    	PFLM_ModelData modelData = (PFLM_ModelData) getPlayerData(entity);
     	return getResourceLocation(modelData, entity, i);
     }
 
@@ -1109,7 +1086,7 @@ public class PFLM_ModelDataMaster
     }
 
     public void setResourceLocation(Entity entity, Object resourceLocation) {
-    	PFLM_ModelData modelData = getPlayerData(entity);
+    	PFLM_ModelData modelData = (PFLM_ModelData) getPlayerData(entity);
     	setResourceLocation(modelData, entity, 0, resourceLocation);
     }
 
@@ -1118,7 +1095,7 @@ public class PFLM_ModelDataMaster
     }
 
     public void setResourceLocation(Entity entity, int i, Object resourceLocation) {
-    	PFLM_ModelData modelData = getPlayerData(entity);
+    	PFLM_ModelData modelData = (PFLM_ModelData) getPlayerData(entity);
     	setResourceLocation(modelData, entity, i, resourceLocation);
     }
 

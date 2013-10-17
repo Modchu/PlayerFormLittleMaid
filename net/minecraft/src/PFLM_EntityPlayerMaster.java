@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import java.lang.reflect.Method;
+
 
 public class PFLM_EntityPlayerMaster {
 
@@ -60,7 +62,8 @@ public class PFLM_EntityPlayerMaster {
 	public void preparePlayerToSpawn() {
 		resetHeight();
 		setSize(0.6F, 1.8F);
-		player.setHealth(getMaxHealth(player));
+		setHealth(player, getMaxHealth(player));
+		//player.setHealth(getMaxHealth(player));
 		player.deathTime = 0;
 	}
 
@@ -315,8 +318,8 @@ public class PFLM_EntityPlayerMaster {
 *///125delete
 //-@-125~b181
     	copyInventory(entityplayer.inventory);
-        player.setHealth(getHealth(player));
-        player.foodStats = entityplayer.getFoodStats();
+    	setHealth(player, getHealth(entityplayer));
+    	player.foodStats = entityplayer.getFoodStats();
 //@-@125~b181
 //-@-b173
 /*//b181delete
@@ -329,6 +332,13 @@ public class PFLM_EntityPlayerMaster {
 //-@-125
         if (EntityPlayerSP2 != null) Modchu_Reflect.setFieldObject(player.getClass(), "score", entityplayer, Modchu_Reflect.getFieldObject(EntityPlayerSP2, "score", entityplayer));
 //@-@125
+    }
+
+    private void setHealth(EntityPlayer entityplayer, int i) {
+    	Method method = mod_Modchu_ModchuLib.modchu_Main.getMinecraftVersion() > 159 ?
+    			Modchu_Reflect.getMethod(EntityLiving.class, "func_70606_j", "setHealth", new Class[]{ float.class }) :
+    				Modchu_Reflect.getMethod(EntityLiving.class, "func_70606_j", "setEntityHealth", new Class[]{ int.class });
+    			Modchu_Reflect.invoke(method, entityplayer, i, 1);
     }
 
     public void copyInventory(InventoryPlayer inventoryplayer)
