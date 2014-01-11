@@ -15,17 +15,12 @@ public class PFLM_PacketPlayerStateManager {
 	}
 
 	public static void addSendList(int i, ModchuModel_ModelDataBase modelData, Entity entity, Object... o) {
-		if (ModchuModel_Main.isPFLMF) ;
-		else return;
+		if (ModchuModel_Main.isPFLMF) ;else return;
 		LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject("modchu.pflmf.PFLMF", "sendList");
 		if (sendList != null) {
 			Object[] o1 = new Object[]{ i, modelData, entity, o };
-			if (sendList.isEmpty()) {
-				sendList.add(o1);
-				Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager addSendList add.");
-			} else {
-				//Modchu_Debug.mDebug("addSendList get(0)="+(sendList.get(0)));
-			}
+			sendList.add(o1);
+			Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager addSendList add.");
 		}
 	}
 
