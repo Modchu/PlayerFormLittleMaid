@@ -1,1 +1,0 @@
-package modchu.pflm;import net.minecraft.entity.EntityLiving;import net.minecraft.world.World;public abstract class PFLM_EntityPlayerDummy extends EntityLiving {	public PFLM_EntityPlayerDummy(World par1World) {		super(par1World);	}}
