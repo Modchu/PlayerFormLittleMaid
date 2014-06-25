@@ -1,15 +1,13 @@
 package modchu.pflm;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiBase;
-import modchu.lib.characteristic.Modchu_GuiModelView;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
 
 import org.lwjgl.input.Mouse;
 
@@ -51,22 +49,12 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 
 	private void setPlayerList() {
 		List playerEntities = Modchu_AS.getList(Modchu_AS.worldPlayerEntities, popWorld);
-		Iterator iterator = playerEntities.iterator();
-		int i = 0;
 		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
 		String thePlayerUsername = Modchu_AS.getString(Modchu_AS.userName, thePlayer);
-		while (iterator.hasNext()) {
-			try {
-				Object entityplayer = playerEntities.get(i);
-				//Modchu_Debug.mDebug("setPlayerList var1.username="+var1.username);
-				String username = Modchu_AS.getString(Modchu_AS.userName, entityplayer);
-				if (!username.equalsIgnoreCase(thePlayerUsername)) {
-					playerList.add(username);
-				}
-				i++;
-			} catch (Exception e) {
-				break;
-			}
+		for (Object entityplayer : playerEntities) {
+			String username = Modchu_AS.getString(Modchu_AS.userName, entityplayer);
+			//Modchu_Debug.mDebug("setPlayerList username="+username);
+			if (!username.equalsIgnoreCase(thePlayerUsername)) playerList.add(username);
 		}
 		if (!Modchu_Main.isRelease()
 				&& playerList.isEmpty()) {

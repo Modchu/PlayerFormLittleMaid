@@ -3,7 +3,6 @@ package modchu.pflm;
 public class PFLM_ConfigData {
 
 	//cfg書き込み項目
-	public static boolean AlphaBlend = true;
 	public static boolean Physical_Undead = false;
 	public static boolean isPlayerForm = true;
 	public static boolean isPlayerAPIDebug = false;
@@ -35,7 +34,6 @@ public class PFLM_ConfigData {
 	public static float watherFog = 0.1F;
 	public static float watherFog2 = 0.05F;
 	public static float lavaFog = 2.0F;
-	public static float transparency = 1.0F;
 	//public static double locationPositionCorrectionY = 0.5D;
 	public static String Physical_HurtSound = "damage.hit";
 	public static String textureSavedir = "/output/";

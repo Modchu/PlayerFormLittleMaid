@@ -1,6 +1,7 @@
 package modchu.pflm;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Reflect;
@@ -9,57 +10,36 @@ import modchu.model.ModchuModel_ModelDataBase;
 
 public class PFLM_PacketPlayerStateManager {
 
-	public static void addSendList(int i, ModchuModel_ModelDataBase modelData, Object entity) {
-		addSendList(i, modelData, entity, (Object) null);
+	public static void addSendList(byte by, ModchuModel_ModelDataBase modelData, Object entity) {
+		addSendList(by, modelData, entity, (Object) null);
 	}
 
-	public static void addSendList(int i, ModchuModel_ModelDataBase modelData, Object entity, Object... o) {
-		if (ModchuModel_Main.isPFLMF) ;else return;
-		LinkedList<Object[]> sendList = (LinkedList<Object[]>) Modchu_Reflect.getFieldObject("modchu.pflmf.PFLMF_Main", "sendList");
+	public static void addSendList(byte by, ModchuModel_ModelDataBase modelData, Object entity, Object... o) {
+		if (ModchuModel_Main.isPFLMF) ;else {
+			//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager addSendList !ModchuModel_Main.isPFLMF return");
+			return;
+		}
+		ArrayList<Object[]> sendList = (ArrayList<Object[]>) Modchu_Reflect.getFieldObject("modchu.pflmf.PFLMF_Main", "sendList");
 		if (sendList != null) {
-			Object[] o1 = new Object[]{ i, modelData, entity, o };
+			Object[] o1 = new Object[]{ by, modelData, entity, o };
 			sendList.add(o1);
-			Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager addSendList add.");
+			//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager addSendList add.");
+		} else {
+			//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager addSendList sendList null !!");
 		}
 	}
 
-	public static boolean getPlayerStateBoolean(int entityId, byte by) {
-		Object o = getPlayerState(entityId, by);
-		if (o != null) {
-			boolean b = false;
-			if (o instanceof Object[]) {
-				Object[] o1 = (Object[]) o;
-				if (o1[0] instanceof Boolean) b = (Boolean) o1[0];
-				//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager getPlayerStateBoolean b="+b);
-			} else {
-				if (o instanceof Boolean) b = (Boolean) o;
-				//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager getPlayerStateBoolean else b="+b);
-			}
-			return b;
-		}
-		return false;
+	public static Object getPlayerStateObject(int entityId, byte by) {
+		if (ModchuModel_Main.isPFLMF) ;else return false;
+		ConcurrentHashMap<Integer, Object> map = getPlayerState(entityId, by);
+		if (map != null) return Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Client", "receivePacket", new Class[]{ ConcurrentHashMap.class, boolean.class }, new Object[]{ map, true });
+		return null;
 	}
 
-	public static int getPlayerStateInt(int entityId, byte by) {
-		Object o = getPlayerState(entityId, by);
-		int i = -1;
-		if (o != null) {
-			if (o instanceof Object[]) {
-				Object[] o1 = (Object[]) o;
-				if (o1[0] instanceof Integer) i = Integer.valueOf(""+o1[1]);
-				//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager getPlayerStateInt i="+i);
-			} else {
-				if (o instanceof Integer) i = Integer.valueOf(""+o);
-				//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager getPlayerStateInt else i="+i);
-			}
-		}
-		return i;
-	}
-
-	public static Object getPlayerState(int entityId, byte by) {
-		if (ModchuModel_Main.isPFLMF) ;
-		else return null;
-		return Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Main", "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
+	public static ConcurrentHashMap<Integer, Object> getPlayerState(int entityId, byte by) {
+		if (ModchuModel_Main.isPFLMF) ;else return null;
+		Object o = Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Main", "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
+		return o != null ? (ConcurrentHashMap<Integer, Object>) o : null;
 	}
 
 }

@@ -3,12 +3,10 @@ package modchu.pflm;
 import java.util.List;
 
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiBase;
-import modchu.lib.characteristic.Modchu_GuiModelView;
-import modchu.model.ModchuModel_IModelCapsConstant;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
 import modchu.model.ModchuModel_Main;
-import modchu.model.ModchuModel_ModelDataMaster;
-import modchu.model.multimodel.MultiModelBaseBiped;
+import modchu.model.multimodel.base.MultiModelBaseBiped;
 
 public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public boolean noSaveFlag;
@@ -38,7 +36,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 
 	private void guiOthersPlayerMasterInit() {
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor", true);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", showArmor);
 		drawEntitySetFlag = true;
 		noSaveFlag = false;
 		colorReverse = false;
@@ -87,7 +85,6 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void initDrawEntity() {
 		super.initDrawEntity();
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor", true);
 	}
 
 	@Override
@@ -150,7 +147,8 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//guiMultiPngSaveButton ShowArmor
 		if(id == 20)
 		{
-			modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor", !modelData.getCapsValueBoolean(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor"));
+			showArmor = !showArmor;
+			modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", showArmor);
 			drawEntitySetFlag = true;
 			initGui();
 			return;
@@ -176,8 +174,8 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		if(id == 52
 				| id == 53) {
 			setColor(colorCheck(getTextureName(), getColor(), colorReverse));
-			modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_maidColor, getColor());
-			modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_changeColor, modelData);
+			modelData.setCapsValue(modelData.caps_maidColor, getColor());
+			modelData.setCapsValue(modelData.caps_changeColor, modelData);
 			noSaveFlag = true;
 			drawEntitySetFlag = true;
 			return;
@@ -187,7 +185,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 				| id == 55) {
 			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true);
 			setTextureArmorName(s0[1]);
-			modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, getTextureArmorName());
+			modelData.setCapsValue(modelData.caps_textureArmorName, getTextureArmorName());
 			noSaveFlag = true;
 			drawEntitySetFlag = true;
 			return;
@@ -297,7 +295,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 			drawString(s7, guiLeft - 140, guiTop - 5, 0xffffff);
 		}
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		boolean localFlag = modelData.getCapsValueInt(ModchuModel_IModelCapsConstant.caps_skinMode) == PFLM_ModelDataMaster.skinMode_local;
+		boolean localFlag = modelData.getCapsValueInt(modelData.caps_skinMode) == PFLM_ModelDataMaster.skinMode_local;
 		if (localFlag
 				| getChangeMode() == modeOffline) {
 /*
@@ -318,7 +316,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		}
 		if(getChangeMode() == modeOffline) {
 			StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
-			s8 = s8.append(modelData.getCapsValueBoolean(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor"));
+			s8 = s8.append(modelData.getCapsValueBoolean(modelData.caps_freeVariable, "showArmor"));
 			drawString(s8.toString(), guiLeft, guiTop + 120, 0xffffff);
 			drawString("Model", width / 2 + 60, height / 2 - 56, 0xffffff);
 			drawString("Color", width / 2 + 60, height / 2 - 41, 0xffffff);
@@ -333,17 +331,17 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void setTextureArmorPackege(int i) {
 		//Modchu_Debug.mDebug("setTextureArmorPackege textureArmorName="+modelData.getCapsValue(modelData.caps_textureArmorName));
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		String s = PFLM_Main.getArmorName((String)modelData.getCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName), i);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, s);
+		String s = PFLM_Main.getArmorName((String)modelData.getCapsValue(modelData.caps_textureArmorName), i);
+		modelData.setCapsValue(modelData.caps_textureArmorName, s);
 		Object ltb = ModchuModel_Main.checkTextureArmorPackege(s);
 		//Modchu_Debug.mDebug("setTextureArmorPackege s="+s);
 		if (ltb != null) ;else {
 			//Modchu_Debug.mDebug("setTextureArmorPackege ltb == null !!");
-			modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, "default");
+			modelData.setCapsValue(modelData.caps_textureArmorName, "default");
 		}
-		if (modelData.getCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName) != null) ;else {
+		if (modelData.getCapsValue(modelData.caps_textureArmorName) != null) ;else {
 			//Modchu_Debug.mDebug("setTextureArmorPackege modelData.getCapsValue(modelData.caps_textureArmorName) == null !!");
-			modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, modelData.getCapsValue(ModchuModel_IModelCapsConstant.caps_textureName));
+			modelData.setCapsValue(modelData.caps_textureArmorName, modelData.getCapsValue(modelData.caps_textureName));
 		}
 	}
 
@@ -355,18 +353,16 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 			setTextureArmorName(s != null && !s.isEmpty() ? s : getTextureArmorName().indexOf("_Biped") == -1 ? "default" : "Biped");
 		}
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor", true);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", showArmor);
 	}
 
 	@Override
 	public void selected(String textureName, String textureArmorName, int color, boolean armorMode) {
 		super.selected(textureName, textureArmorName, color, armorMode);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		if (!armorMode) modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, modelData.getCapsValue(ModchuModel_IModelCapsConstant.caps_textureName));
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_changeColor, modelData);
-		//PFLM_RenderPlayerDummyMaster.showArmor = true;
+		if (!armorMode) modelData.setCapsValue(modelData.caps_textureArmorName, modelData.getCapsValue(modelData.caps_textureName));
+		modelData.setCapsValue(modelData.caps_changeColor, modelData);
 		//drawEntitySetFlag = true;
-		//Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.pflm_RenderPlayerDummy, drawEntity, false);
 	}
 
 	@Override
@@ -378,7 +374,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void setTextureName(String s) {
 		PFLM_ConfigData.othersTextureName = s;
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureName, s);
+		modelData.setCapsValue(modelData.caps_textureName, s);
 	}
 
 	@Override
@@ -390,7 +386,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void setTextureArmorName(String s) {
 		PFLM_ConfigData.othersTextureArmorName = s;
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, s);
+		modelData.setCapsValue(modelData.caps_textureArmorName, s);
 	}
 
 	@Override
@@ -402,7 +398,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void setColor(int i) {
 		PFLM_ConfigData.othersMaidColor = i & 0xf;
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_maidColor, i & 0xf);
+		modelData.setCapsValue(modelData.caps_maidColor, i & 0xf);
 	}
 
 	@Override
@@ -414,7 +410,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void setScale(float f) {
 		PFLM_ConfigData.othersModelScale = f;
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_modelScale, f);
+		modelData.setCapsValue(modelData.caps_modelScale, f);
 	}
 
 	@Override

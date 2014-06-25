@@ -1,9 +1,9 @@
 package modchu.pflm;
 
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_CastHelper;
-import modchu.lib.characteristic.Modchu_GuiBase;
-import modchu.lib.characteristic.Modchu_GuiModelView;
+import modchu.lib.characteristic.recompileonly.Modchu_CastHelper;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
 
 public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOthersPlayerMaster {
 	public static String playerName;
@@ -27,7 +27,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 	@Override
 	public void reInit() {
 		super.reInit();
-		guiOthersPlayerIndividualCustomizeMasterInit((Object)null);
+		guiOthersPlayerIndividualCustomizeMasterInit(playerName);
 	}
 
 	private void guiOthersPlayerIndividualCustomizeMasterInit(Object... o) {
@@ -36,7 +36,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 			Object[] o2 = Modchu_CastHelper.ObjectArray(o);
 			if (o2 != null) {
 				playerName = o2.length > 0
-						&& o2[0] != null ? (String)o2[0] : Modchu_CastHelper.String(o);
+						&& o2[0] != null ? (String)o2[0] : Modchu_CastHelper.String(o2);
 			}
 		}
 		drawEntitySetFlag = true;

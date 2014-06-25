@@ -2,9 +2,10 @@ package modchu.pflm;
 
 import java.util.List;
 
+import modchu.lib.Modchu_Debug;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiBase;
-import modchu.lib.characteristic.Modchu_GuiModelView;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
 
 import org.lwjgl.input.Keyboard;
 
@@ -38,6 +39,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 		super(guiBase, par1GuiScreen, world, o);
 	}
 
+	@Override
 	public void initGui() {
 		List buttonList = Modchu_AS.getList(Modchu_AS.guiScreenButtonList, base);
 		buttonList.clear();
@@ -93,6 +95,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 		Modchu_AS.set(Modchu_AS.guiScreenButtonList, base, buttonList);
 	}
 
+	@Override
 	public void actionPerformed(Object guibutton) {
 		if (!Modchu_AS.getBoolean(Modchu_AS.guiButtonEnabled, guibutton)) {
 			return;
@@ -246,6 +249,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 		return null;
 	}
 
+	@Override
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		int xSize = 80;
 		int ySize = 50;
@@ -284,7 +288,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 			StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
 			Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
 			PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
-			s8 = s8.append(modelData.getCapsValueBoolean(modelData.caps_freeVariable, "showArmor"));
+			s8 = s8.append(showArmor);
 			drawString(s8.toString(), guiLeft, guiTop + 140, 0xffffff);
 			drawString("Armor", width / 2 + 60, height / 2 - 27, 0xffffff);
 		}
@@ -299,11 +303,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 			}
 		}
 		if (PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOnline && PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOffline && PFLM_ConfigData.shortcutKeysChangeMode[select] != modeRandom && PFLM_ConfigData.shortcutKeysChangeMode[select] < modeActionRelease) {
-			if (drawEntitySetFlag) {
-				drawEntitySetFlag = false;
-				setTextureValue();
-				Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, drawEntity, false);
-			}
+			resetFlagCheck();
 			int l = guiLeft;
 			int i1 = guiTop;
 			drawMobModel(i, j, l + 51, i1 + 75, 0, 25, 50F, 0.0F, true);
@@ -346,6 +346,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 		modelData.setCapsValue(modelData.caps_maidColor, i & 0xf);
 	}
 
+	@Override
 	public void setChangeMode(int i) {
 		PFLM_ConfigData.shortcutKeysChangeMode[select] = i;
 	}

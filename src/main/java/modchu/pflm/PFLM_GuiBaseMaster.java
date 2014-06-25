@@ -3,9 +3,9 @@ package modchu.pflm;
 import modchu.lib.Modchu_IGuiBaseMaster;
 import modchu.lib.Modchu_Reflect;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiBase;
 import modchu.lib.characteristic.Modchu_GuiPlayerSlot;
-import modchu.lib.characteristic.Modchu_GuiSmallButton;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiSmallButton;
 import modchu.model.ModchuModel_IModelCapsConstant;
 
 public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
@@ -13,7 +13,6 @@ public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 	public Modchu_GuiBase base;
 
 	public Object popWorld;
-	public static Object drawEntity;
 	public boolean guiMode;
 
 	public PFLM_GuiBaseMaster(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
@@ -26,12 +25,10 @@ public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 		base = guiBase;
 		popWorld = world;
 		guiMode = true;
-		initDrawEntity();
 	}
 
 	@Override
 	public void reInit() {
-		initDrawEntity();
 	}
 
 	@Override
@@ -62,18 +59,8 @@ public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 		Modchu_AS.set(Modchu_AS.guiScreenFontRenderer, base, fontRenderer);
 	}
 
-	public void initDrawEntity() {
-		if (drawEntity != null) ;else drawEntity = Modchu_Reflect.newInstance("modchu.lib.characteristic.Modchu_EntityPlayerDummy", new Class[]{ Modchu_Reflect.loadClass("World") }, new Object[]{ popWorld });
-		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setRender(PFLM_Main.renderPlayerDummyInstance);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showMainModel", true);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "initDrawEntityFlag", true);
-	}
-
 	@Override
 	public void updateScreen() {
-		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		if (!modelData.getCapsValueBoolean(ModchuModel_IModelCapsConstant.caps_freeVariable, "initDrawEntityFlag")) initDrawEntity();
 		try {
 			Thread.sleep(10L);
 		} catch (InterruptedException e) {

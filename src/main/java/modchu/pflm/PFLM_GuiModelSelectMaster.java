@@ -10,8 +10,9 @@ import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiBase;
-import modchu.lib.characteristic.Modchu_GuiModelView;
+import modchu.lib.characteristic.recompileonly.Modchu_CastHelper;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
 import modchu.model.ModchuModel_IModelCapsConstant;
 import modchu.model.ModchuModel_Main;
 import modchu.model.replacepoint.ModchuModel_ModelBaseDuoReplacePoint;
@@ -80,7 +81,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 				&& o[0] != null) armorMode = (Boolean) o[0];
 		if (o != null
 				&& o.length > 1
-				&& o[1] != null) setColor(Integer.valueOf(""+o[1]));
+				&& o[1] != null) setColor(Modchu_CastHelper.Int(""+o[1]));
 		if (o != null
 				&& o.length > 2
 				&& o[2] != null) playerName = (String) o[2];
@@ -287,12 +288,12 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 			else {
 				Object ltb = ModchuModel_Main.getTextureBox(i1);
 				setTextureName(i2, null);
-				if (ltb != null) setTextureName(i2, ModchuModel_Main.getTextureBoxFileName(ltb));
+				if (ltb != null) setTextureName(i2, ModchuModel_Main.getTextureBoxTextureName(ltb));
 				if (getTextureName(i2) != null && !getTextureName(i2).isEmpty() | armorMode) ;
 				else {
 					setTextureName(i2, "default");
 					ltb = ModchuModel_Main.getTextureBox(getTextureName(i2));
-					if (ltb != null) setTextureName(i2, ModchuModel_Main.getTextureBoxFileName(ltb));
+					if (ltb != null) setTextureName(i2, ModchuModel_Main.getTextureBoxPackegeName(ltb));
 				}
 				if (getTextureName(i2) != null && ltb != null) {
 					PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
@@ -410,9 +411,8 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		gui.selected(getTextureName(i2), getTextureArmorName(i2), getColor(), armorMode);
 		Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, gui);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor", true);
 		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showMainModel", true);
-		gui.setArmorTextureValue();
+		gui.setTextureValue();
 		gui.modelChange();
 	}
 

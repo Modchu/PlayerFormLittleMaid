@@ -3,13 +3,13 @@ package modchu.pflm;
 import java.util.ArrayList;
 import java.util.List;
 
-import modchu.lib.Modchu_ASC;
 import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_IGuiModelViewMaster;
 import modchu.lib.Modchu_Main;
+import modchu.lib.Modchu_Reflect;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiBase;
-import modchu.lib.characteristic.Modchu_GuiModelView;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
+import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
 import modchu.lib.replace.Modchu_TextureManagerBase;
 import modchu.model.ModchuModel_IModelCapsConstant;
 import modchu.model.ModchuModel_Main;
@@ -20,6 +20,7 @@ import org.lwjgl.opengl.GL12;
 
 public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modchu_IGuiModelViewMaster {
 
+	public Object drawEntity;
 	public ArrayList<String> drawStringList;
 	public boolean drawEntitySetFlag;
 	public boolean textureResetFlag;
@@ -33,6 +34,7 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 	public boolean buttonReturn;
 	public boolean buttonShowArmor;
 	public boolean displayButton;
+	protected boolean showArmor;
 	public int drawStringPosX;
 	public int drawStringPosY;
 	public int drawStringColor;
@@ -73,16 +75,17 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 		prevMouseX = -999;
 		prevMouseY = -999;
 		cameraZoom = 1.0F;
+		initDrawEntity();
 	}
 
 	@Override
 	public void reInit() {
 		super.reInit();
+		initDrawEntity();
 		setTextureValue();
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor", true);
+		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor", showArmor);
 		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showMainModel", true);
-		Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, drawEntity, false);
 		drawEntitySetFlag = true;
 	}
 
@@ -129,6 +132,13 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 	}
 
 	@Override
+	public void updateScreen() {
+		super.updateScreen();
+		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+		if (!modelData.getCapsValueBoolean(ModchuModel_IModelCapsConstant.caps_freeVariable, "initDrawEntityFlag")) initDrawEntity();
+	}
+
+	@Override
 	public boolean drawScreen(int i, int j, float f) {
 		base.superDrawDefaultBackground();
 		base.superDrawScreen(i, j, f);
@@ -154,6 +164,14 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 		super.drawString(renderer, s, i, j, k);
 	}
 
+	public void initDrawEntity() {
+		if (drawEntity != null) ;else drawEntity = Modchu_Reflect.newInstance("modchu.lib.characteristic.Modchu_EntityPlayerDummy", new Class[]{ Modchu_Reflect.loadClass("World") }, new Object[]{ popWorld });
+		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+		modelData.setRender(PFLM_Main.renderPlayerDummyInstance);
+		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showMainModel", true);
+		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "initDrawEntityFlag", true);
+	}
+
 	@Override
 	public void setTextureArmorPackege() {
 		setTextureArmorPackege(2);
@@ -176,18 +194,11 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 
 	@Override
 	public void setTextureValue() {
-		String textureName = getTextureName();
-		String defaultModelName = Modchu_TextureManagerBase.defaultModelName;
-		if (textureName != null && !textureName.isEmpty()) ;
-		else {
-			if (textureName != null && textureName.isEmpty() | textureName.startsWith("default_" + defaultModelName)) textureName = "default";
-		}
-		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureName, textureName);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, getTextureArmorName());
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_maidColor, getColor());
-		setTextureArmorPackege();
-		setScale(getScale());
+		PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+		initDrawStringListFlag = true;
+	}
+
+	public void setTextureValueAfter() {
 	}
 
 	@Override
@@ -197,11 +208,11 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 	protected void resetFlagCheck() {
 		if (drawEntitySetFlag) {
 			setTextureValue();
-			Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, drawEntity, false);
+			reLoadModel(drawEntity, true);
+			setTextureValueAfter();
 			drawEntitySetFlag = false;
 		}
 		if (textureResetFlag) {
-			setTextureValue();
 			PFLM_ModelDataMaster.instance.allModelTextureReset(drawEntity);
 			textureResetFlag = false;
 		}
@@ -253,14 +264,18 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 		}
 		GL11.glTranslatef(x, y, 50F + f1);
 		GL11.glScalef(-f, f, f);
+/*
 		if (Modchu_Main.getMinecraftVersion() > 169
 				| (Modchu_Main.isRelease()
 						&& Modchu_Main.isForge)
 				| PFLM_Main.oldRender) {
+*/
 			GL11.glRotatef(180F, 180.0F, 0.0F, 1.0F);
+/*
 		} else {
 			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		}
+*/
 		GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
 		if (move) {
 			float ff1 = width / 2 + x2 - i;
@@ -275,20 +290,20 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 			GL11.glRotatef((float) Math.atan(ff1 / 40F) * f5, 0.0F, 1.0F, 0.0F);
 			GL11.glScalef(cameraZoom, cameraZoom, cameraZoom);
 			Modchu_AS.set(Modchu_AS.entityRotationYaw, entity, (float) Math.atan(ff1 / 40F) * f2);
-			Modchu_AS.set(Modchu_AS.entityRotationPitch, (float) Math.atan(ff2 / 40F) * f3);
+			Modchu_AS.set(Modchu_AS.entityRotationPitch, entity, (float) Math.atan(ff2 / 40F) * f3);
 			//entity.renderYawOffset = (float)Math.atan(ff1 / 40F) * f4;
-			Modchu_AS.set(Modchu_AS.entityLivingBasePrevRotationYawHead, Modchu_AS.getFloat(Modchu_AS.entityLivingBaseRotationYawHead, entity));
-			Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, Modchu_AS.getFloat(Modchu_AS.entityRotationYaw, entity));
+			Modchu_AS.set(Modchu_AS.entityLivingBasePrevRotationYawHead, entity, Modchu_AS.getFloat(Modchu_AS.entityLivingBaseRotationYawHead, entity));
+			Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, entity, Modchu_AS.getFloat(Modchu_AS.entityRotationYaw, entity));
 			//entity.rotationYawHead = 0F;
 			//entity.prevRotationYawHead = 0F;
-			Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, 0.0F);
-			//Modchu_Debug.dDebug("drawMobModel2 ff1=" + ff1 + " f2=" + f2+" entity.rotationYaw="+entity.rotationYaw, 2);
-			//Modchu_Debug.dDebug("drawMobModel2 ff2=" + ff1 + " f3=" + f3, 3);
+			Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, entity, 0.0F);
+			//Modchu_Debug.dDebug("drawMobModel2 ff1=" + ff1 + " f2=" + f2+" entity.rotationYaw="+Modchu_AS.get(Modchu_AS.entityRotationYaw, entity), 2);
+			//Modchu_Debug.dDebug("drawMobModel2 ff2=" + ff2 + " f3=" + f3, 3);
 		} else {
-			Modchu_AS.set(Modchu_AS.entityRotationYaw, 0.0F);
-			Modchu_AS.set(Modchu_AS.entityRotationPitch, 0.0F);
-			Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, 0.0F);
-			Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, 0.0F);
+			Modchu_AS.set(Modchu_AS.entityRotationYaw, entity, 0.0F);
+			Modchu_AS.set(Modchu_AS.entityRotationPitch, entity, 0.0F);
+			Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, entity, 0.0F);
+			Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, entity, 0.0F);
 		}
 		GL11.glTranslatef(0.0F, Modchu_AS.getFloat(Modchu_AS.entityYOffset, entity), 0.0F);
 		//RenderManager.instance.playerViewY = 180F;
@@ -332,8 +347,7 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 			switch (clickButton) {
 			case 0:
 				float f1 = 0.02F;
-				if (x != 0) comeraPosX += ((Modchu_Main.getMinecraftVersion() > 169 && !Modchu_Main.isRelease() && Modchu_Main.isForge)
-						| (Modchu_Main.isRelease() && Modchu_Main.isForge)
+				if (x != 0) comeraPosX += (Modchu_Main.isForge
 						| PFLM_Main.oldRender ? -x : x) * f1;
 				if (y != 0) {
 					float f2 = y * f1;
@@ -452,7 +466,6 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 			((Modchu_GuiModelView) base).setColor(color);
 		}
 		((Modchu_GuiModelView) base).setTextureArmorName(textureArmorName);
-		initDrawEntity();
 	}
 
 	@Override
@@ -507,5 +520,11 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 
 	@Override
 	public void setHandednessMode(int i) {
+	}
+
+	public void reLoadModel(Object o, boolean b) {
+		Modchu_Debug.mDebug("------modelDataSetting allModelInit start------ "+o);
+		Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, o, b);
+		Modchu_Debug.mDebug("------modelDataSetting allModelInit end------ "+o);
 	}
 }
