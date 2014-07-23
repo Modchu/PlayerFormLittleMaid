@@ -213,7 +213,7 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 			drawEntitySetFlag = false;
 		}
 		if (textureResetFlag) {
-			PFLM_ModelDataMaster.instance.allModelTextureReset(drawEntity);
+			((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).allModelTextureReset(drawEntity);
 			textureResetFlag = false;
 		}
 	}

@@ -181,7 +181,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 						Modchu_Debug.mDebug("PFLM_GuiMaster bufferedimage drawMuitiModelData set skinChar false");
 						modelData.setCapsValue(modelData.caps_skinMode, PFLM_ModelDataMaster.skinMode_online);
 						if (bufferedimage != null) {
-							Object[] s = PFLM_ModelDataMaster.instance.checkimage(bufferedimage);
+							Object[] s = ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).checkimage(bufferedimage);
 							modelArmorName = (String) s[2];
 							boolean returnflag = (Boolean) s[5];
 							if (!returnflag) {
@@ -196,7 +196,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 							}
 							setcheck();
 							drawModelData.setCapsValue(drawModelData.caps_localFlag, false);
-							PFLM_ModelDataMaster.instance.setResourceLocation(drawModelData, 0, bufferedimage);
+							((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).setResourceLocation(drawModelData, 0, bufferedimage);
 							drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureName, PFLM_Main.textureList.get(setModel));
 							drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, PFLM_Main.textureList.get(setArmor));
 							Modchu_Debug.mDebug("PFLM_GuiMaster bufferedimage ok.drawMuitiModelData set end.");
@@ -645,7 +645,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			int color = getColor();
 			PFLM_Main.setMaidColor(color);
 			modelData.setCapsValue(drawMuitiModelData.caps_maidColor, color);
-			PFLM_ModelDataMaster.instance.allModelTextureReset(thePlayer, modelData);
+			((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).allModelTextureReset(thePlayer, modelData);
 			partsSetFlag = 1;
 			partsInitFlag = false;
 			partsSaveFlag = false;
@@ -706,7 +706,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			}
 			if (PFLM_ConfigData.handednessMode < -1) PFLM_ConfigData.handednessMode = 1;
 			if (PFLM_ConfigData.handednessMode > 1) PFLM_ConfigData.handednessMode = -1;
-			PFLM_ModelDataMaster.instance.setHandedness(thePlayer, PFLM_ConfigData.handednessMode);
+			((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).setHandedness(thePlayer, PFLM_ConfigData.handednessMode);
 			initDrawStringListFlag = true;
 			return;
 		}

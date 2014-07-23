@@ -331,7 +331,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		Modchu_Reflect.setFieldObject(ModchuModel_ModelBaseSoloReplacePoint.class, "model", modelData.modelMain, textureModel[0][i]);
 		Modchu_Reflect.setFieldObject(ModchuModel_ModelBaseDuoReplacePoint.class, "modelInner", modelData.modelFATT, textureModel[1][i]);
 		Modchu_Reflect.setFieldObject(ModchuModel_ModelBaseDuoReplacePoint.class, "modelOuter", modelData.modelFATT, textureModel[2][i]);
-		if (!armorMode) PFLM_ModelDataMaster.instance.modelTextureReset(drawEntity, modelData);
+		if (!armorMode) ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).modelTextureReset(drawEntity, modelData);
 	}
 
 	public void setTextureValue(String texture, String armorTexture, int color) {
