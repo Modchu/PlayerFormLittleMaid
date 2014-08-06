@@ -78,14 +78,13 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		isRendering = new boolean[i1];
 		if (o != null
 				&& o.length > 0
-				&& o[0] != null) armorMode = (Boolean) o[0];
+				&& o[0] != null) armorMode = Modchu_CastHelper.Boolean(o[0]);
 		if (o != null
 				&& o.length > 1
 				&& o[1] != null) setColor(Modchu_CastHelper.Int(""+o[1]));
 		if (o != null
 				&& o.length > 2
-				&& o[2] != null) playerName = (String) o[2];
-		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+				&& o[2] != null) playerName = Modchu_CastHelper.String(o[2]);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor", armorMode);
 		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showMainModel", !armorMode);
@@ -196,7 +195,9 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		}
 		//Armor | Model
 		if (id == 102 | id == 103) {
+			Modchu_Debug.mDebug("Armor 1 ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_GuiModelView) parentScreen).getTextureName());
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiModelSelectMaster.class, parentScreen, popWorld, id == 103, getColor()));
+			Modchu_Debug.mDebug("Armor 2 ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_GuiModelView) parentScreen).getTextureName());
 			return;
 		}
 	}
@@ -211,6 +212,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 
 	@Override
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		//Modchu_Debug.mDebug1("drawGuiContainerBackgroundLayer ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_GuiModelView) parentScreen).getTextureName());
 		//GL11.glPushMatrix();
 		if (displayModels) {
 			modelNamber = offsetSlot;
@@ -298,10 +300,11 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 				if (getTextureName(i2) != null && ltb != null) {
 					PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 					setTextureValue(getTextureName(i2), getTextureName(i2), getColor());
-					setTextureArmorName(i2, (String) modelData.getCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName));
-					Modchu_Debug.mDebug("getTextureName(i2)=" + getTextureName(i2));
-					Modchu_Debug.mDebug("getTextureArmorName(i2)=" + getTextureArmorName(i2));
-					Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, drawEntity, false);
+					setTextureArmorName(i2, Modchu_CastHelper.String(modelData.getCapsValue(modelData.caps_textureArmorName)));
+					//Modchu_Debug.mDebug("getTextureName(i2)=" + getTextureName(i2));
+					//Modchu_Debug.mDebug("getTextureArmorName(i2)=" + getTextureArmorName(i2));
+					if (!armorMode) Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, drawEntity, false);
+					else Modchu_Reflect.invokeMethod(PFLM_Main.renderPlayerDummyInstance.getClass(), "modelArmorInit", new Class[]{ Modchu_Reflect.loadClass("Entity"), boolean.class }, PFLM_Main.renderPlayerDummyInstance, new Object[]{ drawEntity, false });
 					if (changeColorFlag) PFLM_Main.changeColor(drawEntity);
 					textureModel[0][i2] = !armorMode ? modelData.modelMain.model : modelData.modelFATT.modelInner;
 					textureModel[1][i2] = modelData.modelFATT.modelInner;

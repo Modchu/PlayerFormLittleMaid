@@ -1065,11 +1065,12 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	@Override
 	public void selected(String textureName, String textureArmorName, int color, boolean armorMode) {
 		super.selected(textureName, textureArmorName, color, armorMode);
+		//Modchu_Debug.mDebug("PFLM_GuiMaster selected getTextureName()="+getTextureName()+" textureName="+textureName);
 		if (armorMode) {
 			setTextureName(getTextureName());
 			setColor(getColor());
 		}
-		Modchu_Debug.mDebug("PFLM_GuiMaster selected");
+		//Modchu_Debug.mDebug("PFLM_GuiMaster selected");
 	}
 
 	public void setTextureArmorPackege(int i, boolean b) {
@@ -1342,6 +1343,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		drawEntityModelData.setCapsValue(drawEntityModelData.caps_textureName, s);
 		PFLM_ConfigData.textureName = s;
+		Modchu_Debug.mDebug("PFLM_GuiMaster setTextureName s="+s);
 	}
 
 	@Override
