@@ -80,9 +80,7 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 
 	@Override
 	public void reInit() {
-		Modchu_Debug.mDebug("PFLM_GuiModelViewMaster reInit() 1 getTextureName()="+getTextureName());
 		super.reInit();
-		Modchu_Debug.mDebug("PFLM_GuiModelViewMaster reInit() 2 getTextureName()="+getTextureName());
 		initDrawEntity();
 		setTextureValue();
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
@@ -468,8 +466,6 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 			((Modchu_GuiModelView) base).setColor(color);
 		}
 		((Modchu_GuiModelView) base).setTextureArmorName(textureArmorName);
-		Modchu_Debug.mDebug("PFLM_GuiModelViewMaster selected textureName="+textureName+" armorMode="+armorMode);
-		Modchu_Debug.mDebug("PFLM_GuiModelViewMaster selected getTextureName()="+getTextureName());
 	}
 
 	@Override
