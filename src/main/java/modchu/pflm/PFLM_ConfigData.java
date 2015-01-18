@@ -30,10 +30,14 @@ public class PFLM_ConfigData {
 	public static int othersPlayerWaitTime = 600;
 	public static int handednessMode = 0;
 	public static int othersHandednessMode = 0;
+	public static int setModel = 0;
+	public static int setColor = 0;
+	public static int setArmor = 0;
 	public static float Physical_Hammer = 1.0F;
 	public static float watherFog = 0.1F;
 	public static float watherFog2 = 0.05F;
 	public static float lavaFog = 2.0F;
+	public static boolean showArmor = true;
 	//public static double locationPositionCorrectionY = 0.5D;
 	public static String Physical_HurtSound = "damage.hit";
 	public static String textureSavedir = "/output/";
@@ -55,6 +59,12 @@ public class PFLM_ConfigData {
 	public static String othersTextureArmorName = "default";
 	public static float othersModelScale = 0.0F;
 	public static final int maxShortcutKeys = 100;
+	public static final String shortcutKeysName = "key.PFLM";
+	public static final String systemShortcutKeysGuiName = "key.PFLM Gui";
+	public static final String systemShortcutKeysModelsName = "key.PFLM Models Key";
+	public static final String systemShortcutKeysWaitName = "key.PFLM Wait";
+	public static final String systemShortcutKeysSitName = "key.PFLM Sit";
+	public static final String systemShortcutKeysLieDownName = "key.PFLM LieDown";
 	public static float shortcutKeysModelScale[] = new float[maxShortcutKeys];
 	public static String shortcutKeysTextureName[] = new String[maxShortcutKeys];
 	public static String shortcutKeysTextureArmorName[] = new String[maxShortcutKeys];

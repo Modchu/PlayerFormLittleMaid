@@ -1,27 +1,25 @@
 package modchu.pflm;
 
+import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_IGuiBaseMaster;
-import modchu.lib.Modchu_Reflect;
 import modchu.lib.characteristic.Modchu_AS;
 import modchu.lib.characteristic.Modchu_GuiPlayerSlot;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiSmallButton;
-import modchu.model.ModchuModel_IModelCapsConstant;
+import modchu.lib.characteristic.Modchu_GuiSmallButton;
 
 public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 	public Object parentScreen;
-	public Modchu_GuiBase base;
+	public Object base;
 
 	public Object popWorld;
 	public boolean guiMode;
 
-	public PFLM_GuiBaseMaster(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		init(guiBase, par1GuiScreen, world, (Object[])o);
+	public PFLM_GuiBaseMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
+		init(guiBase, guiScreen, world, (Object[])o);
 	}
 
 	@Override
-	public void init(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		parentScreen = par1GuiScreen;
+	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
+		parentScreen = guiScreen;
 		base = guiBase;
 		popWorld = world;
 		guiMode = true;
@@ -39,7 +37,7 @@ public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 		return new Modchu_GuiSmallButton(PFLM_GuiSmallButtonMaster.class, base, i, i2, i3, i4, i5, s);
 	}
 
-	protected Object newInstanceSlot(Modchu_GuiBase base, Object popWorld) {
+	protected Object newInstanceSlot(Object base, Object popWorld) {
 		return new Modchu_GuiPlayerSlot(PFLM_GuiOthersPlayerSlotMaster.class, base, popWorld);
 	}
 
@@ -50,7 +48,9 @@ public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 
 	public Object getFontRenderer(Object renderer) {
 		Object o = renderer != null ? Modchu_AS.get(Modchu_AS.guiScreenFontRenderer, renderer) : null;
+		Modchu_Debug.lDebug1("getFontRenderer o.getClass()="+(o != null ? o.getClass() : null));
 		if (o != null) return o;
+		Modchu_Debug.lDebug1("getFontRenderer minecraftFontRenderer="+(Modchu_AS.get(Modchu_AS.minecraftFontRenderer)).getClass());
 		return Modchu_AS.get(Modchu_AS.minecraftFontRenderer);
 	}
 
@@ -103,6 +103,7 @@ public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 
 	public void drawString(Object renderer, String s, int i, int j, int k) {
 		Object fontRenderer = getFontRenderer(renderer);
+		Modchu_Debug.lDebug1("fontRenderer="+fontRenderer);
 		if (fontRenderer != null) Modchu_AS.set(Modchu_AS.fontRendererDrawString, fontRenderer, s, i, j, k);
 	}
 
@@ -113,6 +114,10 @@ public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 
 	@Override
 	public void mouseClickMove(int mouseX, int mouseY, int clickButton, long time) {
+	}
+
+	@Override
+	public void mouseReleased(int mouseX, int mouseY, int clickButton) {
 	}
 
 	@Override

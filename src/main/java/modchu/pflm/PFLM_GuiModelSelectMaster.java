@@ -10,13 +10,11 @@ import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.recompileonly.Modchu_CastHelper;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
-import modchu.model.ModchuModel_IModelCapsConstant;
+import modchu.lib.characteristic.Modchu_CastHelper;
+import modchu.lib.characteristic.Modchu_GuiModelView;
+import modchu.lib.characteristic.Modchu_ModelBaseDuoBase;
+import modchu.lib.characteristic.Modchu_ModelBaseSoloBase;
 import modchu.model.ModchuModel_Main;
-import modchu.model.replacepoint.ModchuModel_ModelBaseDuoReplacePoint;
-import modchu.model.replacepoint.ModchuModel_ModelBaseSoloReplacePoint;
 
 import org.lwjgl.input.Mouse;
 
@@ -28,7 +26,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	private int pointY;
 	private int selectSlot;
 	private int offsetSlot;
-	private double textureRect[];
+	private double[] textureRect;
 	private BufferedImage bufferedimage;
 	private long lastClicked;
 	private int modelNamber;
@@ -45,12 +43,12 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	public boolean displayModels;
 	public boolean armorMode;
 
-	public PFLM_GuiModelSelectMaster(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
+	public PFLM_GuiModelSelectMaster(Object guiBase, Object par1GuiScreen, Object world, Object... o) {
 		super(guiBase, par1GuiScreen, world, (Object[])o);
 	}
 
 	@Override
-	public void init(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
+	public void init(Object guiBase, Object par1GuiScreen, Object world, Object... o) {
 		super.init(guiBase, par1GuiScreen, world, (Object[])o);
 		guiModelSelectMasterInit((Object[])o);
 	}
@@ -78,18 +76,17 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		isRendering = new boolean[i1];
 		if (o != null
 				&& o.length > 0
-				&& o[0] != null) armorMode = (Boolean) o[0];
+				&& o[0] != null) armorMode = Modchu_CastHelper.Boolean(o[0]);
 		if (o != null
 				&& o.length > 1
 				&& o[1] != null) setColor(Modchu_CastHelper.Int(""+o[1]));
 		if (o != null
 				&& o.length > 2
-				&& o[2] != null) playerName = (String) o[2];
-		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+				&& o[2] != null) playerName = Modchu_CastHelper.String(o[2]);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showArmor", armorMode);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showMainModel", !armorMode);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_skinMode, PFLM_ModelDataMaster.skinMode_offline);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", armorMode);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", !armorMode);
+		modelData.setCapsValue(modelData.caps_skinMode, PFLM_ModelDataMaster.skinMode_offline);
 		if (PFLM_ConfigData.isModelSize) {
 			Modchu_AS.set(Modchu_AS.minecraftGameSettingsThirdPersonView, 0);
 		}
@@ -106,7 +103,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 			Modchu_Debug.lDebug("PFLM_GuiModelSelect bufferedimage Exception!!");
 			selectCursorId = -1;
 		}
-		resetTextureRect();
+		Modchu_Main.resetTextureRect(textureRect);
 		drawEntitySetFlag = true;
 		changeColorFlag = true;
 	}
@@ -196,7 +193,9 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		}
 		//Armor | Model
 		if (id == 102 | id == 103) {
+			Modchu_Debug.mDebug("Armor 1 ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_GuiModelView) parentScreen).getTextureName());
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiModelSelectMaster.class, parentScreen, popWorld, id == 103, getColor()));
+			Modchu_Debug.mDebug("Armor 2 ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_GuiModelView) parentScreen).getTextureName());
 			return;
 		}
 	}
@@ -211,6 +210,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 
 	@Override
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		//Modchu_Debug.mDebug1("drawGuiContainerBackgroundLayer ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_GuiModelView) parentScreen).getTextureName());
 		//GL11.glPushMatrix();
 		if (displayModels) {
 			modelNamber = offsetSlot;
@@ -259,13 +259,15 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	}
 
 	private void drawSelectCursor() {
-		if (selectCursorId > 0 && selectSlot > -1 && getTexturesNamber(selectSlot, getColor()) != -1) {
+		if (selectCursorId > 0
+				&& selectSlot > -1
+				&& getTexturesNamber(selectSlot, getColor()) != -1) {
 			if (Modchu_Main.getMinecraftVersion() > 159) {
 				Modchu_AS.set(Modchu_AS.textureUtilBindTexture, selectCursorId);
 			} else {
 				Modchu_AS.set(Modchu_AS.renderEngineSetupTexture, bufferedimage, 1);
 			}
-			renderTexture((selectSlot - offsetSlot) % selectBoxX * 25 + modelListx, (selectSlot - offsetSlot) / selectBoxX * 55 + modelListy - 50, 8, 8);
+			Modchu_Main.renderTexture((selectSlot - offsetSlot) % selectBoxX * 25 + modelListx, (selectSlot - offsetSlot) / selectBoxX * 55 + modelListy - 50, 8, 8, textureRect);
 		}
 	}
 
@@ -297,11 +299,13 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 				}
 				if (getTextureName(i2) != null && ltb != null) {
 					PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+					modelData.setCapsValue(modelData.caps_freeVariable, "skinChar", false);
 					setTextureValue(getTextureName(i2), getTextureName(i2), getColor());
-					setTextureArmorName(i2, (String) modelData.getCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName));
-					Modchu_Debug.mDebug("getTextureName(i2)=" + getTextureName(i2));
-					Modchu_Debug.mDebug("getTextureArmorName(i2)=" + getTextureArmorName(i2));
-					Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, drawEntity, false);
+					setTextureArmorName(i2, Modchu_CastHelper.String(modelData.getCapsValue(modelData.caps_textureArmorName)));
+					//Modchu_Debug.mDebug("getTextureName(i2)=" + getTextureName(i2));
+					//Modchu_Debug.mDebug("getTextureArmorName(i2)=" + getTextureArmorName(i2));
+					if (!armorMode) Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, drawEntity, false);
+					else Modchu_Reflect.invokeMethod(PFLM_Main.renderPlayerDummyInstance.getClass(), "modelArmorInit", new Class[]{ Object.class, boolean.class }, PFLM_Main.renderPlayerDummyInstance, new Object[]{ drawEntity, false });
 					if (changeColorFlag) PFLM_Main.changeColor(drawEntity);
 					textureModel[0][i2] = !armorMode ? modelData.modelMain.model : modelData.modelFATT.modelInner;
 					textureModel[1][i2] = modelData.modelFATT.modelInner;
@@ -325,32 +329,32 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 				&& textureModel != null
 				&& i < textureModel[0].length) ;else return;
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureName, getTextureName(i));
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_maidColor, getColor());
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, getTextureArmorName(i));
-		Modchu_Reflect.setFieldObject(ModchuModel_ModelBaseSoloReplacePoint.class, "model", modelData.modelMain, textureModel[0][i]);
-		Modchu_Reflect.setFieldObject(ModchuModel_ModelBaseDuoReplacePoint.class, "modelInner", modelData.modelFATT, textureModel[1][i]);
-		Modchu_Reflect.setFieldObject(ModchuModel_ModelBaseDuoReplacePoint.class, "modelOuter", modelData.modelFATT, textureModel[2][i]);
+		modelData.setCapsValue(modelData.caps_textureName, getTextureName(i));
+		modelData.setCapsValue(modelData.caps_maidColor, getColor());
+		modelData.setCapsValue(modelData.caps_textureArmorName, getTextureArmorName(i));
+		Modchu_Reflect.setFieldObject(Modchu_ModelBaseSoloBase.class, "model", modelData.modelMain, textureModel[0][i]);
+		Modchu_Reflect.setFieldObject(Modchu_ModelBaseDuoBase.class, "modelInner", modelData.modelFATT, textureModel[1][i]);
+		Modchu_Reflect.setFieldObject(Modchu_ModelBaseDuoBase.class, "modelOuter", modelData.modelFATT, textureModel[2][i]);
 		if (!armorMode) ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).modelTextureReset(drawEntity, modelData);
 	}
 
 	public void setTextureValue(String texture, String armorTexture, int color) {
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureName, texture);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_maidColor, color);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, armorTexture);
+		modelData.setCapsValue(modelData.caps_textureName, texture);
+		modelData.setCapsValue(modelData.caps_maidColor, color);
+		modelData.setCapsValue(modelData.caps_textureArmorName, armorTexture);
 		if (!armorMode) {
 			setTextureArmorPackege();
-			modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, (String) modelData.getCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName));
+			modelData.setCapsValue(modelData.caps_textureArmorName, (String) modelData.getCapsValue(modelData.caps_textureArmorName));
 		}
 	}
 
 	@Override
 	public void setTextureArmorPackege() {
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, modelData.getCapsValue(ModchuModel_IModelCapsConstant.caps_textureName));
-		String s = PFLM_Main.getArmorName((String) modelData.getCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName), 2);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_textureArmorName, s);
+		modelData.setCapsValue(modelData.caps_textureArmorName, modelData.getCapsValue(modelData.caps_textureName));
+		String s = PFLM_Main.getArmorName((String) modelData.getCapsValue(modelData.caps_textureArmorName), 2);
+		modelData.setCapsValue(modelData.caps_textureArmorName, s);
 	}
 
 	@Override
@@ -411,56 +415,9 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		gui.selected(getTextureName(i2), getTextureArmorName(i2), getColor(), armorMode);
 		Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, gui);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_freeVariable, "showMainModel", true);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", true);
 		gui.setTextureValue();
 		gui.modelChange();
-	}
-
-	private void renderTexture(int x, int y, int width, int height) {
-		Object tes = Modchu_AS.get(Modchu_AS.tessellatorInstance);
-		Modchu_AS.set(Modchu_AS.tessellatorStartDrawingQuads, tes);
-		Modchu_AS.set(Modchu_AS.tessellatorAddVertexWithUV, tes, (double) (x + 0), (double) (y + 0), 0.0D, textureRect[0], textureRect[1]);
-		Modchu_AS.set(Modchu_AS.tessellatorAddVertexWithUV, tes, (double) (x + 0), (double) (y + height), 0.0D, textureRect[2], textureRect[3]);
-		Modchu_AS.set(Modchu_AS.tessellatorAddVertexWithUV, tes, (double) (x + width), (double) (y + height), 0.0D, textureRect[4], textureRect[5]);
-		Modchu_AS.set(Modchu_AS.tessellatorAddVertexWithUV, tes, (double) (x + width), (double) (y + 0), 0.0D, textureRect[6], textureRect[7]);
-		Modchu_AS.set(Modchu_AS.tessellatorDraw, tes);
-	}
-
-	private void resetTextureRect() {
-		textureRect[0] = 0.0D;
-		textureRect[1] = 0.0D;
-		textureRect[2] = 0.0D;
-		textureRect[3] = 1.0D;
-		textureRect[4] = 1.0D;
-		textureRect[5] = 1.0D;
-		textureRect[6] = 1.0D;
-		textureRect[7] = 0.0D;
-	}
-
-	private double[] mirrorTexture(double[] src) {
-		double[] result = new double[8];
-		result[0] = src[6];
-		result[1] = src[1];
-		result[2] = src[4];
-		result[3] = src[3];
-		result[4] = src[2];
-		result[5] = src[5];
-		result[6] = src[0];
-		result[7] = src[7];
-		return result;
-	}
-
-	private double[] rotateTexture(double[] src) {
-		double[] result = new double[8];
-		result[0] = src[2];
-		result[1] = src[3];
-		result[2] = src[4];
-		result[3] = src[5];
-		result[4] = src[6];
-		result[5] = src[7];
-		result[6] = src[0];
-		result[7] = src[1];
-		return result;
 	}
 
 	public int getMaxSelectBoxViewCount() {
@@ -529,13 +486,13 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	@Override
 	public float getScale() {
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		return modelData.getCapsValueFloat(ModchuModel_IModelCapsConstant.caps_modelScale);
+		return modelData.getCapsValueFloat(modelData.caps_modelScale);
 	}
 
 	@Override
 	public void setScale(float f) {
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(ModchuModel_IModelCapsConstant.caps_modelScale, f);
+		modelData.setCapsValue(modelData.caps_modelScale, f);
 	}
 
 	@Override

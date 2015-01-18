@@ -29,16 +29,16 @@ public class PFLM_PacketPlayerStateManager {
 		}
 	}
 
-	public static Object getPlayerStateObject(int entityId, byte by) {
+	public static Object getPlayerStateObject(Object entityId, byte by) {
 		if (ModchuModel_Main.isPFLMF) ;else return false;
 		LinkedList list = getPlayerState(entityId, by);
 		if (list != null) return Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Client", "receivePacket", new Class[]{ LinkedList.class, boolean.class }, new Object[]{ list, true });
 		return null;
 	}
 
-	public static LinkedList getPlayerState(int entityId, byte by) {
+	public static LinkedList getPlayerState(Object entityId, byte by) {
 		if (ModchuModel_Main.isPFLMF) ;else return null;
-		Object o = Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Main", "getPlayerState", new Class[]{ int.class, byte.class }, null, new Object[]{ entityId, by });
+		Object o = Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Main", "getPlayerState", new Class[]{ Object.class, byte.class }, null, new Object[]{ entityId, by });
 		return o != null ? (LinkedList) o : null;
 	}
 

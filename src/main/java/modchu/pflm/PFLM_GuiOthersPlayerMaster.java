@@ -3,8 +3,8 @@ package modchu.pflm;
 import java.util.List;
 
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
+import modchu.lib.characteristic.Modchu_GuiBase;
+import modchu.lib.characteristic.Modchu_GuiModelView;
 import modchu.model.ModchuModel_Main;
 import modchu.model.multimodel.base.MultiModelBaseBiped;
 
@@ -13,18 +13,15 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public boolean colorReverse;
 	public boolean isIndividual;
 	public boolean buttonIndividualCustomize;
-	public static final int modePlayer							= 3;
-	public static final int modePlayerOffline					= 4;
-	public static final int modePlayerOnline					= 5;
-	public static final int othersPlayerMaxchangeMode	= 5;
+	public static final int othersPlayerMaxchangeMode = 5;
 
-	public PFLM_GuiOthersPlayerMaster(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super(guiBase, par1GuiScreen, world, o);
+	public PFLM_GuiOthersPlayerMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
+		super(guiBase, guiScreen, world, (Object[]) o);
 	}
 
 	@Override
-	public void init(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super.init(guiBase, par1GuiScreen, world, o);
+	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
+		super.init(guiBase, guiScreen, world, (Object[]) o);
 		guiOthersPlayerMasterInit();
 	}
 
@@ -63,16 +60,16 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	@Override
 	protected void initButtonSetting() {
 		if (!isIndividual) {
-			buttonOnline = getChangeMode() == modePlayerOnline;
-			buttonOffline = getChangeMode() == modeOffline;
-			buttonRandom = getChangeMode() == modeRandom;
+			buttonOnline = getChangeMode() == PFLM_GuiConstant.modePlayerOnline;
+			buttonOffline = getChangeMode() == PFLM_GuiConstant.modeOffline;
+			buttonRandom = getChangeMode() == PFLM_GuiConstant.modeRandom;
 			buttonScale = modelScaleButton;
 			buttonParts = false;
-			buttonPlayer = getChangeMode() == modePlayerOffline
-					| getChangeMode() == modePlayerOnline
-					| getChangeMode() == modePlayer
-					| getChangeMode() == modeOnline;
-			buttonShowArmor = getChangeMode() == modeOffline;
+			buttonPlayer = getChangeMode() == PFLM_GuiConstant.modePlayerOffline
+					| getChangeMode() == PFLM_GuiConstant.modePlayerOnline
+					| getChangeMode() == PFLM_GuiConstant.modePlayer
+					| getChangeMode() == PFLM_GuiConstant.modeOnline;
+			buttonShowArmor = getChangeMode() == PFLM_GuiConstant.modeOffline;
 		}
 		buttonReturn = true;
 		buttonCustomize = false;
@@ -215,8 +212,10 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//Save
 		if(id == 200)
 		{
+			PFLM_ConfigData.showArmor = showArmor;
 			PFLM_Main.saveOthersPlayerParamater(false);
 			PFLM_Config.clearCfgData();
+			PFLM_Main.loadOthersPlayerParamater();
 			PFLM_Main.clearDataMap();
 			noSaveFlag = false;
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, (Object)null);
@@ -262,7 +261,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		//drawEntitySetFlag = true;
 		//textureResetFlag = true;
-		resetFlagCheck();
+		resetFlagCheck(true);
 		int xSize = 80;
 		int ySize = 50;
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
@@ -276,16 +275,16 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		StringBuilder s9 = (new StringBuilder()).append("changeMode : ");
 		s9 = s9.append(getChangeModeString(getChangeMode()));
 		drawString(s9.toString(), guiLeft, guiTop + 130, 0xffffff);
-		if(getChangeMode() == modeOffline
-				| getChangeMode() == modeRandom) {
+		if(getChangeMode() == PFLM_GuiConstant.modeOffline
+				| getChangeMode() == PFLM_GuiConstant.modeRandom) {
 			StringBuilder s10 = (new StringBuilder()).append("Handedness : ");
 			s10 = s10.append(getHandednessModeString(getHandednessMode()));
 			//if (getHandednessMode() == -1) s10 = s10.append(" Result : ").append(getHandednessModeString(handedness));
 			drawString(s10.toString(), guiLeft, guiTop + 140, 0xffffff);
 		}
 		if (PFLM_ConfigData.useScaleChange
-				&& (getChangeMode() == modeOffline
-				| getChangeMode() == modeRandom)
+				&& (getChangeMode() == PFLM_GuiConstant.modeOffline
+				| getChangeMode() == PFLM_GuiConstant.modeRandom)
 				&& modelScaleButton) {
 			String s6 = "modelScale : "+getScale();
 			s6 = (new StringBuilder()).append(s6).toString();
@@ -297,10 +296,10 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		boolean localFlag = modelData.getCapsValueInt(modelData.caps_skinMode) == PFLM_ModelDataMaster.skinMode_local;
 		if (localFlag
-				| getChangeMode() == modeOffline) {
+				| getChangeMode() == PFLM_GuiConstant.modeOffline) {
 /*
 			if (changeMode == modefalse
-					| changeMode == modePlayerOnline
+					| changeMode == PFLM_GuiConstant.modePlayerOnline
 							| (changeMode == modePlayer
 									&& PFLM_Main.changeMode == PFLM_Gui.modeOnline)
 					&& !localFlag) {
@@ -314,7 +313,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 				drawString(s1.toString(), guiLeft, guiTop + 110, 0xffffff);
 			//}
 		}
-		if(getChangeMode() == modeOffline) {
+		if(getChangeMode() == PFLM_GuiConstant.modeOffline) {
 			StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
 			s8 = s8.append(modelData.getCapsValueBoolean(modelData.caps_freeVariable, "showArmor"));
 			drawString(s8.toString(), guiLeft, guiTop + 120, 0xffffff);

@@ -2,16 +2,14 @@ package modchu.pflm;
 
 import java.util.List;
 
-import modchu.lib.Modchu_Debug;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
+import modchu.lib.characteristic.Modchu_GuiModelView;
 
 import org.lwjgl.input.Keyboard;
 
 public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 
-	private static int select;
+	private int select;
 	public static final int modeOthersSettingOffline = 0;
 	public static final int modeSetModelAndArmor = 1;
 	public static final int modeSetModelAndColor = 2;
@@ -35,8 +33,8 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 	public static final int changeModeMax = 48;
 	private String shortcutKey;
 
-	public PFLM_GuiKeyControlsMaster(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super(guiBase, par1GuiScreen, world, o);
+	public PFLM_GuiKeyControlsMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
+		super(guiBase, guiScreen, world, o);
 	}
 
 	@Override
@@ -90,7 +88,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 				buttonList.add(newInstanceButton(412, x + 15, y + 165, 20, 15, "-10"));
 			}
 		}
-		setTextureValue();
+		if (PFLM_ConfigData.shortcutKeysChangeMode[select] < 8) setTextureValue();
 		selectInit();
 		Modchu_AS.set(Modchu_AS.guiScreenButtonList, base, buttonList);
 	}
@@ -103,7 +101,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 		//Save
 		int id = Modchu_AS.getInt(Modchu_AS.guiButtonID, guibutton);
 		if (id == 200) {
-			PFLM_Main.saveShortcutKeysPlayerParamater();
+			PFLM_Main.saveShortcutKeysParamater();
 			PFLM_Config.clearCfgData();
 			noSaveFlag = false;
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, (Object)null);
@@ -303,7 +301,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 			}
 		}
 		if (PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOnline && PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOffline && PFLM_ConfigData.shortcutKeysChangeMode[select] != modeRandom && PFLM_ConfigData.shortcutKeysChangeMode[select] < modeActionRelease) {
-			resetFlagCheck();
+			resetFlagCheck(true);
 			int l = guiLeft;
 			int i1 = guiTop;
 			drawMobModel(i, j, l + 51, i1 + 75, 0, 25, 50F, 0.0F, true);

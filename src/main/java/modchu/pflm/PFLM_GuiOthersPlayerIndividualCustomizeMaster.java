@@ -1,9 +1,9 @@
 package modchu.pflm;
 
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.recompileonly.Modchu_CastHelper;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
+import modchu.lib.characteristic.Modchu_CastHelper;
+import modchu.lib.characteristic.Modchu_GuiBase;
+import modchu.lib.characteristic.Modchu_GuiModelView;
 
 public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOthersPlayerMaster {
 	public static String playerName;
@@ -14,13 +14,13 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 	public static int individualCustomizeChangeMode;
 	public static int othersHandednessMode;
 
-	public PFLM_GuiOthersPlayerIndividualCustomizeMaster(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super(guiBase, par1GuiScreen, world, (Object[])o);
+	public PFLM_GuiOthersPlayerIndividualCustomizeMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
+		super(guiBase, guiScreen, world, (Object[])o);
 	}
 
 	@Override
-	public void init(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super.init(guiBase, par1GuiScreen, world, (Object[])o);
+	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
+		super.init(guiBase, guiScreen, world, (Object[])o);
 		guiOthersPlayerIndividualCustomizeMasterInit((Object[])o);
 	}
 
@@ -45,15 +45,18 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 	@Override
 	protected void initButtonSetting() {
 		super.initButtonSetting();
-		buttonOnline = individualCustomizeChangeMode == modePlayerOnline;
-		buttonOffline = individualCustomizeChangeMode == modeOffline;
-		buttonRandom = individualCustomizeChangeMode == modeRandom;
+		buttonOnline = individualCustomizeChangeMode == PFLM_GuiConstant.modePlayerOnline;
+		buttonOffline = individualCustomizeChangeMode == PFLM_GuiConstant.modeOffline;
+		buttonRandom = individualCustomizeChangeMode == PFLM_GuiConstant.modeRandom;
 		buttonScale = modelScaleButton;
 		buttonParts = false;
 		buttonIndividualCustomize = false;
 		buttonReturn = true;
-		buttonPlayer = individualCustomizeChangeMode == modePlayerOffline | individualCustomizeChangeMode == modePlayerOnline | individualCustomizeChangeMode == modePlayer | individualCustomizeChangeMode == modeOnline;
-		buttonShowArmor = individualCustomizeChangeMode == modeOffline;
+		buttonPlayer = individualCustomizeChangeMode == PFLM_GuiConstant.modePlayerOffline
+				| individualCustomizeChangeMode == PFLM_GuiConstant.modePlayerOnline
+				| individualCustomizeChangeMode == PFLM_GuiConstant.modePlayer
+				| individualCustomizeChangeMode == PFLM_GuiConstant.modeOnline;
+		buttonShowArmor = individualCustomizeChangeMode == PFLM_GuiConstant.modeOffline;
 	}
 
 	public void actionPerformed(Object guibutton) {
@@ -71,8 +74,10 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 		//Save
 		if (id == 200) {
 			setPlayerLocalData();
+			PFLM_ConfigData.showArmor = showArmor;
 			PFLM_Main.saveOthersPlayerParamater(true);
 			PFLM_Config.clearCfgData();
+			PFLM_Main.loadOthersPlayerParamater();
 			noSaveFlag = false;
 			PFLM_Main.clearDataMap();
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiBase(PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
@@ -112,7 +117,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 	}
 
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		resetFlagCheck();
+		resetFlagCheck(true);
 		int xSize = 80;
 		int ySize = 50;
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
@@ -134,8 +139,8 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 		//if (getHandednessMode() == -1) s11 = s11.append(" Result : ").append(getHandednessModeString(handedness));
 		drawString(s11.toString(), guiLeft, guiTop + 140, 0xffffff);
 		if (PFLM_ConfigData.useScaleChange
-				&& (individualCustomizeChangeMode == modeOffline
-				| individualCustomizeChangeMode == modeRandom)
+				&& (individualCustomizeChangeMode == PFLM_GuiConstant.modeOffline
+				| individualCustomizeChangeMode == PFLM_GuiConstant.modeRandom)
 				&& modelScaleButton) {
 			String s6 = "modelScale : " + getScale();
 			s6 = (new StringBuilder()).append(s6).toString();
@@ -144,7 +149,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 			s7 = (new StringBuilder()).append(s7).toString();
 			drawString(s7, guiLeft - 140, guiTop - 5, 0xffffff);
 		}
-		if (individualCustomizeChangeMode == modeOffline) {
+		if (individualCustomizeChangeMode == PFLM_GuiConstant.modeOffline) {
 			s = s.append(getTextureName());
 			drawString(s.toString(), guiLeft, guiTop + 90, 0xffffff);
 			s2 = s2.append(getColor());

@@ -13,17 +13,17 @@ import javax.imageio.ImageIO;
 
 import modchu.lib.Modchu_Config;
 import modchu.lib.Modchu_Debug;
+import modchu.lib.Modchu_FileManager;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
+import modchu.lib.Modchu_RenderEngine;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.recompileonly.Modchu_CastHelper;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
-import modchu.lib.characteristic.recompileonly.Modchu_ModelRenderer;
-import modchu.lib.replace.Modchu_IModelCapsBase;
+import modchu.lib.characteristic.Modchu_GuiBase;
+import modchu.lib.characteristic.Modchu_GuiModelView;
+import modchu.lib.characteristic.Modchu_IEntityCapsBase;
+import modchu.lib.characteristic.Modchu_ModelRenderer;
 import modchu.model.ModchuModel_Config;
 import modchu.model.ModchuModel_Main;
-import modchu.model.ModchuModel_ModelDataBase;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -58,24 +58,20 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public boolean buttonMultiPngSave;
 	public boolean buttonKeyControls;
 	public boolean buttonCustomModel;
-	public static boolean partsSaveFlag;
-	public static boolean noSaveFlag;
-	public static int partsSetFlag = 0;
-	public static int setModel;
-	public static int setArmor;
-	public static int setColor;
-	public static final int modeOffline = 0;
-	public static final int modeOnline = 1;
-	public static final int modeRandom = 2;
-	private static final int maxChangeMode = 3;
+	public boolean partsSaveFlag;
+	public boolean noSaveFlag;
+	public int setModel = 0;
+	public int setArmor = 0;
+	public int setColor = 0;
+	private final int maxChangeMode = 3;
 
-	public PFLM_GuiMaster(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super(guiBase, par1GuiScreen, world, o);
+	public PFLM_GuiMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
+		super(guiBase, guiScreen, world, o);
 	}
 
 	@Override
-	public void init(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super.init(guiBase, par1GuiScreen, world, o);
+	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
+		super.init(guiBase, guiScreen, world, o);
 		guiMasterInit();
 	}
 
@@ -109,10 +105,11 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		buttonKeyControls = true;
 		buttonCustomModel = true;
 		showArmor = true;
-		partsSetFlag = 0;
-		setModel = 0;
-		setArmor = 0;
-		setColor = 0;
+		PFLM_GuiConstant.partsSetFlag = 0;
+		setModel = PFLM_ConfigData.setModel;
+		setArmor = PFLM_ConfigData.setArmor;
+		setColor = PFLM_ConfigData.setColor;
+		showArmor = PFLM_ConfigData.showArmor;
 		if (parts != null) {
 			parts.clear();
 		} else {
@@ -132,12 +129,12 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		if (drawMuitiEntity != null) ;else drawMuitiEntity = Modchu_Reflect.newInstance("modchu.lib.characteristic.Modchu_EntityPlayerDummy", new Class[]{ Modchu_Reflect.loadClass("World") }, new Object[]{ popWorld });
 		PFLM_ModelData drawMuitiModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawMuitiEntity);
 		drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_freeVariable, "showMainModel", true);
-		drawMuitiModelData.setRender(PFLM_Main.renderPlayerDummyInstance);
 		drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_freeVariable, "initDrawEntityFlag", true);
 	}
 
 	@Override
 	public void initGui() {
+		Modchu_Debug.mDebug("initGui");
 		initButtonSetting();
 		super.initGui();
 		if (!displayButton) return;
@@ -151,31 +148,32 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		if (buttonKeyControls) buttonList.add(newInstanceButton(57, x + 75, y + 70, 75, 15, "KeyControls"));
 		if (buttonCustomModel
 				&& !Modchu_Main.isRelease) buttonList.add(newInstanceButton(59, x + 75, y + 40, 75, 15, "CustomModel"));
-		if (getChangeMode() != modeRandom) {
+		if (getChangeMode() != PFLM_GuiConstant.modeRandom) {
 			if (buttonMultiPngSave
 					&& PFLM_ConfigData.guiMultiPngSaveButton
 					&& !partsButton
 					&& !modelScaleButton) {
 				buttonList.add(newInstanceButton(12, x + 75, y + 100, 80, 20, "MultiPngSave"));
 				bufferedimageMode = false;
-				if (PFLM_Main.bipedCheck(drawEntity)
-						| getChangeMode() == modeOnline) {
+				PFLM_ModelData drawModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+				if (drawModelData.modelMain != null
+						&& PFLM_Main.bipedCheck(drawModelData.modelMain.model)
+						| getChangeMode() == PFLM_GuiConstant.modeOnline) {
 					buttonList.add(newInstanceButton(15, 50, y + 55, 15, 15, "<"));
 					buttonList.add(newInstanceButton(14, 65, y + 55, 15, 15, ">"));
 					buttonList.add(newInstanceButton(17, 50, y + 72, 15, 15, "-"));
 					buttonList.add(newInstanceButton(16, 65, y + 72, 15, 15, "+"));
 					buttonList.add(newInstanceButton(19, 50, y + 89, 15, 15, "<"));
 					buttonList.add(newInstanceButton(18, 65, y + 89, 15, 15, ">"));
+					PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 					PFLM_ModelData drawMuitiModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawMuitiEntity);
 					buttonList.add(newInstanceButton(21, 70, y + 107, 30, 15, "" + drawMuitiModelData.getCapsValueBoolean(drawMuitiModelData.caps_freeVariable, "showArmor")));
-					if (getChangeMode() == modeOnline
+					if (getChangeMode() == PFLM_GuiConstant.modeOnline
 							&& (bufferedimage == null
 							| drawEntitySetFlag)) {
-						PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 						//bufferedimage = PFLM_ModelDataMaster.instance.getOnlineSkin(modelData, thePlayer);
 						Object o = modelData.getCapsValue(modelData.caps_freeVariable, "bufferedimage");
 						bufferedimage = o != null ? (BufferedImage) o : null;
-						PFLM_ModelData drawModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 						drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_freeVariable, "skinChar", false);
 						drawModelData.setCapsValue(drawModelData.caps_freeVariable, "skinChar", false);
 						Modchu_Debug.mDebug("PFLM_GuiMaster bufferedimage drawMuitiModelData set skinChar false");
@@ -209,7 +207,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 						//PFLM_Main.removeDataMap();
 						textureResetFlag = true;
 					} else {
-						bufferedimageMode = getChangeMode() == modeOnline ? true : false;
+						bufferedimageMode = getChangeMode() == PFLM_GuiConstant.modeOnline ? true : false;
 					}
 					setcheck();
 				}
@@ -224,7 +222,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				}
 			}
 		}
-		if (getChangeMode() != modeRandom) {
+		if (getChangeMode() != PFLM_GuiConstant.modeRandom) {
 			if (partsButton) {
 				buttonList.add(newInstanceButton(10, x + 75, y + 10, 75, 15, "Close"));
 				buttonList = partsButtonAdd(buttonList);
@@ -237,13 +235,13 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	}
 
 	protected void initButtonSetting() {
-		buttonOnline = getChangeMode() == modeOnline;
-		buttonOffline = getChangeMode() == modeOffline;
-		buttonRandom = getChangeMode() == modeRandom;
+		buttonOnline = getChangeMode() == PFLM_GuiConstant.modeOnline;
+		buttonOffline = getChangeMode() == PFLM_GuiConstant.modeOffline;
+		buttonRandom = getChangeMode() == PFLM_GuiConstant.modeRandom;
 		buttonScale = modelScaleButton;
 		buttonParts = partsButton;
 		buttonPlayer = false;
-		buttonShowArmor = getChangeMode() != modeRandom;
+		buttonShowArmor = getChangeMode() != PFLM_GuiConstant.modeRandom;
 		buttonCustomize = true;
 		buttonMultiPngSave = true;
 		buttonCustomModel = true;
@@ -377,14 +375,14 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		super.updateScreen();
 		PFLM_ModelData drawMuitiModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawMuitiEntity);
 		if (!drawMuitiModelData.getCapsValueBoolean(drawMuitiModelData.caps_freeVariable, "initDrawEntityFlag")) initDrawEntity();
-		if (partsSetFlag == 2) {
-			partsSetFlag = 3;
+		if (PFLM_GuiConstant.partsSetFlag == 2) {
+			PFLM_GuiConstant.partsSetFlag = 3;
 			//if (!partsSetDefault) PFLM_Config.loadShowModelList(PFLM_Main.showModelList);
 			//Modchu_Debug.mDebug("updateScreen()");
 			if (!partsInitFlag) {
 				partsInitFlag = true;
 				partsInit();
-				partsSetFlag = 1;
+				PFLM_GuiConstant.partsSetFlag = 1;
 			}
 			initGui();
 		}
@@ -473,21 +471,21 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			setChangeMode(getChangeMode() + 1);
 			if (getChangeMode() >= maxChangeMode) setChangeMode(0);
 			if (!PFLM_ConfigData.changeModeButton
-					&& getChangeMode() == modeOnline) {
+					&& getChangeMode() == PFLM_GuiConstant.modeOnline) {
 				setChangeMode(getChangeMode() + 1);
 				if (getChangeMode() >= maxChangeMode) setChangeMode(0);
 			}
 			switch (getChangeMode()) {
-			case modeOnline:
+			case PFLM_GuiConstant.modeOnline:
 				setModel--;
 				id = 14;
-			case modeOffline:
-			case modeRandom:
+			case PFLM_GuiConstant.modeOffline:
+			case PFLM_GuiConstant.modeRandom:
 				PFLM_Main.removeDataMap();
 				break;
 			}
 			bufferedimage = null;
-			partsSetFlag = 1;
+			PFLM_GuiConstant.partsSetFlag = 1;
 			noSaveFlag = true;
 			//if (getChangeMode() != modeOnline) {
 				initGui();
@@ -543,8 +541,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				color = drawMuitiModelData.getCapsValueInt(drawMuitiModelData.caps_maidColor) - 1;
 				colorReverse = true;
 			}
-			if (color > 15) color = 0;
-			if (color < 0) color = 15;
+			color = Modchu_Main.normalize(color, 0, 15, 15, 0);
 			imageWriteComplete = false;
 			imageWriteFail = false;
 			Modchu_Debug.mDebug("guiMultiPngSaveButton color="+color);
@@ -632,21 +629,16 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			return;
 		}
 		//ColorChange
-		if (id == 52) {
-			setColor(getColor() - 1);
-			colorReverse = true;
-		}
-		if (id == 53) {
-			setColor(getColor() + 1);
-			colorReverse = false;
-		}
 		if (id == 52 | id == 53) {
+			setColor(getColor() + (id == 53 ? 1 : -1));
+			Modchu_Debug.mDebug("ColorChange getColor()="+getColor());
+			colorReverse = id == 52;
 			setColor(colorCheck(getTextureName(), getColor(), colorReverse));
 			int color = getColor();
 			PFLM_Main.setMaidColor(color);
 			modelData.setCapsValue(drawMuitiModelData.caps_maidColor, color);
 			((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).allModelTextureReset(thePlayer, modelData);
-			partsSetFlag = 1;
+			PFLM_GuiConstant.partsSetFlag = 1;
 			partsInitFlag = false;
 			partsSaveFlag = false;
 			partsSetDefault = false;
@@ -677,7 +669,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			if (PFLM_ConfigData.isModelSize) {
 				closePlayerToSpawn = true;
 			}
-			partsSetFlag = 1;
+			PFLM_GuiConstant.partsSetFlag = 1;
 			partsInitFlag = false;
 			imageWriteComplete = false;
 			imageWriteFail = false;
@@ -728,7 +720,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		if (id == 97 | id == 98) {
 			if (armorType < 0) armorType = 3;
 			if (armorType > 3) armorType = 0;
-			partsSetFlag = 1;
+			PFLM_GuiConstant.partsSetFlag = 1;
 			partsInitFlag = false;
 			return;
 		}
@@ -760,21 +752,29 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			}
 			ModchuModel_Config.setConfigShowPartsMap(getTextureName(), getColor(), armorType, parts);
 			partsSaveFlag = true;
-			partsSetFlag = 1;
+			PFLM_GuiConstant.partsSetFlag = 1;
 			drawEntitySetFlag = true;
 			return;
 		}
 		//Save
 		if (id == 200) {
-			PFLM_Config.clearCfgData();
-			if (partsSaveFlag) ModchuModel_Config.setConfigShowPartsMap(getTextureName(), getColor(), armorType, parts);
+			PFLM_ConfigData.showArmor = showArmor;
+			PFLM_ConfigData.setModel = setModel;
+			PFLM_ConfigData.setColor = setColor;
+			PFLM_ConfigData.setArmor = setArmor;
 			PFLM_Main.saveParamater();
+			ModchuModel_Config.saveShowModelParamater(ModchuModel_Main.cfgfile);
+			PFLM_Config.clearCfgData();
+			if (partsSaveFlag) {
+				ModchuModel_Config.setConfigShowPartsMap(getTextureName(), getColor(), armorType, parts);
+				partsSaveFlag = false;
+			}
+			PFLM_Main.loadParamater();
 			Modchu_Config.loadConfig(ModchuModel_Main.showModelList, ModchuModel_Main.cfgfile);
 			PFLM_Config.loadShowModelList(ModchuModel_Main.showModelList);
 			PFLM_Main.clearDataMap();
 			noSaveFlag = false;
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, (Object)null);
-			//mc.displayGuiScreen(null);
 			return;
 		}
 	}
@@ -820,7 +820,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		//Modchu_Debug.dDebug("drawGuiContainerBackgroundLayer tes 5");
 		//textureResetFlag = true;
-		resetFlagCheck();
+		resetFlagCheck(true);
 /*
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_FOG);
@@ -859,48 +859,48 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			StringBuilder s2 = (new StringBuilder()).append("MaidColor : ");
 			int x = 0;
 			//int x = partsButton | !getModelType().startsWith("Biped") ? 0 : 150;
-			if (getChangeMode() != modeRandom) {
+			if (getChangeMode() != PFLM_GuiConstant.modeRandom) {
 				PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 				boolean localFlag = modelData.getCapsValueInt(modelData.caps_skinMode) == PFLM_ModelDataMaster.skinMode_local;
-				if (getChangeMode() != modeOnline | localFlag) {
+				if (getChangeMode() != PFLM_GuiConstant.modeOnline | localFlag) {
 					s = s.append(getTextureName());
 					drawStringList.add(s.toString());
 					s2 = s2.append(getColor());
 					drawStringList.add(s2.toString());
 				}
-				if ((PFLM_Main.bipedCheck(drawEntity) | getChangeMode() == modeOnline) && !localFlag) {
+				if ((PFLM_Main.bipedCheck(drawEntity) | getChangeMode() == PFLM_GuiConstant.modeOnline) && !localFlag) {
 				} else {
 					s1 = s1.append(getTextureArmorName());
 					drawStringList.add(s1.toString());
 				}
 			}
 			StringBuilder s9 = (new StringBuilder()).append("changeMode : ");
-			s9 = s9.append(getChangeModeString(getChangeMode()));
+			s9 = s9.append(PFLM_GuiConstant.getChangeModeString(getChangeMode()));
 			drawStringList.add(s9.toString());
 			StringBuilder s10 = (new StringBuilder()).append("Handedness : ");
-			s10 = s10.append(getHandednessModeString(PFLM_ConfigData.handednessMode));
+			s10 = s10.append(PFLM_GuiConstant.getHandednessModeString(PFLM_ConfigData.handednessMode));
 			PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
-			if (PFLM_ConfigData.handednessMode == -1) s10 = s10.append(" Result : ").append(getHandednessModeString(modelData.getCapsValueInt(Modchu_IModelCapsBase.caps_dominantArm)));
+			if (PFLM_ConfigData.handednessMode == -1) s10 = s10.append(" Result : ").append(PFLM_GuiConstant.getHandednessModeString(modelData.getCapsValueInt(Modchu_IEntityCapsBase.caps_dominantArm)));
 			drawStringList.add(s10.toString());
-			if (PFLM_ConfigData.isModelSize && getChangeMode() != modeOnline) {
+			if (PFLM_ConfigData.isModelSize && getChangeMode() != PFLM_GuiConstant.modeOnline) {
 				float f1 = 0.5F;
 				float f2 = 1.35F;
 				float f3 = 1.17F;
 				if (!TempYOffsetInit) {
 					TempYOffsetInit = true;
-					if (PFLM_Main.gotchaNullCheck()) setTempYOffset(PFLM_Main.getyOffset());
+					if (PFLM_Main.gotchaNullCheck()) setTempYOffset(PFLM_Main.getYOffset());
 				}
 				f1 = PFLM_Main.getWidth();
 				f2 = PFLM_Main.getHeight();
-				f3 = PFLM_Main.getyOffset();
+				f3 = PFLM_Main.getYOffset();
 				String s3 = "Size : Width = " + f1 + " Height = " + f2;
 				s3 = (new StringBuilder()).append(s3).toString();
 				drawStringList.add(s3.toString());
-				String s4 = "yOffset : " + f3;
+				String s4 = "YOffset : " + f3;
 				s4 = (new StringBuilder()).append(s4).toString();
 				drawStringList.add(s4.toString());
 			}
-			if (getChangeMode() != modeRandom) {
+			if (getChangeMode() != PFLM_GuiConstant.modeRandom) {
 				//Modchu_Debug.mDebug("getChangeMode()="+getChangeMode());
 				PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 				StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
@@ -920,7 +920,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			drawString("ModchuLib", 10, 30, 0xffffff);
 			drawString((new StringBuilder()).append("newVersion v").append(Modchu_Main.newVersion).append(" Release!").toString(), 10, 40, 0xffffff);
 		}
-		if (getChangeMode() != modeRandom) {
+		if (getChangeMode() != PFLM_GuiConstant.modeRandom) {
 			String s5;
 			if (imageWriteComplete) {
 				s5 = (new StringBuilder()).append(PFLM_ConfigData.textureSavedir).append(tagSetFileName).append(" Successfully written file.").toString();
@@ -931,8 +931,8 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				drawString(s5, 10, 10, 0xffffff);
 			}
 		}
-		if (getChangeMode() != modeRandom
-				&& getChangeMode() != modeOnline) {
+		if (getChangeMode() != PFLM_GuiConstant.modeRandom
+				&& getChangeMode() != PFLM_GuiConstant.modeOnline) {
 			drawString("Model", width / 2 + 60, height / 2 - 56, 0xffffff);
 			drawString("Color", width / 2 + 60, height / 2 - 41, 0xffffff);
 			drawString("Armor", width / 2 + 60, height / 2 - 27, 0xffffff);
@@ -942,7 +942,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			s8 = (new StringBuilder()).append(s8).toString();
 			drawString(s8, width / 2 - 180, -scrollY, 0xffffff);
 			if (PFLM_Main.guiShowArmorSupport) {
-				s8 = (new StringBuilder()).append("Type : ").append(getArmorTypeString(armorType)).toString();
+				s8 = (new StringBuilder()).append("Type : ").append(PFLM_GuiConstant.getArmorTypeString(armorType)).toString();
 				drawString(s8, width / 2 - 100, 15 - scrollY, 0xffffff);
 			}
 		}
@@ -955,12 +955,12 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			s7 = (new StringBuilder()).append(s7).toString();
 			drawString(s7, guiLeft - 140, guiTop - 5, 0xffffff);
 		}
-		if (getChangeMode() != modeRandom) {
+		if (getChangeMode() != PFLM_GuiConstant.modeRandom) {
 			//Modchu_Debug.mDebug("getChangeMode()="+getChangeMode());
 			int var4 = guiLeft;
 			int var5 = guiTop;
 			drawMobModel(i, j, var4 + 51, var5 + 75, 0, -25, 50F, 0.0F, true);
-			if (getChangeMode() == modeOnline
+			if (getChangeMode() == PFLM_GuiConstant.modeOnline
 					| PFLM_Main.bipedCheck(drawEntity)
 					&& PFLM_ConfigData.guiMultiPngSaveButton
 					&& !partsButton
@@ -1003,7 +1003,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, thePlayer, true);
 		setTextureValue();
-		partsSetFlag = 1;
+		PFLM_GuiConstant.partsSetFlag = 1;
 		partsInitFlag = false;
 		partsSaveFlag = false;
 		partsSetDefault = false;
@@ -1018,17 +1018,17 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public void setTextureValue() {
 		PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		switch(getChangeMode()) {
-		case modeOffline:
+		case PFLM_GuiConstant.modeOffline:
 			setTextureName(getTextureName());
 			setTextureArmorName(getTextureArmorName());
 			setColor(getColor());
 			drawEntityModelData.setCapsValue(drawEntityModelData.caps_skinMode, PFLM_ModelDataMaster.skinMode_offline);
 			break;
-		case modeOnline:
+		case PFLM_GuiConstant.modeOnline:
 			//drawEntityModelData.modelMain = thePlayerModelData.modelMain;
 			//drawEntityModelData.modelFATT = thePlayerModelData.modelFATT;
 			drawEntityModelData.setCapsValue(drawEntityModelData.caps_skinMode, PFLM_ModelDataMaster.skinMode_online);
-			PFLM_ModelDataMaster.instance.loadPlayerData(drawEntity, drawEntityModelData);
+			drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.newPlayerData(drawEntity, drawEntityModelData);
 /*
 			drawEntityModelData.setCapsValue(drawEntityModelData.caps_textureName, thePlayerModelData.getCapsValue(thePlayerModelData.caps_textureName));
 			drawEntityModelData.setCapsValue(drawEntityModelData.caps_textureArmorName, thePlayerModelData.getCapsValue(thePlayerModelData.caps_textureArmorName));
@@ -1036,7 +1036,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 */
 			break;
 		}
-		if (getChangeMode() != modeOnline) drawEntityModelData.setCapsValue(drawEntityModelData.caps_freeVariable, "skinChar", false);
+		if (getChangeMode() != PFLM_GuiConstant.modeOnline) drawEntityModelData.setCapsValue(drawEntityModelData.caps_freeVariable, "skinChar", false);
 		super.setTextureValue();
 		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
 		PFLM_ModelData thePlayerModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
@@ -1065,11 +1065,12 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	@Override
 	public void selected(String textureName, String textureArmorName, int color, boolean armorMode) {
 		super.selected(textureName, textureArmorName, color, armorMode);
+		//Modchu_Debug.mDebug("PFLM_GuiMaster selected getTextureName()="+getTextureName()+" textureName="+textureName);
 		if (armorMode) {
 			setTextureName(getTextureName());
 			setColor(getColor());
 		}
-		Modchu_Debug.mDebug("PFLM_GuiMaster selected");
+		//Modchu_Debug.mDebug("PFLM_GuiMaster selected");
 	}
 
 	public void setTextureArmorPackege(int i, boolean b) {
@@ -1103,7 +1104,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		return PFLM_Main.texturesArmorNamber[i];
 	}
 */
-	private static void setArmorNumber(int i) {
+	private void setArmorNumber(int i) {
 		setArmor = i;
 	}
 
@@ -1121,7 +1122,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public void setPositionCorrection() {
 		PFLM_Main.setSize(0.6F, 1.8F);
 		PFLM_Main.resetHeight();
-		double d = tempYOffset - PFLM_Main.getyOffset() - 0.5D;
+		double d = tempYOffset - PFLM_Main.getYOffset() - 0.5D;
 		PFLM_Main.setPositionCorrection(0.0D, -d, 0.0D);
 	}
 
@@ -1138,7 +1139,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		} else {
 			try {
 				if (bufferedimage1 == null
-						| getChangeMode() == modeOffline) {
+						| getChangeMode() == PFLM_GuiConstant.modeOffline) {
 					image = readTextureImage(ModchuModel_Main.textureManagerGetTexture(getTextureName(), c));
 				} else {
 					image = bufferedimage1;
@@ -1152,7 +1153,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		if (image != null
 				&& result) {
 			if (PFLM_Main.bipedCheck(drawEntity)
-					| getChangeMode() == modeOnline) {
+					| getChangeMode() == PFLM_GuiConstant.modeOnline) {
 				result = false;
 			} else {
 				result = true;
@@ -1174,11 +1175,11 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			int setX = image.getWidth() - 1;
 			int setY = 0;
 			if (rightBottomSet) setY = 31;
-			int rgb = colorRGB(255, 0, 0);
+			int rgb = Modchu_RenderEngine.instance.colorRGB(255, 0, 0);
 			image.setRGB(setX, setY, rgb);
 
 			//ローカルテクスチャを使用するかどうか判断用ドット
-			rgb = result ? colorRGB(255, 255, 0) : colorRGB(255, 0, 255);
+			rgb = result ? Modchu_RenderEngine.instance.colorRGB(255, 255, 0) : Modchu_RenderEngine.instance.colorRGB(255, 0, 255);
 			setY = 1;
 			if (rightBottomSet) setY = 30;
 			image.setRGB(setX, setY, rgb);
@@ -1187,7 +1188,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			int r1 = result ? 255 - c : 255 - drawMuitiModelData.getCapsValueInt(drawMuitiModelData.caps_maidColor);
 			int g1 = 255 - t2;
 			int b1 = 255 - t;
-			rgb = colorRGB(r1, g1, b1);
+			rgb = Modchu_RenderEngine.instance.colorRGB(r1, g1, b1);
 			setX = image.getWidth() - 2;
 			setY = 0;
 			if (rightBottomSet) setY = image.getHeight() - 1;
@@ -1197,14 +1198,14 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			//handedness r = 255 right , r = 0 left , else Random
 			Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
 			PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
-			int handedness = modelData.getCapsValueInt(Modchu_IModelCapsBase.caps_dominantArm);
+			int handedness = modelData.getCapsValueInt(Modchu_IEntityCapsBase.caps_dominantArm);
 			r1 = handedness == 0 ? 255 : handedness == 1 ? 0 : 128;
 			//g = PFLM_ConfigData.modelScale
 			g1 = 255 - ((int) (getScale() / (0.9375F / 24F)));
 			if (g1 > 255) g1 = 255;
 			if (g1 < 0) g1 = 0;
 			b1 = 255;
-			rgb = colorRGB(r1, g1, b1);
+			rgb = Modchu_RenderEngine.instance.colorRGB(r1, g1, b1);
 			setX = image.getWidth() - 2;
 			setY = 1;
 			if (rightBottomSet) setY = 30;
@@ -1225,7 +1226,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 */
 			tagSetFileName = s;
 			s = (new StringBuilder()).append(PFLM_ConfigData.textureSavedir).append(s).toString();
-			createDir(s);
+			Modchu_FileManager.createDir(s);
 			try {
 				result = ImageIO.write(image, "png", new File(Modchu_AS.getFile(Modchu_AS.minecraftMcDataDir) + s));
 				image.flush();
@@ -1276,19 +1277,9 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				}
 			}
 		} catch (Exception e) {
-			Modchu_Debug.lDebug("" + getClass().getName(), "fullColorConversion", 2, e);
+			Modchu_Debug.lDebug("" + getClass().getName()+" fullColorConversion", 2, e);
 		}
 		return write;
-	}
-
-	public static void createDir(String s) {
-		String s1 = "";
-		String as[] = s.split("/");
-		for (int i = 0; i < as.length - 1; i++) {
-			s1 = (new StringBuilder()).append(s1).append(as[i]).toString();
-			boolean flag = (new File((new StringBuilder()).append(Modchu_AS.getFile(Modchu_AS.minecraftMcDataDir)).append(s1).toString())).mkdir();
-			s1 = (new StringBuilder()).append(s1).append("/").toString();
-		}
 	}
 
 	public void setcheck() {
@@ -1308,30 +1299,6 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_skinMode, PFLM_ModelDataMaster.skinMode_offline);
 	}
 
-	public static int colorA(int c) {
-		return c >>> 24;
-	}
-
-	public static int colorR(int c) {
-		return c >> 16 & 0xff;
-	}
-
-	public static int colorG(int c) {
-		return c >> 8 & 0xff;
-	}
-
-	public static int colorB(int c) {
-		return c & 0xff;
-	}
-
-	public static int colorRGB(int r, int g, int b) {
-		return 0xff000000 | r << 16 | g << 8 | b;
-	}
-
-	public static int colorARGB(int a, int r, int g, int b) {
-		return a << 24 | r << 16 | g << 8 | b;
-	}
-
 	@Override
 	public String getTextureName() {
 		return PFLM_ConfigData.textureName;
@@ -1342,6 +1309,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		drawEntityModelData.setCapsValue(drawEntityModelData.caps_textureName, s);
 		PFLM_ConfigData.textureName = s;
+		Modchu_Debug.mDebug("PFLM_GuiMaster setTextureName s="+s);
 	}
 
 	@Override
@@ -1387,54 +1355,6 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	@Override
 	public void setChangeMode(int i) {
 		PFLM_ConfigData.changeMode = i;
-	}
-
-	public static String getChangeModeString(int i) {
-		String s = null;
-		switch (i) {
-		case modeOffline:
-			s = "modeOffline";
-			break;
-		case modeOnline:
-			s = "modeOnline";
-			break;
-		case modeRandom:
-			s = "modeRandom";
-			break;
-		}
-		return s;
-	}
-
-	public static String getHandednessModeString(int i) {
-		String s = null;
-		switch (i) {
-		case -1:
-			s = "RandomMode";
-			break;
-		case 0:
-			s = "R";
-			break;
-		case 1:
-			s = "L";
-			break;
-		}
-		return s;
-	}
-
-	public static String getArmorTypeString(int i) {
-		String s = null;
-		switch (i) {
-		case 0:
-			s = "mainInner";
-			break;
-		case 2:
-			s = "armorInner";
-			break;
-		case 3:
-			s = "armorOuter";
-			break;
-		}
-		return s;
 	}
 /*
 	public static ConcurrentHashMap<String, Boolean> getShowPartsMap() {

@@ -6,8 +6,7 @@ import java.util.List;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiBase;
-import modchu.lib.characteristic.recompileonly.Modchu_GuiModelView;
+import modchu.lib.characteristic.Modchu_GuiModelView;
 
 import org.lwjgl.input.Mouse;
 
@@ -17,13 +16,13 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 	private Object localScroll;
 	public static List<String> playerList;
 
-	public PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super(guiBase, par1GuiScreen, world, (Object[])o);
+	public PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
+		super(guiBase, guiScreen, world, (Object[])o);
 	}
 
 	@Override
-	public void init(Modchu_GuiBase guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super.init(guiBase, par1GuiScreen, world, o);
+	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
+		super.init(guiBase, guiScreen, world, o);
 		othersPlayerIndividualCustomizeSelectMasterInit();
 	}
 
@@ -87,32 +86,33 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 		if (!Modchu_AS.getBoolean(Modchu_AS.guiButtonEnabled, guibutton)) {
 			return;
 		}
-		//delete
 		int id = Modchu_AS.getInt(Modchu_AS.guiButtonID, guibutton);
-		if(id == 0) {
+
+		//delete
+		if (id == 0) {
 			Modchu_Reflect.invokeMethod(selectPanel.getClass(), "deletePlayerLocalData", selectPanel);
 		}
 		//Return
-		if(id == 201) {
+		if (id == 201) {
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiOthersPlayerMaster.class, base, popWorld));
 		}
 		//Select
-		if(id == 300) {
+		if (id == 300) {
 			Modchu_Reflect.invokeMethod(selectPanel.getClass(), "openGuiCustomize", selectPanel);
 			return;
-		} else {
-			Modchu_AS.set(Modchu_AS.guiSlotActionPerformed, selectPanel, guibutton);
 		}
+
+		Modchu_AS.set(Modchu_AS.guiSlotActionPerformed, selectPanel, guibutton);
 	}
 
 	@Override
 	public boolean drawScreen(int i, int j, float f) {
-		base.superDrawDefaultBackground();
+		Modchu_Reflect.invokeMethod(base.getClass(), "superDrawDefaultBackground", base);
 		super.drawScreen(i, j, f);
 		Modchu_AS.set(Modchu_AS.guiSlotDrawScreen, selectPanel, i, j, f);
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
 		Modchu_AS.set(Modchu_AS.guiDrawCenteredString, base, getFontRenderer(), screenTitle, width / 2, 20, 0xffffff);
-		base.superDrawScreen(i, j, f);
+		Modchu_Reflect.invokeMethod(base.getClass(), "superDrawScreen", new Class[]{ int.class, int.class, float.class }, base, new Object[]{ i, j, f });
 		return false;
 	}
 
