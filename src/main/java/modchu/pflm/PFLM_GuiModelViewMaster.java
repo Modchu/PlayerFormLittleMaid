@@ -8,7 +8,7 @@ import modchu.lib.Modchu_IGuiModelViewMaster;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiBase;
+import modchu.lib.characteristic.Modchu_GlStateManager;
 import modchu.lib.characteristic.Modchu_GuiModelView;
 import modchu.model.ModchuModel_Main;
 
@@ -91,9 +91,9 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 
 	@Override
 	public void initGui() {
-		if (base != null) ;else return;
+		if (base != null); else return;
 		List buttonList = Modchu_AS.getList(Modchu_AS.guiScreenButtonList, base);
-		if (buttonList != null) ;else return;
+		if (buttonList != null); else return;
 		buttonList.clear();
 		if (!displayButton) return;
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
@@ -152,7 +152,7 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		if (drawStringList != null
 				&& !drawStringList.isEmpty()
-				&& displayButton) ;else return;
+				&& displayButton); else return;
 		String s;
 		for (int i1 = 0; i1 < drawStringList.size(); i1++) {
 			s = drawStringList.get(i1);
@@ -167,7 +167,7 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 	}
 
 	public void initDrawEntity() {
-		if (drawEntity != null) ;else drawEntity = Modchu_Reflect.newInstance("modchu.lib.characteristic.Modchu_EntityPlayerDummy", new Class[]{ Modchu_Reflect.loadClass("World") }, new Object[]{ popWorld });
+		if (drawEntity != null); else drawEntity = Modchu_Reflect.newInstance("modchu.lib.characteristic.Modchu_EntityPlayerDummy", new Class[]{ Class.class, Modchu_Reflect.loadClass("World") }, new Object[]{ PFLM_EntityPlayerDummyMaster.class, popWorld });
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", true);
 		modelData.setCapsValue(modelData.caps_freeVariable, "initDrawEntityFlag", true);
@@ -254,82 +254,87 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 
 	@Override
 	public void drawMobModel(Object guiScreen, int i, int j, int x, int y, int x2, int y2, float f, float f1, float f2, float f3, float f4, float f5, boolean move, Object entity) {
-		//Modchu_Debug.dDebug("drawMobModel2 x=" + i + " y=" + j, 1);
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-		GL11.glPushMatrix();
-		float entityWidth = Modchu_AS.getFloat(Modchu_AS.entityWidth, entity);
-		float entityHeight = Modchu_AS.getFloat(Modchu_AS.entityHeight, entity);
-		float width = Modchu_AS.getFloat(Modchu_AS.guiScreenWidth, guiScreen);
-		float height = Modchu_AS.getFloat(Modchu_AS.guiScreenHeight, guiScreen);
-		if (entityHeight > 2F) {
-			f = f * 2F / entityHeight;
-		}
-		GL11.glTranslatef(x, y, 50F + f1);
-		GL11.glScalef(-f, f, f);
+		Modchu_GlStateManager.pushMatrix();
+		Modchu_GlStateManager.enableColorMaterial();
+		try {
+			//Modchu_Debug.dDebug("drawMobModel2 x=" + i + " y=" + j, 1);
+			float entityWidth = Modchu_AS.getFloat(Modchu_AS.entityWidth, entity);
+			float entityHeight = Modchu_AS.getFloat(Modchu_AS.entityHeight, entity);
+			float width = Modchu_AS.getFloat(Modchu_AS.guiScreenWidth, guiScreen);
+			float height = Modchu_AS.getFloat(Modchu_AS.guiScreenHeight, guiScreen);
+			if (entityHeight > 2F) {
+				f = f * 2F / entityHeight;
+			}
+			Modchu_GlStateManager.translate(x, y, 50F + f1);
+			Modchu_GlStateManager.scale(-f, f, f);
 /*
-		if (Modchu_Main.getMinecraftVersion() > 169
-				| (Modchu_Main.isRelease()
-						&& Modchu_Main.isForge)
-				| PFLM_Main.oldRender) {
+			if (Modchu_Main.getMinecraftVersion() > 169
+					| (Modchu_Main.isRelease()
+							&& Modchu_Main.isForge)
+					| PFLM_Main.oldRender) {
 */
-			GL11.glRotatef(180F, 180.0F, 0.0F, 1.0F);
+			Modchu_GlStateManager.rotate(180F, 180.0F, 0.0F, 1.0F);
 /*
-		} else {
-			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		}
+			} else {
+				Modchu_GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
+			}
 */
-		//GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
-		if (move) {
-			float ff1 = width / 2 + x2 - i;
-			float ff2 = height / 2 + y2 - j;
-			GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
-			//GL11.glRotatef(-(float)Math.atan(f6 / 40F) * 20F, 1.0F, 0.0F, 0.0F);
-			GL11.glTranslatef(comeraPosX, comeraPosY, comeraPosZ);
-			GL11.glRotatef(comeraRotationX, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(comeraRotationY, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(comeraRotationZ, 0.0F, 0.0F, 1.0F);
-			GL11.glRotatef((float) Math.atan(ff1 / 40F) * f5, 0.0F, 1.0F, 0.0F);
-			GL11.glScalef(cameraZoom, cameraZoom, cameraZoom);
-			Modchu_AS.set(Modchu_AS.entityRotationYaw, entity, (float) Math.atan(ff1 / 40F) * f2);
-			Modchu_AS.set(Modchu_AS.entityRotationPitch, entity, (float) Math.atan(ff2 / 40F) * f3);
-			//entity.renderYawOffset = (float)Math.atan(ff1 / 40F) * f4;
-			Modchu_AS.set(Modchu_AS.entityLivingBasePrevRotationYawHead, entity, Modchu_AS.getFloat(Modchu_AS.entityLivingBaseRotationYawHead, entity));
-			Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, entity, Modchu_AS.getFloat(Modchu_AS.entityRotationYaw, entity));
-			//entity.rotationYawHead = 0F;
-			//entity.prevRotationYawHead = 0F;
-			Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, entity, 0.0F);
-			//Modchu_Debug.dDebug("drawMobModel2 ff1=" + ff1 + " f2=" + f2+" entity.rotationYaw="+Modchu_AS.get(Modchu_AS.entityRotationYaw, entity), 2);
-			//Modchu_Debug.dDebug("drawMobModel2 ff2=" + ff2 + " f3=" + f3, 3);
-		} else {
-			Modchu_AS.set(Modchu_AS.entityRotationYaw, entity, 0.0F);
-			Modchu_AS.set(Modchu_AS.entityRotationPitch, entity, 0.0F);
-			Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, entity, 0.0F);
-			Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, entity, 0.0F);
+			//Modchu_GlStateManager.rotate(180F, 0.0F, 1.0F, 0.0F);
+			if (move) {
+				float ff1 = width / 2 + x2 - i;
+				float ff2 = height / 2 + y2 - j;
+				Modchu_GlStateManager.rotate(135F, 0.0F, 1.0F, 0.0F);
+				Modchu_GlStateManager.rotate(-135F, 0.0F, 1.0F, 0.0F);
+				//Modchu_GlStateManager.rotate(-(float)Math.atan(f6 / 40F) * 20F, 1.0F, 0.0F, 0.0F);
+				Modchu_GlStateManager.translate(comeraPosX, comeraPosY, comeraPosZ);
+				Modchu_GlStateManager.rotate(comeraRotationX, 1.0F, 0.0F, 0.0F);
+				Modchu_GlStateManager.rotate(comeraRotationY, 0.0F, 1.0F, 0.0F);
+				Modchu_GlStateManager.rotate(comeraRotationZ, 0.0F, 0.0F, 1.0F);
+				Modchu_GlStateManager.rotate((float) Math.atan(ff1 / 40F) * f5, 0.0F, 1.0F, 0.0F);
+				Modchu_GlStateManager.scale(cameraZoom, cameraZoom, cameraZoom);
+				Modchu_AS.set(Modchu_AS.entityRotationYaw, entity, (float) Math.atan(ff1 / 40F) * f2);
+				Modchu_AS.set(Modchu_AS.entityRotationPitch, entity, (float) Math.atan(ff2 / 40F) * f3);
+				//entity.renderYawOffset = (float)Math.atan(ff1 / 40F) * f4;
+				Modchu_AS.set(Modchu_AS.entityLivingBasePrevRotationYawHead, entity, Modchu_AS.getFloat(Modchu_AS.entityLivingBaseRotationYawHead, entity));
+				Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, entity, Modchu_AS.getFloat(Modchu_AS.entityRotationYaw, entity));
+				//entity.rotationYawHead = 0F;
+				//entity.prevRotationYawHead = 0F;
+				Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, entity, 0.0F);
+				//Modchu_Debug.dDebug("drawMobModel2 ff1=" + ff1 + " f2=" + f2+" entity.rotationYaw="+Modchu_AS.get(Modchu_AS.entityRotationYaw, entity), 2);
+				//Modchu_Debug.dDebug("drawMobModel2 ff2=" + ff2 + " f3=" + f3, 3);
+			} else {
+				Modchu_AS.set(Modchu_AS.entityRotationYaw, entity, 0.0F);
+				Modchu_AS.set(Modchu_AS.entityRotationPitch, entity, 0.0F);
+				Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, entity, 0.0F);
+				Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, entity, 0.0F);
+			}
+			Modchu_GlStateManager.translate(0.0F, Modchu_AS.getFloat(Modchu_AS.entityYOffset, entity), 0.0F);
+			//RenderManager.instance.playerViewY = 180F;
+			GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+			Modchu_GlStateManager.enableColorMaterial();
+			Modchu_GlStateManager.enableTexture2D();
+			Modchu_GlStateManager.depthMask(true);
+			Modchu_AS.set(Modchu_AS.renderHelperEnableStandardItemLighting);
+			//Modchu_GlStateManager.disable(GL12.GL_RESCALE_NORMAL);
+			Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperLightmapTexUnit));
+			Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperDefaultTexUnit));
+			boolean b = Modchu_AS.getBoolean(Modchu_AS.renderManagerRenderEntityWithPosYaw, entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+			//Modchu_Debug.mDebug("renderManagerRenderEntityWithPosYaw b="+b);
+			//Modchu_Debug.mDebug("renderManagerGetEntityRenderObject="+Modchu_AS.get(Modchu_AS.renderManagerGetEntityRenderObject, entity));
+		} catch(Error e) {
+			e.printStackTrace();
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
-		GL11.glTranslatef(0.0F, Modchu_AS.getFloat(Modchu_AS.entityYOffset, entity), 0.0F);
-		//RenderManager.instance.playerViewY = 180F;
-		GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-		GL11.glEnable(2903 /*GL_COLOR_MATERIAL*/);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDepthMask(true);
-		Modchu_AS.set(Modchu_AS.renderHelperEnableStandardItemLighting);
-		//GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-		Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperLightmapTexUnit));
-		Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperDefaultTexUnit));
-		boolean b = Modchu_AS.getBoolean(Modchu_AS.renderManagerRenderEntityWithPosYaw, entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-		//Modchu_Debug.mDebug("renderManagerRenderEntityWithPosYaw b="+b);
-		//Modchu_Debug.mDebug("renderManagerGetEntityRenderObject="+Modchu_AS.get(Modchu_AS.renderManagerGetEntityRenderObject, entity));
-		GL11.glPopMatrix();
+		Modchu_GlStateManager.popMatrix();
 
 		//Modchu_AS.set(Modchu_AS.renderHelperDisableStandardItemLighting);
-		GL11.glDisable(32826);
+		GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperLightmapTexUnit));
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		Modchu_GlStateManager.enableTexture2D();
 		Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperDefaultTexUnit));
-		GL11.glDisable(GL11.GL_LIGHTING);
-
+		Modchu_GlStateManager.disableLighting();
 	}
 
 	@Override
@@ -406,7 +411,7 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 		long systemTime = Modchu_AS.getLong(Modchu_AS.minecraftSystemTime);
 		if (Mouse.isButtonDown(0)
 				| Mouse.isButtonDown(1)
-				| Mouse.isButtonDown(2)) ;else {
+				| Mouse.isButtonDown(2)); else {
 			if (tempLastMouseEventTime == -1) {
 				if (clickMove) {
 					clickMove = false;

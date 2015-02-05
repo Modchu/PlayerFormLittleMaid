@@ -153,7 +153,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//ModelChange
 		if(id == 50
 				| id == 51) {
-			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false);
+			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false, PFLM_ConfigData.autoArmorSelect);
 			setTextureName(s0[0]);
 			setTextureArmorName(s0[1]);
 			modelChange();
@@ -180,7 +180,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//ArmorChange
 		if(id == 54
 				| id == 55) {
-			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true);
+			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true, PFLM_ConfigData.autoArmorSelect);
 			setTextureArmorName(s0[1]);
 			modelData.setCapsValue(modelData.caps_textureArmorName, getTextureArmorName());
 			noSaveFlag = true;
@@ -334,11 +334,11 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		modelData.setCapsValue(modelData.caps_textureArmorName, s);
 		Object ltb = ModchuModel_Main.checkTextureArmorPackege(s);
 		//Modchu_Debug.mDebug("setTextureArmorPackege s="+s);
-		if (ltb != null) ;else {
+		if (ltb != null); else {
 			//Modchu_Debug.mDebug("setTextureArmorPackege ltb == null !!");
 			modelData.setCapsValue(modelData.caps_textureArmorName, "default");
 		}
-		if (modelData.getCapsValue(modelData.caps_textureArmorName) != null) ;else {
+		if (modelData.getCapsValue(modelData.caps_textureArmorName) != null); else {
 			//Modchu_Debug.mDebug("setTextureArmorPackege modelData.getCapsValue(modelData.caps_textureArmorName) == null !!");
 			modelData.setCapsValue(modelData.caps_textureArmorName, modelData.getCapsValue(modelData.caps_textureName));
 		}

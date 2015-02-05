@@ -126,7 +126,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public void initDrawEntity() {
 		super.initDrawEntity();
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		if (drawMuitiEntity != null) ;else drawMuitiEntity = Modchu_Reflect.newInstance("modchu.lib.characteristic.Modchu_EntityPlayerDummy", new Class[]{ Modchu_Reflect.loadClass("World") }, new Object[]{ popWorld });
+		if (drawMuitiEntity != null); else drawMuitiEntity = Modchu_Reflect.newInstance("modchu.lib.characteristic.Modchu_EntityPlayerDummy", new Class[]{ Class.class, Modchu_Reflect.loadClass("World") }, new Object[]{ PFLM_EntityPlayerDummyMaster.class, popWorld });
 		PFLM_ModelData drawMuitiModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawMuitiEntity);
 		drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_freeVariable, "showMainModel", true);
 		drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_freeVariable, "initDrawEntityFlag", true);
@@ -330,7 +330,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		Object model = PFLM_Main.getModel(armorType);
 		ConcurrentHashMap<Integer, String> showPartsNemeMap = ModchuModel_Config.getConfigShowPartsNemeMap(getTextureName(), armorType);
 		if (showPartsNemeMap != null
-				&& !showPartsNemeMap.isEmpty()) ;else return;
+				&& !showPartsNemeMap.isEmpty()); else return;
 		ConcurrentHashMap<String, Boolean> showPartsList = ModchuModel_Config.getConfigShowPartsMap(getTextureName(), getColor(), armorType);
 		ConcurrentHashMap<String, Field> modelRendererMap = ModchuModel_Config.getConfigModelRendererMap(model, getTextureName(), armorType);
 		ConcurrentHashMap<String, Boolean> defaultShowPartsMap = ModchuModel_Config.getDefaultShowPartsMap(getTextureName(), armorType);
@@ -617,7 +617,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		//ModelChange
 		if (id == 50 | id == 51) {
-			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false);
+			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false, PFLM_ConfigData.autoArmorSelect);
 			if (s0 != null && s0[0] != null && !s0[0].isEmpty()) {
 				setTextureName(s0[0]);
 				if (s0[1] != null && !s0[1].isEmpty()) setTextureArmorName(s0[1]);
@@ -656,7 +656,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			//armorNamber += id == 55 ? 1 : -1;
 			//if (armorNamber >= PFLM_Main.maxTexturesArmorNamber) armorNamber = 0;
 			//if (armorNamber < 0) armorNamber = PFLM_Main.maxTexturesArmorNamber - 1;
-			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true);
+			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true, PFLM_ConfigData.autoArmorSelect);
 			setTextureArmorName(s0[1]);
 			//Modchu_Debug.mDebug("armorNamber="+armorNamber);
 

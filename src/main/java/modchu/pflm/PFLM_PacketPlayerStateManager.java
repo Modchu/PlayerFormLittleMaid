@@ -15,7 +15,7 @@ public class PFLM_PacketPlayerStateManager {
 	}
 
 	public static void addSendList(byte by, ModchuModel_ModelDataBase modelData, Object entity, Object... o) {
-		if (ModchuModel_Main.isPFLMF) ;else {
+		if (ModchuModel_Main.isPFLMF); else {
 			//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager addSendList !ModchuModel_Main.isPFLMF return");
 			return;
 		}
@@ -30,14 +30,14 @@ public class PFLM_PacketPlayerStateManager {
 	}
 
 	public static Object getPlayerStateObject(Object entityId, byte by) {
-		if (ModchuModel_Main.isPFLMF) ;else return false;
+		if (ModchuModel_Main.isPFLMF); else return false;
 		LinkedList list = getPlayerState(entityId, by);
 		if (list != null) return Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Client", "receivePacket", new Class[]{ LinkedList.class, boolean.class }, new Object[]{ list, true });
 		return null;
 	}
 
 	public static LinkedList getPlayerState(Object entityId, byte by) {
-		if (ModchuModel_Main.isPFLMF) ;else return null;
+		if (ModchuModel_Main.isPFLMF); else return null;
 		Object o = Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Main", "getPlayerState", new Class[]{ Object.class, byte.class }, null, new Object[]{ entityId, by });
 		return o != null ? (LinkedList) o : null;
 	}

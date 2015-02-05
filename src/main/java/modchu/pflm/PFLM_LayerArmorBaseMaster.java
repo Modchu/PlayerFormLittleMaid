@@ -26,15 +26,21 @@ public class PFLM_LayerArmorBaseMaster extends Modchu_LayerArmorBaseMasterBasis 
 			int i1 = Modchu_CastHelper.Int(Modchu_Reflect.invokeMethod(render.getClass(), "setArmorModel", new Class[]{ Object.class, Object.class, int.class, float.class, int.class }, render, new Object[]{ null, entityLivingBase, i, f6, 0 }));
 			if (i1 < 0
 					| Modchu_CastHelper.Int(Modchu_Reflect.invokeMethod(render.getClass(), "shouldRenderPass", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), int.class, float.class }, render, new Object[]{ entityLivingBase, i, f6 })) < 0) continue;
-
-			modelInner.setLivingAnimations(entityLivingBase, f, f1, f2);
-			Modchu_AS.set(Modchu_AS.renderBindTexture, render, modelData.modelFATT.textureInner[i]);
-			modelInner.setModelAttributes(modelData.modelMain.model);
-			modelInner.render(modelData, f, f1, f2, f4, f5, f6, (Boolean) Modchu_Reflect.getFieldObject(Modchu_ModelBaseNihilBase.class, "isRendering", modelData.modelFATT));
-
-			modelOuter.setLivingAnimations(entityLivingBase, f, f1, f2);
-			Modchu_AS.set(Modchu_AS.renderBindTexture, render, modelData.modelFATT.textureOuter[i]);
-			modelOuter.render(modelData, f, f1, f2, f4, f5, f6, (Boolean) Modchu_Reflect.getFieldObject(Modchu_ModelBaseNihilBase.class, "isRendering", modelData.modelFATT));
+			if (modelInner != null) {
+				modelInner.setLivingAnimations(entityLivingBase, f, f1, f2);
+				modelInner.setModelAttributes(modelData.modelMain.model);
+				if (modelData.modelFATT.textureInner[i] != null) Modchu_AS.set(Modchu_AS.renderBindTexture, render, modelData.modelFATT.textureInner[i]);
+				modelInner.render(modelData, f, f1, f3, f4, f5, f6, modelData.modelFATT.textureInner[i] != null ? (Boolean) Modchu_Reflect.getFieldObject(Modchu_ModelBaseNihilBase.class, "isRendering", modelData.modelFATT) : false);
+				//Modchu_Debug.mDebug("PFLM_LayerArmorBaseMaster doRenderLayer modelData.modelFATT.textureInner["+i+"]="+modelData.modelFATT.textureInner[i]);
+				//Modchu_Debug.mDebug("PFLM_LayerArmorBaseMaster doRenderLayer isRendering="+Modchu_Reflect.getFieldObject(Modchu_ModelBaseNihilBase.class, "isRendering", modelData.modelFATT));
+				//Modchu_Debug.mDebug("PFLM_LayerArmorBaseMaster doRenderLayer modelInner="+modelInner);
+			}
+			if (modelOuter != null) {
+				modelOuter.setLivingAnimations(entityLivingBase, f, f1, f2);
+				modelOuter.setModelAttributes(modelData.modelMain.model);
+				if (modelData.modelFATT.textureOuter[i] != null) Modchu_AS.set(Modchu_AS.renderBindTexture, render, modelData.modelFATT.textureOuter[i]);
+				modelOuter.render(modelData, f, f1, f3, f4, f5, f6, modelData.modelFATT.textureOuter[i] != null ? (Boolean) Modchu_Reflect.getFieldObject(Modchu_ModelBaseNihilBase.class, "isRendering", modelData.modelFATT) : false);
+			}
 		}
 	}
 /*

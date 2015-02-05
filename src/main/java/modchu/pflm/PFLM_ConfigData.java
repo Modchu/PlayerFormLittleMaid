@@ -74,6 +74,7 @@ public class PFLM_ConfigData {
 	public static boolean shortcutKeysPFLMModelsUse[] = new boolean[maxShortcutKeys];
 	public static boolean shortcutKeysCtrlUse[] = new boolean[maxShortcutKeys];
 	public static boolean shortcutKeysShiftUse[] = new boolean[maxShortcutKeys];
+	public static boolean autoArmorSelect = true;
 	public static int shortcutKeysNumber = 0;
 	public static int[][] texturesNamber;
 	public static int[] texturesArmorNamber;

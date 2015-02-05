@@ -18,11 +18,11 @@ public class PFLM_Aether {
 
 	public PFLM_Aether() {
 		RenderPlayerAether = Modchu_Reflect.loadClass("net.aetherteam.aether.client.RenderPlayerAether");
-		if (renderPlayerAether != null) ;else {
+		if (renderPlayerAether != null); else {
 			renderPlayerAether = RenderPlayerAether != null ? Modchu_Reflect.newInstance(RenderPlayerAether) : null;
 			Modchu_AS.set(Modchu_AS.renderRenderManager, renderPlayerAether);
 		}
-		if (modchu_ModelBiped != null) ;else {
+		if (modchu_ModelBiped != null); else {
 			modchu_ModelBiped = new Modchu_ModelBiped(null);
 		}
 	}
@@ -30,7 +30,7 @@ public class PFLM_Aether {
 	public Object[] modchu_RenderPlayerDoRender(Object[] o) {
 		//Modchu_Debug.mDebug("PFLM_Aether modchu_RenderPlayerDoRender o[0]="+(o != null ? o[0] : null));
 		//Modchu_Reflect.setFieldObject(renderPlayerAether.getClass(), "scale", renderPlayerAether, f);
-		if (o != null && o.length > 5 && pflm_RenderPlayerMaster != null) ;else {
+		if (o != null && o.length > 5 && pflm_RenderPlayerMaster != null); else {
 			if (pflm_RenderPlayerMaster == null) {
 				Object render = Modchu_Main.getRender(Modchu_AS.get(Modchu_AS.minecraftThePlayer));
 				if (render != null
@@ -42,7 +42,7 @@ public class PFLM_Aether {
 		Object entity = o[0];
 		float f1 = Modchu_CastHelper.Float(o[5]);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(entity);
-		if (modelData != null) ;else return null;
+		if (modelData != null); else return null;
 		modchu_ModelBiped.master = modelData.modelMain.model;
 		Modchu_Reflect.setFieldObject(RenderPlayerAether, "modelMisc", renderPlayerAether, modchu_ModelBiped);
 		Object modelMisc = Modchu_Reflect.getFieldObject(RenderPlayerAether, "modelMisc", renderPlayerAether);
@@ -99,10 +99,10 @@ public class PFLM_Aether {
 
 	public Object[] modchu_RenderPlayerRenderFirstPersonArm(Object[] o) {
 		if (o != null
-				&& o.length > 0) ;else return null;
+				&& o.length > 0); else return null;
 		//Modchu_Debug.mDebug("PFLM_Aether modchu_RenderPlayerRenderFirstPersonArm o[0]="+(o != null ? o[0] : null));
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(o[0]);
-		if (modelData != null) ;else return null;
+		if (modelData != null); else return null;
 		if (modelData.modelMain.model != null
 				&& modelData.getCapsValue(modelData.caps_ResourceLocation) != null) {
 			pflm_RenderPlayerMaster.bindTexture(modelData, modelData.getCapsValue(modelData.caps_ResourceLocation));
@@ -114,10 +114,10 @@ public class PFLM_Aether {
 
 	public Object[] modchu_RenderPlayerRenderEquippedItems(Object[] o) {
 		if (o != null
-				&& o.length > 1) ;else return null;
+				&& o.length > 1); else return null;
 		//Modchu_Debug.mDebug("PFLM_Aether modchu_RenderPlayerRenderEquippedItems o[0]="+(o != null ? o[0] : null));
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(o[0]);
-		if (modelData != null) ;else return null;
+		if (modelData != null); else return null;
 		float f1 = 1.62F - (Float) modelData.getCapsValue(modelData.caps_YOffset);
 		Modchu_Reflect.invokeMethod(RenderPlayerAether, "renderSpecialHeadEars", new Class[]{ Modchu_Reflect.loadClass("EntityPlayer"), float.class }, renderPlayerAether, new Object[]{ o[0], o[1] });
 		return null;
@@ -125,7 +125,7 @@ public class PFLM_Aether {
 
 	public Object[] modchu_RenderPlayerRenderPlayerSleep(Object[] o) {
 		if (o != null
-				&& o.length > 3) ;else return null;
+				&& o.length > 3); else return null;
 		//Modchu_Debug.mDebug("PFLM_Aether modchu_RenderPlayerRenderPlayerSleep o[0]="+(o != null ? o[0] : null));
 		Modchu_Reflect.invokeMethod(Modchu_Reflect.loadClass("RenderPlayer"), "func_77039_a", "renderLivingAt", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), double.class, double.class, double.class }, renderPlayerAether, new Object[]{ o[0], o[1], o[2], o[3] });
 		return null;

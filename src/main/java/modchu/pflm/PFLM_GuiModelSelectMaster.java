@@ -315,7 +315,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 					//Modchu_Debug.mDebug("textureModel[2][i2]="+textureModel[2][i2]);
 				}
 			}
-			isRendering[i2] = (!armorMode && textureModel[0][i2] != null) | (armorMode && textureModel[1][i2] != null | textureModel[2][i2] != null);
+			isRendering[i2] = (!armorMode && textureModel[0][i2] != null) | (armorMode && (textureModel[1][i2] != null | textureModel[2][i2] != null));
 			//Modchu_Debug.mDebug("textureModel[0]["+i2+"]="+textureModel[0][i2]+" i1="+i1);
 		} else {
 			setTextureModel(i2);
@@ -327,7 +327,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	private void setTextureModel(int i) {
 		if (i > -1
 				&& textureModel != null
-				&& i < textureModel[0].length) ;else return;
+				&& i < textureModel[0].length); else return;
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		modelData.setCapsValue(modelData.caps_textureName, getTextureName(i));
 		modelData.setCapsValue(modelData.caps_maidColor, getColor());
@@ -362,7 +362,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		boolean b = super.mouseClicked(x, y, i);
 		boolean doubleClick = false;
 		if (Mouse.isButtonDown(0)
-				&& displayModels) ;else return true;
+				&& displayModels); else return true;
 		long l1 = Modchu_AS.getLong(Modchu_AS.minecraftSystemTime);
 		if (l1 - lastClicked < 250L) doubleClick = true;
 		lastClicked = l1;
@@ -406,7 +406,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	}
 
 	private void selected() {
-		if (parentScreen instanceof Modchu_GuiModelView) ;else {
+		if (parentScreen instanceof Modchu_GuiModelView); else {
 			Modchu_Debug.mDebug("selected !parentScreen instanceof Modchu_GuiModelView !! parentScreen="+(parentScreen != null ? parentScreen.getClass() : null));
 			return;
 		}
