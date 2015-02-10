@@ -354,7 +354,8 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 			switch (clickButton) {
 			case 0:
 				float f1 = 0.02F;
-				if (x != 0) comeraPosX += (Modchu_Main.isForge
+				if (x != 0) comeraPosX += ((Modchu_Main.isForge
+						&& Modchu_Main.getMinecraftVersion() < 180)
 						| PFLM_Main.oldRender ? -x : x) * f1;
 				if (y != 0) {
 					float f2 = y * f1;
