@@ -125,7 +125,8 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 			buttonList.add(newInstanceButton(2, 145, 180, 15, 15, "<"));
 			buttonList.add(newInstanceButton(3, 160, 180, 15, 15, ">"));
 		}
-		buttonList.add(newInstanceButton(armorMode ? 102 : 103, 70, 205, 75, 20, armorMode ? "Model" : "Armor"));
+		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+		if (!PFLM_Main.bipedCheck(modelData.modelMain.model)) buttonList.add(newInstanceButton(armorMode ? 102 : 103, 70, 205, 75, 20, armorMode ? "Model" : "Armor"));
 		buttonList.add(newInstanceButton(100, 155, 205, 75, 20, "select"));
 		buttonList.add(newInstanceButton(101, 240, 205, 75, 20, "return"));
 		buttonList.add(newInstanceButton(999, 0, 0, 0, 0, ""));
@@ -211,7 +212,6 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	@Override
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		//Modchu_Debug.mDebug1("drawGuiContainerBackgroundLayer ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_GuiModelView) parentScreen).getTextureName());
-		//GL11.glPushMatrix();
 		if (displayModels) {
 			modelNamber = offsetSlot;
 			float f1 = 20F;
@@ -241,7 +241,6 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 			//Modchu_Debug.mDebug("drawGuiContainerBackgroundLayer drawEntitySetFlag = false set");
 			drawEntitySetFlag = false;
 		}
-		//GL11.glPopMatrix();
 	}
 
 	private int getMaxTexturesNamber(int i) {
