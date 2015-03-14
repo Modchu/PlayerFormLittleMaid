@@ -1,17 +1,18 @@
 package modchu.pflm;
 
+import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_CastHelper;
 import modchu.lib.Modchu_Debug;
+import modchu.lib.Modchu_IModelBiped;
+import modchu.lib.Modchu_IRenderPlayer;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_CastHelper;
-import modchu.lib.characteristic.Modchu_ModelBiped;
-import modchu.lib.characteristic.Modchu_RenderPlayer;
+import modchu.model.multimodel.base.ModchuModelModelBipedCapsMaster;
 
 import org.lwjgl.opengl.GL11;
 
 public class PFLM_Aether {
-	public static Modchu_ModelBiped modchu_ModelBiped;
+	public static Modchu_IModelBiped modchu_ModelBiped;
 	public static PFLM_RenderPlayerMaster pflm_RenderPlayerMaster;
 	public Object renderPlayerAether;
 	private Class RenderPlayerAether;
@@ -19,11 +20,11 @@ public class PFLM_Aether {
 	public PFLM_Aether() {
 		RenderPlayerAether = Modchu_Reflect.loadClass("net.aetherteam.aether.client.RenderPlayerAether");
 		if (renderPlayerAether != null); else {
-			renderPlayerAether = RenderPlayerAether != null ? Modchu_Reflect.newInstance(RenderPlayerAether) : null;
+			renderPlayerAether = RenderPlayerAether != null ? Modchu_Main.getMinecraftVersion() > 162 ? Modchu_Reflect.newInstance(RenderPlayerAether) : Modchu_Reflect.newInstance(RenderPlayerAether, new Class[]{ int.class, Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreRender") }, new Object[]{ 0, null }) : null;
 			Modchu_AS.set(Modchu_AS.renderRenderManager, renderPlayerAether);
 		}
 		if (modchu_ModelBiped != null); else {
-			modchu_ModelBiped = new Modchu_ModelBiped(null);
+			modchu_ModelBiped = (Modchu_IModelBiped) Modchu_Main.newModchuCharacteristicObject("Modchu_ModelBiped", ModchuModelModelBipedCapsMaster.class);
 		}
 	}
 
@@ -34,7 +35,10 @@ public class PFLM_Aether {
 			if (pflm_RenderPlayerMaster == null) {
 				Object render = Modchu_Main.getRender(Modchu_AS.get(Modchu_AS.minecraftThePlayer));
 				if (render != null
-						&& render instanceof Modchu_RenderPlayer) pflm_RenderPlayerMaster = ((Modchu_RenderPlayer) render).master instanceof PFLM_RenderPlayerMaster ? (PFLM_RenderPlayerMaster) ((Modchu_RenderPlayer) render).master : null;
+						&& render instanceof Modchu_IRenderPlayer) {
+					Object master = Modchu_Main.getModchuCharacteristicObjectMaster(render);
+					pflm_RenderPlayerMaster = master instanceof PFLM_RenderPlayerMaster ? (PFLM_RenderPlayerMaster) master : null;
+				}
 				if (pflm_RenderPlayerMaster == null) Modchu_Debug.mDebug("PFLM_Aether modchu_RenderPlayerDoRender pflm_RenderPlayerMaster == null !!");
 			}
 			return null;
@@ -43,7 +47,7 @@ public class PFLM_Aether {
 		float f1 = Modchu_CastHelper.Float(o[5]);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(entity);
 		if (modelData != null); else return null;
-		modchu_ModelBiped.master = modelData.modelMain.model;
+		Modchu_Reflect.setFieldObject(ModchuModelModelBipedCapsMaster.class, "model", Modchu_Main.getModchuCharacteristicObjectMaster(modchu_ModelBiped), modelData.modelMain.model);
 		Modchu_Reflect.setFieldObject(RenderPlayerAether, "modelMisc", renderPlayerAether, modchu_ModelBiped);
 		Object modelMisc = Modchu_Reflect.getFieldObject(RenderPlayerAether, "modelMisc", renderPlayerAether);
 

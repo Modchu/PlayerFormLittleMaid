@@ -1,10 +1,11 @@
 package modchu.pflm;
 
+import java.util.HashMap;
 import java.util.List;
 
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiBase;
-import modchu.lib.characteristic.Modchu_GuiModelView;
+import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_IGuiModelView;
+import modchu.lib.Modchu_Main;
 import modchu.model.ModchuModel_Main;
 import modchu.model.multimodel.base.MultiModelBaseBiped;
 
@@ -15,13 +16,13 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public boolean buttonIndividualCustomize;
 	public static final int othersPlayerMaxchangeMode = 5;
 
-	public PFLM_GuiOthersPlayerMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super(guiBase, guiScreen, world, (Object[]) o);
+	public PFLM_GuiOthersPlayerMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override
-	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super.init(guiBase, guiScreen, world, (Object[]) o);
+	public void init(HashMap<String, Object> map) {
+		super.init(map);
 		guiOthersPlayerMasterInit();
 	}
 
@@ -189,8 +190,8 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		}
 		//ModelListSelect
 		if(id == 56) {
-			Modchu_GuiModelView gui = new Modchu_GuiModelView(PFLM_GuiModelSelectMaster.class, base, popWorld);
-			((PFLM_GuiModelSelectMaster) gui.master).drawEntitySetFlag = true;
+			Modchu_IGuiModelView gui = (Modchu_IGuiModelView) Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiModelSelectMaster.class, popWorld, base);
+			((PFLM_GuiModelSelectMaster) Modchu_Main.getModchuCharacteristicObjectMaster(gui)).drawEntitySetFlag = true;
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, gui);
 			return;
 		}
@@ -224,7 +225,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//Return
 		if(id == 201)
 		{
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiMaster.class, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiMaster.class, popWorld));
 			return;
 		}
 		//ChangeMode
@@ -246,7 +247,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//IndividualCustomize
 		if(id == 401)
 		{
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiBase(PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiBase", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
 			return;
 		}
 	}

@@ -1,12 +1,13 @@
 package modchu.pflm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiModelView;
 
 import org.lwjgl.input.Mouse;
 
@@ -16,13 +17,13 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 	private Object localScroll;
 	public static List<String> playerList;
 
-	public PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super(guiBase, guiScreen, world, (Object[])o);
+	public PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override
-	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super.init(guiBase, guiScreen, world, o);
+	public void init(HashMap<String, Object> map) {
+		super.init(map);
 		othersPlayerIndividualCustomizeSelectMasterInit();
 	}
 
@@ -75,7 +76,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 		buttonList.add(newInstanceButton(0, width / 2 + 65, height - 44, 70, 20, "delete"));
 		buttonList.add(newInstanceButton(201, width / 2 - 135, height - 44, 70, 20, "Return"));
 
-		selectPanel = newInstanceSlot(base, popWorld);
+		selectPanel = newInstanceSlot(base, popWorld, width, height, 32, height - 64, 36);
 		Modchu_AS.set(Modchu_AS.guiSlotRegisterScrollButtons, selectPanel, null, 3, 4);
 		localScroll = newInstanceButton(3, 0, 0, 0, 0, "");
 		Modchu_AS.set(Modchu_AS.guiScreenButtonList, base, buttonList);
@@ -90,15 +91,17 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 
 		//delete
 		if (id == 0) {
-			Modchu_Reflect.invokeMethod(selectPanel.getClass(), "deletePlayerLocalData", selectPanel);
+			Object master = Modchu_Main.getModchuCharacteristicObjectMaster(selectPanel);
+			Modchu_Reflect.invokeMethod(master.getClass(), "deletePlayerLocalData", master);
 		}
 		//Return
 		if (id == 201) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiOthersPlayerMaster.class, base, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiOthersPlayerMaster.class, popWorld, base));
 		}
 		//Select
 		if (id == 300) {
-			Modchu_Reflect.invokeMethod(selectPanel.getClass(), "openGuiCustomize", selectPanel);
+			Object master = Modchu_Main.getModchuCharacteristicObjectMaster(selectPanel);
+			Modchu_Reflect.invokeMethod(master.getClass(), "openGuiCustomize", master);
 			return;
 		}
 
@@ -107,12 +110,12 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 
 	@Override
 	public boolean drawScreen(int i, int j, float f) {
-		Modchu_Reflect.invokeMethod(base.getClass(), "superDrawDefaultBackground", base);
+		base.superDrawDefaultBackground();
 		super.drawScreen(i, j, f);
 		Modchu_AS.set(Modchu_AS.guiSlotDrawScreen, selectPanel, i, j, f);
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
 		Modchu_AS.set(Modchu_AS.guiDrawCenteredString, base, getFontRenderer(), screenTitle, width / 2, 20, 0xffffff);
-		Modchu_Reflect.invokeMethod(base.getClass(), "superDrawScreen", new Class[]{ int.class, int.class, float.class }, base, new Object[]{ i, j, f });
+		base.superDrawScreen(i, j, f );
 		return false;
 	}
 
@@ -122,8 +125,9 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 		int i = Mouse.getEventDWheel();
 		if(i != 0) {
 			Modchu_AS.set(Modchu_AS.guiButtonID, localScroll, i > 0 ? 3 : 4);
-			Modchu_AS.set(Modchu_AS.guiScreenActionPerformed, selectPanel, localScroll);
+			Modchu_AS.set(Modchu_AS.guiSlotActionPerformed, selectPanel, localScroll);
 		}
+		if (Modchu_Main.getMinecraftVersion() > 179) Modchu_AS.set("GuiSlot", "handleMouseInput", selectPanel, (Class[])null);
 		return true;
 	}
 

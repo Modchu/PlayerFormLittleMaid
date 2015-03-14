@@ -1,18 +1,21 @@
 package modchu.pflm;
 
-import modchu.lib.Modchu_Debug;
+import java.util.HashMap;
+
+import org.lwjgl.opengl.GL11;
+
+import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_CastHelper;
 import modchu.lib.Modchu_LayerArmorBaseMasterBasis;
 import modchu.lib.Modchu_Reflect;
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_CastHelper;
-import modchu.lib.characteristic.Modchu_ModelBaseNihilBase;
-import modchu.lib.characteristic.Modchu_RenderPlayer;
+import modchu.model.ModchuModel_ConfigData;
+import modchu.model.ModchuModel_ModelBaseNihil;
 import modchu.model.multimodel.base.MultiModelBaseBiped;
 
 public class PFLM_LayerArmorBaseMaster extends Modchu_LayerArmorBaseMasterBasis  {
 
-	public PFLM_LayerArmorBaseMaster(Object modchu_LayerBipedArmor) {
-		super(modchu_LayerBipedArmor);
+	public PFLM_LayerArmorBaseMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override
@@ -22,15 +25,26 @@ public class PFLM_LayerArmorBaseMaster extends Modchu_LayerArmorBaseMasterBasis 
 		MultiModelBaseBiped modelInner = modelData.modelFATT.modelInner;
 		MultiModelBaseBiped modelOuter = modelData.modelFATT.modelOuter;
 		//Modchu_Debug.mDebug("PFLM_LayerArmorBaseMaster doRenderLayer render="+render);
+		if (modelInner != null
+				| modelOuter != null); else return;
 		for (int i = 0; i < 4; i++) {
 			int i1 = Modchu_CastHelper.Int(Modchu_Reflect.invokeMethod(render.getClass(), "setArmorModel", new Class[]{ Object.class, Object.class, int.class, float.class, int.class }, render, new Object[]{ null, entityLivingBase, i, f6, 0 }));
 			if (i1 < 0
 					| Modchu_CastHelper.Int(Modchu_Reflect.invokeMethod(render.getClass(), "shouldRenderPass", new Class[]{ Modchu_Reflect.loadClass("EntityLivingBase"), int.class, float.class }, render, new Object[]{ entityLivingBase, i, f6 })) < 0) continue;
+			GL11.glPushMatrix();
+			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+			if (ModchuModel_ConfigData.AlphaBlend) {
+				GL11.glEnable(GL11.GL_ALPHA_TEST);
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			} else {
+				GL11.glDisable(GL11.GL_BLEND);
+			}
 			if (modelInner != null) {
 				modelInner.setLivingAnimations(entityLivingBase, f, f1, f2);
 				modelInner.setModelAttributes(modelData.modelMain.model);
 				if (modelData.modelFATT.textureInner[i] != null) Modchu_AS.set(Modchu_AS.renderBindTexture, render, modelData.modelFATT.textureInner[i]);
-				modelInner.render(modelData, f, f1, f3, f4, f5, f6, modelData.modelFATT.textureInner[i] != null ? (Boolean) Modchu_Reflect.getFieldObject(Modchu_ModelBaseNihilBase.class, "isRendering", modelData.modelFATT) : false);
+				modelInner.render(modelData, f, f1, f3, f4, f5, f6, modelData.modelFATT.textureInner[i] != null ? (Boolean) Modchu_Reflect.getFieldObject(ModchuModel_ModelBaseNihil.class, "isRendering", modelData.modelFATT) : false);
 				//Modchu_Debug.mDebug("PFLM_LayerArmorBaseMaster doRenderLayer modelData.modelFATT.textureInner["+i+"]="+modelData.modelFATT.textureInner[i]);
 				//Modchu_Debug.mDebug("PFLM_LayerArmorBaseMaster doRenderLayer isRendering="+Modchu_Reflect.getFieldObject(Modchu_ModelBaseNihilBase.class, "isRendering", modelData.modelFATT));
 				//Modchu_Debug.mDebug("PFLM_LayerArmorBaseMaster doRenderLayer modelInner="+modelInner);
@@ -39,8 +53,12 @@ public class PFLM_LayerArmorBaseMaster extends Modchu_LayerArmorBaseMasterBasis 
 				modelOuter.setLivingAnimations(entityLivingBase, f, f1, f2);
 				modelOuter.setModelAttributes(modelData.modelMain.model);
 				if (modelData.modelFATT.textureOuter[i] != null) Modchu_AS.set(Modchu_AS.renderBindTexture, render, modelData.modelFATT.textureOuter[i]);
-				modelOuter.render(modelData, f, f1, f3, f4, f5, f6, modelData.modelFATT.textureOuter[i] != null ? (Boolean) Modchu_Reflect.getFieldObject(Modchu_ModelBaseNihilBase.class, "isRendering", modelData.modelFATT) : false);
+				modelOuter.render(modelData, f, f1, f3, f4, f5, f6, modelData.modelFATT.textureOuter[i] != null ? (Boolean) Modchu_Reflect.getFieldObject(ModchuModel_ModelBaseNihil.class, "isRendering", modelData.modelFATT) : false);
 			}
+			GL11.glDisable(GL11.GL_ALPHA_TEST);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glPopAttrib();
+			GL11.glPopMatrix();
 		}
 	}
 /*

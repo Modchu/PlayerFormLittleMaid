@@ -1,7 +1,6 @@
 package modchu.pflm;
 
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
 
 import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Reflect;
@@ -33,12 +32,16 @@ public class PFLM_PacketPlayerStateManager {
 		if (ModchuModel_Main.isPFLMF); else return false;
 		LinkedList list = getPlayerState(entityId, by);
 		if (list != null) return Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Client", "receivePacket", new Class[]{ LinkedList.class, boolean.class }, new Object[]{ list, true });
+		else {
+			//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager getPlayerStateObject list == null");
+		}
 		return null;
 	}
 
 	public static LinkedList getPlayerState(Object entityId, byte by) {
 		if (ModchuModel_Main.isPFLMF); else return null;
 		Object o = Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Main", "getPlayerState", new Class[]{ Object.class, byte.class }, null, new Object[]{ entityId, by });
+		//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager getPlayerState o="+o);
 		return o != null ? (LinkedList) o : null;
 	}
 

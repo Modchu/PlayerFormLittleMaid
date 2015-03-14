@@ -1,13 +1,15 @@
 package modchu.pflm;
 
+import java.util.HashMap;
+
+import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_LayerHeldItemMasterBasis;
 import modchu.lib.Modchu_Reflect;
-import modchu.lib.characteristic.Modchu_AS;
 
 public class PFLM_LayerHeldItemMaster extends Modchu_LayerHeldItemMasterBasis  {
 
-	public PFLM_LayerHeldItemMaster(Object modchu_LayerHeldItem) {
-		super(modchu_LayerHeldItem);
+	public PFLM_LayerHeldItemMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override

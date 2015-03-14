@@ -2,19 +2,20 @@ package modchu.pflm;
 
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_CastHelper;
 import modchu.lib.Modchu_Debug;
+import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_CastHelper;
-import modchu.lib.characteristic.Modchu_GuiModelView;
-import modchu.lib.characteristic.Modchu_ModelBaseDuoBase;
-import modchu.lib.characteristic.Modchu_ModelBaseSoloBase;
 import modchu.model.ModchuModel_Main;
+import modchu.model.ModchuModel_ModelBaseDuo;
+import modchu.model.ModchuModel_ModelBaseSolo;
 
 import org.lwjgl.input.Mouse;
 
@@ -43,17 +44,17 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	public boolean displayModels;
 	public boolean armorMode;
 
-	public PFLM_GuiModelSelectMaster(Object guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super(guiBase, par1GuiScreen, world, (Object[])o);
+	public PFLM_GuiModelSelectMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override
-	public void init(Object guiBase, Object par1GuiScreen, Object world, Object... o) {
-		super.init(guiBase, par1GuiScreen, world, (Object[])o);
-		guiModelSelectMasterInit((Object[])o);
+	public void init(HashMap<String, Object> map) {
+		super.init(map);
+		guiModelSelectMasterInit(map);
 	}
 
-	private void guiModelSelectMasterInit(Object... o) {
+	private void guiModelSelectMasterInit(HashMap<String, Object> map) {
 		modelColor = 0;
 		modelListx = 30;
 		modelListy = 60;
@@ -74,15 +75,12 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		textureName = new String[i1];
 		textureArmorName = new String[i1];
 		isRendering = new boolean[i1];
-		if (o != null
-				&& o.length > 0
-				&& o[0] != null) armorMode = Modchu_CastHelper.Boolean(o[0]);
-		if (o != null
-				&& o.length > 1
-				&& o[1] != null) setColor(Modchu_CastHelper.Int(""+o[1]));
-		if (o != null
-				&& o.length > 2
-				&& o[2] != null) playerName = Modchu_CastHelper.String(o[2]);
+		if (map != null
+				&& !map.isEmpty()) {
+			armorMode = Modchu_CastHelper.Boolean(map.get("Boolean"));
+			setColor(Modchu_CastHelper.Int(map.get("Integer")));
+			playerName = Modchu_CastHelper.String(map.get("String"));
+		}
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", armorMode);
 		modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", !armorMode);
@@ -111,7 +109,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	@Override
 	public void reInit() {
 		super.reInit();
-		guiModelSelectMasterInit((Object)null);
+		guiModelSelectMasterInit(null);
 	}
 
 	@Override
@@ -187,16 +185,16 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		//return
 		if (id == 101) {
 			if (parentScreen != null
-					&& parentScreen instanceof Modchu_GuiModelView) {
-				((Modchu_GuiModelView) parentScreen).reInit();
+					&& parentScreen instanceof Modchu_IGuiModelView) {
+				((Modchu_IGuiModelView) parentScreen).reInit();
 			}
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, parentScreen);
 		}
 		//Armor | Model
 		if (id == 102 | id == 103) {
-			Modchu_Debug.mDebug("Armor 1 ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_GuiModelView) parentScreen).getTextureName());
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiModelSelectMaster.class, parentScreen, popWorld, id == 103, getColor()));
-			Modchu_Debug.mDebug("Armor 2 ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_GuiModelView) parentScreen).getTextureName());
+			Modchu_Debug.mDebug("Armor 1 ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_IGuiModelView) parentScreen).getTextureName());
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiModelSelectMaster.class, popWorld, parentScreen, id == 103, getColor()));
+			Modchu_Debug.mDebug("Armor 2 ((Modchu_GuiModelView) parentScreen).getTextureName()="+((Modchu_IGuiModelView) parentScreen).getTextureName());
 			return;
 		}
 	}
@@ -331,9 +329,9 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		modelData.setCapsValue(modelData.caps_textureName, getTextureName(i));
 		modelData.setCapsValue(modelData.caps_maidColor, getColor());
 		modelData.setCapsValue(modelData.caps_textureArmorName, getTextureArmorName(i));
-		Modchu_Reflect.setFieldObject(Modchu_ModelBaseSoloBase.class, "model", modelData.modelMain, textureModel[0][i]);
-		Modchu_Reflect.setFieldObject(Modchu_ModelBaseDuoBase.class, "modelInner", modelData.modelFATT, textureModel[1][i]);
-		Modchu_Reflect.setFieldObject(Modchu_ModelBaseDuoBase.class, "modelOuter", modelData.modelFATT, textureModel[2][i]);
+		Modchu_Reflect.setFieldObject(ModchuModel_ModelBaseSolo.class, "model", modelData.modelMain, textureModel[0][i]);
+		Modchu_Reflect.setFieldObject(ModchuModel_ModelBaseDuo.class, "modelInner", modelData.modelFATT, textureModel[1][i]);
+		Modchu_Reflect.setFieldObject(ModchuModel_ModelBaseDuo.class, "modelOuter", modelData.modelFATT, textureModel[2][i]);
 		if (!armorMode) ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).modelTextureReset(drawEntity, modelData);
 	}
 
@@ -405,11 +403,11 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	}
 
 	private void selected() {
-		if (parentScreen instanceof Modchu_GuiModelView); else {
-			Modchu_Debug.mDebug("selected !parentScreen instanceof Modchu_GuiModelView !! parentScreen="+(parentScreen != null ? parentScreen.getClass() : null));
+		if (parentScreen instanceof Modchu_IGuiModelView); else {
+			Modchu_Debug.mDebug("selected !parentScreen instanceof Modchu_IGuiModelView !! parentScreen="+(parentScreen != null ? parentScreen.getClass() : null));
 			return;
 		}
-		Modchu_GuiModelView gui = (Modchu_GuiModelView) parentScreen;
+		Modchu_IGuiModelView gui = (Modchu_IGuiModelView) parentScreen;
 		int i2 = maxSelectBoxCheck(selectSlot);
 		gui.selected(getTextureName(i2), getTextureArmorName(i2), getColor(), armorMode);
 		Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, gui);

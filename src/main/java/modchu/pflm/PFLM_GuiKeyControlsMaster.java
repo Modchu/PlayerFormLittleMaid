@@ -1,9 +1,10 @@
 package modchu.pflm;
 
+import java.util.HashMap;
 import java.util.List;
 
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiModelView;
+import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_IGuiModelView;
 
 import org.lwjgl.input.Keyboard;
 
@@ -33,8 +34,8 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 	public static final int changeModeMax = 48;
 	private String shortcutKey;
 
-	public PFLM_GuiKeyControlsMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super(guiBase, guiScreen, world, o);
+	public PFLM_GuiKeyControlsMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override
@@ -110,7 +111,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 		}
 		//Return
 		if (id == 201) {
-			((Modchu_GuiModelView) parentScreen).setTextureValue();
+			((Modchu_IGuiModelView) parentScreen).setTextureValue();
 			Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, drawEntity, false);
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, parentScreen);
 			return;

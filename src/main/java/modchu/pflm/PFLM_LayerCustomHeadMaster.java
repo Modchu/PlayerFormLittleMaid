@@ -1,11 +1,13 @@
 package modchu.pflm;
 
+import java.util.HashMap;
+
 import modchu.lib.Modchu_LayerCustomHeadMasterBasis;
 
 public class PFLM_LayerCustomHeadMaster extends Modchu_LayerCustomHeadMasterBasis  {
 
-	public PFLM_LayerCustomHeadMaster(Object modchu_LayerHeldItem) {
-		super(modchu_LayerHeldItem);
+	public PFLM_LayerCustomHeadMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override

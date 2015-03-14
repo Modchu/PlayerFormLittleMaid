@@ -1,8 +1,10 @@
 package modchu.pflm;
 
+import java.util.HashMap;
+
+import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_IEntityLivingMaster;
 import modchu.lib.Modchu_Reflect;
-import modchu.lib.characteristic.Modchu_AS;
 
 public class PFLM_EntityPlayerDummyMaster implements Modchu_IEntityLivingMaster {
 	public static Object[] armorItemStack = {
@@ -14,9 +16,9 @@ public class PFLM_EntityPlayerDummyMaster implements Modchu_IEntityLivingMaster 
 	public Object base;
 	public Object popWorld;
 
-	public PFLM_EntityPlayerDummyMaster(Object[] o) {
-		base = o[0];
-		popWorld = o[1];
+	public PFLM_EntityPlayerDummyMaster(HashMap<String, Object> map) {
+		base = map.get("base");
+		popWorld = map.get("Object");
 	}
 
 	@Override

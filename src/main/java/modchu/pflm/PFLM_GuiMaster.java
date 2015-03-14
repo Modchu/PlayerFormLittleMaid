@@ -6,25 +6,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
+import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Config;
 import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_FileManager;
+import modchu.lib.Modchu_GlStateManager;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.lib.Modchu_RenderEngine;
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GlStateManager;
-import modchu.lib.characteristic.Modchu_GuiModelView;
-import modchu.lib.characteristic.Modchu_IEntityCapsBase;
-import modchu.lib.characteristic.Modchu_ModelRenderer;
 import modchu.model.ModchuModel_Config;
 import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_ModelDataBase;
+import modchu.model.ModchuModel_ModelRenderer;
 
 import org.lwjgl.input.Mouse;
 
@@ -58,6 +57,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public boolean buttonMultiPngSave;
 	public boolean buttonKeyControls;
 	public boolean buttonCustomModel;
+	public boolean buttonOtherPlayer;
 	public boolean partsSaveFlag;
 	public boolean noSaveFlag;
 	public int setModel = 0;
@@ -65,13 +65,13 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public int setColor = 0;
 	private final int maxChangeMode = 3;
 
-	public PFLM_GuiMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super(guiBase, guiScreen, world, o);
+	public PFLM_GuiMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override
-	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super.init(guiBase, guiScreen, world, o);
+	public void init(HashMap<String, Object> map) {
+		super.init(map);
 		guiMasterInit();
 	}
 
@@ -104,6 +104,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		buttonMultiPngSave = true;
 		buttonKeyControls = true;
 		buttonCustomModel = true;
+		buttonOtherPlayer = true;
 		showArmor = true;
 		PFLM_GuiConstant.partsSetFlag = 0;
 		setModel = PFLM_ConfigData.setModel;
@@ -115,7 +116,9 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		} else {
 			parts = new ConcurrentHashMap();
 		}
-		PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
+		modelData.setCapsValue(modelData.caps_actionRequest, new boolean[]{ true, false });
 		setTextureName(getTextureName());
 		setTextureArmorName(getTextureArmorName());
 		setColor(getColor());
@@ -126,7 +129,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public void initDrawEntity() {
 		super.initDrawEntity();
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		if (drawMuitiEntity != null); else drawMuitiEntity = Modchu_Reflect.newInstance("modchu.lib.characteristic.Modchu_EntityPlayerDummy", new Class[]{ Class.class, Modchu_Reflect.loadClass("World") }, new Object[]{ PFLM_EntityPlayerDummyMaster.class, popWorld });
+		if (drawMuitiEntity != null); else drawMuitiEntity = Modchu_Main.newModchuCharacteristicObject("Modchu_EntityPlayerDummy", PFLM_EntityPlayerDummyMaster.class, popWorld);
 		PFLM_ModelData drawMuitiModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawMuitiEntity);
 		drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_freeVariable, "showMainModel", true);
 		drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_freeVariable, "initDrawEntityFlag", true);
@@ -218,7 +221,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		} else {
 			if (!partsButton) {
 				if (PFLM_Main.isMulti) {
-					buttonList.add(newInstanceButton(30, x + 75, y - 5, 75, 15, "othersPlayer"));
+					if (buttonOtherPlayer) buttonList.add(newInstanceButton(30, x + 75, y - 5, 75, 15, "othersPlayer"));
 				}
 			}
 		}
@@ -280,7 +283,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		//if (showPartsHideMap != null) Modchu_Debug.mDebug("showPartsHideMap.size()="+showPartsHideMap.size());
 		//else Modchu_Debug.mDebug("showPartsHideMap.size()=null !!");
 		List<String> list = new ArrayList();
-		Modchu_ModelRenderer modelRenderer = null;
+		ModchuModel_ModelRenderer modelRenderer = null;
 		Field f = null;
 		int i1 = 0;
 		for (int i = 0; i < showPartsNemeMap.size(); i++) {
@@ -326,7 +329,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		boolean b;
 		Field f = null;
 		List<String> list = new ArrayList();
-		Modchu_ModelRenderer modelRenderer = null;
+		ModchuModel_ModelRenderer modelRenderer = null;
 		Object model = PFLM_Main.getModel(armorType);
 		ConcurrentHashMap<Integer, String> showPartsNemeMap = ModchuModel_Config.getConfigShowPartsNemeMap(getTextureName(), armorType);
 		if (showPartsNemeMap != null
@@ -355,7 +358,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 					//Modchu_Debug.mDebug("PFLM_Gui partsButtonAdd() modelRendererMap f != null");
 					try {
 						Object o = f.get(model);
-						modelRenderer = o != null ? (Modchu_ModelRenderer) o : null;
+						modelRenderer = o != null ? (ModchuModel_ModelRenderer) o : null;
 						if (modelRenderer != null) {
 							//Modchu_Debug.mmlDebug("PFLM_Gui partsInit() modelRendererMap f.getName()="+f.getName()+" modelRenderer.showModel="+modelRenderer.showModel);
 							if (defaultShowPartsMap != null && defaultShowPartsMap.containsKey(s2)) b = defaultShowPartsMap.get(s2);
@@ -616,7 +619,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		//OthersPlayer
 		if (id == 30) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiOthersPlayerMaster.class, base, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiOthersPlayerMaster.class, popWorld, base));
 		}
 		//ModelChange
 		if (id == 50 | id == 51) {
@@ -656,17 +659,8 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		//ArmorChange
 		if (id == 54 | id == 55) {
-			//armorNamber += id == 55 ? 1 : -1;
-			//if (armorNamber >= PFLM_Main.maxTexturesArmorNamber) armorNamber = 0;
-			//if (armorNamber < 0) armorNamber = PFLM_Main.maxTexturesArmorNamber - 1;
 			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true, PFLM_ConfigData.autoArmorSelect);
 			setTextureArmorName(s0[1]);
-			//Modchu_Debug.mDebug("armorNamber="+armorNamber);
-
-			//Object ltb = Modchu_Main.getTextureBox(getTexturesArmorNamber(armorNamber));
-			//if (ltb != null) setTextureArmorName(Modchu_Main.getTextureBoxFileName(ltb));
-
-			//modelData.setCapsValue(data.caps_maidColor, getColor());
 			modelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, getTextureArmorName());
 			//Modchu_Debug.mDebug("ArmorChange getTextureArmorName()="+getTextureArmorName());
 			if (PFLM_ConfigData.isModelSize) {
@@ -682,14 +676,12 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		//ModelListSelect
 		if (id == 56) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiModelSelectMaster.class, base, popWorld, false, getColor()));
-			//mc.displayGuiScreen(new PFLM_GuiModelSelect(this, popWorld, 0));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiModelSelectMaster.class, popWorld, base, false, getColor()));
 			return;
 		}
 		//KeyControls
 		if (id == 57) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiKeyControlsMaster.class, base, popWorld));
-			//mc.displayGuiScreen(new PFLM_GuiKeyControls(this, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiKeyControlsMaster.class, popWorld, base));
 			return;
 		}
 		//Handedness
@@ -707,8 +699,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		//CustomModel
 		if (id == 59) {
-			//Modchu_Main.displayGuiScreen(new PFLM_GuiCustomModel(this, popWorld));
-			//mc.displayGuiScreen(new PFLM_GuiCustomModel(this, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiCustomModel.class, popWorld, base));
 			return;
 		}
 		//Customize ArmorType
@@ -883,7 +874,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			StringBuilder s10 = (new StringBuilder()).append("Handedness : ");
 			s10 = s10.append(PFLM_GuiConstant.getHandednessModeString(PFLM_ConfigData.handednessMode));
 			PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
-			if (PFLM_ConfigData.handednessMode == -1) s10 = s10.append(" Result : ").append(PFLM_GuiConstant.getHandednessModeString(modelData.getCapsValueInt(Modchu_IEntityCapsBase.caps_dominantArm)));
+			if (PFLM_ConfigData.handednessMode == -1) s10 = s10.append(" Result : ").append(PFLM_GuiConstant.getHandednessModeString(modelData.getCapsValueInt(modelData.caps_dominantArm)));
 			drawStringList.add(s10.toString());
 			if (PFLM_ConfigData.isModelSize && getChangeMode() != PFLM_GuiConstant.modeOnline) {
 				float f1 = 0.5F;
@@ -968,7 +959,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 					&& PFLM_ConfigData.guiMultiPngSaveButton
 					&& !partsButton
 					&& !modelScaleButton) {
-				if (Modchu_Main.getMinecraftVersion() > 179) Modchu_GlStateManager.bindTexture(9999);;
+				if (Modchu_Main.getMinecraftVersion() > 179) Modchu_GlStateManager.bindTexture(9999);
 				PFLM_ModelData drawMuitiModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawMuitiEntity);
 				if (drawMuitiEntitySetFlag) {
 					Modchu_Debug.mDebug("drawMuitiEntitySetFlag");
@@ -1003,7 +994,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		if (PFLM_ConfigData.isModelSize) {
 			closePlayerToSpawn = true;
 		}
-		Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, thePlayer, true);
+		//Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, thePlayer, true);
 		setTextureValue();
 		PFLM_GuiConstant.partsSetFlag = 1;
 		partsInitFlag = false;
@@ -1201,7 +1192,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			//handedness r = 255 right , r = 0 left , else Random
 			Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
 			PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
-			int handedness = modelData.getCapsValueInt(Modchu_IEntityCapsBase.caps_dominantArm);
+			int handedness = modelData.getCapsValueInt(modelData.caps_dominantArm);
 			r1 = handedness == 0 ? 255 : handedness == 1 ? 0 : 128;
 			//g = PFLM_ConfigData.modelScale
 			g1 = 255 - ((int) (getScale() / (0.9375F / 24F)));

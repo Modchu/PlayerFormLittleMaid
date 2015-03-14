@@ -1,22 +1,23 @@
 package modchu.pflm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Debug;
+import modchu.lib.Modchu_GlStateManager;
+import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_IGuiModelViewMaster;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GlStateManager;
-import modchu.lib.characteristic.Modchu_GuiModelView;
 import modchu.model.ModchuModel_Main;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modchu_IGuiModelViewMaster {
+public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modchu_IGuiModelViewMaster {
 
 	public Object drawEntity;
 	public ArrayList<String> drawStringList;
@@ -49,13 +50,13 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 	private float comeraPosZ;
 	private boolean clickMove;
 
-	public PFLM_GuiModelViewMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super(guiBase, guiScreen, world, (Object[])o);
+	public PFLM_GuiModelViewMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override
-	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super.init(guiBase, guiScreen, world, (Object[])o);
+	public void init(HashMap<String, Object> map) {
+		super.init(map);
 		drawEntitySetFlag = true;
 		drawStringList = new ArrayList();
 		buttonOnline = false;
@@ -126,8 +127,8 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 			}
 		}
 		if (buttonShowArmor) buttonList.add(newInstanceButton(20, x, y + 70, 75, 15, "showArmor"));
-		if (((Modchu_GuiModelView) base).getScale() == 0.0F) {
-			((Modchu_GuiModelView) base).setScale(PFLM_Main.getModelScale());
+		if (((Modchu_IGuiModelView) base).getScale() == 0.0F) {
+			((Modchu_IGuiModelView) base).setScale(PFLM_Main.getModelScale());
 		}
 		guiMode = true;
 		Modchu_AS.set(Modchu_AS.guiScreenButtonList, base, buttonList);
@@ -142,9 +143,13 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 
 	@Override
 	public boolean drawScreen(int i, int j, float f) {
-		Modchu_Reflect.invokeMethod(base.getClass(), "superDrawDefaultBackground", base);
-		Modchu_Reflect.invokeMethod(base.getClass(), "superDrawScreen", new Class[]{ int.class, int.class, float.class }, base, new Object[]{ i, j, f });
+		GL11.glPushMatrix();
+		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+		base.superDrawDefaultBackground();
+		base.superDrawScreen(i, j, f);
 		drawGuiContainerBackgroundLayer(f, i, j);
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
 		return false;
 	}
 
@@ -167,10 +172,24 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 	}
 
 	public void initDrawEntity() {
-		if (drawEntity != null); else drawEntity = Modchu_Reflect.newInstance("modchu.lib.characteristic.Modchu_EntityPlayerDummy", new Class[]{ Class.class, Modchu_Reflect.loadClass("World") }, new Object[]{ PFLM_EntityPlayerDummyMaster.class, popWorld });
-		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", true);
-		modelData.setCapsValue(modelData.caps_freeVariable, "initDrawEntityFlag", true);
+		try {
+			if (drawEntity != null); else drawEntity = Modchu_Main.newModchuCharacteristicObject("Modchu_EntityPlayerDummy", PFLM_EntityPlayerDummyMaster.class, popWorld);
+			if (drawEntity != null) {
+				PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+				if (modelData != null) {
+					modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", true);
+					modelData.setCapsValue(modelData.caps_freeVariable, "initDrawEntityFlag", true);
+				} else {
+					Modchu_Debug.lDebug("PFLM_GuiModelViewMasterinitDrawEntity modelData == null error !! ");
+				}
+			} else {
+				Modchu_Debug.lDebug("PFLM_GuiModelViewMasterinitDrawEntity drawEntity == null error !! ");
+			}
+		} catch(Error e) {
+			e.printStackTrace();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -260,8 +279,8 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 			//Modchu_Debug.dDebug("drawMobModel2 x=" + i + " y=" + j, 1);
 			float entityWidth = Modchu_AS.getFloat(Modchu_AS.entityWidth, entity);
 			float entityHeight = Modchu_AS.getFloat(Modchu_AS.entityHeight, entity);
-			float width = Modchu_AS.getFloat(Modchu_AS.guiScreenWidth, guiScreen);
-			float height = Modchu_AS.getFloat(Modchu_AS.guiScreenHeight, guiScreen);
+			int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, guiScreen);
+			int height = Modchu_AS.getInt(Modchu_AS.guiScreenHeight, guiScreen);
 			if (entityHeight > 2F) {
 				f = f * 2F / entityHeight;
 			}
@@ -327,22 +346,23 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 			e.printStackTrace();
 		}
 		Modchu_GlStateManager.popMatrix();
-
+/*
 		//Modchu_AS.set(Modchu_AS.renderHelperDisableStandardItemLighting);
-		GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+		GL11.glDisable(32826);
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperLightmapTexUnit));
 		Modchu_GlStateManager.enableTexture2D();
 		Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperDefaultTexUnit));
 		Modchu_GlStateManager.disableLighting();
+*/
 	}
 
 	@Override
 	public void mouseClickMove(int mouseX, int mouseY, int clickButton, long time) {
 		//Modchu_Debug.dDebug("mouseClickMove x=" + mouseX + " y=" + mouseY + " clickButton=" + clickButton + " time=" + time);
 		//Modchu_Debug.dDebug("mouseClickMove anyButtonClick=" + PFLM_GuiSmallButtonMaster.anyButtonClick + " allButtonOutOfRangeClick="+PFLM_GuiSmallButtonMaster.allButtonOutOfRangeClick, 1);
-		float width = Modchu_AS.getFloat(Modchu_AS.guiScreenWidth, base);
-		float height = Modchu_AS.getFloat(Modchu_AS.guiScreenHeight, base);
+		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
+		int height = Modchu_AS.getInt(Modchu_AS.guiScreenHeight, base);
 		if (prevMouseX != -999
 				&& prevMouseY != -999
 				&& time > 200
@@ -387,7 +407,7 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 
 	@Override
 	public void mouseReleased(int mouseX, int mouseY, int clickButton) {
-		((Modchu_GuiModelView) base).superMouseReleased(mouseX, mouseY, clickButton);
+		base.superMouseReleased(mouseX, mouseY, clickButton);
 		//Modchu_Debug.dDebug("mouseMovedOrUp x="+mouseX+" y="+mouseY+" clickButton="+clickButton);
 		prevMouseX = -999;
 		prevMouseY = -999;
@@ -470,10 +490,10 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 	@Override
 	public void selected(String textureName, String textureArmorName, int color, boolean armorMode) {
 		if (!armorMode) {
-			((Modchu_GuiModelView) base).setTextureName(textureName);
-			((Modchu_GuiModelView) base).setColor(color);
+			((Modchu_IGuiModelView) base).setTextureName(textureName);
+			((Modchu_IGuiModelView) base).setColor(color);
 		}
-		((Modchu_GuiModelView) base).setTextureArmorName(textureArmorName);
+		((Modchu_IGuiModelView) base).setTextureArmorName(textureArmorName);
 		Modchu_Debug.mDebug("PFLM_GuiModelViewMaster selected textureName="+textureName+" armorMode="+armorMode);
 		Modchu_Debug.mDebug("PFLM_GuiModelViewMaster selected getTextureName()="+getTextureName());
 	}
@@ -537,7 +557,11 @@ public abstract class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster impleme
 
 	public void reLoadModel(Object o, boolean debug) {
 		if (debug) Modchu_Debug.mDebug("------modelDataSetting allModelInit start------ "+o);
-		PFLM_Main.renderPlayerDummyInstance.allModelInit(o, debug);
+		Modchu_Reflect.invokeMethod(PFLM_Main.renderPlayerDummyInstance.getClass(), "allModelInit", new Class[]{ Object.class, boolean.class }, PFLM_Main.renderPlayerDummyInstance, new Object[]{ o, debug });
 		if (debug) Modchu_Debug.mDebug("------modelDataSetting allModelInit end------ "+o);
+	}
+
+	@Override
+	public void modelChange() {
 	}
 }

@@ -1,27 +1,28 @@
 package modchu.pflm;
 
+import java.util.HashMap;
+
+import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Debug;
+import modchu.lib.Modchu_IGuiBase;
 import modchu.lib.Modchu_IGuiBaseMaster;
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_GuiPlayerSlot;
-import modchu.lib.characteristic.Modchu_GuiSmallButton;
+import modchu.lib.Modchu_Main;
 
 public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 	public Object parentScreen;
-	public Object base;
+	public Modchu_IGuiBase base;
 
 	public Object popWorld;
 	public boolean guiMode;
 
-	public PFLM_GuiBaseMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
-		init(guiBase, guiScreen, world, (Object[])o);
+	public PFLM_GuiBaseMaster(HashMap<String, Object> map) {
+		init(map);
 	}
 
-	@Override
-	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
-		parentScreen = guiScreen;
-		base = guiBase;
-		popWorld = world;
+	public void init(HashMap<String, Object> map) {
+		base = map.containsKey("base") ? (Modchu_IGuiBase) map.get("base") : null;
+		popWorld = map.get("Object");
+		parentScreen = map.containsKey("Object1") ? map.get("Object1") : null;
 		guiMode = true;
 	}
 
@@ -34,11 +35,11 @@ public class PFLM_GuiBaseMaster implements Modchu_IGuiBaseMaster {
 	}
 
 	protected Object newInstanceButton(int i, int i2, int i3, int i4, int i5, String s) {
-		return new Modchu_GuiSmallButton(PFLM_GuiSmallButtonMaster.class, base, i, i2, i3, i4, i5, s);
+		return Modchu_Main.newModchuCharacteristicObject("Modchu_GuiSmallButton", PFLM_GuiSmallButtonMaster.class, base, i, i2, i3, i4, i5, s);
 	}
 
-	protected Object newInstanceSlot(Object base, Object popWorld) {
-		return new Modchu_GuiPlayerSlot(PFLM_GuiOthersPlayerSlotMaster.class, base, popWorld);
+	protected Object newInstanceSlot(Object base, Object popWorld, int width, int height, int topIn, int bottomIn, int slotHeightIn) {
+		return Modchu_Main.newModchuCharacteristicObject("Modchu_GuiSlot", PFLM_GuiOthersPlayerSlotMaster.class, popWorld, base, width, height, topIn, bottomIn, slotHeightIn);
 	}
 
 	@Override

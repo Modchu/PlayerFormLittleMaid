@@ -1,9 +1,9 @@
 package modchu.pflm;
 
-import modchu.lib.characteristic.Modchu_AS;
-import modchu.lib.characteristic.Modchu_CastHelper;
-import modchu.lib.characteristic.Modchu_GuiBase;
-import modchu.lib.characteristic.Modchu_GuiModelView;
+import java.util.HashMap;
+
+import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_Main;
 
 public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOthersPlayerMaster {
 	public static String playerName;
@@ -14,30 +14,26 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 	public static int individualCustomizeChangeMode;
 	public static int othersHandednessMode;
 
-	public PFLM_GuiOthersPlayerIndividualCustomizeMaster(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super(guiBase, guiScreen, world, (Object[])o);
+	public PFLM_GuiOthersPlayerIndividualCustomizeMaster(HashMap<String, Object> map) {
+		super(map);
 	}
 
 	@Override
-	public void init(Object guiBase, Object guiScreen, Object world, Object... o) {
-		super.init(guiBase, guiScreen, world, (Object[])o);
-		guiOthersPlayerIndividualCustomizeMasterInit((Object[])o);
+	public void init(HashMap<String, Object> map) {
+		super.init(map);
+		guiOthersPlayerIndividualCustomizeMasterInit(map);
 	}
 
 	@Override
 	public void reInit() {
 		super.reInit();
-		guiOthersPlayerIndividualCustomizeMasterInit(playerName);
+		guiOthersPlayerIndividualCustomizeMasterInit(null);
 	}
 
-	private void guiOthersPlayerIndividualCustomizeMasterInit(Object... o) {
+	private void guiOthersPlayerIndividualCustomizeMasterInit(HashMap<String, Object> map) {
 		isIndividual = true;
-		if (o != null) {
-			Object[] o2 = Modchu_CastHelper.ObjectArray(o);
-			if (o2 != null) {
-				playerName = o2.length > 0
-						&& o2[0] != null ? (String)o2[0] : Modchu_CastHelper.String(o2);
-			}
+		if (map != null) {
+			playerName = map.containsKey("String") ? (String)map.get("String") : null;
 		}
 		drawEntitySetFlag = true;
 	}
@@ -52,6 +48,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 		buttonParts = false;
 		buttonIndividualCustomize = false;
 		buttonReturn = true;
+		buttonOtherPlayer = false;
 		buttonPlayer = individualCustomizeChangeMode == PFLM_GuiConstant.modePlayerOffline
 				| individualCustomizeChangeMode == PFLM_GuiConstant.modePlayerOnline
 				| individualCustomizeChangeMode == PFLM_GuiConstant.modePlayer
@@ -68,7 +65,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 		boolean isCtrlKeyDown = Modchu_AS.getBoolean(Modchu_AS.isCtrlKeyDown);
 		//ModelListSelect
 		if (id == 56) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiModelView(PFLM_GuiModelSelectMaster.class, base, popWorld, false, getColor(), playerName));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiModelSelectMaster.class, popWorld, base, false, getColor(), playerName));
 			return;
 		}
 		//Save
@@ -80,12 +77,12 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 			PFLM_Main.loadOthersPlayerParamater();
 			noSaveFlag = false;
 			PFLM_Main.clearDataMap();
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiBase(PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiBase", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
 			return;
 		}
 		//Return
 		if (id == 201) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, new Modchu_GuiBase(PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiBase", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
 			return;
 		}
 		//ChangeMode
