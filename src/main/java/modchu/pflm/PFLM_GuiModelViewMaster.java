@@ -11,11 +11,10 @@ import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_IGuiModelViewMaster;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
-import modchu.model.ModchuModel_Main;
+import modchu.model.ModchuModel_TextureManagerBase;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modchu_IGuiModelViewMaster {
 
@@ -203,7 +202,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		String s = PFLM_Main.getArmorName((String) modelData.getCapsValue(modelData.caps_textureArmorName), i);
 		modelData.setCapsValue(modelData.caps_textureArmorName, s);
-		Object ltb = ModchuModel_Main.checkTextureArmorPackege(s);
+		Object ltb = ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(s);
 		if (ltb != null) ;
 		else {
 			modelData.setCapsValue(modelData.caps_textureArmorName, "default");
@@ -292,7 +291,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 							&& Modchu_Main.isForge)
 					| PFLM_Main.oldRender) {
 */
-			Modchu_GlStateManager.rotate(180F, 180.0F, 0.0F, 1.0F);
+			Modchu_GlStateManager.rotate(180F, Modchu_Main.getMinecraftVersion() > 159 ? 180.0F : 0F, 0.0F, 1.0F);
 /*
 			} else {
 				Modchu_GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
@@ -374,9 +373,12 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 			switch (clickButton) {
 			case 0:
 				float f1 = 0.02F;
-				if (x != 0) comeraPosX += ((Modchu_Main.isForge
-						&& Modchu_Main.getMinecraftVersion() < 180)
-						| PFLM_Main.oldRender ? -x : x) * f1;
+				if (x != 0) comeraPosX += (
+						//(Modchu_Main.isForge
+						//&& Modchu_Main.getMinecraftVersion() < 179
+						//)
+						//| 
+						PFLM_Main.oldRender ? -x : x) * f1;
 				if (y != 0) {
 					float f2 = y * f1;
 					if (Modchu_AS.getBoolean(Modchu_AS.isCtrlKeyDown)) comeraPosZ += f2;
@@ -500,10 +502,10 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 
 	@Override
 	public int colorCheck(String textureName, int i, boolean colorReverse) {
-		Object texture = ModchuModel_Main.textureManagerGetTexture(textureName, i);
+		Object texture = ModchuModel_TextureManagerBase.instance.textureManagerGetTexture(textureName, i);
 		if (texture == null) {
 			for (int n = 0; n < 16; n++) {
-				texture = ModchuModel_Main.textureManagerGetTexture(textureName, i);
+				texture = ModchuModel_TextureManagerBase.instance.textureManagerGetTexture(textureName, i);
 				if (texture != null) {
 					i = Modchu_Main.normalize(i, 0, 15, 15, 0);
 					break;

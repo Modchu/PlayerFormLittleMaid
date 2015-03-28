@@ -16,6 +16,7 @@ import modchu.lib.Modchu_Reflect;
 import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_ModelBaseDuo;
 import modchu.model.ModchuModel_ModelBaseSolo;
+import modchu.model.ModchuModel_TextureManagerBase;
 
 import org.lwjgl.input.Mouse;
 
@@ -150,7 +151,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		if (id == 1) {
 			int i1 = getMaxSelectBoxViewCount();
 			int i = i1 + offsetSlot;
-			if (i < ModchuModel_Main.getTextureManagerTexturesSize()) {
+			if (i < ModchuModel_TextureManagerBase.instance.textures.size()) {
 				if (getTexturesNamber(i, getColor()) != -1) offsetSlot += i1;
 			}
 			selectSlot = -1;
@@ -283,16 +284,16 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 					textureModel[2][i3] = null;
 				}
 			}
-			if (i1 < 0 | i1 >= ModchuModel_Main.getTextureManagerTexturesSize()) ;
+			if (i1 < 0 | i1 >= ModchuModel_TextureManagerBase.instance.textures.size()) ;
 			else {
-				Object ltb = ModchuModel_Main.getTextureBox(i1);
+				Object ltb = ModchuModel_TextureManagerBase.instance.getTextureBox(i1);
 				setTextureName(i2, null);
-				if (ltb != null) setTextureName(i2, ModchuModel_Main.getTextureBoxTextureName(ltb));
+				if (ltb != null) setTextureName(i2, ModchuModel_TextureManagerBase.instance.getTextureBoxTextureName(ltb));
 				if (getTextureName(i2) != null && !getTextureName(i2).isEmpty() | armorMode) ;
 				else {
 					setTextureName(i2, "default");
-					ltb = ModchuModel_Main.getTextureBox(getTextureName(i2));
-					if (ltb != null) setTextureName(i2, ModchuModel_Main.getTextureBoxPackegeName(ltb));
+					ltb = ModchuModel_TextureManagerBase.instance.getTextureBox(getTextureName(i2));
+					if (ltb != null) setTextureName(i2, ModchuModel_TextureManagerBase.instance.getTextureBoxPackegeName(ltb));
 				}
 				if (getTextureName(i2) != null && ltb != null) {
 					PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
@@ -371,7 +372,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		//Modchu_Debug.dDebug("pointY="+pointY,3);
 		if (pointX >= 0 && pointX < selectBoxX && pointY >= 0 && pointY < selectBoxY) {
 			int i1 = offsetSlot + pointX + (pointY * selectBoxX);
-			if (i1 < ModchuModel_Main.getTextureManagerTexturesSize()) {
+			if (i1 < ModchuModel_TextureManagerBase.instance.textures.size()) {
 				if (getTexturesNamber(i1, getColor()) != -1) selectSlot = i1;
 			}
 			if (doubleClick && selectSlot > -1 && getTexturesNamber(selectSlot, getColor()) != -1) {

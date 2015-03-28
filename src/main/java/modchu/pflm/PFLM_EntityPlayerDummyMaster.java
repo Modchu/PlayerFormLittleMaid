@@ -161,4 +161,9 @@ public class PFLM_EntityPlayerDummyMaster implements Modchu_IEntityLivingMaster 
 		return null;
 	}
 
+	@Override
+	public int getMaxHealth() {
+		return 0;
+	}
+
 }

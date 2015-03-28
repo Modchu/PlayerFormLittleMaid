@@ -18,12 +18,12 @@ import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_FileManager;
 import modchu.lib.Modchu_GlStateManager;
 import modchu.lib.Modchu_Main;
-import modchu.lib.Modchu_Reflect;
 import modchu.lib.Modchu_RenderEngine;
 import modchu.model.ModchuModel_Config;
 import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_ModelDataBase;
 import modchu.model.ModchuModel_ModelRenderer;
+import modchu.model.ModchuModel_TextureManagerBase;
 
 import org.lwjgl.input.Mouse;
 
@@ -505,7 +505,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			boolean b = false;
 			while (b == false && setModel < PFLM_Main.textureList.size()) {
 				drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureName, PFLM_Main.textureList.get(setModel));
-				Object ltb = ModchuModel_Main.checkTexturePackege((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureName), drawMuitiModelData.getCapsValueInt(drawMuitiModelData.caps_maidColor));
+				Object ltb = ModchuModel_TextureManagerBase.instance.checkTexturePackege((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureName), drawMuitiModelData.getCapsValueInt(drawMuitiModelData.caps_maidColor));
 				if (ltb != null) {
 					b = true;
 				} else {
@@ -519,7 +519,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			boolean b = false;
 			while (b == false && setModel > -1) {
 				drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureName, PFLM_Main.textureList.get(setModel));
-				Object ltb = ModchuModel_Main.checkTexturePackege((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureName), drawMuitiModelData.getCapsValueInt(drawMuitiModelData.caps_maidColor));
+				Object ltb = ModchuModel_TextureManagerBase.instance.checkTexturePackege((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureName), drawMuitiModelData.getCapsValueInt(drawMuitiModelData.caps_maidColor));
 				if (ltb != null) {
 					b = true;
 				} else {
@@ -566,7 +566,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			boolean b = false;
 			while (b == false && setArmor < PFLM_Main.textureList.size()) {
 				drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, PFLM_Main.textureList.get(setArmor));
-				Object ltb = ModchuModel_Main.checkTextureArmorPackege((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureArmorName));
+				Object ltb = ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureArmorName));
 				if (ltb != null) {
 					b = true;
 				} else {
@@ -581,7 +581,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			boolean b = false;
 			while (b == false && setArmor < PFLM_Main.textureList.size()) {
 				drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, PFLM_Main.textureList.get(setArmor));
-				Object ltb = ModchuModel_Main.checkTextureArmorPackege((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureArmorName));
+				Object ltb = ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureArmorName));
 				if (ltb != null) {
 					b = true;
 				} else {
@@ -1079,14 +1079,14 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			s = b | PFLM_Main.specificationArmorCheckBoolean((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureName)) ? "x32_QB" : "default";
 			drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, s);
 		}
-		if (ModchuModel_Main.checkTextureArmorPackege(s) != null) ;
+		if (ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(s) != null) ;
 		else drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureName));
 	}
 
 	@Override
 	public void setArmorTextureValue() {
 		if (getTextureArmorName() == null) setTextureArmorName(getTextureName());
-		if (ModchuModel_Main.checkTextureArmorPackege(getTextureArmorName()) == null) {
+		if (ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(getTextureArmorName()) == null) {
 			setTextureArmorName(PFLM_Main.getArmorName(getTextureName(), 1));
 		}
 	}
@@ -1134,7 +1134,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			try {
 				if (bufferedimage1 == null
 						| getChangeMode() == PFLM_GuiConstant.modeOffline) {
-					image = readTextureImage(ModchuModel_Main.textureManagerGetTexture(getTextureName(), c));
+					image = readTextureImage(ModchuModel_TextureManagerBase.instance.textureManagerGetTexture(getTextureName(), c));
 				} else {
 					image = bufferedimage1;
 					result = true;
@@ -1205,7 +1205,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			if (rightBottomSet) setY = 30;
 			image.setRGB(setX, setY, rgb);
 
-			Object resourceLocation = ModchuModel_Main.textureManagerGetTexture(s1, c);
+			Object resourceLocation = ModchuModel_TextureManagerBase.instance.textureManagerGetTexture(s1, c);
 			String s = "output.png";
 /*
 			if (resourceLocation == null

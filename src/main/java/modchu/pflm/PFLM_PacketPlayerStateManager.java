@@ -2,7 +2,6 @@ package modchu.pflm;
 
 import java.util.LinkedList;
 
-import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Reflect;
 import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_ModelDataBase;

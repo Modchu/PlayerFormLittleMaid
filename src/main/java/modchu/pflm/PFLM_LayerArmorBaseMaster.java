@@ -2,8 +2,6 @@ package modchu.pflm;
 
 import java.util.HashMap;
 
-import org.lwjgl.opengl.GL11;
-
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_CastHelper;
 import modchu.lib.Modchu_LayerArmorBaseMasterBasis;
@@ -11,6 +9,8 @@ import modchu.lib.Modchu_Reflect;
 import modchu.model.ModchuModel_ConfigData;
 import modchu.model.ModchuModel_ModelBaseNihil;
 import modchu.model.multimodel.base.MultiModelBaseBiped;
+
+import org.lwjgl.opengl.GL11;
 
 public class PFLM_LayerArmorBaseMaster extends Modchu_LayerArmorBaseMasterBasis  {
 

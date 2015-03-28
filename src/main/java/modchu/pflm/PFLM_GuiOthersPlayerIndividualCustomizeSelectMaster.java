@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import modchu.lib.Modchu_AS;
-import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 

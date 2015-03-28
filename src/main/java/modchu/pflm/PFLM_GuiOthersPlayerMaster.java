@@ -6,7 +6,7 @@ import java.util.List;
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_Main;
-import modchu.model.ModchuModel_Main;
+import modchu.model.ModchuModel_TextureManagerBase;
 import modchu.model.multimodel.base.MultiModelBaseBiped;
 
 public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
@@ -333,7 +333,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		String s = PFLM_Main.getArmorName((String)modelData.getCapsValue(modelData.caps_textureArmorName), i);
 		modelData.setCapsValue(modelData.caps_textureArmorName, s);
-		Object ltb = ModchuModel_Main.checkTextureArmorPackege(s);
+		Object ltb = ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(s);
 		//Modchu_Debug.mDebug("setTextureArmorPackege s="+s);
 		if (ltb != null); else {
 			//Modchu_Debug.mDebug("setTextureArmorPackege ltb == null !!");
@@ -348,7 +348,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	@Override
 	public void setArmorTextureValue() {
 		if (getTextureArmorName() == null) setTextureArmorName(getTextureName());
-		if (ModchuModel_Main.checkTextureArmorPackege(getTextureArmorName()) == null) {
+		if (ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(getTextureArmorName()) == null) {
 			String s = PFLM_Main.getArmorName(getTextureName(), 1);
 			setTextureArmorName(s != null && !s.isEmpty() ? s : getTextureArmorName().indexOf("_Biped") == -1 ? "default" : "Biped");
 		}
