@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_Main;
 import modchu.model.ModchuModel_TextureManagerBase;
@@ -14,7 +15,6 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public boolean colorReverse;
 	public boolean isIndividual;
 	public boolean buttonIndividualCustomize;
-	public static final int othersPlayerMaxchangeMode = 5;
 
 	public PFLM_GuiOthersPlayerMaster(HashMap<String, Object> map) {
 		super(map);
@@ -40,6 +40,9 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		colorReverse = false;
 		isIndividual = false;
 		buttonIndividualCustomize = true;
+		int changeMode = getChangeMode();
+		if (changeMode > PFLM_GuiConstant.otherChangeModelist.size()) setChangeMode(0);
+		if (changeMode < 0) setChangeMode(PFLM_GuiConstant.otherChangeModelist.size() - 1);
 	}
 
 	@Override
@@ -61,16 +64,19 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	@Override
 	protected void initButtonSetting() {
 		if (!isIndividual) {
-			buttonOnline = getChangeMode() == PFLM_GuiConstant.modePlayerOnline;
-			buttonOffline = getChangeMode() == PFLM_GuiConstant.modeOffline;
-			buttonRandom = getChangeMode() == PFLM_GuiConstant.modeRandom;
+			int skinMode = getSkinMode();
+			buttonOnline = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOnline;
+			buttonOffline = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline;
+			buttonRandom = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random;
 			buttonScale = modelScaleButton;
 			buttonParts = false;
-			buttonPlayer = getChangeMode() == PFLM_GuiConstant.modePlayerOffline
-					| getChangeMode() == PFLM_GuiConstant.modePlayerOnline
-					| getChangeMode() == PFLM_GuiConstant.modePlayer
-					| getChangeMode() == PFLM_GuiConstant.modeOnline;
-			buttonShowArmor = getChangeMode() == PFLM_GuiConstant.modeOffline;
+			buttonPlayer = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOffline
+					| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOnline
+					| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Player
+					| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_online;
+			buttonShowArmor = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline;
+			Modchu_Debug.mDebug("initButtonSetting changeModeString="+PFLM_GuiConstant.getOtherChangeModeString(getChangeMode()));
+			Modchu_Debug.mDebug("initButtonSetting buttonOffline="+buttonOffline);
 		}
 		buttonReturn = true;
 		buttonCustomize = false;
@@ -231,13 +237,15 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//ChangeMode
 		if(id == 13)
 		{
+			int changeMode = getChangeMode();
 			if (isShiftKeyDown) {
-				setChangeMode(getChangeMode() - 1);
+				changeMode--;
 			} else {
-				setChangeMode(getChangeMode() + 1);
+				changeMode++;
 			}
-			if (getChangeMode() > othersPlayerMaxchangeMode) setChangeMode(0);
-			if (getChangeMode() < 0) setChangeMode(othersPlayerMaxchangeMode);
+			if (changeMode >= PFLM_GuiConstant.otherChangeModelist.size()) changeMode = 0;
+			if (changeMode < 0) changeMode = PFLM_GuiConstant.otherChangeModelist.size() - 1;
+			setChangeMode(changeMode);
 			PFLM_ModelDataMaster.instance.removeDataMap(drawEntity);
 			setTextureValue();
 			drawEntitySetFlag = true;
@@ -262,7 +270,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		//drawEntitySetFlag = true;
 		//textureResetFlag = true;
-		resetFlagCheck(true);
+		resetFlagCheck(false);
 		int xSize = 80;
 		int ySize = 50;
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
@@ -274,18 +282,19 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		StringBuilder s1 = (new StringBuilder()).append("ArmorName : ");
 		StringBuilder s2 = (new StringBuilder()).append("MaidColor : ");
 		StringBuilder s9 = (new StringBuilder()).append("changeMode : ");
-		s9 = s9.append(getChangeModeString(getChangeMode()));
+		int skinMode = getSkinMode();
+		s9 = s9.append(PFLM_GuiConstant.getOtherChangeModeString(getChangeMode()));
 		drawString(s9.toString(), guiLeft, guiTop + 130, 0xffffff);
-		if(getChangeMode() == PFLM_GuiConstant.modeOffline
-				| getChangeMode() == PFLM_GuiConstant.modeRandom) {
+		if(skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline
+				| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random) {
 			StringBuilder s10 = (new StringBuilder()).append("Handedness : ");
 			s10 = s10.append(getHandednessModeString(getHandednessMode()));
 			//if (getHandednessMode() == -1) s10 = s10.append(" Result : ").append(getHandednessModeString(handedness));
 			drawString(s10.toString(), guiLeft, guiTop + 140, 0xffffff);
 		}
 		if (PFLM_ConfigData.useScaleChange
-				&& (getChangeMode() == PFLM_GuiConstant.modeOffline
-				| getChangeMode() == PFLM_GuiConstant.modeRandom)
+				&& (skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline
+				| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random)
 				&& modelScaleButton) {
 			String s6 = "modelScale : "+getScale();
 			s6 = (new StringBuilder()).append(s6).toString();
@@ -297,24 +306,15 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		boolean localFlag = modelData.getCapsValueInt(modelData.caps_skinMode) == PFLM_ModelDataMaster.skinMode_local;
 		if (localFlag
-				| getChangeMode() == PFLM_GuiConstant.modeOffline) {
-/*
-			if (changeMode == modefalse
-					| changeMode == PFLM_GuiConstant.modePlayerOnline
-							| (changeMode == modePlayer
-									&& PFLM_Main.changeMode == PFLM_Gui.modeOnline)
-					&& !localFlag) {
-			} else {
-*/
-				s = s.append(getTextureName());
-				drawString(s.toString(), guiLeft, guiTop + 90, 0xffffff);
-				s2 = s2.append(getColor());
-				drawString(s2.toString(), guiLeft, guiTop + 100, 0xffffff);
-				s1 = s1.append(getTextureArmorName());
-				drawString(s1.toString(), guiLeft, guiTop + 110, 0xffffff);
-			//}
+				| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline) {
+			s = s.append(getTextureName());
+			drawString(s.toString(), guiLeft, guiTop + 90, 0xffffff);
+			s2 = s2.append(getColor());
+			drawString(s2.toString(), guiLeft, guiTop + 100, 0xffffff);
+			s1 = s1.append(getTextureArmorName());
+			drawString(s1.toString(), guiLeft, guiTop + 110, 0xffffff);
 		}
-		if(getChangeMode() == PFLM_GuiConstant.modeOffline) {
+		if(skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline) {
 			StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
 			s8 = s8.append(modelData.getCapsValueBoolean(modelData.caps_freeVariable, "showArmor"));
 			drawString(s8.toString(), guiLeft, guiTop + 120, 0xffffff);
@@ -350,7 +350,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		if (getTextureArmorName() == null) setTextureArmorName(getTextureName());
 		if (ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(getTextureArmorName()) == null) {
 			String s = PFLM_Main.getArmorName(getTextureName(), 1);
-			setTextureArmorName(s != null && !s.isEmpty() ? s : getTextureArmorName().indexOf("_Biped") == -1 ? "default" : "Biped");
+			setTextureArmorName(s);
 		}
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", showArmor);
@@ -433,29 +433,8 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		PFLM_ConfigData.othersChangeMode = i;
 	}
 
-	public static String getChangeModeString(int i) {
-		String s = null;
-		switch (i) {
-		case 0:
-			s = "modeOthersSettingOffline";
-			break;
-		case 1:
-			s = "modefalse";
-			break;
-		case 2:
-			s = "modeRandom";
-			break;
-		case 3:
-			s = "modePlayer";
-			break;
-		case 4:
-			s = "modePlayerOffline";
-			break;
-		case 5:
-			s = "modePlayerOnline";
-			break;
-		}
-		return s;
+	public int getSkinMode() {
+		return PFLM_GuiConstant.getOtherSkinMode(getChangeMode());
 	}
 
 	public static String getHandednessModeString(int i) {

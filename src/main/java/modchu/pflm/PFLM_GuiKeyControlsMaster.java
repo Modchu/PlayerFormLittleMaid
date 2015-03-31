@@ -271,17 +271,26 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 		StringBuilder s9 = (new StringBuilder()).append("changeMode : ");
 		s9 = s9.append(getChangeModeString(PFLM_ConfigData.shortcutKeysChangeMode[select]));
 		drawString(s9.toString(), guiLeft, guiTop + 130, 0xffffff);
-		if (PFLM_ConfigData.shortcutKeysChangeMode[select] == modeOthersSettingOffline | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModel | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModelAndColor | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
+		if (PFLM_ConfigData.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModel
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModelAndColor
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModelAndArmor) {
 			s = s.append(getTextureName());
 			drawString(s.toString(), guiLeft, guiTop + 100, 0xffffff);
 			drawString("Model", width / 2 + 60, height / 2 - 56, 0xffffff);
 		}
-		if (PFLM_ConfigData.shortcutKeysChangeMode[select] == modeOthersSettingOffline | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetColor | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModelAndColor | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
+		if (PFLM_ConfigData.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetColor
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModelAndColor
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
 			s2 = s2.append(getColor());
 			drawString(s2.toString(), guiLeft, guiTop + 110, 0xffffff);
 			drawString("Color", width / 2 + 60, height / 2 - 41, 0xffffff);
 		}
-		if (PFLM_ConfigData.shortcutKeysChangeMode[select] == modeOthersSettingOffline | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModelAndArmor | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetArmor | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
+		if (PFLM_ConfigData.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetModelAndArmor
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetArmor
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeSetColorAndArmor) {
 			s1 = s1.append(getTextureArmorName());
 			drawString(s1.toString(), guiLeft, guiTop + 120, 0xffffff);
 			StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
@@ -291,7 +300,8 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 			drawString(s8.toString(), guiLeft, guiTop + 140, 0xffffff);
 			drawString("Armor", width / 2 + 60, height / 2 - 27, 0xffffff);
 		}
-		if (PFLM_ConfigData.shortcutKeysChangeMode[select] == modeOthersSettingOffline | PFLM_ConfigData.shortcutKeysChangeMode[select] == modeModelScale) {
+		if (PFLM_ConfigData.shortcutKeysChangeMode[select] == modeOthersSettingOffline
+				| PFLM_ConfigData.shortcutKeysChangeMode[select] == modeModelScale) {
 			if (modelScaleButton) {
 				String s6 = "ModelScale : " + getScale();
 				s6 = (new StringBuilder()).append(s6).toString();
@@ -301,8 +311,11 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 				drawString(s7, guiLeft - 120, guiTop + 55, 0xffffff);
 			}
 		}
-		if (PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOnline && PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOffline && PFLM_ConfigData.shortcutKeysChangeMode[select] != modeRandom && PFLM_ConfigData.shortcutKeysChangeMode[select] < modeActionRelease) {
-			resetFlagCheck(true);
+		if (PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOnline
+				&& PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOffline
+				&& PFLM_ConfigData.shortcutKeysChangeMode[select] != modeRandom
+				&& PFLM_ConfigData.shortcutKeysChangeMode[select] < modeActionRelease) {
+			resetFlagCheck(false);
 			int l = guiLeft;
 			int i1 = guiTop;
 			drawMobModel(i, j, l + 51, i1 + 75, 0, 25, 50F, 0.0F, true);
