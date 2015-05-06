@@ -255,7 +255,8 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//IndividualCustomize
 		if(id == 401)
 		{
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiBase", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
+			Modchu_Debug.mDebug("PFLM_GuiOthersPlayerMaster id == 401 popWorld="+popWorld);
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiScreen", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
 			return;
 		}
 	}

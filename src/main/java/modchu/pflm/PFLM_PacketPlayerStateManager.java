@@ -2,6 +2,7 @@ package modchu.pflm;
 
 import java.util.LinkedList;
 
+import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Reflect;
 import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_ModelDataBase;
@@ -30,8 +31,10 @@ public class PFLM_PacketPlayerStateManager {
 	public static Object getPlayerStateObject(Object entityId, byte by) {
 		if (ModchuModel_Main.isPFLMF); else return false;
 		LinkedList list = getPlayerState(entityId, by);
-		if (list != null) return Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Client", "receivePacket", new Class[]{ LinkedList.class, boolean.class }, new Object[]{ list, true });
-		else {
+		if (list != null) {
+			//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager getPlayerStateObject return "+(Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Client", "receivePacket", new Class[]{ LinkedList.class, boolean.class }, new Object[]{ list, true })));
+			return Modchu_Reflect.invokeMethod("modchu.pflmf.PFLMF_Client", "receivePacket", new Class[]{ LinkedList.class, boolean.class }, new Object[]{ list, true });
+		} else {
 			//Modchu_Debug.mDebug("PFLM_PacketPlayerStateManager getPlayerStateObject list == null");
 		}
 		return null;

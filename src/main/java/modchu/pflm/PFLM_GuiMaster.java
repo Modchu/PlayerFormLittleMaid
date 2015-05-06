@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -789,7 +790,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	}
 
 	@Override
-	public boolean handleMouseInput() {
+	public void handleMouseInput() {
 		super.handleMouseInput();
 		if (partsButton) {
 			int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
@@ -806,11 +807,10 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				}
 			}
 		}
-		return true;
 	}
 
 	@Override
-	public boolean keyTyped(char c, int i) {
+	public void keyTyped(char c, int i) {
 		if (i == 200) {
 			scrollY += 30;
 			scrollY = scrollY > showPartsListSize * 15 ? showPartsListSize * 15 : scrollY;
@@ -822,7 +822,6 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			initGui();
 		}
 		super.keyTyped(c, i);
-		return true;
 	}
 
 	@Override
@@ -1249,7 +1248,9 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				if (inputStream != null) inputStream.close();
 			}
 		} else {
-			image = ImageIO.read(Modchu_AS.getFile(Modchu_AS.getResource, o));
+			URL url = (URL) Modchu_AS.get(Modchu_AS.getResource, o);
+			Modchu_Debug.mDebug("PFLM_GuiMaster readTextureImage url="+url);
+			image = ImageIO.read(url);
 		}
 		return fullColorConversion(image);
 	}

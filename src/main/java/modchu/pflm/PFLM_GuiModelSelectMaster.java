@@ -356,11 +356,11 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 	}
 
 	@Override
-	public boolean mouseClicked(int x, int y, int i) {
-		boolean b = super.mouseClicked(x, y, i);
+	public void mouseClicked(int x, int y, int i) {
+		super.mouseClicked(x, y, i);
 		boolean doubleClick = false;
 		if (Mouse.isButtonDown(0)
-				&& displayModels); else return true;
+				&& displayModels); else return;
 		long l1 = Modchu_AS.getLong(Modchu_AS.minecraftSystemTime);
 		if (l1 - lastClicked < 250L) doubleClick = true;
 		lastClicked = l1;
@@ -380,18 +380,16 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 				selected();
 			}
 		}
-		return true;
 	}
 
 	@Override
-	public boolean keyTyped(char c, int i) {
+	public void keyTyped(char c, int i) {
 		super.keyTyped(c, i);
 		//Modchu_Debug.dDebug("keyTyped i="+i);
 		if (i == 61) {
 			displayModels = !displayModels;
 			initGui();
 		}
-		return true;
 	}
 
 	private int getTexturesNamber(int i, int i1) {

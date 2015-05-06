@@ -12,6 +12,7 @@ import modchu.lib.Modchu_IGuiModelViewMaster;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.model.ModchuModel_TextureManagerBase;
+import modchu.pflm.PFLM_GuiBaseMaster;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -141,7 +142,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 	}
 
 	@Override
-	public boolean drawScreen(int i, int j, float f) {
+	public void drawScreen(int i, int j, float f) {
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		base.superDrawDefaultBackground();
@@ -149,7 +150,6 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 		drawGuiContainerBackgroundLayer(f, i, j);
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
-		return false;
 	}
 
 	@Override
@@ -375,9 +375,10 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 				float f1 = 0.02F;
 				if (x != 0) comeraPosX += (
 						//(Modchu_Main.isForge
-						//&& Modchu_Main.getMinecraftVersion() < 179
+						//&& 
+						Modchu_Main.getMinecraftVersion() < 160
 						//)
-						//| 
+						| 
 						PFLM_Main.oldRender ? -x : x) * f1;
 				if (y != 0) {
 					float f2 = y * f1;
@@ -416,7 +417,8 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 	}
 
 	@Override
-	public boolean handleMouseInput() {
+	public void handleMouseInput() {
+		super.handleMouseInput();
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
 		int k = Mouse.getEventButton();
 		int i = Mouse.getEventX() * width / Modchu_AS.getInt(Modchu_AS.minecraftDisplayWidth);
@@ -443,14 +445,14 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 					tempLastMouseEventTime = systemTime;
 				}
 			}
-			return true;
+			return;
 		}
 		//Modchu_Debug.mDebug("doubleClick systemTime="+systemTime+" tempLastMouseEvent="+tempLastMouseEvent);
 		if (tempLastMouseEventTime < 0
 				| systemTime - tempLastMouseEventTime > 500L
 				| systemTime - tempLastMouseEventTime < 25L) {
 			tempLastMouseEventTime = -1;
-			return true;
+			return;
 		}
 		//Modchu_Debug.mDebug("doubleClick Time="+(systemTime - tempLastMouseEventTime));
 		tempLastMouseEventTime = systemTime;
@@ -475,18 +477,16 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 				break;
 			}
 		}
-		return true;
 	}
 
 	@Override
-	public boolean keyTyped(char c, int i) {
+	public void keyTyped(char c, int i) {
 		//Modchu_Debug.dDebug("keyTyped i="+i);
 		super.keyTyped(c, i);
 		if (i == 59) {
 			displayButton = !displayButton;
 			initGui();
 		}
-		return true;
 	}
 
 	@Override

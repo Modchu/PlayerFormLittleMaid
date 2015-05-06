@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 
@@ -55,7 +56,8 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 			//Modchu_Debug.mDebug("setPlayerList username="+username);
 			if (!username.equalsIgnoreCase(thePlayerUsername)) playerList.add(username);
 		}
-		if (!Modchu_Main.isRelease()
+		if ((!Modchu_Main.isRelease()
+				| Modchu_Debug.mDebug)
 				&& playerList.isEmpty()) {
 			String s;
 			for (int i1 = 0 ; i1 < 2 ; i1++) {
@@ -66,6 +68,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 		}
 	}
 
+	@Override
 	public void initGui() {
 		List buttonList = Modchu_AS.getList(Modchu_AS.guiScreenButtonList, base);
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
@@ -108,26 +111,25 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 	}
 
 	@Override
-	public boolean drawScreen(int i, int j, float f) {
+	public void drawScreen(int i, int j, float f) {
 		base.superDrawDefaultBackground();
 		super.drawScreen(i, j, f);
 		Modchu_AS.set(Modchu_AS.guiSlotDrawScreen, selectPanel, i, j, f);
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
 		Modchu_AS.set(Modchu_AS.guiDrawCenteredString, base, getFontRenderer(), screenTitle, width / 2, 20, 0xffffff);
 		base.superDrawScreen(i, j, f );
-		return false;
 	}
 
 	@Override
-	public boolean handleMouseInput() {
+	public void handleMouseInput() {
 		// ホイールスクロール用
+		super.handleMouseInput();
 		int i = Mouse.getEventDWheel();
 		if(i != 0) {
 			Modchu_AS.set(Modchu_AS.guiButtonID, localScroll, i > 0 ? 3 : 4);
 			Modchu_AS.set(Modchu_AS.guiSlotActionPerformed, selectPanel, localScroll);
 		}
 		if (Modchu_Main.getMinecraftVersion() > 179) Modchu_AS.set("GuiSlot", "handleMouseInput", selectPanel, (Class[])null);
-		return true;
 	}
 
 	public void memoryRelease() {

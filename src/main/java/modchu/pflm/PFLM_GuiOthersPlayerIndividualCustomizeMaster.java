@@ -79,12 +79,12 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 			PFLM_Main.loadOthersPlayerParamater();
 			noSaveFlag = false;
 			PFLM_Main.clearDataMap();
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiBase", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiScreen", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
 			return;
 		}
 		//Return
 		if (id == 201) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiBase", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiScreen", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
 			return;
 		}
 		super.actionPerformed(guibutton);
