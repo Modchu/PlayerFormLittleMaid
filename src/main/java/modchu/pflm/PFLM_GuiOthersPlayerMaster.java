@@ -7,6 +7,7 @@ import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_Main;
+import modchu.model.ModchuModel_IEntityCaps;
 import modchu.model.ModchuModel_TextureManagerBase;
 import modchu.model.multimodel.base.MultiModelBaseBiped;
 
@@ -30,6 +31,10 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void reInit() {
 		super.reInit();
 		guiOthersPlayerMasterInit();
+	}
+
+	@Override
+	protected void guiMasterInitAfter() {
 	}
 
 	private void guiOthersPlayerMasterInit() {
@@ -65,16 +70,16 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	protected void initButtonSetting() {
 		if (!isIndividual) {
 			int skinMode = getSkinMode();
-			buttonOnline = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOnline;
-			buttonOffline = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline;
-			buttonRandom = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random;
+			buttonOnline = skinMode == ModchuModel_IEntityCaps.skinMode_PlayerOnline;
+			buttonOffline = skinMode == ModchuModel_IEntityCaps.skinMode_offline;
+			buttonRandom = skinMode == ModchuModel_IEntityCaps.skinMode_Random;
 			buttonScale = modelScaleButton;
 			buttonParts = false;
-			buttonPlayer = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOffline
-					| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOnline
-					| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Player
-					| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_online;
-			buttonShowArmor = skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline;
+			buttonPlayer = skinMode == ModchuModel_IEntityCaps.skinMode_PlayerOffline
+					| skinMode == ModchuModel_IEntityCaps.skinMode_PlayerOnline
+					| skinMode == ModchuModel_IEntityCaps.skinMode_Player
+					| skinMode == ModchuModel_IEntityCaps.skinMode_online;
+			buttonShowArmor = skinMode == ModchuModel_IEntityCaps.skinMode_offline;
 			Modchu_Debug.mDebug("initButtonSetting changeModeString="+PFLM_GuiConstant.getOtherChangeModeString(getChangeMode()));
 			Modchu_Debug.mDebug("initButtonSetting buttonOffline="+buttonOffline);
 		}
@@ -103,7 +108,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		boolean isCtrlKeyDown = Modchu_AS.getBoolean(Modchu_AS.isCtrlKeyDown);
 		if(id == 3)
 		{
-			setScale(modelData.modelMain.model instanceof MultiModelBaseBiped ? ((MultiModelBaseBiped) modelData.modelMain.model).getModelScale(modelData) : 0.9375F);
+			setScale(modelData.models[0] instanceof MultiModelBaseBiped ? ((MultiModelBaseBiped) modelData.models[0]).getModelScale(modelData) : 0.9375F);
 		}
 		//isModelSize UP
 		if(id == 4)
@@ -160,7 +165,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//ModelChange
 		if(id == 50
 				| id == 51) {
-			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false, PFLM_ConfigData.autoArmorSelect);
+			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false, PFLM_ConfigData.autoArmorSelect);
 			setTextureName(s0[0]);
 			setTextureArmorName(s0[1]);
 			modelChange();
@@ -187,7 +192,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//ArmorChange
 		if(id == 54
 				| id == 55) {
-			String[] s0 = PFLM_Main.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true, PFLM_ConfigData.autoArmorSelect);
+			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true, PFLM_ConfigData.autoArmorSelect);
 			setTextureArmorName(s0[1]);
 			modelData.setCapsValue(modelData.caps_textureArmorName, getTextureArmorName());
 			noSaveFlag = true;
@@ -271,7 +276,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		//drawEntitySetFlag = true;
 		//textureResetFlag = true;
-		resetFlagCheck(false);
+		resetFlagCheck(false, false);
 		int xSize = 80;
 		int ySize = 50;
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
@@ -286,16 +291,16 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		int skinMode = getSkinMode();
 		s9 = s9.append(PFLM_GuiConstant.getOtherChangeModeString(getChangeMode()));
 		drawString(s9.toString(), guiLeft, guiTop + 130, 0xffffff);
-		if(skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline
-				| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random) {
+		if(skinMode == ModchuModel_IEntityCaps.skinMode_offline
+				| skinMode == ModchuModel_IEntityCaps.skinMode_Random) {
 			StringBuilder s10 = (new StringBuilder()).append("Handedness : ");
 			s10 = s10.append(getHandednessModeString(getHandednessMode()));
 			//if (getHandednessMode() == -1) s10 = s10.append(" Result : ").append(getHandednessModeString(handedness));
 			drawString(s10.toString(), guiLeft, guiTop + 140, 0xffffff);
 		}
 		if (PFLM_ConfigData.useScaleChange
-				&& (skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline
-				| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random)
+				&& (skinMode == ModchuModel_IEntityCaps.skinMode_offline
+				| skinMode == ModchuModel_IEntityCaps.skinMode_Random)
 				&& modelScaleButton) {
 			String s6 = "modelScale : "+getScale();
 			s6 = (new StringBuilder()).append(s6).toString();
@@ -305,9 +310,9 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 			drawString(s7, guiLeft - 140, guiTop - 5, 0xffffff);
 		}
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		boolean localFlag = modelData.getCapsValueInt(modelData.caps_skinMode) == PFLM_ModelDataMaster.skinMode_local;
+		boolean localFlag = modelData.getCapsValueInt(modelData.caps_skinMode) == ModchuModel_IEntityCaps.skinMode_local;
 		if (localFlag
-				| skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline) {
+				| skinMode == ModchuModel_IEntityCaps.skinMode_offline) {
 			s = s.append(getTextureName());
 			drawString(s.toString(), guiLeft, guiTop + 90, 0xffffff);
 			s2 = s2.append(getColor());
@@ -315,7 +320,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 			s1 = s1.append(getTextureArmorName());
 			drawString(s1.toString(), guiLeft, guiTop + 110, 0xffffff);
 		}
-		if(skinMode == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline) {
+		if(skinMode == ModchuModel_IEntityCaps.skinMode_offline) {
 			StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
 			s8 = s8.append(modelData.getCapsValueBoolean(modelData.caps_freeVariable, "showArmor"));
 			drawString(s8.toString(), guiLeft, guiTop + 120, 0xffffff);
@@ -332,13 +337,13 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void setTextureArmorPackege(int i) {
 		//Modchu_Debug.mDebug("setTextureArmorPackege textureArmorName="+modelData.getCapsValue(modelData.caps_textureArmorName));
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		String s = PFLM_Main.getArmorName((String)modelData.getCapsValue(modelData.caps_textureArmorName), i);
+		String s = ModchuModel_TextureManagerBase.instance.getArmorName((String)modelData.getCapsValue(modelData.caps_textureArmorName), i);
 		modelData.setCapsValue(modelData.caps_textureArmorName, s);
 		Object ltb = ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(s);
 		//Modchu_Debug.mDebug("setTextureArmorPackege s="+s);
 		if (ltb != null); else {
 			//Modchu_Debug.mDebug("setTextureArmorPackege ltb == null !!");
-			modelData.setCapsValue(modelData.caps_textureArmorName, "default");
+			modelData.setCapsValue(modelData.caps_textureArmorName, ModchuModel_TextureManagerBase.instance.getDefaultTextureName());
 		}
 		if (modelData.getCapsValue(modelData.caps_textureArmorName) != null); else {
 			//Modchu_Debug.mDebug("setTextureArmorPackege modelData.getCapsValue(modelData.caps_textureArmorName) == null !!");
@@ -350,7 +355,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void setArmorTextureValue() {
 		if (getTextureArmorName() == null) setTextureArmorName(getTextureName());
 		if (ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(getTextureArmorName()) == null) {
-			String s = PFLM_Main.getArmorName(getTextureName(), 1);
+			String s = ModchuModel_TextureManagerBase.instance.getArmorName(getTextureName(), 1);
 			setTextureArmorName(s);
 		}
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);

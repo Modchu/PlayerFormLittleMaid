@@ -1,5 +1,7 @@
 package modchu.pflm;
 
+import modchu.model.ModchuModel_TextureManagerBase;
+
 public class PFLM_ConfigData {
 
 	//cfg書き込み項目
@@ -53,10 +55,10 @@ public class PFLM_ConfigData {
 	public static int guiMultiplayerSwapCount = 0;
 	public static float setWatherFog = 0F;
 	public static float setWatherFog2 = 0F;
-	public static String textureName = "default";
-	public static String textureArmorName = "default";
-	public static String othersTextureName = "default";
-	public static String othersTextureArmorName = "default";
+	public static String textureName = ModchuModel_TextureManagerBase.instance.getDefaultTextureName();
+	public static String textureArmorName = ModchuModel_TextureManagerBase.instance.getDefaultTextureName();
+	public static String othersTextureName = ModchuModel_TextureManagerBase.instance.getDefaultTextureName();
+	public static String othersTextureArmorName = ModchuModel_TextureManagerBase.instance.getDefaultTextureName();
 	public static float othersModelScale = 0.0F;
 	public static final int maxShortcutKeys = 100;
 	public static final String shortcutKeysName = "key.PFLM";

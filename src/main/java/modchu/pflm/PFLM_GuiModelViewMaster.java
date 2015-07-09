@@ -11,8 +11,9 @@ import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_IGuiModelViewMaster;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
+import modchu.model.ModchuModel_EntityPlayerDummyMaster;
+import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_TextureManagerBase;
-import modchu.pflm.PFLM_GuiBaseMaster;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -172,9 +173,11 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 
 	public void initDrawEntity() {
 		try {
-			if (drawEntity != null); else drawEntity = Modchu_Main.newModchuCharacteristicObject("Modchu_EntityPlayerDummy", PFLM_EntityPlayerDummyMaster.class, popWorld);
+			if (drawEntity != null); else drawEntity = Modchu_Main.newModchuCharacteristicObject("Modchu_EntityPlayerDummy", ModchuModel_EntityPlayerDummyMaster.class, popWorld);
 			if (drawEntity != null) {
+				Modchu_Debug.lDebug("PFLM_GuiModelViewMaster initDrawEntity modelData start ----------------------");
 				PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+				Modchu_Debug.lDebug("PFLM_GuiModelViewMaster initDrawEntity modelData end. ----------------------");
 				if (modelData != null) {
 					modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", true);
 					modelData.setCapsValue(modelData.caps_freeVariable, "initDrawEntityFlag", true);
@@ -200,12 +203,12 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 	public void setTextureArmorPackege(int i) {
 		//modelData.setCapsValue(modelData.caps_textureArmorName, modelData.getCapsValue(modelData.caps_textureName));
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		String s = PFLM_Main.getArmorName((String) modelData.getCapsValue(modelData.caps_textureArmorName), i);
+		String s = ModchuModel_TextureManagerBase.instance.getArmorName((String) modelData.getCapsValue(modelData.caps_textureArmorName), i);
 		modelData.setCapsValue(modelData.caps_textureArmorName, s);
 		Object ltb = ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(s);
 		if (ltb != null) ;
 		else {
-			modelData.setCapsValue(modelData.caps_textureArmorName, "default");
+			modelData.setCapsValue(modelData.caps_textureArmorName, ModchuModel_TextureManagerBase.instance.getDefaultTextureName());
 		}
 		if (modelData.getCapsValue(modelData.caps_textureArmorName) != null) ;
 		else modelData.setCapsValue(modelData.caps_textureArmorName, modelData.getCapsValue(modelData.caps_textureName));
@@ -213,7 +216,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 
 	@Override
 	public void setTextureValue() {
-		PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+		//PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		initDrawStringListFlag = true;
 	}
 
@@ -224,10 +227,10 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 	public void setArmorTextureValue() {
 	}
 
-	protected void resetFlagCheck(boolean debug) {
+	protected void resetFlagCheck(boolean debug, boolean errorDefault) {
 		if (drawEntitySetFlag) {
 			setTextureValue();
-			reLoadModel(drawEntity, debug);
+			reLoadModel(drawEntity, debug, errorDefault);
 			setTextureValueAfter();
 			initGui();
 			drawEntitySetFlag = false;
@@ -289,7 +292,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 			if (Modchu_Main.getMinecraftVersion() > 169
 					| (Modchu_Main.isRelease()
 							&& Modchu_Main.isForge)
-					| PFLM_Main.oldRender) {
+					| ModchuModel_Main.oldRender) {
 */
 			Modchu_GlStateManager.rotate(180F, Modchu_Main.getMinecraftVersion() > 159 ? 180.0F : 0F, 0.0F, 1.0F);
 /*
@@ -375,11 +378,11 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 				float f1 = 0.02F;
 				if (x != 0) comeraPosX += (
 						//(Modchu_Main.isForge
-						//&& 
+						//&&
 						Modchu_Main.getMinecraftVersion() < 160
 						//)
-						| 
-						PFLM_Main.oldRender ? -x : x) * f1;
+						|
+						ModchuModel_Main.oldRender ? -x : x) * f1;
 				if (y != 0) {
 					float f2 = y * f1;
 					if (Modchu_AS.getBoolean(Modchu_AS.isCtrlKeyDown)) comeraPosZ += f2;
@@ -557,9 +560,10 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 	public void setHandednessMode(int i) {
 	}
 
-	public void reLoadModel(Object o, boolean debug) {
+	public void reLoadModel(Object o, boolean debug, boolean errorDefault) {
 		if (debug) Modchu_Debug.mDebug("------modelDataSetting allModelInit start------ "+o);
-		Modchu_Reflect.invokeMethod(PFLM_Main.renderPlayerDummyInstance.getClass(), "allModelInit", new Class[]{ Object.class, boolean.class }, PFLM_Main.renderPlayerDummyInstance, new Object[]{ o, debug });
+		Object master = Modchu_Main.getModchuCharacteristicObjectMaster(ModchuModel_Main.renderPlayerDummyInstance);
+		Modchu_Reflect.invokeMethod(master.getClass(), "allModelInit", new Class[]{ Object.class, boolean.class, boolean.class }, master, new Object[]{ o, debug, errorDefault });
 		if (debug) Modchu_Debug.mDebug("------modelDataSetting allModelInit end------ "+o);
 	}
 

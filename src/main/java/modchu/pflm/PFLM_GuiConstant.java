@@ -2,6 +2,8 @@ package modchu.pflm;
 
 import java.util.ArrayList;
 
+import modchu.model.ModchuModel_IEntityCaps;
+
 public class PFLM_GuiConstant {
 	public static int partsSetFlag = 0;
 	public static ArrayList<Integer> changeModelist;
@@ -10,39 +12,39 @@ public class PFLM_GuiConstant {
 	public static void init() {
 		if (changeModelist != null); else {
 			changeModelist = new ArrayList();
-			changeModelist.add(((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline);
-			changeModelist.add(((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_online);
-			changeModelist.add(((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random);
+			changeModelist.add(ModchuModel_IEntityCaps.skinMode_offline);
+			changeModelist.add(ModchuModel_IEntityCaps.skinMode_online);
+			changeModelist.add(ModchuModel_IEntityCaps.skinMode_Random);
 		}
 		if (otherChangeModelist != null); else {
 			otherChangeModelist = new ArrayList();
-			otherChangeModelist.add(((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline);
-			otherChangeModelist.add(((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_online);
-			otherChangeModelist.add(((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random);
-			otherChangeModelist.add(((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Player);
-			otherChangeModelist.add(((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOffline);
-			otherChangeModelist.add(((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOnline);
+			otherChangeModelist.add(ModchuModel_IEntityCaps.skinMode_offline);
+			otherChangeModelist.add(ModchuModel_IEntityCaps.skinMode_online);
+			otherChangeModelist.add(ModchuModel_IEntityCaps.skinMode_Random);
+			otherChangeModelist.add(ModchuModel_IEntityCaps.skinMode_Player);
+			otherChangeModelist.add(ModchuModel_IEntityCaps.skinMode_PlayerOffline);
+			otherChangeModelist.add(ModchuModel_IEntityCaps.skinMode_PlayerOnline);
 		}
 	}
 
 	public static String getChangeModeString(int i) {
 		int i1 = changeModelist.get(i);
 		String s = null;
-		if (i1 == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline) s = "modeOffline";
-		if (i1 == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_online) s = "modeOnline";
-		if (i1 == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random) s = "modeRandom";
+		if (i1 == ModchuModel_IEntityCaps.skinMode_offline) s = "modeOffline";
+		if (i1 == ModchuModel_IEntityCaps.skinMode_online) s = "modeOnline";
+		if (i1 == ModchuModel_IEntityCaps.skinMode_Random) s = "modeRandom";
 		return s;
 	}
 
 	public static String getOtherChangeModeString(int i) {
 		int i1 = otherChangeModelist.get(i);
 		String s = null;
-		if (i1 == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_offline) s = "modeOthersSettingOffline";
-		if (i1 == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_online) s = "modefalse";
-		if (i1 == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Random) s = "modeRandom";
-		if (i1 == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_Player) s = "modePlayer";
-		if (i1 == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOffline) s = "modePlayerOffline";
-		if (i1 == ((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).skinMode_PlayerOnline) s = "modePlayerOnline";
+		if (i1 == ModchuModel_IEntityCaps.skinMode_offline) s = "modeOthersSettingOffline";
+		if (i1 == ModchuModel_IEntityCaps.skinMode_online) s = "modefalse";
+		if (i1 == ModchuModel_IEntityCaps.skinMode_Random) s = "modeRandom";
+		if (i1 == ModchuModel_IEntityCaps.skinMode_Player) s = "modePlayer";
+		if (i1 == ModchuModel_IEntityCaps.skinMode_PlayerOffline) s = "modePlayerOffline";
+		if (i1 == ModchuModel_IEntityCaps.skinMode_PlayerOnline) s = "modePlayerOnline";
 		return s;
 	}
 

@@ -47,7 +47,7 @@ public class PFLM_Aether {
 		float f1 = Modchu_CastHelper.Float(o[5]);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(entity);
 		if (modelData != null); else return null;
-		Modchu_Reflect.setFieldObject(ModchuModelModelBipedCapsMaster.class, "model", Modchu_Main.getModchuCharacteristicObjectMaster(modchu_ModelBiped), modelData.modelMain.model);
+		Modchu_Reflect.setFieldObject(ModchuModelModelBipedCapsMaster.class, "model", Modchu_Main.getModchuCharacteristicObjectMaster(modchu_ModelBiped), modelData.models[0]);
 		Modchu_Reflect.setFieldObject(RenderPlayerAether, "modelMisc", renderPlayerAether, modchu_ModelBiped);
 		Object modelMisc = Modchu_Reflect.getFieldObject(RenderPlayerAether, "modelMisc", renderPlayerAether);
 
@@ -81,7 +81,7 @@ public class PFLM_Aether {
 		}
 
 		double dd1 = Modchu_CastHelper.Double(o[2]);
-		float hight = modelData.modelMain.model.getHeight(modelData);
+		float hight = modelData.models[0].getHeight(modelData);
 		dd1 += pflm_RenderPlayerMaster.doRenderSettingY(entity, modelData, dd1) - 0.82D + (hight - 1.8F);
 		//Modchu_Debug.dDebug("PFLM_Aether doRenderSettingY dd1="+dd1, 1);
 		boolean b = modelData.getCapsValueBoolean(modelData.caps_isSneak);
@@ -107,7 +107,7 @@ public class PFLM_Aether {
 		//Modchu_Debug.mDebug("PFLM_Aether modchu_RenderPlayerRenderFirstPersonArm o[0]="+(o != null ? o[0] : null));
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(o[0]);
 		if (modelData != null); else return null;
-		if (modelData.modelMain.model != null
+		if (modelData.models[0] != null
 				&& modelData.getCapsValue(modelData.caps_ResourceLocation) != null) {
 			pflm_RenderPlayerMaster.bindTexture(modelData, modelData.getCapsValue(modelData.caps_ResourceLocation));
 		}

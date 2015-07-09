@@ -5,6 +5,7 @@ import java.util.List;
 
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_IGuiModelView;
+import modchu.model.ModchuModel_Main;
 
 import org.lwjgl.input.Keyboard;
 
@@ -112,7 +113,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 		//Return
 		if (id == 201) {
 			((Modchu_IGuiModelView) parentScreen).setTextureValue();
-			Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, drawEntity, false);
+			Modchu_AS.set(Modchu_AS.allModelInit, ModchuModel_Main.renderPlayerDummyInstance, drawEntity, false);
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, parentScreen);
 			return;
 		}
@@ -315,7 +316,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 				&& PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOffline
 				&& PFLM_ConfigData.shortcutKeysChangeMode[select] != modeRandom
 				&& PFLM_ConfigData.shortcutKeysChangeMode[select] < modeActionRelease) {
-			resetFlagCheck(false);
+			resetFlagCheck(false, false);
 			int l = guiLeft;
 			int i1 = guiTop;
 			drawMobModel(i, j, l + 51, i1 + 75, 0, 25, 50F, 0.0F, true);
