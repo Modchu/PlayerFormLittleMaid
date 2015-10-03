@@ -35,6 +35,11 @@ public class PFLM_ConfigData {
 	public static int setModel = 0;
 	public static int setColor = 0;
 	public static int setArmor = 0;
+	public static int defaultSystemShortcutKeysGui = 41;
+	public static int defaultSystemShortcutKeysModels = 43;
+	public static int defaultSystemShortcutKeysWait = 26;
+	public static int defaultSystemShortcutKeysSit = 39;
+	public static int defaultSystemShortcutKeysLieDown = 27;
 	public static float Physical_Hammer = 1.0F;
 	public static float watherFog = 0.1F;
 	public static float watherFog2 = 0.05F;

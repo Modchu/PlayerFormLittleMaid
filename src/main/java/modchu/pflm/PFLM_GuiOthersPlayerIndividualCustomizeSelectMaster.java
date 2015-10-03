@@ -129,7 +129,9 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 			Modchu_AS.set(Modchu_AS.guiButtonID, localScroll, i > 0 ? 3 : 4);
 			Modchu_AS.set(Modchu_AS.guiSlotActionPerformed, selectPanel, localScroll);
 		}
-		if (Modchu_Main.getMinecraftVersion() > 179) Modchu_AS.set("GuiSlot", "handleMouseInput", selectPanel);
+		if (Modchu_Main.getMinecraftVersion() > 179) {
+			Modchu_AS.set(Modchu_AS.guiSlotHandleMouseInput, selectPanel);
+		}
 	}
 
 	public void memoryRelease() {
