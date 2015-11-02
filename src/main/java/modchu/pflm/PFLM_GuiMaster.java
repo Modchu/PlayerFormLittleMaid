@@ -13,6 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.input.Mouse;
+
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_CastHelper;
 import modchu.lib.Modchu_Config;
@@ -28,8 +30,6 @@ import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_ModelDataBase;
 import modchu.model.ModchuModel_ModelRenderer;
 import modchu.model.ModchuModel_TextureManagerBase;
-
-import org.lwjgl.input.Mouse;
 
 public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 
@@ -611,8 +611,10 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			setArmor++;
 			setcheck();
 			boolean b = false;
+			String textureArmorName = null;
 			while (b == false && setArmor < PFLM_Main.textureList.size()) {
-				drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, PFLM_Main.textureList.get(setArmor));
+				textureArmorName = PFLM_Main.textureList.get(setArmor);
+				drawMuitiModelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, textureArmorName);
 				Object ltb = ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureArmorName));
 				if (ltb != null) {
 					b = true;
@@ -720,7 +722,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true, PFLM_ConfigData.autoArmorSelect);
 			setTextureArmorName(s0[1]);
 			modelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, getTextureArmorName());
-			//Modchu_Debug.mDebug("ArmorChange getTextureArmorName()="+getTextureArmorName());
+			//Modchu_Debug.mDebug("PFLM_GuiMaster actionPerformed ArmorChange getTextureArmorName()="+getTextureArmorName());
 			if (PFLM_ConfigData.isModelSize) {
 				closePlayerToSpawn = true;
 			}

@@ -1,5 +1,9 @@
 package modchu.pflm;
 
+import java.lang.reflect.Method;
+
+import org.lwjgl.opengl.GL11;
+
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_CastHelper;
 import modchu.lib.Modchu_Debug;
@@ -9,16 +13,21 @@ import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.model.multimodel.base.ModchuModelModelBipedCapsMaster;
 
-import org.lwjgl.opengl.GL11;
-
 public class PFLM_Aether {
 	public static Modchu_IModelBiped modchu_ModelBiped;
 	public static PFLM_RenderPlayerMaster pflm_RenderPlayerMaster;
 	public Object renderPlayerAether;
 	private Class RenderPlayerAether;
+	private Method renderMiscMethod = null;
 
 	public PFLM_Aether() {
-		RenderPlayerAether = Modchu_Reflect.loadClass("net.aetherteam.aether.client.RenderPlayerAether");
+		RenderPlayerAether = Modchu_Reflect.loadClass("net.aetherteam.aether.client.renders.entities.player.RenderPlayerAether", -1);
+		if (RenderPlayerAether != null) {
+			//renderMiscMethod = Modchu_Reflect.getMethod(RenderPlayerAether, "renderMisc", new Class[]{ Modchu_Reflect.loadClass("EntityPlayer"), double.class, double.class, double.class, float.class, float.class, boolean.class });
+		} else {
+			RenderPlayerAether = Modchu_Reflect.loadClass("net.aetherteam.aether.client.RenderPlayerAether");
+			renderMiscMethod = Modchu_Reflect.getMethod(RenderPlayerAether, "renderMisc", new Class[]{ Modchu_Reflect.loadClass("EntityPlayer"), double.class, double.class, double.class, float.class, float.class });
+		}
 		if (renderPlayerAether != null); else {
 			renderPlayerAether = RenderPlayerAether != null ? Modchu_Main.getMinecraftVersion() > 162 ? Modchu_Reflect.newInstance(RenderPlayerAether) : Modchu_Reflect.newInstance(RenderPlayerAether, new Class[]{ int.class, Modchu_Reflect.loadClass("net.aetherteam.playercore_api.cores.PlayerCoreRender") }, new Object[]{ 0, null }) : null;
 			Modchu_AS.set(Modchu_AS.renderRenderManager, renderPlayerAether);
@@ -31,6 +40,7 @@ public class PFLM_Aether {
 	public Object[] modchu_RenderPlayerDoRender(Object[] o) {
 		//Modchu_Debug.mDebug("PFLM_Aether modchu_RenderPlayerDoRender o[0]="+(o != null ? o[0] : null));
 		//Modchu_Reflect.setFieldObject(renderPlayerAether.getClass(), "scale", renderPlayerAether, f);
+		if (renderMiscMethod != null); else return null;
 		if (o != null && o.length > 5 && pflm_RenderPlayerMaster != null); else {
 			if (pflm_RenderPlayerMaster == null) {
 				Object render = Modchu_Main.getRender(Modchu_AS.get(Modchu_AS.minecraftThePlayer));
@@ -92,7 +102,7 @@ public class PFLM_Aether {
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78117_n", "isSneak", modelMisc, b);
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78093_q", "isRiding", modelMisc, b1);
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78118_o", "aimedBow", modelMisc, b2);
-		Modchu_Reflect.invokeMethod(RenderPlayerAether, "renderMisc", new Class[]{ Modchu_Reflect.loadClass("EntityPlayer"), double.class, double.class, double.class, float.class, float.class }, renderPlayerAether, new Object[]{ entity, o[1], dd1, o[3], o[4], o[5] });
+		Modchu_Reflect.invoke(renderMiscMethod, renderPlayerAether, new Object[]{ entity, o[1], dd1, o[3], o[4], o[5], false });
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78117_n", "isSneak", modelMisc, false);
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78093_q", "isRiding", modelMisc, false);
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78118_o", "aimedBow", modelMisc, false);
