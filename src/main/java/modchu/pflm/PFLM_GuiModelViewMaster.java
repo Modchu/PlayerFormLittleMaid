@@ -180,6 +180,8 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 				Modchu_Debug.lDebug("PFLM_GuiModelViewMaster initDrawEntity modelData end. ----------------------");
 				if (modelData != null) {
 					modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", true);
+					modelData.setCapsValue(modelData.caps_freeVariable, "showShadowAndFire", false);
+					modelData.setCapsValue(modelData.caps_freeVariable, "showRenderName", false);
 					modelData.setCapsValue(modelData.caps_freeVariable, "initDrawEntityFlag", true);
 				} else {
 					Modchu_Debug.lDebug("PFLM_GuiModelViewMasterinitDrawEntity modelData == null error !! ");
