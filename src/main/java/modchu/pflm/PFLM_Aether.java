@@ -102,7 +102,8 @@ public class PFLM_Aether {
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78117_n", "isSneak", modelMisc, b);
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78093_q", "isRiding", modelMisc, b1);
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78118_o", "aimedBow", modelMisc, b2);
-		Modchu_Reflect.invoke(renderMiscMethod, renderPlayerAether, new Object[]{ entity, o[1], dd1, o[3], o[4], o[5], false });
+		//Modchu_Reflect.invoke(renderMiscMethod, renderPlayerAether, new Object[]{ entity, o[1], dd1, o[3], o[4], o[5], false });
+		Modchu_Reflect.invoke(renderMiscMethod, renderPlayerAether, new Object[]{ entity, o[1], dd1, o[3], o[4], o[5] });
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78117_n", "isSneak", modelMisc, false);
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78093_q", "isRiding", modelMisc, false);
 		t = Modchu_Reflect.setFieldObject(modelMisc.getClass(), "field_78118_o", "aimedBow", modelMisc, false);
