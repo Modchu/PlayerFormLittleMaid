@@ -5,6 +5,7 @@ import java.util.HashMap;
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Main;
 import modchu.model.ModchuModel_IEntityCaps;
+import modchu.model.ModchuModel_RenderMasterBase;
 import modchu.model.ModchuModel_TextureManagerBase;
 
 public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOthersPlayerMaster {
@@ -152,7 +153,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 			drawString("Armor", width / 2 + 60, height / 2 - 27, 0xffffff);
 			int l = guiLeft;
 			int i1 = guiTop;
-			drawMobModel(i, j, l + 51, i1 + 75, 0, 25, 50F, 0.0F, true);
+			ModchuModel_RenderMasterBase.drawMobModel(width, height, i, j, l + 51, i1 + 75, 0, 25, 50F, 0.0F, comeraPosX, comeraPosY, comeraPosZ, comeraRotationX, comeraRotationY, comeraRotationZ, cameraZoom, cameraZoom, cameraZoom, true, drawEntity);
 		}
 	}
 

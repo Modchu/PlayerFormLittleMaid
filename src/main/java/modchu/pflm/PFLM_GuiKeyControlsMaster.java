@@ -6,6 +6,7 @@ import java.util.List;
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_IGuiModelView;
 import modchu.model.ModchuModel_Main;
+import modchu.model.ModchuModel_RenderMasterBase;
 
 import org.lwjgl.input.Keyboard;
 
@@ -319,7 +320,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 			resetFlagCheck(false, false);
 			int l = guiLeft;
 			int i1 = guiTop;
-			drawMobModel(i, j, l + 51, i1 + 75, 0, 25, 50F, 0.0F, true);
+			ModchuModel_RenderMasterBase.drawMobModel(width, height, i, j, l + 51, i1 + 75, 0, 25, 50F, 0.0F, comeraPosX, comeraPosY, comeraPosZ, comeraRotationX, comeraRotationY, comeraRotationZ, cameraZoom, cameraZoom, cameraZoom, true, drawEntity);
 		}
 	}
 

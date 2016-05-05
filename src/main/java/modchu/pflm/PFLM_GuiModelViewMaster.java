@@ -38,17 +38,17 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 	public int drawStringPosX;
 	public int drawStringPosY;
 	public int drawStringColor;
-	private int comeraRotationX;
-	private int comeraRotationY;
-	private int comeraRotationZ;
+	protected int comeraRotationX;
+	protected int comeraRotationY;
+	protected int comeraRotationZ;
 	private int prevMouseX;
 	private int prevMouseY;
-	private float cameraZoom;
+	protected float cameraZoom;
 	private long tempLastMouseEventTime;
 	private int tempLastMouseClick;
-	private float comeraPosX;
-	private float comeraPosY;
-	private float comeraPosZ;
+	protected float comeraPosX;
+	protected float comeraPosY;
+	protected float comeraPosZ;
 	private boolean clickMove;
 
 	public PFLM_GuiModelViewMaster(HashMap<String, Object> map) {
@@ -104,7 +104,9 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 		int y = height / 2 - 85;
 		buttonList.add(newInstanceButton(200, x, y + 100, 75, 20, "Save"));
 		buttonList.add(newInstanceButton(13, x, y + 85, 75, 15, "ChangeMode"));
-		if (!buttonPlayer) buttonList.add(newInstanceButton(58, x + 75, y + 55, 75, 15, "Handedness"));
+		int version = Modchu_Main.getMinecraftVersion();
+		if (version < 190
+				&& !buttonPlayer) buttonList.add(newInstanceButton(58, x + 75, y + 55, 75, 15, "Handedness"));
 		if (buttonReturn) buttonList.add(newInstanceButton(201, x + 75, y + 100, 75, 20, "Return"));
 		if (buttonOffline) {
 			buttonList.add(newInstanceButton(56, x - 10, y + 10, 85, 15, "ModelListSelect"));
@@ -241,124 +243,6 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 			((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).allModelTextureReset(drawEntity);
 			textureResetFlag = false;
 		}
-	}
-
-	@Override
-	public void drawMobModel(int i, int j, int x, int y, int x2, int y2, float f, float f1, boolean move) {
-		drawMobModel(base, i, j, x, y, x2, y2, f, f1, 30F, -30F, -30F, 0F, move, drawEntity);
-	}
-
-	public void drawMobModel(Object guiScreen, int i, int j, int x, int y, int x2, int y2, float f, float f1, boolean move) {
-		drawMobModel(guiScreen, i, j, x, y, x2, y2, f, f1, 30F, -30F, -30F, 0F, move, drawEntity);
-	}
-
-	@Override
-	public void drawMobModel(int i, int j, int x, int y, int x2, int y2, float f, float f1, boolean move, Object entity) {
-		drawMobModel(base, i, j, x, y, x2, y2, f, f1, 30F, -30F, -30F, 0F, move, entity);
-	}
-
-	public void drawMobModel(Object guiScreen, int i, int j, int x, int y, int x2, int y2, float f, float f1, boolean move, Object entity) {
-		drawMobModel(guiScreen, i, j, x, y, x2, y2, f, f1, 30F, -30F, -30F, 0F, move, entity);
-	}
-
-	@Override
-	public void drawMobModel(int i, int j, int x, int y, int x2, int y2, float f, float f1, float f2, float f3, float f4, float f5, boolean move) {
-		drawMobModel(base, i, j, x, y, x2, y2, f, f1, f2, f3, f4, f5, move, drawEntity);
-	}
-
-	public void drawMobModel(Object guiScreen, int i, int j, int x, int y, int x2, int y2, float f, float f1, float f2, float f3, float f4, float f5, boolean move) {
-		drawMobModel(guiScreen, i, j, x, y, x2, y2, f, f1, f2, f3, f4, f5, move, drawEntity);
-	}
-
-	@Override
-	public void drawMobModel(int i, int j, int x, int y, int x2, int y2, float f, float f1, float f2, float f3, float f4, float f5, boolean move, Object entity) {
-		drawMobModel(base, i, j, x, y, x2, y2, f, f1, f2, f3, f4, f5, move, entity);
-	}
-
-	@Override
-	public void drawMobModel(Object guiScreen, int i, int j, int x, int y, int x2, int y2, float f, float f1, float f2, float f3, float f4, float f5, boolean move, Object entity) {
-		Modchu_GlStateManager.pushMatrix();
-		Modchu_GlStateManager.enableColorMaterial();
-		try {
-			//Modchu_Debug.dDebug("drawMobModel2 x=" + i + " y=" + j, 1);
-			float entityWidth = Modchu_AS.getFloat(Modchu_AS.entityWidth, entity);
-			float entityHeight = Modchu_AS.getFloat(Modchu_AS.entityHeight, entity);
-			int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, guiScreen);
-			int height = Modchu_AS.getInt(Modchu_AS.guiScreenHeight, guiScreen);
-			if (entityHeight > 2F) {
-				f = f * 2F / entityHeight;
-			}
-			Modchu_GlStateManager.translate(x, y, 50F + f1);
-			Modchu_GlStateManager.scale(-f, f, f);
-/*
-			if (Modchu_Main.getMinecraftVersion() > 169
-					| (Modchu_Main.isRelease()
-							&& Modchu_Main.isForge)
-					| ModchuModel_Main.oldRender) {
-*/
-			Modchu_GlStateManager.rotate(180F, Modchu_Main.getMinecraftVersion() > 159 ? 180.0F : 0F, 0.0F, 1.0F);
-/*
-			} else {
-				Modchu_GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
-			}
-*/
-			//Modchu_GlStateManager.rotate(180F, 0.0F, 1.0F, 0.0F);
-			if (move) {
-				float ff1 = width / 2 + x2 - i;
-				float ff2 = height / 2 + y2 - j;
-				Modchu_GlStateManager.rotate(135F, 0.0F, 1.0F, 0.0F);
-				Modchu_GlStateManager.rotate(-135F, 0.0F, 1.0F, 0.0F);
-				//Modchu_GlStateManager.rotate(-(float)Math.atan(f6 / 40F) * 20F, 1.0F, 0.0F, 0.0F);
-				Modchu_GlStateManager.translate(comeraPosX, comeraPosY, comeraPosZ);
-				Modchu_GlStateManager.rotate(comeraRotationX, 1.0F, 0.0F, 0.0F);
-				Modchu_GlStateManager.rotate(comeraRotationY, 0.0F, 1.0F, 0.0F);
-				Modchu_GlStateManager.rotate(comeraRotationZ, 0.0F, 0.0F, 1.0F);
-				Modchu_GlStateManager.rotate((float) Math.atan(ff1 / 40F) * f5, 0.0F, 1.0F, 0.0F);
-				Modchu_GlStateManager.scale(cameraZoom, cameraZoom, cameraZoom);
-				Modchu_AS.set(Modchu_AS.entityRotationYaw, entity, (float) Math.atan(ff1 / 40F) * f2);
-				Modchu_AS.set(Modchu_AS.entityRotationPitch, entity, (float) Math.atan(ff2 / 40F) * f3);
-				//entity.renderYawOffset = (float)Math.atan(ff1 / 40F) * f4;
-				Modchu_AS.set(Modchu_AS.entityLivingBasePrevRotationYawHead, entity, Modchu_AS.getFloat(Modchu_AS.entityLivingBaseRotationYawHead, entity));
-				Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, entity, Modchu_AS.getFloat(Modchu_AS.entityRotationYaw, entity));
-				//entity.rotationYawHead = 0F;
-				//entity.prevRotationYawHead = 0F;
-				Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, entity, 0.0F);
-				//Modchu_Debug.dDebug("drawMobModel2 ff1=" + ff1 + " f2=" + f2+" entity.rotationYaw="+Modchu_AS.get(Modchu_AS.entityRotationYaw, entity), 2);
-				//Modchu_Debug.dDebug("drawMobModel2 ff2=" + ff2 + " f3=" + f3, 3);
-			} else {
-				Modchu_AS.set(Modchu_AS.entityRotationYaw, entity, 0.0F);
-				Modchu_AS.set(Modchu_AS.entityRotationPitch, entity, 0.0F);
-				Modchu_AS.set(Modchu_AS.entityLivingBaseRenderYawOffset, entity, 0.0F);
-				Modchu_AS.set(Modchu_AS.entityLivingBaseRotationYawHead, entity, 0.0F);
-			}
-			Modchu_GlStateManager.translate(0.0F, Modchu_AS.getFloat(Modchu_AS.entityYOffset, entity), 0.0F);
-			//RenderManager.instance.playerViewY = 180F;
-			GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-			Modchu_GlStateManager.enableColorMaterial();
-			Modchu_GlStateManager.enableTexture2D();
-			Modchu_GlStateManager.depthMask(true);
-			Modchu_AS.set(Modchu_AS.renderHelperEnableStandardItemLighting);
-			//Modchu_GlStateManager.disable(GL12.GL_RESCALE_NORMAL);
-			Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperLightmapTexUnit));
-			Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperDefaultTexUnit));
-			boolean b = Modchu_AS.getBoolean(Modchu_AS.renderManagerRenderEntityWithPosYaw, entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-			//Modchu_Debug.mDebug("renderManagerRenderEntityWithPosYaw b="+b);
-			//Modchu_Debug.mDebug("renderManagerGetEntityRenderObject="+Modchu_AS.get(Modchu_AS.renderManagerGetEntityRenderObject, entity));
-		} catch(Error e) {
-			e.printStackTrace();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		Modchu_GlStateManager.popMatrix();
-/*
-		//Modchu_AS.set(Modchu_AS.renderHelperDisableStandardItemLighting);
-		GL11.glDisable(32826);
-		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-		Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperLightmapTexUnit));
-		Modchu_GlStateManager.enableTexture2D();
-		Modchu_AS.set(Modchu_AS.openGlHelperSetActiveTexture, Modchu_AS.getInt(Modchu_AS.openGlHelperDefaultTexUnit));
-		Modchu_GlStateManager.disableLighting();
-*/
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import modchu.model.ModchuModel_IEntityCaps;
 import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_ModelDataBase;
 import modchu.model.ModchuModel_ModelRenderer;
+import modchu.model.ModchuModel_RenderMasterBase;
 import modchu.model.ModchuModel_TextureManagerBase;
 
 public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
@@ -67,6 +68,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public boolean buttonOtherPlayer;
 	public boolean partsSaveFlag;
 	public boolean noSaveFlag;
+	private static boolean initNewReleaseDrow;
 	public int setModel = 0;
 	public int setArmor = 0;
 	public int setColor = 0;
@@ -901,7 +903,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			StringBuilder s1 = (new StringBuilder()).append("ArmorName : ");
 			StringBuilder s2 = (new StringBuilder()).append("MaidColor : ");
 			int x = 0;
-			if (skinMode != ModchuModel_IEntityCaps.skinMode_Random) {
+			//if (skinMode != ModchuModel_IEntityCaps.skinMode_Random) {
 				PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 				boolean localFlag = modelData.getCapsValueInt(modelData.caps_skinMode) == ModchuModel_IEntityCaps.skinMode_local;
 				if (skinMode != ModchuModel_IEntityCaps.skinMode_online
@@ -918,13 +920,13 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 					s1 = s1.append(getTextureArmorName());
 					drawStringList.add(s1.toString());
 				}
-			}
+			//}
 			StringBuilder s9 = (new StringBuilder()).append("changeMode : ");
 			s9 = s9.append(PFLM_GuiConstant.getChangeModeString(getChangeMode()));
 			drawStringList.add(s9.toString());
 			StringBuilder s10 = (new StringBuilder()).append("Handedness : ");
 			s10 = s10.append(PFLM_GuiConstant.getHandednessModeString(PFLM_ConfigData.handednessMode));
-			PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
+			//PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 			if (PFLM_ConfigData.handednessMode == -1) s10 = s10.append(" Result : ").append(PFLM_GuiConstant.getHandednessModeString(modelData.getCapsValueInt(modelData.caps_dominantArm)));
 			drawStringList.add(s10.toString());
 			if (PFLM_ConfigData.isModelSize
@@ -956,13 +958,15 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		if (PFLM_Main.newRelease
 				&& !partsButton
-				&& !modelScaleButton) {
+				&& !modelScaleButton
+				&& !initNewReleaseDrow) {
 			drawString("PlayerFormLittleMaid", 10, 10, 0xffffff);
 			drawString((new StringBuilder()).append("newVersion v").append(PFLM_Main.newVersion).append(" Release!").toString(), 10, 20, 0xffffff);
 		}
 		if (Modchu_Main.newRelease
 				&& !partsButton
-				&& !modelScaleButton) {
+				&& !modelScaleButton
+				&& !initNewReleaseDrow) {
 			drawString("ModchuLib", 10, 30, 0xffffff);
 			drawString((new StringBuilder()).append("newVersion v").append(Modchu_Main.newVersion).append(" Release!").toString(), 10, 40, 0xffffff);
 		}
@@ -1005,7 +1009,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			//Modchu_Debug.mDebug("changeMode="+changeMode);
 			int var4 = guiLeft;
 			int var5 = guiTop;
-			drawMobModel(i, j, var4 + 51, var5 + 75, 0, -25, 50F, 0.0F, true);
+			ModchuModel_RenderMasterBase.drawMobModel(width, height, i, j, var4 + 51, var5 + 75, 0, -25, 50F, 0.0F, comeraPosX, comeraPosY, comeraPosZ, comeraRotationX, comeraRotationY, comeraRotationZ, cameraZoom, cameraZoom, cameraZoom, true, drawEntity);
 			if (skinMode == ModchuModel_IEntityCaps.skinMode_online
 					| ModchuModel_Main.bipedCheck(drawEntity)
 					&& PFLM_ConfigData.guiMultiPngSaveButton
@@ -1030,7 +1034,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				drawString((new StringBuilder()).append("MultiColor : ").append(drawMuitiModelData.getCapsValueInt(drawMuitiModelData.caps_maidColor)).toString(), 10, guiTop + 110, 0xffffff);
 				drawString("MultiArmorName : ", 10, guiTop + 120, 0xffffff);
 				drawString((String) drawMuitiModelData.getCapsValue(drawMuitiModelData.caps_textureArmorName), 10, guiTop + 130, 0xffffff);
-				drawMobModel(i, j, 120, height / 2 + 20, -90, -50, 30F, 0.0F, false, drawMuitiEntity);
+				ModchuModel_RenderMasterBase.drawMobModel(width, height, i, j, 120, height / 2 + 20, -90, -50, 30F, 0.0F, comeraPosX, comeraPosY, comeraPosZ, comeraRotationX, comeraRotationY, comeraRotationZ, cameraZoom, cameraZoom, cameraZoom, false, drawMuitiEntity);
 				//PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 				//Modchu_Debug.mDebug("drawGuiContainerBackgroundLayer drawEntityModelData skinChar="+drawEntityModelData.getCapsValue(drawEntityModelData.caps_freeVariable, "skinChar"));
 			}
@@ -1164,6 +1168,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		tempYOffsetInit = false;
 		drawMuitiEntitySetFlag = true;
+		initNewReleaseDrow = false;
 	}
 
 	public void setPositionCorrection() {

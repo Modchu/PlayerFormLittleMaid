@@ -15,6 +15,7 @@ import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.model.ModchuModel_IEntityCaps;
 import modchu.model.ModchuModel_Main;
+import modchu.model.ModchuModel_RenderMasterBase;
 import modchu.model.ModchuModel_TextureManagerBase;
 import modchu.model.multimodel.base.MultiModelBaseBiped;
 
@@ -229,7 +230,9 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 				drawString(armorMode ? "TextureArmorName" : "TextureName", 240, 170, 0xffffff);
 				drawString(textureName, 240, 180, 0xffffff);
 				setTextureModel(i2);
-				drawMobModel(i, j, 300, 150, 90, 30, 50F, 0.0F, true);
+				int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
+				int height = Modchu_AS.getInt(Modchu_AS.guiScreenHeight, base);
+				ModchuModel_RenderMasterBase.drawMobModel(width, height, i, j, 300, 150, 90, 30, 50F, 0.0F, comeraPosX, comeraPosY, comeraPosZ, comeraRotationX, comeraRotationY, comeraRotationZ, cameraZoom, cameraZoom, cameraZoom, true, drawEntity);
 			}
 		}
 		drawString("Page : " + offsetSlot / getMaxSelectBoxViewCount() + " / " + (getMaxTexturesNamber(getColor()) - 1) / getMaxSelectBoxViewCount(), 55, 170, 0xffffff);
@@ -322,7 +325,11 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 			setTextureModel(i2);
 		}
 		//Modchu_Debug.mDebug("modelNamber="+modelNamber+" getTextureName("+i2+")="+getTextureName(i2));
-		if (isRendering[i2]) drawMobModel(i, j, x, y, 0, -50, f, 0.0F, false);
+		if (isRendering[i2]) {
+			int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
+			int height = Modchu_AS.getInt(Modchu_AS.guiScreenHeight, base);
+			ModchuModel_RenderMasterBase.drawMobModel(width, height, i, j, x, y, 0, -50, f, 0.0F, comeraPosX, comeraPosY, comeraPosZ, comeraRotationX, comeraRotationY, comeraRotationZ, cameraZoom, cameraZoom, cameraZoom, false, drawEntity);
+		}
 	}
 
 	private void setTextureModel(int i) {
