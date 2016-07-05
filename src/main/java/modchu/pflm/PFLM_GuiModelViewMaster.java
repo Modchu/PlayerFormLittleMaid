@@ -131,7 +131,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 		}
 		if (buttonShowArmor) buttonList.add(newInstanceButton(20, x, y + 70, 75, 15, "showArmor"));
 		if (((Modchu_IGuiModelView) base).getScale() == 0.0F) {
-			((Modchu_IGuiModelView) base).setScale(PFLM_Main.getModelScale());
+			((Modchu_IGuiModelView) base).setScale(PFLM_Main.getModelScale(null));
 		}
 		guiMode = true;
 		Modchu_AS.set(Modchu_AS.guiScreenButtonList, base, buttonList);

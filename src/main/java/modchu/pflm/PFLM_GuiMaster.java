@@ -311,7 +311,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		boolean b = true;
 		guiPartsNemeMap = new ConcurrentHashMap();
 		defaultParts = new ConcurrentHashMap();
-		Object model = PFLM_Main.getModel(armorType);
+		Object model = PFLM_Main.getModel(null, armorType);
 		ConcurrentHashMap<Integer, String> showPartsNemeMap = ModchuModel_Config.getConfigShowPartsNemeMap(getTextureName(), armorType);
 		ConcurrentHashMap<String, String> showPartsReneme = ModchuModel_Config.getConfigShowPartsRenemeMap(model, getTextureName(), armorType);
 		ConcurrentHashMap<Integer, String> showPartsHideMap = ModchuModel_Config.getConfigShowPartsHideMap(model, getTextureName(), armorType);
@@ -369,7 +369,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		Field f = null;
 		List<String> list = new ArrayList();
 		ModchuModel_ModelRenderer modelRenderer = null;
-		Object model = PFLM_Main.getModel(armorType);
+		Object model = PFLM_Main.getModel(null, armorType);
 		ConcurrentHashMap<Integer, String> showPartsNemeMap = ModchuModel_Config.getConfigShowPartsNemeMap(getTextureName(), armorType);
 		if (showPartsNemeMap != null
 				&& !showPartsNemeMap.isEmpty()); else return;
@@ -443,7 +443,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		int id = Modchu_AS.getInt(Modchu_AS.guiButtonID, guibutton);
 		Modchu_Debug.mDebug("id="+id);
 		if (id == 3) {
-			setScale(PFLM_Main.getModelScale());
+			setScale(PFLM_Main.getModelScale(thePlayer));
 			setTextureValue();
 			drawEntitySetFlag = true;
 			return;
@@ -936,11 +936,11 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				float f3 = 1.17F;
 				if (!tempYOffsetInit) {
 					tempYOffsetInit = true;
-					if (PFLM_Main.gotchaNullCheck()) setTempYOffset(PFLM_Main.getYOffset());
+					if (PFLM_Main.gotchaNullCheck()) setTempYOffset(PFLM_Main.getYOffset(thePlayer));
 				}
-				f1 = PFLM_Main.getWidth();
-				f2 = PFLM_Main.getHeight();
-				f3 = PFLM_Main.getYOffset();
+				f1 = PFLM_Main.getWidth(thePlayer);
+				f2 = PFLM_Main.getHeight(thePlayer);
+				f3 = PFLM_Main.getYOffset(thePlayer);
 				String s3 = "Size : Width = " + f1 + " Height = " + f2;
 				s3 = (new StringBuilder()).append(s3).toString();
 				drawStringList.add(s3.toString());
@@ -1164,18 +1164,19 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		super.onGuiClosed();
 		if (closePlayerToSpawn
 				&& PFLM_ConfigData.isModelSize) {
-			setPositionCorrection();
+			setPositionCorrection(null);
 		}
 		tempYOffsetInit = false;
 		drawMuitiEntitySetFlag = true;
 		initNewReleaseDrow = false;
 	}
 
-	public void setPositionCorrection() {
-		PFLM_Main.setSize(0.6F, 1.8F);
-		PFLM_Main.resetHeight();
-		double d = tempYOffset - PFLM_Main.getYOffset() - 0.5D;
-		PFLM_Main.setPositionCorrection(0.0D, -d, 0.0D);
+	public void setPositionCorrection(Object entity) {
+		if (entity != null); else entity = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		PFLM_Main.setSize(entity, 0.6F, 1.8F);
+		PFLM_Main.resetHeight(entity);
+		double d = tempYOffset - PFLM_Main.getYOffset(entity) - 0.5D;
+		PFLM_Main.setPositionCorrection(entity, 0.0D, -d, 0.0D);
 	}
 
 	public void imageMultiTagSetSave(int c) {
