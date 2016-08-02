@@ -1,5 +1,8 @@
 package modchu.pflm;
 
+import java.util.HashMap;
+import java.util.List;
+
 import modchu.model.ModchuModel_TextureManagerBase;
 
 public class PFLM_ConfigData {
@@ -83,9 +86,7 @@ public class PFLM_ConfigData {
 	public static boolean shortcutKeysShiftUse[] = new boolean[maxShortcutKeys];
 	public static boolean autoArmorSelect = true;
 	public static int shortcutKeysNumber = 0;
-	public static int[][] texturesNamber;
-	public static int[] texturesArmorNamber;
-	public static int[] maxTexturesNamber = new int [16];
-	public static int maxTexturesArmorNamber;
+	public static HashMap<Integer, List<Integer>> texturesNamberMap;
+	public static List<Integer> texturesArmorNamberList;
 
 }

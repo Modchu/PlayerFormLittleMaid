@@ -40,7 +40,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 
 	private void guiOthersPlayerMasterInit() {
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", showArmor);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", PFLM_ConfigData.showArmor);
 		drawEntitySetFlag = true;
 		noSaveFlag = false;
 		colorReverse = false;
@@ -157,8 +157,8 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//guiMultiPngSaveButton ShowArmor
 		if(id == 20)
 		{
-			showArmor = !showArmor;
-			modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", showArmor);
+			PFLM_ConfigData.showArmor = !PFLM_ConfigData.showArmor;
+			modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", PFLM_ConfigData.showArmor);
 			drawEntitySetFlag = true;
 			initGui();
 			return;
@@ -166,7 +166,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//ModelChange
 		if(id == 50
 				| id == 51) {
-			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false, PFLM_ConfigData.autoArmorSelect);
+			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false, false, PFLM_ConfigData.autoArmorSelect);
 			setTextureName(s0[0]);
 			setTextureArmorName(s0[1]);
 			modelChange();
@@ -193,7 +193,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//ArmorChange
 		if(id == 54
 				| id == 55) {
-			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true, PFLM_ConfigData.autoArmorSelect);
+			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true, false, PFLM_ConfigData.autoArmorSelect);
 			setTextureArmorName(s0[1]);
 			modelData.setCapsValue(modelData.caps_textureArmorName, getTextureArmorName());
 			noSaveFlag = true;
@@ -225,7 +225,6 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//Save
 		if(id == 200)
 		{
-			PFLM_ConfigData.showArmor = showArmor;
 			PFLM_Main.saveOthersPlayerParamater(false);
 			PFLM_Config.clearCfgData();
 			PFLM_Main.loadOthersPlayerParamater();
@@ -338,7 +337,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void setTextureArmorPackege(int i) {
 		//Modchu_Debug.mDebug("setTextureArmorPackege textureArmorName="+modelData.getCapsValue(modelData.caps_textureArmorName));
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		String s = ModchuModel_TextureManagerBase.instance.getArmorName((String)modelData.getCapsValue(modelData.caps_textureArmorName), i);
+		String s = ModchuModel_TextureManagerBase.instance.getArmorName((String)modelData.getCapsValue(modelData.caps_textureArmorName), i, false);
 		modelData.setCapsValue(modelData.caps_textureArmorName, s);
 		Object ltb = ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(s);
 		//Modchu_Debug.mDebug("setTextureArmorPackege s="+s);
@@ -356,11 +355,11 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 	public void setArmorTextureValue() {
 		if (getTextureArmorName() == null) setTextureArmorName(getTextureName());
 		if (ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(getTextureArmorName()) == null) {
-			String s = ModchuModel_TextureManagerBase.instance.getArmorName(getTextureName(), 1);
+			String s = ModchuModel_TextureManagerBase.instance.getArmorName(getTextureName(), 1, false);
 			setTextureArmorName(s);
 		}
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", showArmor);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", PFLM_ConfigData.showArmor);
 	}
 
 	@Override

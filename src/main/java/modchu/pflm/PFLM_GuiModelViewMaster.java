@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Debug;
-import modchu.lib.Modchu_GlStateManager;
 import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_IGuiModelViewMaster;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
 import modchu.model.ModchuModel_EntityPlayerDummyMaster;
 import modchu.model.ModchuModel_Main;
+import modchu.model.ModchuModel_ModelDataBase;
+import modchu.model.ModchuModel_ModelDataMaster;
 import modchu.model.ModchuModel_TextureManagerBase;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modchu_IGuiModelViewMaster {
 
@@ -34,7 +35,6 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 	public boolean buttonReturn;
 	public boolean buttonShowArmor;
 	public boolean displayButton;
-	protected boolean showArmor;
 	public int drawStringPosX;
 	public int drawStringPosY;
 	public int drawStringColor;
@@ -86,7 +86,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 		initDrawEntity();
 		setTextureValue();
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", showArmor);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", PFLM_ConfigData.showArmor);
 		modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", true);
 		drawEntitySetFlag = true;
 	}
@@ -207,7 +207,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 	public void setTextureArmorPackege(int i) {
 		//modelData.setCapsValue(modelData.caps_textureArmorName, modelData.getCapsValue(modelData.caps_textureName));
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-		String s = ModchuModel_TextureManagerBase.instance.getArmorName((String) modelData.getCapsValue(modelData.caps_textureArmorName), i);
+		String s = ModchuModel_TextureManagerBase.instance.getArmorName((String) modelData.getCapsValue(modelData.caps_textureArmorName), i, false);
 		modelData.setCapsValue(modelData.caps_textureArmorName, s);
 		Object ltb = ModchuModel_TextureManagerBase.instance.checkTextureArmorPackege(s);
 		if (ltb != null) ;
@@ -376,6 +376,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 			displayButton = !displayButton;
 			initGui();
 		}
+		Modchu_Main.checkKeybinding();
 	}
 
 	@Override

@@ -298,7 +298,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 			StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
 			Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
 			PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
-			s8 = s8.append(showArmor);
+			s8 = s8.append(PFLM_ConfigData.showArmor);
 			drawString(s8.toString(), guiLeft, guiTop + 140, 0xffffff);
 			drawString("Armor", width / 2 + 60, height / 2 - 27, 0xffffff);
 		}

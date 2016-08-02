@@ -75,7 +75,6 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 		//Save
 		if (id == 200) {
 			setPlayerLocalData();
-			PFLM_ConfigData.showArmor = showArmor;
 			PFLM_Main.saveOthersPlayerParamater(true);
 			PFLM_Config.clearCfgData();
 			PFLM_Main.loadOthersPlayerParamater();
