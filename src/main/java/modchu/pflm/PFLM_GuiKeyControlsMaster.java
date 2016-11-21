@@ -122,7 +122,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 		if (id == 400) {
 			if (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54)) {
 				PFLM_ConfigData.shortcutKeysChangeMode[select]--;
-				if ((PFLM_ConfigData.shortcutKeysChangeMode[select] > modeAction && PFLM_ConfigData.shortcutKeysChangeMode[select] <= modeActionLast + 1)
+				if ((PFLM_ConfigData.shortcutKeysChangeMode[select] > modeAction && PFLM_ConfigData.shortcutKeysChangeMode[select] <= modeActionLast)
 				//TODO modeを増やしたときに問題ないかチェックする
 				//&& changeModeMax == modeActionLast + 1
 				) PFLM_ConfigData.shortcutKeysChangeMode[select] = modeAction;
