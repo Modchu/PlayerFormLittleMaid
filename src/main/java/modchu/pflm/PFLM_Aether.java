@@ -43,7 +43,7 @@ public class PFLM_Aether {
 		if (renderMiscMethod != null); else return null;
 		if (o != null && o.length > 5 && pflm_RenderPlayerMaster != null); else {
 			if (pflm_RenderPlayerMaster == null) {
-				Object render = Modchu_Main.getRender(Modchu_AS.get(Modchu_AS.minecraftThePlayer));
+				Object render = Modchu_Main.getRender(Modchu_AS.get(Modchu_AS.minecraftPlayer));
 				if (render != null
 						&& render instanceof Modchu_IRenderPlayer) {
 					Object master = Modchu_Main.getModchuCharacteristicObjectMaster(render);

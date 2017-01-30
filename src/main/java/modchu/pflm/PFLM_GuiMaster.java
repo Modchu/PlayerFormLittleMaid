@@ -85,7 +85,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	}
 
 	protected void guiMasterInitAfter() {
-		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 		modelData.setCapsValue(modelData.caps_actionRequest, new boolean[]{ true, false });
 		setTextureName(Modchu_CastHelper.String(modelData.getCapsValue(modelData.caps_textureName)));
@@ -145,7 +145,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			if (drawEntity != null); else drawEntity = Modchu_Main.newModchuCharacteristicObject("Modchu_EntityPlayerDummy", ModchuModel_EntityPlayerDummyMaster.class, popWorld);
 			if (drawEntity != null) {
 				modelData = PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
-				ModchuModel_ModelDataBase thePlayerModelData = PFLM_ModelDataMaster.instance.getPlayerData(Modchu_AS.get(Modchu_AS.minecraftThePlayer));
+				ModchuModel_ModelDataBase thePlayerModelData = PFLM_ModelDataMaster.instance.getPlayerData(Modchu_AS.get(Modchu_AS.minecraftPlayer));
 				if (thePlayerModelData != null) {
 					modelData.setCapsValue(modelData.caps_skinMode, thePlayerModelData.getCapsValue(modelData.caps_skinMode));
 					super.initDrawEntity();
@@ -181,7 +181,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		int x = width / 2 + 55;
 		int y = height / 2 - 85;
 		List buttonList = Modchu_AS.getList(Modchu_AS.guiScreenButtonList, base);
-		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 		showPartsListSize = 0;
 		if (buttonKeyControls) buttonList.add(newInstanceButton(57, x + 75, y + 70, 75, 15, "KeyControls"));
 		if (buttonCustomModel
@@ -433,7 +433,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		if (!Modchu_AS.getBoolean(Modchu_AS.guiButtonEnabled, guibutton)) {
 			return;
 		}
-		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 		PFLM_ModelData drawEntityModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		PFLM_ModelData drawMuitiModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawMuitiEntity);
@@ -885,7 +885,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		//Modchu_Debug.dDebug("drawGuiContainerBackgroundLayer");
 		resetFlagCheck(false, false);
-		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 		int xSize = 80;
 		int ySize = 50;
 		int width = Modchu_AS.getInt(Modchu_AS.guiScreenWidth, base);
@@ -1046,7 +1046,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 
 	@Override
 	public void modelChange() {
-		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 		if (PFLM_ConfigData.isModelSize) {
 			closePlayerToSpawn = true;
 		}
@@ -1086,7 +1086,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		if (skinMode != ModchuModel_IEntityCaps.skinMode_online) drawEntityModelData.setCapsValue(drawEntityModelData.caps_freeVariable, "skinChar", false);
 		super.setTextureValue();
-		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 		PFLM_ModelData thePlayerModelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 		drawEntityModelData.setCapsValue(drawEntityModelData.caps_modelScale, getScale());
 		boolean isSitting = thePlayerModelData.getCapsValueBoolean(drawEntityModelData.caps_isSitting);
@@ -1172,7 +1172,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	}
 
 	public void setPositionCorrection(Object entity) {
-		if (entity != null); else entity = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		if (entity != null); else entity = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 		PFLM_Main.setSize(entity, 0.6F, 1.8F);
 		PFLM_Main.resetHeight(entity);
 		double d = tempYOffset - PFLM_Main.getYOffset(entity) - 0.5D;
@@ -1250,7 +1250,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			Modchu_Debug.mDebug("imageMultiTagSetSave r1=" + r1 + " g1=" + g1 + " b1=" + b1);
 
 			//handedness r = 255 right , r = 0 left , else Random
-			Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+			Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 			PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 			int handedness = modelData.getCapsValueInt(modelData.caps_dominantArm);
 			r1 = handedness == 0 ? 255 : handedness == 1 ? 0 : 128;

@@ -49,7 +49,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 
 	private void setPlayerList() {
 		List playerEntities = Modchu_AS.getList(Modchu_AS.worldPlayerEntities, popWorld);
-		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 		String thePlayerUsername = Modchu_AS.getString(Modchu_AS.userName, thePlayer);
 		for (Object entityplayer : playerEntities) {
 			String username = Modchu_AS.getString(Modchu_AS.userName, entityplayer);

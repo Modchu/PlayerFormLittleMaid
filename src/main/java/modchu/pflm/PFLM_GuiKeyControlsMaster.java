@@ -296,7 +296,7 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 			s1 = s1.append(getTextureArmorName());
 			drawString(s1.toString(), guiLeft, guiTop + 120, 0xffffff);
 			StringBuilder s8 = (new StringBuilder()).append("showArmor : ");
-			Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftThePlayer);
+			Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 			PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 			s8 = s8.append(PFLM_ConfigData.showArmor);
 			drawString(s8.toString(), guiLeft, guiTop + 140, 0xffffff);
