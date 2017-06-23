@@ -88,6 +88,8 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
 		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", PFLM_ConfigData.showArmor);
 		modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", true);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showShadowAndFire", false);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showRenderName", false);
 		drawEntitySetFlag = true;
 	}
 

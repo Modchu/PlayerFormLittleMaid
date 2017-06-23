@@ -2,9 +2,12 @@ package modchu.pflm;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_IGuiModelView;
+import modchu.lib.Modchu_Main;
 import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_RenderMasterBase;
 
@@ -238,14 +241,28 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 	}
 
 	public String getKeyDisplayString(String s) {
-		Object keyBinding;
-		List keybindArray = Modchu_AS.getList(Modchu_AS.keybindArray);
-		for (int i = 0; i < keybindArray.size(); i++) {
-			keyBinding = keybindArray.get(i);
-			String keyDescription = Modchu_AS.getString(Modchu_AS.keyBindingKeyDescription, keyBinding);
-			if (keyDescription.equalsIgnoreCase(s)) {
-				return Modchu_AS.getString(Modchu_AS.gameSettingsGetKeyDisplayString, Modchu_AS.getInt(Modchu_AS.keyBindingKeyCode, keyBinding));
+		Object keybindArray = Modchu_AS.get(Modchu_AS.keybindArray);
+		int version = Modchu_Main.getMinecraftVersion();
+		if (version > 212) {
+			Map<String, Object> map1 = (Map) keybindArray;
+			for (Entry<String, Object> en : map1.entrySet()) {
+				Object keyBinding = en.getValue();
+				return getKeyDisplayString_r(keyBinding, s);
 			}
+		} else {
+			List keybindArrayList = (List) keybindArray;
+			for (Object keyBinding : keybindArrayList) {
+				return getKeyDisplayString_r(keyBinding, s);
+			}
+		}
+		return null;
+	}
+
+	private String getKeyDisplayString_r(Object keyBinding, String s) {
+		String keyDescription = Modchu_AS.getString(Modchu_AS.keyBindingKeyDescription, keyBinding);
+		if (keyDescription.equalsIgnoreCase(s)) {
+			PFLM_Main.PFLMModelsKeyCode = Modchu_AS.getInt(Modchu_AS.keyBindingKeyCode, keyBinding);
+			return Modchu_AS.getString(Modchu_AS.gameSettingsGetKeyDisplayString, Modchu_AS.getInt(Modchu_AS.keyBindingKeyCode, keyBinding));
 		}
 		return null;
 	}

@@ -95,6 +95,8 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 			modelDatas[i] = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntitys[i]);
 			modelDatas[i].setCapsValue(modelDatas[i].caps_freeVariable, "showArmor", armorMode);
 			modelDatas[i].setCapsValue(modelDatas[i].caps_freeVariable, "showMainModel", !armorMode);
+			modelDatas[i].setCapsValue(modelDatas[i].caps_freeVariable, "showShadowAndFire", false);
+			modelDatas[i].setCapsValue(modelDatas[i].caps_freeVariable, "showRenderName", false);
 			modelDatas[i].setCapsValue(modelDatas[i].caps_skinMode, ModchuModel_IEntityCaps.skinMode_offline);
 			Modchu_AS.set(Modchu_AS.entitySetPosition, drawEntitys[i], Modchu_AS.getDouble(Modchu_AS.entityPosX), Modchu_AS.getDouble(Modchu_AS.entityPosY), Modchu_AS.getDouble(Modchu_AS.entityPosZ));
 		}
@@ -172,7 +174,7 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 			}
 		}
 		//PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntitys[i2]);
-		//if (!ModchuModel_Main.bipedCheck(modelData.models[0])) 
+		//if (!ModchuModel_Main.bipedCheck(modelData.models[0]))
 			buttonList.add(newInstanceButton(armorMode ? 102 : 103, 70, 210, 75, 20, armorMode ? "Model" : "Armor"));
 		buttonList.add(newInstanceButton(100, 155, 210, 75, 20, "select"));
 		buttonList.add(newInstanceButton(101, 240, 210, 75, 20, "return"));
@@ -527,6 +529,8 @@ public class PFLM_GuiModelSelectMaster extends PFLM_GuiModelViewMaster {
 		Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, gui);
 		PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(drawEntitys[i2]);
 		modelData.setCapsValue(modelData.caps_freeVariable, "showMainModel", true);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showShadowAndFire", false);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showRenderName", false);
 		gui.setTextureValue();
 		gui.modelChange();
 	}
