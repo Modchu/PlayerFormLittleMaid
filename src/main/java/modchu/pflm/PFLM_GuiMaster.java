@@ -22,7 +22,7 @@ import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_FileManager;
 import modchu.lib.Modchu_GlStateManager;
 import modchu.lib.Modchu_Main;
-import modchu.lib.Modchu_RenderEngine;
+import modchu.lib.Modchu_RenderSupport;
 import modchu.model.ModchuModel_Config;
 import modchu.model.ModchuModel_EntityPlayerDummyMaster;
 import modchu.model.ModchuModel_IEntityCaps;
@@ -1229,11 +1229,11 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			int setX = image.getWidth() - 1;
 			int setY = 0;
 			if (rightBottomSet) setY = 31;
-			int rgb = Modchu_RenderEngine.instance.colorRGB(255, 0, 0);
+			int rgb = Modchu_RenderSupport.instance.colorRGB(255, 0, 0);
 			image.setRGB(setX, setY, rgb);
 
 			//ローカルテクスチャを使用するかどうか判断用ドット
-			rgb = result ? Modchu_RenderEngine.instance.colorRGB(255, 255, 0) : Modchu_RenderEngine.instance.colorRGB(255, 0, 255);
+			rgb = result ? Modchu_RenderSupport.instance.colorRGB(255, 255, 0) : Modchu_RenderSupport.instance.colorRGB(255, 0, 255);
 			setY = 1;
 			if (rightBottomSet) setY = 30;
 			image.setRGB(setX, setY, rgb);
@@ -1242,7 +1242,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			int r1 = result ? 255 - c : 255 - drawMuitiModelData.getCapsValueInt(drawMuitiModelData.caps_maidColor);
 			int g1 = 255 - t2;
 			int b1 = 255 - t;
-			rgb = Modchu_RenderEngine.instance.colorRGB(r1, g1, b1);
+			rgb = Modchu_RenderSupport.instance.colorRGB(r1, g1, b1);
 			setX = image.getWidth() - 2;
 			setY = 0;
 			if (rightBottomSet) setY = image.getHeight() - 1;
@@ -1259,7 +1259,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			if (g1 > 255) g1 = 255;
 			if (g1 < 0) g1 = 0;
 			b1 = 255;
-			rgb = Modchu_RenderEngine.instance.colorRGB(r1, g1, b1);
+			rgb = Modchu_RenderSupport.instance.colorRGB(r1, g1, b1);
 			setX = image.getWidth() - 2;
 			setY = 1;
 			if (rightBottomSet) setY = 30;
@@ -1282,7 +1282,14 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			s = (new StringBuilder()).append(PFLM_ConfigData.textureSavedir).append(s).toString();
 			Modchu_FileManager.createDir(s);
 			try {
-				result = ImageIO.write(image, "png", new File(Modchu_AS.getFile(Modchu_AS.minecraftMcDataDir) + s));
+				File file = new File(Modchu_AS.getFile(Modchu_AS.minecraftMcDataDir) + s);
+				if (file.exists()) {
+					try {
+						file.delete();
+					} catch (Exception e) {
+					}
+				}
+				result = ImageIO.write(image, "png", file);
 				image.flush();
 				imageWriteComplete = true;
 				imageWriteFail = false;
@@ -1301,21 +1308,35 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	private BufferedImage readTextureImage(Object o) throws IOException {
 		//Modchu_Debug.mDebug("readTextureImage assets/minecraft/" + resourceLocation.func_110624_b());
 		//Modchu_Debug.mDebug("readTextureImage assets/minecraft/" + resourceLocation.func_110623_a());
+		Modchu_Debug.lDebug("PFLM_GuiMaster readTextureImage o="+o);
+
 		BufferedImage image = null;
 		InputStream inputStream = null;
-		if (Modchu_Main.getMinecraftVersion() > 159) {
-			try {
-				inputStream = Modchu_AS.getInputStream(Modchu_AS.resourceManagerInputStream, o);
+		try {
+			inputStream = Modchu_FileManager.getModInputStream(o);
+			Modchu_Debug.lDebug("PFLM_GuiMaster readTextureImage getModInputStream inputStream="+inputStream);
+			if (inputStream != null) {
 				image = ImageIO.read(inputStream);
-			} finally {
-				if (inputStream != null) inputStream.close();
+			} else {
+				int version = Modchu_Main.getMinecraftVersion();
+				if (version > 159) {
+					try {
+						inputStream = Modchu_AS.getInputStream(Modchu_AS.resourceManagerInputStream, o);
+						Modchu_Debug.lDebug("PFLM_GuiMaster readTextureImage resourceManagerInputStream inputStream="+inputStream);
+						if (inputStream != null) image = ImageIO.read(inputStream);
+					} finally {
+						if (inputStream != null) inputStream.close();
+					}
+				} else {
+					URL url = (URL) Modchu_AS.get(Modchu_AS.getResource, o);
+					Modchu_Debug.mDebug("PFLM_GuiMaster readTextureImage url="+url);
+					image = ImageIO.read(url);
+				}
 			}
-		} else {
-			URL url = (URL) Modchu_AS.get(Modchu_AS.getResource, o);
-			Modchu_Debug.mDebug("PFLM_GuiMaster readTextureImage url="+url);
-			image = ImageIO.read(url);
+		} finally {
+			if (inputStream != null) inputStream.close();
 		}
-		return fullColorConversion(image);
+		return image != null ? fullColorConversion(image) : null;
 	}
 
 	private BufferedImage fullColorConversion(BufferedImage image) {
