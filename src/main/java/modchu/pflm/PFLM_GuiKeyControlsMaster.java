@@ -6,9 +6,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import modchu.lib.Modchu_AS;
+import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_Main;
+import modchu.model.ModchuModel_IEntityCaps;
 import modchu.model.ModchuModel_Main;
+import modchu.model.ModchuModel_ModelDataBase;
 import modchu.model.ModchuModel_RenderMasterBase;
 
 import org.lwjgl.input.Keyboard;
@@ -334,11 +337,28 @@ public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 				&& PFLM_ConfigData.shortcutKeysChangeMode[select] != modePlayerOffline
 				&& PFLM_ConfigData.shortcutKeysChangeMode[select] != modeRandom
 				&& PFLM_ConfigData.shortcutKeysChangeMode[select] < modeActionRelease) {
-			resetFlagCheck(false, false);
+			resetFlagCheck(true, false);
 			int l = guiLeft;
 			int i1 = guiTop;
 			ModchuModel_RenderMasterBase.drawMobModel(width, height, i, j, l + 51, i1 + 75, 0, 25, 50F, 0.0F, comeraPosX, comeraPosY, comeraPosZ, comeraRotationX, comeraRotationY, comeraRotationZ, cameraZoom, cameraZoom, cameraZoom, true, drawEntity);
 		}
+	}
+
+	@Override
+	public void setTextureValue() {
+		boolean debug = false;
+		ModchuModel_ModelDataBase drawEntityModelData = PFLM_ModelDataMaster.instance.getPlayerData(drawEntity);
+		if (debug) {
+			Modchu_Debug.Debug("PFLM_GuiKeyControlsMaster setTextureValue getTextureName()="+getTextureName());
+			Modchu_Debug.Debug("PFLM_GuiKeyControlsMaster setTextureValue getTextureArmorName()="+getTextureArmorName());
+			Modchu_Debug.Debug("PFLM_GuiKeyControlsMaster setTextureValue getColor()="+getColor());
+		}
+		setTextureName(getTextureName());
+		setTextureArmorName(getTextureArmorName());
+		setColor(getColor());
+		drawEntityModelData.setCapsValue(drawEntityModelData.caps_skinMode, ModchuModel_IEntityCaps.skinMode_offline);
+		drawEntityModelData.setCapsValue(drawEntityModelData.caps_freeVariable, "skinChar", false);
+		drawEntitySetFlag = true;
 	}
 
 	@Override

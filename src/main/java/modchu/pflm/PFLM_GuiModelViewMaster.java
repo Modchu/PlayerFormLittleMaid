@@ -264,13 +264,7 @@ public class PFLM_GuiModelViewMaster extends PFLM_GuiBaseMaster implements Modch
 			switch (clickButton) {
 			case 0:
 				float f1 = 0.02F;
-				if (x != 0) comeraPosX += (
-						//(Modchu_Main.isForge
-						//&&
-						Modchu_Main.getMinecraftVersion() < 160
-						//)
-						|
-						ModchuModel_Main.oldRender ? -x : x) * f1;
+				if (x != 0) comeraPosX += -x * f1;
 				if (y != 0) {
 					float f2 = y * f1;
 					if (Modchu_AS.getBoolean(Modchu_AS.isCtrlKeyDown)) comeraPosZ += f2;
