@@ -7,6 +7,7 @@ import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_IGuiModelView;
 import modchu.lib.Modchu_Main;
+import modchu.model.ModchuModel_GuiModelSelectMaster;
 import modchu.model.ModchuModel_IEntityCaps;
 import modchu.model.ModchuModel_RenderMasterBase;
 import modchu.model.ModchuModel_TextureManagerBase;
@@ -166,7 +167,7 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		//ModelChange
 		if(id == 50
 				| id == 51) {
-			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false, false, PFLM_ConfigData.autoArmorSelect);
+			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 50 ? 1 : 0, false, PFLM_ConfigData.autoArmorSelect, false);
 			setTextureName(s0[0]);
 			setTextureArmorName(s0[1]);
 			modelChange();
@@ -202,8 +203,8 @@ public class PFLM_GuiOthersPlayerMaster extends PFLM_GuiMaster {
 		}
 		//ModelListSelect
 		if(id == 56) {
-			Modchu_IGuiModelView gui = (Modchu_IGuiModelView) Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiModelSelectMaster.class, popWorld, base);
-			((PFLM_GuiModelSelectMaster) Modchu_Main.getModchuCharacteristicObjectMaster(gui)).drawEntitySetFlag = true;
+			Modchu_IGuiModelView gui = (Modchu_IGuiModelView) Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", ModchuModel_GuiModelSelectMaster.class, popWorld, base);
+			((ModchuModel_GuiModelSelectMaster) Modchu_Main.getModchuCharacteristicObjectMaster(gui)).drawEntitySetFlag = true;
 			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, gui);
 			return;
 		}

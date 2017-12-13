@@ -11,7 +11,6 @@ public class PFLM_ConfigData {
 	public static boolean Physical_Undead = false;
 	public static boolean isPlayerForm = true;
 	public static boolean isPlayerAPIDebug = false;
-	public static boolean isModelSize = false;
 	public static boolean isClearWater = false;
 	public static boolean isVoidFog = true;
 	public static boolean isFog = true;
@@ -86,7 +85,5 @@ public class PFLM_ConfigData {
 	public static boolean shortcutKeysShiftUse[] = new boolean[maxShortcutKeys];
 	public static boolean autoArmorSelect = true;
 	public static int shortcutKeysNumber = 0;
-	public static HashMap<Integer, List<Integer>> texturesNamberMap;
-	public static List<Integer> texturesArmorNamberList;
 
 }

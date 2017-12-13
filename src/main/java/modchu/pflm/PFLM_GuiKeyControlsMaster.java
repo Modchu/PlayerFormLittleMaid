@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.lwjgl.input.Keyboard;
+
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_IGuiModelView;
@@ -13,8 +15,6 @@ import modchu.model.ModchuModel_IEntityCaps;
 import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_ModelDataBase;
 import modchu.model.ModchuModel_RenderMasterBase;
-
-import org.lwjgl.input.Keyboard;
 
 public class PFLM_GuiKeyControlsMaster extends PFLM_GuiMaster {
 

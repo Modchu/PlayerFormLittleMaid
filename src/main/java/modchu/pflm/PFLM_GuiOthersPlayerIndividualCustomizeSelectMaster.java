@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.lwjgl.input.Mouse;
+
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Debug;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_Reflect;
+import modchu.model.ModchuModel_GuiBaseMaster;
 
-import org.lwjgl.input.Mouse;
-
-public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_GuiBaseMaster {
+public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends ModchuModel_GuiBaseMaster {
 	public String screenTitle;
 	public Object selectPanel;
 	private Object localScroll;
@@ -135,6 +136,11 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster extends PFLM_Gu
 	}
 
 	public void memoryRelease() {
+	}
+
+	protected Object newInstanceSlot(Object base, Object popWorld, int width, int height, int topIn, int bottomIn, int slotHeightIn) {
+		//Modchu_Debug.mDebug("PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster newInstanceSlot popWorld="+popWorld);
+		return Modchu_Main.newModchuCharacteristicObject("Modchu_GuiSlot", PFLM_GuiOthersPlayerSlotMaster.class, popWorld, base, width, height, topIn, bottomIn, slotHeightIn);
 	}
 
 }

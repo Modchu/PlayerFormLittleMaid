@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import modchu.lib.Modchu_AS;
 import modchu.lib.Modchu_Main;
+import modchu.model.ModchuModel_GuiModelSelectMaster;
 import modchu.model.ModchuModel_IEntityCaps;
 import modchu.model.ModchuModel_RenderMasterBase;
 import modchu.model.ModchuModel_TextureManagerBase;
@@ -69,7 +70,7 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 		boolean isCtrlKeyDown = Modchu_AS.getBoolean(Modchu_AS.isCtrlKeyDown);
 		//ModelListSelect
 		if (id == 56) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiModelSelectMaster.class, popWorld, base, false, getColor(), playerName));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", ModchuModel_GuiModelSelectMaster.class, popWorld, base, false, getColor(), playerName));
 			return;
 		}
 		//Save
@@ -80,12 +81,12 @@ public class PFLM_GuiOthersPlayerIndividualCustomizeMaster extends PFLM_GuiOther
 			PFLM_Main.loadOthersPlayerParamater();
 			noSaveFlag = false;
 			PFLM_Main.clearDataMap();
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiScreen", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, parentScreen);
 			return;
 		}
 		//Return
 		if (id == 201) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiScreen", PFLM_GuiOthersPlayerIndividualCustomizeSelectMaster.class, popWorld));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, parentScreen);
 			return;
 		}
 		super.actionPerformed(guibutton);

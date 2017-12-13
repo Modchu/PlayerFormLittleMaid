@@ -24,15 +24,20 @@ import modchu.lib.Modchu_GlStateManager;
 import modchu.lib.Modchu_Main;
 import modchu.lib.Modchu_RenderSupport;
 import modchu.model.ModchuModel_Config;
+import modchu.model.ModchuModel_ConfigData;
 import modchu.model.ModchuModel_EntityPlayerDummyMaster;
+import modchu.model.ModchuModel_GuiCustomModel;
+import modchu.model.ModchuModel_GuiModelSelectMaster;
+import modchu.model.ModchuModel_GuiModelViewMaster;
 import modchu.model.ModchuModel_IEntityCaps;
 import modchu.model.ModchuModel_Main;
 import modchu.model.ModchuModel_ModelDataBase;
+import modchu.model.ModchuModel_ModelDataMaster;
 import modchu.model.ModchuModel_ModelRenderer;
 import modchu.model.ModchuModel_RenderMasterBase;
 import modchu.model.ModchuModel_TextureManagerBase;
 
-public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
+public class PFLM_GuiMaster extends ModchuModel_GuiModelViewMaster {
 
 	public Object drawMuitiEntity;
 	private BufferedImage bufferedimage;
@@ -40,6 +45,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	private String textureName;
 	private String textureArmorName;
 	private String tagSetFileName;
+	private String errorModelString;
 	private double tempYOffset;
 	private boolean imageWriteComplete;
 	private boolean imageWriteFail;
@@ -127,6 +133,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		setModel = PFLM_ConfigData.setModel;
 		setArmor = PFLM_ConfigData.setArmor;
 		setColor = PFLM_ConfigData.setColor;
+		useScaleChange = PFLM_ConfigData.useScaleChange;
 		if (parts != null) {
 			parts.clear();
 		} else {
@@ -135,6 +142,8 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		int changeMode = getChangeMode();
 		if (changeMode > PFLM_GuiConstant.changeModelist.size()) setChangeMode(0);
 		if (changeMode < 0) setChangeMode(PFLM_GuiConstant.changeModelist.size() - 1);
+		ModchuModel_ModelDataBase modelData = ModchuModel_ModelDataMaster.instance.getPlayerData(drawEntity);
+		modelData.setCapsValue(modelData.caps_freeVariable, "showArmor", PFLM_ConfigData.showArmor);
 		setDrawMuitiTextureValue();
 	}
 
@@ -172,7 +181,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 
 	@Override
 	public void initGui() {
-		Modchu_Debug.mDebug("initGui");
+		Modchu_Debug.mDebug("PFLM_GuiMaster initGui");
 		initButtonSetting();
 		super.initGui();
 		if (!displayButton) return;
@@ -271,6 +280,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			}
 		}
 		Modchu_AS.set(Modchu_AS.guiScreenButtonList, base, buttonList);
+		Modchu_Debug.mDebug("PFLM_GuiMaster initGui end. buttonList="+buttonList);
 	}
 
 	protected void initButtonSetting() {
@@ -309,7 +319,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		boolean b = true;
 		guiPartsNemeMap = new ConcurrentHashMap();
 		defaultParts = new ConcurrentHashMap();
-		Object model = PFLM_Main.getModel(null, armorType);
+		Object model = ModchuModel_Main.getModel(null, armorType);
 		ConcurrentHashMap<Integer, String> showPartsNemeMap = ModchuModel_Config.getConfigShowPartsNemeMap(getTextureName(), armorType);
 		ConcurrentHashMap<String, String> showPartsReneme = ModchuModel_Config.getConfigShowPartsRenemeMap(model, getTextureName(), armorType);
 		ConcurrentHashMap<Integer, String> showPartsHideMap = ModchuModel_Config.getConfigShowPartsHideMap(model, getTextureName(), armorType);
@@ -367,7 +377,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		Field f = null;
 		List<String> list = new ArrayList();
 		ModchuModel_ModelRenderer modelRenderer = null;
-		Object model = PFLM_Main.getModel(null, armorType);
+		Object model = ModchuModel_Main.getModel(null, armorType);
 		ConcurrentHashMap<Integer, String> showPartsNemeMap = ModchuModel_Config.getConfigShowPartsNemeMap(getTextureName(), armorType);
 		if (showPartsNemeMap != null
 				&& !showPartsNemeMap.isEmpty()); else return;
@@ -441,7 +451,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		int id = Modchu_AS.getInt(Modchu_AS.guiButtonID, guibutton);
 		Modchu_Debug.mDebug("id="+id);
 		if (id == 3) {
-			setScale(PFLM_Main.getModelScale(thePlayer));
+			setScale(ModchuModel_Main.getModelScale(thePlayer));
 			setTextureValue();
 			drawEntitySetFlag = true;
 			return;
@@ -680,7 +690,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				setTextureName(s0[0]);
 				if (s0[1] != null
 						&& !s0[1].isEmpty()) {
-					//Modchu_Debug.mDebug("PFLM_GuiMaster ModelChange s0[1]="+s0[1]);
+					Modchu_Debug.mDebug("PFLM_GuiMaster ModelChange actionPerformed s0[1]="+s0[1]);
 					setTextureArmorName(s0[1]);
 				} else {
 					String s = "PFLM_GuiMaster ModelChange s0[1] == null !!";
@@ -690,8 +700,8 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			} else {
 
 			}
-			//modelData.setCapsValue(drawMuitiModelData.caps_textureName, getTextureName());
-			//modelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, getTextureArmorName());
+			//modelData.setCapsValue(modelData.caps_textureName, getTextureName());
+			//modelData.setCapsValue(modelData.caps_textureArmorName, getTextureArmorName());
 			//Modchu_Debug.mDebug("PFLM_GuiMaster ModelChange getTextureName()="+getTextureName());
 			//Modchu_Debug.mDebug("PFLM_GuiMaster ModelChange getTextureArmorName()="+getTextureArmorName());
 			modelChange();
@@ -705,7 +715,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			setColor(colorCheck(getTextureName(), getColor(), colorReverse));
 			int color = getColor();
 			PFLM_Main.setMaidColor(color);
-			modelData.setCapsValue(drawMuitiModelData.caps_maidColor, color);
+			modelData.setCapsValue(modelData.caps_maidColor, color);
 			((PFLM_ModelDataMaster) PFLM_ModelDataMaster.instance).allModelTextureReset(thePlayer, modelData);
 			PFLM_GuiConstant.partsSetFlag = 1;
 			partsInitFlag = false;
@@ -715,18 +725,18 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			imageWriteFail = false;
 			noSaveFlag = true;
 			textureResetFlag = true;
-			PFLM_Main.changeColor(thePlayer);
+			ModchuModel_Main.changeColor(thePlayer);
 			setTextureValue();
-			PFLM_Main.changeColor(drawEntity);
+			ModchuModel_Main.changeColor(drawEntity);
 			return;
 		}
 		//ArmorChange
 		if (id == 54 | id == 55) {
 			String[] s0 = ModchuModel_TextureManagerBase.instance.setTexturePackege(getTextureName(), getTextureArmorName(), getColor(), id == 54 ? 1 : 0, true, false, PFLM_ConfigData.autoArmorSelect);
 			setTextureArmorName(s0[1]);
-			modelData.setCapsValue(drawMuitiModelData.caps_textureArmorName, getTextureArmorName());
+			//modelData.setCapsValue(modelData.caps_textureArmorName, getTextureArmorName());
 			//Modchu_Debug.mDebug("PFLM_GuiMaster actionPerformed ArmorChange getTextureArmorName()="+getTextureArmorName());
-			if (PFLM_ConfigData.isModelSize) {
+			if (ModchuModel_ConfigData.isModelSize) {
 				closePlayerToSpawn = true;
 			}
 			PFLM_GuiConstant.partsSetFlag = 1;
@@ -739,7 +749,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		//ModelListSelect
 		if (id == 56) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiModelSelectMaster.class, popWorld, base, false, getColor()));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", ModchuModel_GuiModelSelectMaster.class, popWorld, base, false, getColor()));
 			return;
 		}
 		//KeyControls
@@ -762,7 +772,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		}
 		//CustomModel
 		if (id == 59) {
-			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", PFLM_GuiCustomModel.class, popWorld, base));
+			Modchu_AS.set(Modchu_AS.minecraftDisplayGuiScreen, Modchu_Main.newModchuCharacteristicObject("Modchu_GuiModelView", ModchuModel_GuiCustomModel.class, popWorld, base));
 			return;
 		}
 		//Customize ArmorType
@@ -929,18 +939,18 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 			//PFLM_ModelData modelData = (PFLM_ModelData) PFLM_ModelDataMaster.instance.getPlayerData(thePlayer);
 			if (PFLM_ConfigData.handednessMode == -1) s10 = s10.append(" Result : ").append(PFLM_GuiConstant.getHandednessModeString(modelData.getCapsValueInt(modelData.caps_dominantArm)));
 			drawStringList.add(s10.toString());
-			if (PFLM_ConfigData.isModelSize
+			if (ModchuModel_ConfigData.isModelSize
 					&& skinMode != ModchuModel_IEntityCaps.skinMode_online) {
 				float f1 = 0.5F;
 				float f2 = 1.35F;
 				float f3 = 1.17F;
 				if (!tempYOffsetInit) {
 					tempYOffsetInit = true;
-					if (PFLM_Main.gotchaNullCheck()) setTempYOffset(PFLM_Main.getYOffset(thePlayer));
+					if (PFLM_Main.gotchaNullCheck()) setTempYOffset(ModchuModel_Main.getYOffset(thePlayer));
 				}
-				f1 = PFLM_Main.getWidth(thePlayer);
-				f2 = PFLM_Main.getHeight(thePlayer);
-				f3 = PFLM_Main.getYOffset(thePlayer);
+				f1 = ModchuModel_Main.getWidth(thePlayer);
+				f2 = ModchuModel_Main.getHeight(thePlayer);
+				f3 = ModchuModel_Main.getYOffset(thePlayer);
 				String s3 = "Size : Width = " + f1 + " Height = " + f2;
 				s3 = (new StringBuilder()).append(s3).toString();
 				drawStringList.add(s3.toString());
@@ -955,31 +965,51 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 				s8 = s8.append(PFLM_ConfigData.showArmor);
 				drawStringList.add(s8.toString());
 			}
+			String[] s0 = ModchuModel_TextureManagerBase.instance.getMissingModelClassData(textureName);
+			if (s0 != null
+					&& s0.length > 0) {
+				errorModelString = textureName + " is error model. error message [ " + s0[1]+" ]";
+			} else {
+				if (ModchuModel_TextureManagerBase.instance.getModelClassName(textureName) == null
+						&& textureName.indexOf("_Custom") < 0) {
+					errorModelString = textureName + " is error model. error message [ Model Class Not Found. ]";
+				} else {
+					errorModelString = null;
+				}
+			}
 		}
+		int i1 = 20;
 		if (PFLM_Main.newRelease
 				&& !partsButton
 				&& !modelScaleButton
 				&& !initNewReleaseDrow) {
 			drawString("PlayerFormLittleMaid", 10, 10, 0xffffff);
-			drawString((new StringBuilder()).append("newVersion v").append(PFLM_Main.newVersion).append(" Release!").toString(), 10, 20, 0xffffff);
+			drawString((new StringBuilder()).append("newVersion v").append(PFLM_Main.newVersion).append(" Release!").toString(), 10, i1, 0xffffff);
+			i1 = i1 + 20;
 		}
 		if (Modchu_Main.newRelease
 				&& !partsButton
 				&& !modelScaleButton
 				&& !initNewReleaseDrow) {
 			drawString("ModchuLib", 10, 30, 0xffffff);
-			drawString((new StringBuilder()).append("newVersion v").append(Modchu_Main.newVersion).append(" Release!").toString(), 10, 40, 0xffffff);
+			drawString((new StringBuilder()).append("newVersion v").append(Modchu_Main.newVersion).append(" Release!").toString(), 10, i1, 0xffffff);
+			i1 = i1 + 20;
 		}
 		if (skinMode != ModchuModel_IEntityCaps.skinMode_Random) {
 			String s5;
 			if (imageWriteComplete) {
 				s5 = (new StringBuilder()).append(PFLM_ConfigData.textureSavedir).append(tagSetFileName).append(" Successfully written file.").toString();
-				drawString(s5, 10, 10, 0xffffff);
+				drawString(s5, 10, i1, 0xffffff);
+				i1 = i1 + 20;
 			}
 			if (imageWriteFail) {
 				s5 = (new StringBuilder()).append(PFLM_ConfigData.textureSavedir).append(tagSetFileName).append(" Failed to write file.").toString();
-				drawString(s5, 10, 10, 0xffffff);
+				drawString(s5, 10, i1, 0xffffff);
+				i1 = i1 + 20;
 			}
+		}
+		if (errorModelString != null) {
+			drawString(errorModelString, 10, i1, 0xffffff);
 		}
 		if (skinMode != ModchuModel_IEntityCaps.skinMode_Random
 				&& skinMode != ModchuModel_IEntityCaps.skinMode_online) {
@@ -1047,7 +1077,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	@Override
 	public void modelChange() {
 		Object thePlayer = Modchu_AS.get(Modchu_AS.minecraftPlayer);
-		if (PFLM_ConfigData.isModelSize) {
+		if (ModchuModel_ConfigData.isModelSize) {
 			closePlayerToSpawn = true;
 		}
 		//Modchu_AS.set(Modchu_AS.allModelInit, PFLM_Main.renderPlayerDummyInstance, thePlayer, true);
@@ -1163,7 +1193,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		if (closePlayerToSpawn
-				&& PFLM_ConfigData.isModelSize) {
+				&& ModchuModel_ConfigData.isModelSize) {
 			setPositionCorrection(null);
 		}
 		tempYOffsetInit = false;
@@ -1175,7 +1205,7 @@ public class PFLM_GuiMaster extends PFLM_GuiModelViewMaster {
 		if (entity != null); else entity = Modchu_AS.get(Modchu_AS.minecraftPlayer);
 		PFLM_Main.setSize(entity, 0.6F, 1.8F);
 		PFLM_Main.resetHeight(entity);
-		double d = tempYOffset - PFLM_Main.getYOffset(entity) - 0.5D;
+		double d = tempYOffset - ModchuModel_Main.getYOffset(entity) - 0.5D;
 		PFLM_Main.setPositionCorrection(entity, 0.0D, -d, 0.0D);
 	}
 
