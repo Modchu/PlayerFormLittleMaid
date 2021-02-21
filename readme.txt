@@ -1,1 +1,3 @@
-//PlayerFormLittleMaid readme開発中につき取扱注意
+jar file dowmload url
+https://minecraft.curseforge.com/projects/modchu_playerformlittlemaid
+
